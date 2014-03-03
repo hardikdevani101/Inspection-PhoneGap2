@@ -1,12 +1,26 @@
-E:\PhotoProject\PhotoPro\platforms\android\bin\classes.dex : \
-E:\PhotoProject\PhotoPro\platforms\android\bin\classes\com\logilite\photopro\BuildConfig.class \
-E:\PhotoProject\PhotoPro\platforms\android\bin\classes\com\logilite\photopro\PhotoPro.class \
-E:\PhotoProject\PhotoPro\platforms\android\bin\classes\com\logilite\photopro\R$attr.class \
-E:\PhotoProject\PhotoPro\platforms\android\bin\classes\com\logilite\photopro\R$drawable.class \
-E:\PhotoProject\PhotoPro\platforms\android\bin\classes\com\logilite\photopro\R$string.class \
-E:\PhotoProject\PhotoPro\platforms\android\bin\classes\com\logilite\photopro\R$xml.class \
-E:\PhotoProject\PhotoPro\platforms\android\bin\classes\com\logilite\photopro\R.class \
-E:\PhotoProject\PhotoPro\platforms\android\bin\classes\org\apache\cordova\camera\CameraLauncher.class \
-E:\PhotoProject\PhotoPro\platforms\android\bin\classes\org\apache\cordova\camera\ExifHelper.class \
-E:\PhotoProject\PhotoPro\platforms\android\bin\classes\org\apache\cordova\camera\FileHelper.class \
-E:\PhotoProject\PhotoPro\platforms\android\bin\dexedLibs\classes-50de7c8c3f3e5cdc7a6506b63bb490d8.jar \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes.dex : \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\com\logilite\photopro\BuildConfig.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\com\logilite\photopro\PhotoPro.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\com\logilite\photopro\R$attr.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\com\logilite\photopro\R$drawable.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\com\logilite\photopro\R$string.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\com\logilite\photopro\R$xml.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\com\logilite\photopro\R.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\com\logilite\VelocityInspectorApp\BuildConfig.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\com\logilite\VelocityInspectorApp\PhotoPro.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\com\logilite\VelocityInspectorApp\R$attr.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\com\logilite\VelocityInspectorApp\R$drawable.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\com\logilite\VelocityInspectorApp\R$string.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\com\logilite\VelocityInspectorApp\R$xml.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\com\logilite\VelocityInspectorApp\R.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\com\velocity\inspector\BuildConfig.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\com\velocity\inspector\PhotoPro.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\com\velocity\inspector\R$attr.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\com\velocity\inspector\R$drawable.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\com\velocity\inspector\R$string.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\com\velocity\inspector\R$xml.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\com\velocity\inspector\R.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\org\apache\cordova\camera\CameraLauncher.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\org\apache\cordova\camera\ExifHelper.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes\org\apache\cordova\camera\FileHelper.class \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\dexedLibs\classes-95f62b5c018694aabe24019f2559770f.jar \

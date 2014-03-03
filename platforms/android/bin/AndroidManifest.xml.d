@@ -1,2 +1,2 @@
-E:\PhotoProject\PhotoPro\platforms\android\bin\AndroidManifest.xml : \
-E:\PhotoProject\PhotoPro\platforms\android\AndroidManifest.xml \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\AndroidManifest.xml : \
+E:\Copy of VIS Inspection Project Repo\platforms\android\AndroidManifest.xml \

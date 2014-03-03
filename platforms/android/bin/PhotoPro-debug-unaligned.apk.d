@@ -1,4 +1,4 @@
-E:\PhotoProject\PhotoPro\platforms\android\bin\PhotoPro-debug-unaligned.apk : \
-E:\PhotoProject\PhotoPro\platforms\android\bin\PhotoPro.ap_ \
-E:\PhotoProject\PhotoPro\platforms\android\bin\classes.dex \
-E:\PhotoProject\PhotoPro\platforms\android\CordovaLib\bin\classes.jar \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\PhotoPro-debug-unaligned.apk : \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\PhotoPro.ap_ \
+E:\Copy of VIS Inspection Project Repo\platforms\android\bin\classes.dex \
+E:\Copy of VIS Inspection Project Repo\platforms\android\CordovaLib\bin\classes.jar \

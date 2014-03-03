@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF8">
-<title>Photo Pro</title>
+<title>VIS-Inspection Phonegap</title>
 <script src="cordova.js"></script>
 <script src="scripts/indexJS.js"></script>
 <script src="scripts/jquery.min.js"></script>
@@ -16,7 +16,7 @@
 
 	<div class="page" id="home">
 		<span>
-			<h1>Photo Pro</h1>
+		<h1>VIS-Inspection Phonegap</h1>
 		</span> <br /> <br /> <input class="menuButton" id="loginBtn"
 			onclick="onLogin()" type="button" value="Login"><br> <input
 			class="menuButton" id="startNewInspectionBtn"
@@ -27,17 +27,6 @@
 			value="Resume Inspection"><br> <input class="menuButton"
 			id="setupBtn" onclick="onSetup()" type="button" value="Setup"><br>
 	</div>
-
-	<!-- <div class="page" id="img1">
-		<h2>Photo Saved!!</h2>
-		<br> <img id="smallImage" name="smallImage" src=""
-			style="width: 50%; height: 50%;"><br>
-		<ul>
-			<li onclick="captureI()">Take another Photo &gt;&gt;</li>
-
-			<li onclick="loadPage('home')">Go Back</li>
-		</ul>
-	</div> -->
 
 	<div class="page" id="startNewInsp">
 		<span> Line No: <input type="text" id="lineNoTxt" />
@@ -98,7 +87,7 @@
 		<div id="cropImage">
 		</div>
 		<div>
-			<input type="button" value="Save" />
+			<input type="button" value="Save" onClick="onCropSaved()"/>
 			<input type="button" value="Discard" />
 		</div>
 		</center>
