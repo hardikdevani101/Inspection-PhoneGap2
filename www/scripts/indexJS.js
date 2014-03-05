@@ -130,7 +130,10 @@ function reonCrop(){
 	onCrop();
 }
 
-function onWatermark(){
-	
+function onCropSkip(){
+	$('#waterImage').attr('src',document.getElementById('smallImage').src);
+	loadPage("waterImgPrev");
 }
+
+
 
