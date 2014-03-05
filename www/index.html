@@ -35,7 +35,8 @@
 		<div style="height: 70%; overflow: auto; text-align: center;">
 			<center>
 				<div class="divButton" onclick="onInspSet('Top')">Top</div>
-				<div class="divButton" onclick="onInspSet('Bottom')">Bottom</div>
+				<!--<div class="divButton" onclick="onInspSet('Bottom')">Bottom</div>-->
+				<div class="divButton" onclick="captureI()">Bottom</div>
 				<div class="divButton" onclick="onInspSet('Contacts')">Contacts</div>
 				<div class="divButton" onclick="onInspSet('Box')">Box</div>
 				<div class="divButton" onclick="onInspSet('Data Sheet')">Data
@@ -74,23 +75,44 @@
 		<center>
 		<img id="smallImage" name="smallImage"
 			style="width: 80%; height: 80%;" />
-		<div>
+		<div style="margin-top:2px;">
 			<input type="button" value="Crop" onClick="onCrop()"/>
-			<input type="button" value="Save" />
+			<input type="button" value="Cancel" />
+		</div>
+		</center>
+	</div>
+	
+	<div id="cropView" class="page" >
+		<center>
+		<div>
+			<Span > Crop Image </Span> 
+		</div>
+		<br>
+		<div id="cropImage">
+		</div>
+		<div>
+			<input type="button" value="Crop" onClick="onCropSaved()"/>
 			<input type="button" value="Discard" />
 		</div>
 		</center>
 	</div>
 	
-	<div id="cropView" class="page">
+	<div id="waterImgPrev" class="page">
 		<center>
-		<div id="cropImage">
-		</div>
 		<div>
-			<input type="button" value="Save" onClick="onCropSaved()"/>
-			<input type="button" value="Discard" />
+			<Span > Water Mark </Span> 
+		</div>
+		<br>
+		<img id="waterImage" name="waterImage"
+			style="width: 80%; height: 80%;" />
+		<div>
+			<input type="button" value="Crop" onClick="reonCrop()"/>
+			<input type="button" value="Save" />
+			<input type="button" value="Back" onClick="onCrop()" />
 		</div>
 		</center>
 	</div>
+	
+	
 </body>
 </html>

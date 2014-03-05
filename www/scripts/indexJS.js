@@ -20,6 +20,7 @@ function onLoad() {
 function onPhotoDataSuccess(imageData) {
 	$('#smallImage').attr('src',"data:image/jpeg;base64," + imageData);
 	loadPage("imagePrev");
+	onCrop();
 }
 
 function onDeviceReady() {
@@ -34,6 +35,7 @@ function captureI() {
 		destinationType : Camera.DestinationType.DATA_URL,
 		allowEdit : true
 	});
+	
 }
 
 function onFail(message) {
@@ -73,10 +75,7 @@ function onCrop() {
 	$('#cropImage').html(['<img src="', document.getElementById('smallImage').src, '" width="80%" height="80%" />'].join(''));
 	crop_img = $('#cropImage img')[0];
 	
-	var tempImage = new Image();
-    tempImage.src = crop_img.src;
-	xsize = tempImage.width,
-    ysize = tempImage.height;
+	
 	
 	$('#cropImage img').Jcrop({
 						 bgColor: 'black',
@@ -101,7 +100,12 @@ function onCrop() {
 
 function onCropSaved() {
 	canvas = document.createElement('canvas');
-
+	
+	var tempImage = new Image();
+    tempImage.src = crop_img.src;
+	xsize = tempImage.width,
+    ysize = tempImage.height;
+	
 	var rx = xsize / boundx;
 	var ry = ysize / boundy;
 
@@ -116,7 +120,17 @@ function onCropSaved() {
 
 	var ctx = canvas.getContext('2d');
 	ctx.drawImage(crop_img, x1, y1, w, h, 0, 0, w, h);
-
-	$('#smallImage').attr('src', canvas.toDataURL());
-	loadPage("imagePrev");
+	$('#waterImage').attr('src', canvas.toDataURL());
+	loadPage("waterImgPrev");
 }
+
+function reonCrop(){
+	$('#smallImage').attr('src',document.getElementById('waterImage').src);
+	loadPage("imagePrev");
+	onCrop();
+}
+
+function onWatermark(){
+	
+}
+
