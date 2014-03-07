@@ -252,8 +252,12 @@ function applyWatermark(x,y){
 			y=y-(watermark.height/2);
 			if(x<0)
 				x=0;
+				else if(x>(gcanvas.width-watermark.width))
+					x=gcanvas.width-watermark.width;
 			if(y<0)
 				y=0;
+				else if(y>(gcanvas.height-watermark.height))
+					y=gcanvas.height-watermark.height;
 			gctx.drawImage(watermark, x, y);
 			
 }
