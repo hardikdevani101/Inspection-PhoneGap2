@@ -25,14 +25,18 @@ var canvaso;
 var wrx;
 var wry;
 var wmCanvasDiv;
+var scW;
+var scH;
 
 
 function onLoad() {
 	loadPage("home");
 	document.addEventListener("deviceready", onDeviceReady, false);
 	document.addEventListener("backbutton", onBackButton, false);
+	scW=window.innerWidth;
+	scH=window.innerHeight;
 	watermark = new Image();
-	watermark.src = "img/logo.png";
+	watermark.src = "img/Velocity_Watermark.png";
 }
 
 function onPhotoDataSuccess(imageData) {
@@ -143,11 +147,7 @@ function onCropSaved() {
 	origImg.src=canvas.toDataURL();
 	
 	loadPage("waterImgPrev");
-	onWatermark();
-	//Using timer to reApplyWaterMark
-	window.setTimeout(function(){
-	reApplyatterMark();
-	},300);
+	
 }
 
 function reonCrop(){
@@ -158,7 +158,14 @@ function reonCrop(){
 
 function onCropSkip(){
 	$('#waterImage').attr('src',document.getElementById('smallImage').src);
+	origImg = new Image();
+	origImg.src=document.getElementById('waterImage').src;
 	loadPage("waterImgPrev");
+	onWatermark();
+	//Using timer to reApplyWaterMark
+	window.setTimeout(function(){
+	reApplyatterMark();
+	},300);
 }
 //For Water Mark
 function onWatermark(){
@@ -225,9 +232,16 @@ function applyTransparency(){
 function applyWatermark(x,y){
 	console.log("applyWatermark");
 		
+			/*gcanvas.width = origImg.width || origImg.offsetWidth;
+			gcanvas.height = origImg.height || origImg.offsetHeight;*/
 			gcanvas.width = origImg.width || origImg.offsetWidth;
 			gcanvas.height = origImg.height || origImg.offsetHeight;
 			gctx.drawImage(origImg, 0, 0);
+			
+			/*console.log("Win W"+window.innerWidth
+						+"Win H"+window.innerHeight);
+			console.log("gcan W"+gcanvas.width
+						+"gcan H"+gcanvas.height);*/
 			
 			x=x-(watermark.width/2);
 			y=y-(watermark.height/2);
