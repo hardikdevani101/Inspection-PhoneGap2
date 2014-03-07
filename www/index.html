@@ -9,9 +9,15 @@
 <script src="scripts/jquery.Jcrop.js"></script>
 <LINK href="styles/indexStyle.css" rel="stylesheet" type="text/css">
 <LINK href="styles/jquery.Jcrop.css" rel="stylesheet" type="text/css">
+<style type="text/css"><!--
+		#wmCanvasContainer { position: relative; }
+      #WatermarkCanvas { border: 1px solid #000; }
+      #waterimageTemp { position: absolute; top: 1px; left: 1px; }
+	  -->
+</style>
 </head>
 
-<body onload="onLoad()">
+<body onLoad="onLoad()">
 	<div id="disp"></div>
 
 	<div class="page" id="home">
@@ -25,7 +31,7 @@
 			class="menuButton" id="resumeInspectionBtn"
 			onclick="onResumeInspection()" type="button"
 			value="Resume Inspection"><br> <input class="menuButton"
-			id="setupBtn" onclick="onSetup()" type="button" value="Setup"><br>
+			id="setupBtn" onClick="onSetup()" type="button" value="Setup"><br>
 	</div>
 
 	<div class="page" id="startNewInsp">
@@ -34,16 +40,16 @@
 		<hr>
 		<div style="height: 70%; overflow: auto; text-align: center;">
 			<center>
-				<div class="divButton" onclick="onInspSet('Top')">Top</div>
+				<div class="divButton" onClick="captureI()">Top</div>
 				<!--<div class="divButton" onclick="onInspSet('Bottom')">Bottom</div>-->
-				<div class="divButton" onclick="captureI()">Bottom</div>
-				<div class="divButton" onclick="onInspSet('Contacts')">Contacts</div>
-				<div class="divButton" onclick="onInspSet('Box')">Box</div>
-				<div class="divButton" onclick="onInspSet('Data Sheet')">Data
+				<div class="divButton" onClick="captureI()">Bottom</div>
+				<div class="divButton" onClick="captureI()">Contacts</div>
+				<div class="divButton" onClick="captureI()">Box</div>
+				<div class="divButton" onClick="captureI()">Data
 					Sheet</div>
-				<div class="divButton" onclick="onInspSet('XRF')">XRF</div>
-				<div class="divButton" onclick="onInspSet('X-Ray')">X-Ray</div>
-				<div class="divButton" onclick="onInspSet('Not Sent')">Not
+				<div class="divButton" onClick="captureI()">XRF</div>
+				<div class="divButton" onClick="captureI()">X-Ray</div>
+				<div class="divButton" onClick="onInspSet('Not Sent')">Not
 					Sent</div>
 			</center>
 		</div>
@@ -62,7 +68,7 @@
 			<Span id="gallery_head" style="float: left;"> </Span> <Span
 				style="float: right; border: 1px solid black; padding: 2px; margin-left: 2px;">Discard</Span>
 			<Span
-				style="float: right; border: 1px solid black; padding: 2px; margin-left: 2px;" onclick="captureI()">Acquire</Span>
+				style="float: right; border: 1px solid black; padding: 2px; margin-left: 2px;" onClick="captureI()">Acquire</Span>
 		</div>
 		<br>
 		<div>
@@ -89,6 +95,7 @@
 		</div>
 		<br>
 		<div id="cropImage">
+			
 		</div>
 		<div>
 			<input type="button" value="Crop" onClick="onCropSaved()"/>
@@ -104,15 +111,28 @@
 			<Span > Water Mark </Span> 
 		</div>
 		<br>
-		<img id="waterImage" name="waterImage"
-			style="width: 80%; height: 80%;" />
-		<div>
+		
+					<table>
+  <tr>
+    <td>
+	<div id="wmCanvasContainer" style="position: relative;">
+		<canvas id="WatermarkCanvas"  width="80%" height="80%"></canvas></td>
+	</div>
+  </tr>
+</table>
+
+		<br>
+		<div style="position: relative;">
 			<input type="button" value="Crop" onClick="reonCrop()"/>
 			<input type="button" value="Save" />
 			<input type="button" value="Back" onClick="onCrop()" />
+			<!--<input type="button" value="Apply Watermark" onClick="reApplyatterMark()" />-->
 		</div>
+		<div id="waterDivContainer">
+			<img id="waterImage" name="waterImage"
+				style="width: 80%; height: 80%; display: none"  />
+			</div>
 		</center>
-	</div>
 	
 	
 </body>
