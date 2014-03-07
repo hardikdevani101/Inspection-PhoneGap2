@@ -36,6 +36,7 @@ function onLoad() {
 	scW=window.innerWidth;
 	scH=window.innerHeight;
 	watermark = new Image();
+	origImg = new Image();
 	watermark.src = "img/Velocity_Watermark.png";
 }
 
@@ -143,11 +144,15 @@ function onCropSaved() {
 	var ctx = canvas.getContext('2d');
 	ctx.drawImage(crop_img, x1, y1, w, h, 0, 0, w, h);
 	$('#waterImage').attr('src', canvas.toDataURL());
-	origImg = new Image();
+	
 	origImg.src=canvas.toDataURL();
 	
 	loadPage("waterImgPrev");
-	
+	onWatermark();
+	//Using timer to reApplyWaterMark
+	window.setTimeout(function(){
+	reApplyatterMark();
+	},300);
 }
 
 function reonCrop(){
@@ -158,7 +163,7 @@ function reonCrop(){
 
 function onCropSkip(){
 	$('#waterImage').attr('src',document.getElementById('smallImage').src);
-	origImg = new Image();
+	
 	origImg.src=document.getElementById('waterImage').src;
 	loadPage("waterImgPrev");
 	onWatermark();
