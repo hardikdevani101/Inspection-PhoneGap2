@@ -182,20 +182,8 @@ function initCanvas(){
 			//gcanvas.style.cssText = " width:80%; height:80%";
 			gctx = gcanvas.getContext("2d");
 			
-			
-			gcanvas.onmouseup = function(ev){
-				var x,y;
-				if (ev.layerX || ev.layerX == 0) { // Firefox
-				  x = ev.layerX;
-				  y = ev.layerY;
-				} else if (ev.offsetX || ev.offsetX == 0) { // Opera
-				  x = ev.offsetX;
-				  y = ev.offsetY;
-				}
-				applyWatermark(x,y);
-			}
 }
-function applyWatermark(x,y){
+function applyWatermark(){
 	console.log("applyWatermark");
 		
 			/*gcanvas.width = origImg.width || origImg.offsetWidth;
@@ -209,22 +197,14 @@ function applyWatermark(x,y){
 			console.log("gcan W"+gcanvas.width
 						+"gcan H"+gcanvas.height);*/
 			
-			x=x-(watermark.width/2);
-			y=y-(watermark.height/2);
-			if(x<0)
-				x=0;
-				else if(x>(gcanvas.width-watermark.width))
-					x=gcanvas.width-watermark.width;
-			if(y<0)
-				y=0;
-				else if(y>(gcanvas.height-watermark.height))
-					y=gcanvas.height-watermark.height;
+			x=(gcanvas.width-20)-(watermark.width);
+			y=(gcanvas.height-20)-(watermark.height);
 			gctx.drawImage(watermark, x, y);
 			
 }
 function reApplyatterMark(){
 
-	applyWatermark(50,50);
+	applyWatermark();
 }
 
 
