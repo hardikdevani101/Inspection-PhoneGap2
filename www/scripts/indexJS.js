@@ -12,18 +12,11 @@ var crop_img;
 
 
 var watermark;
-var watermarkX = "10";
-var watermarkY = "10";
 var opacity = (255/(100/50));
 var gcanvas;
 var gctx;
 var origImg;
 //var waterImg;
-var previewCanvas;
-var contexto;
-var canvaso;
-var wrx;
-var wry;
 var wmCanvasDiv;
 var scW;
 var scH;
@@ -175,8 +168,7 @@ function onCropSkip(){
 //For Water Mark
 function onWatermark(){
 	
-	initCanvas();
-	initWatermark();	
+	initCanvas();	
 }
 function initCanvas(){
 	
@@ -203,37 +195,6 @@ function initCanvas(){
 				applyWatermark(x,y);
 			}
 }
-function initWatermark(){
-	
-	applyTransparency();
-			console.log("watermark img="+watermark.src);
-}
-function applyTransparency(){
-			var w = watermark.width || watermark.offsetWidth,
-			h = watermark.height || watermark.offsetHeight;
-			
-			canvas.width = w;
-			canvas.height = h;
-			var ctx = canvas.getContext('2d');
-			ctx.drawImage(watermark, 0, 0);
-			var image = ctx.getImageData(0, 0, w, h);
-			var imageData = image.data,
-			length = imageData.length;
-			for(var i=3; i < length; i+=4){  
-				imageData[i] = (imageData[i]<opacity)?imageData[i]:opacity;
-			}
-			image.data = imageData;
-			ctx.putImageData(image, 0, 0);
-			watermark.onload = null;
-			watermark.src = "";
-			watermark.src = canvas.toDataURL();
-			// assign img attributes to the transparent watermark
-			// because browsers recalculation doesn't work as fast as needed
-			watermark.width = w;
-			watermark.height = h;
-			applyWatermark(50,50);
-}
-
 function applyWatermark(x,y){
 	console.log("applyWatermark");
 		
