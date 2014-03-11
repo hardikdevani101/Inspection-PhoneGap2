@@ -23,7 +23,7 @@
 	<div class="page" id="home">
 		<span>
 		<h1>VIS-Inspection Phonegap</h1>
-		</span> <br /> <br /> <input class="menuButton" id="loginBtn"
+		</span><br /> <input class="menuButton" id="loginBtn"
 			onclick="onLogin()" type="button" value="Login"><br> <input
 			class="menuButton" id="startNewInspectionBtn"
 			onclick="onStartNewInspection()" type="button"
@@ -120,13 +120,11 @@
 	</div>
   </tr>
 </table>
-
-		<br>
 		<div style="position: relative;">
-			<input type="button" value="Crop" onClick="reonCrop()"/>
-			<input type="button" value="Save" />
+			
+			<input type="button" value="Save" onClick="saveImage()" />
 			<input type="button" value="Back" onClick="onCrop()" />
-			<!--<input type="button" value="Apply Watermark" onClick="reApplyatterMark()" />-->
+			<input type="button" value="Discard" />
 		</div>
 		<div id="waterDivContainer">
 			<img id="waterImage" name="waterImage"
