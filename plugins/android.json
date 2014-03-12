@@ -8,7 +8,8 @@
             "/*": {
                 "<feature name=\"Camera\"><param name=\"android-package\" value=\"org.apache.cordova.camera.CameraLauncher\" /></feature>": 1,
                 "<feature name=\"File\"><param name=\"android-package\" value=\"org.apache.cordova.file.FileUtils\" /><param name=\"onload\" value=\"true\" /></feature>": 1,
-                "<feature name=\"FileTransfer\"><param name=\"android-package\" value=\"org.apache.cordova.filetransfer.FileTransfer\" /></feature>": 1
+                "<feature name=\"FileTransfer\"><param name=\"android-package\" value=\"org.apache.cordova.filetransfer.FileTransfer\" /></feature>": 1,
+                "<feature name=\"Notification\"><param name=\"android-package\" value=\"org.apache.cordova.dialogs.Notification\" /></feature>": 1
             }
         },
         "AndroidManifest.xml": {
@@ -22,6 +23,9 @@
             "PACKAGE_NAME": "com.logilite.photopro"
         },
         "org.apache.cordova.file-transfer": {
+            "PACKAGE_NAME": "com.logilite.photopro"
+        },
+        "org.apache.cordova.dialogs": {
             "PACKAGE_NAME": "com.logilite.photopro"
         }
     },

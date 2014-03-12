@@ -87,8 +87,7 @@ function onInspSet(name) {
 
 function onCrop() {
 	loadPage('cropView');
-	canvas = document.createElement('canvas');
-    
+	
 	$('#cropImage').html(['<img src="', document.getElementById('smallImage').src, '" width="80%" height="80%" />'].join(''));
 	crop_img = $('#cropImage img')[0];
 	
@@ -129,7 +128,10 @@ function onCropSaved() {
 
 	canvas.width = Math.round(rx * finalSelection.w);
 	canvas.height = Math.round(ry * finalSelection.h);
-
+	
+	if(canvas.width<1024 && canvas.height<768)
+	navigator.notification.alert('Select Bigger Size!',onCrop,'Crop Not Correct','Ok');
+	
 	var x1 = Math.round(rx * finalSelection.x);
 	var y1 = Math.round(ry * finalSelection.y);
 
@@ -148,12 +150,6 @@ function onCropSaved() {
 	window.setTimeout(function(){
 	reApplyatterMark();
 	},300);
-}
-
-function reonCrop(){
-	$('#smallImage').attr('src',document.getElementById('waterImage').src);
-	loadPage("imagePrev");
-	onCrop();
 }
 
 function onCropSkip(){
