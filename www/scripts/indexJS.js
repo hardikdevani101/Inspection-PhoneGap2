@@ -17,9 +17,10 @@ var gcanvas;
 var gctx;
 var origImg;
 //var waterImg;
-var wmCanvasDiv;
 var scW;
 var scH;
+var fileName;
+var imageURI;
 
 
 function onLoad() {
@@ -34,17 +35,17 @@ function onLoad() {
 }
 
 function onPhotoDataSuccess(imageData) {
-	$('#smallImage').attr('src',"data:image/jpeg;base64," + imageData);
+	$('#smallImage').attr('src',"data:image/png;base64," + imageData);
 	loadPage("imagePrev");
 	onCrop();
 }
 
 function onDeviceReady() {
+	
 	pictureSource = navigator.camera.PictureSourceType;
 	destinationType = navigator.camera.DestinationType;
 	loadPage("home");
 }
-
 function captureI() {
 	navigator.camera.getPicture(onPhotoDataSuccess, onFail, {
 		quality : 90,
@@ -97,7 +98,8 @@ function onCrop() {
 						 bgColor: 'black',
 						 bgOpacity: .3,
 						 onSelect: cropAreaChanged,
-						 onChange: cropAreaChanged
+						 onChange: cropAreaChanged,
+						 aspectRatio: 4 / 3
 					},function(){
 					      // Use the API to get the real image size
 					      var bounds = this.getBounds();
@@ -172,31 +174,24 @@ function onWatermark(){
 }
 function initCanvas(){
 	
-			wmCanvasDiv = document.getElementById('wmCanvasContainer');
-			gcanvas =  document.getElementById('WatermarkCanvas'); //document.createElement('canvas');
+			gcanvas =   document.getElementById('WatermarkCanvas'); //document.createElement('canvas');
 			if (!gcanvas) {
 			  alert('Error: I cannot create a new canvas element!');
 			  return;
 			}
-
-			//gcanvas.style.cssText = " width:80%; height:80%";
 			gctx = gcanvas.getContext("2d");
 			
 }
 function applyWatermark(){
 	console.log("applyWatermark");
 		
-			/*gcanvas.width = origImg.width || origImg.offsetWidth;
-			gcanvas.height = origImg.height || origImg.offsetHeight;*/
+			/*origImg.width = window.innerWidth*0.8;
+			origImg.height = window.innerHeight*0.8;
+			*/
 			gcanvas.width = origImg.width || origImg.offsetWidth;
 			gcanvas.height = origImg.height || origImg.offsetHeight;
+			
 			gctx.drawImage(origImg, 0, 0);
-			
-			/*console.log("Win W"+window.innerWidth
-						+"Win H"+window.innerHeight);
-			console.log("gcan W"+gcanvas.width
-						+"gcan H"+gcanvas.height);*/
-			
 			x=(gcanvas.width-20)-(watermark.width);
 			y=(gcanvas.height-20)-(watermark.height);
 			gctx.drawImage(watermark, x, y);
@@ -206,5 +201,38 @@ function reApplyatterMark(){
 
 	applyWatermark();
 }
+function saveImage(){
+	
+	var date = new Date;
+	var sec = date.getSeconds();
+	var mi = date.getMinutes();
+	var hh = date.getHours();
 
+	var yy = date.getFullYear();
+	var mm = date.getMonth();
+	var dd = date.getDate();
+	fileName="vis_inspection_"+mm+dd+yy+"_"+hh+mi+sec+".png";
+	
+	var img64 = gcanvas.toDataURL("image/png").replace(/data:image\/png;base64,/,''); 
+	var img=Base64Binary.decodeArrayBuffer(img64);
+	imageURI=img;
+	
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFileSystem,function(error){ console.log("request FSError = "+error); });
+}
+
+function gotFileEntry(fileEntry) {
+	fileEntry.createWriter(gotFileWriter, function(error){ console.log("file entry FSError = "+error.code); });
+}
+function gotFileWriter(writer){
+	 writer.write(imageURI);	
+}
+function gotFileSystem(fileSystem) {
+	fileSystem.root.getDirectory("VIS_Inspection", {create : true},datafile, dirFail);
+}
+function datafile(directory){
+	directory.getFile(fileName, {create: true, exclusive: false}, gotFileEntry,function(error){ console.log("File Create FSError = "+error.code); });
+}
+function dirFail(error) {
+	console.log("DIRError = "+error);
+}
 
