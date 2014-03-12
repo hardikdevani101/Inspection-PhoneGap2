@@ -145,11 +145,11 @@ function onCropSaved() {
 	origImg.src=canvas.toDataURL();
 	
 	loadPage("waterImgPrev");
-	onWatermark();
+	
 	//Using timer to reApplyWaterMark
 	window.setTimeout(function(){
 	reApplyatterMark();
-	},300);
+	},50);
 }
 
 function onCropSkip(){
@@ -157,44 +157,36 @@ function onCropSkip(){
 	
 	origImg.src=document.getElementById('waterImage').src;
 	loadPage("waterImgPrev");
-	onWatermark();
 	//Using timer to reApplyWaterMark
 	window.setTimeout(function(){
 	reApplyatterMark();
-	},300);
+	},50);
 }
 //For Water Mark
-function onWatermark(){
+function applyWatermark(){
 	
-	initCanvas();	
-}
-function initCanvas(){
-	
-			gcanvas =   document.getElementById('WatermarkCanvas'); //document.createElement('canvas');
+			console.log("applyWatermark");
+			gcanvas =  document.createElement('canvas');
 			if (!gcanvas) {
 			  alert('Error: I cannot create a new canvas element!');
 			  return;
 			}
 			gctx = gcanvas.getContext("2d");
 			
-}
-function applyWatermark(){
-	console.log("applyWatermark");
-		
-			/*origImg.width = window.innerWidth*0.8;
-			origImg.height = window.innerHeight*0.8;
-			*/
-			gcanvas.width = origImg.width || origImg.offsetWidth;
-			gcanvas.height = origImg.height || origImg.offsetHeight;
+			if(origImg.width>1024 && origImg.height>768){
+				gcanvas.width = 1024;
+				gcanvas.height = 768;
+			}
 			
-			gctx.drawImage(origImg, 0, 0);
+			gctx.drawImage(origImg, 0, 0,origImg.width,origImg.height,0,0,1024,768);
 			x=(gcanvas.width-20)-(watermark.width);
 			y=(gcanvas.height-20)-(watermark.height);
 			gctx.drawImage(watermark, x, y);
+			$('#waterImage').attr('src',gcanvas.toDataURL());
+			
 			
 }
 function reApplyatterMark(){
-
 	applyWatermark();
 }
 function saveImage(){

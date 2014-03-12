@@ -104,32 +104,23 @@
 		</center>
 	</div>
 	
-	<div id="waterImgPrev" class="page">
+	<div id="waterImgPrev" class="page" >
 		<center>
 		<div>
 			<Span > Water Mark </Span> 
 		</div>
-		
-<table>
-  <tr>
-    <td>
-	<div id="wmCanvasContainer" style="position: relative;" >
-		<canvas id="WatermarkCanvas"  width="80%" height="80%"></canvas>
-	</div>
-	</td>
-  </tr>
-</table>
+		<div id="waterDivContainer">
+			<img id="waterImage" name="waterImage"
+				style="width: 80%; height: 80%;"  />
+			</div>
+		</center>
 		<div style="position: relative;">
 			
 			<input type="button" value="Save" onClick="saveImage()" />
 			<input type="button" value="Back" onClick="onCrop()" />
 			<input type="button" value="Discard" />
 		</div>
-		<div id="waterDivContainer">
-			<img id="waterImage" name="waterImage"
-				style="width: 80%; height: 80%; display: none"  />
-			</div>
-		</center>
+		
 	
 	
 </body>
