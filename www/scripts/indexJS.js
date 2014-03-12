@@ -98,7 +98,8 @@ function onCrop() {
 						 bgOpacity: .3,
 						 onSelect: cropAreaChanged,
 						 onChange: cropAreaChanged,
-						 aspectRatio: 4 / 3
+						 aspectRatio: 4 / 3,
+						 setSelect: [0,0,256,192]
 					},function(){
 					      // Use the API to get the real image size
 					      var bounds = this.getBounds();
