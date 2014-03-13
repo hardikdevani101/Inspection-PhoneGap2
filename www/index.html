@@ -24,8 +24,8 @@
 	<div class="page" id="home">
 		<span>
 		<h1>VIS-Inspection Phonegap</h1>
-		</span><input class="menuButton" id="loginBtn"
-			onclick="onLogin()" type="button" value="Login"><br> <input
+		</span><input class="menuButton" id="loginpageBtn"
+			onclick="onLoginpage()" type="button" value="Login"><br> <input
 			class="menuButton" id="startNewInspectionBtn"
 			onclick="onStartNewInspection()" type="button"
 			value="Start New Inspection"><br> <input
@@ -34,6 +34,42 @@
 			value="Resume Inspection"><br> <input class="menuButton"
 			id="setupBtn" onClick="onSetup()" type="button" value="Setup"><br>
 	</div>
+	
+	<div class="page" id="login">
+		<span>
+		<h2>VIS Login</h2>
+		</span>
+		Username : <input id="txt_user" type="text" /><br><br> 
+		Password : <input id="txt_password" type="text" /><br><br>
+		<input id="loginbtn" onClick="onLogin()" type="button" value="Login">&nbsp;&nbsp;
+		<input id="settingpagebtn" onClick="onSettingPage()" type="button" value="Setting">
+	</div>
+	
+	<div class="page" id="setting">
+		<span>
+		<h2>VIS Login</h2>
+		</span>
+		<center>
+		<table border="0px">
+		<tr>
+		<td>Url : </td><td><input id="txt_url" type="text" /></td></tr>
+		<tr>
+		<td>Language : </td><td><input id="txt_lang" type="text" /></td></tr>
+		<tr>
+		<td>Client : </td><td><input id="txt_client" type="text" /></td></tr>
+		<tr>
+		<td>Role : </td><td><input id="txt_role" type="text" /></td></tr>
+		<tr>
+		<td>Warehouse : </td><td><input id="txt_warehouse" type="text" /></td></tr>
+		<tr>
+		<td>Organizer : </td><td><input id="txt_organizer" type="text" /></td></tr>
+		</table>
+		<input id="btn_update" onClick="onSettingUpdate()" type="button" value="Update">
+		<input id="btn_cancel" onClick="onLoginpage()" type="button" value="Cancel">
+		</center>
+	</div>
+	
+	
 
 	<div class="page" id="startNewInsp">
 		<span> Line No: <input type="text" id="lineNoTxt" />

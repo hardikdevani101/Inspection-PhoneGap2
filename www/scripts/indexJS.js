@@ -21,6 +21,8 @@ var scW;
 var scH;
 var fileName;
 var imageURI;
+var db;
+var vis_url,vis_lang,vis_client_id,vis_role,vis_whouse_id,vis_ord_id;
 
 
 function onLoad() {
@@ -34,6 +36,44 @@ function onLoad() {
 	watermark.src = "img/Velocity_Watermark.png";
 }
 
+
+function onLoginpage(){
+	loadPage("login");
+}
+function onLogin(){
+	
+}
+function onSettingPage(){
+	console.log("url="+vis_url+"\nlang="+vis_lang+"\nclient="+vis_client_id+"\nrole="+vis_role+"\nwarehouse="+vis_whouse_id+"\norg="+vis_ord_id);
+	loadPage("setting");
+	setSettingpage();
+}
+function setSettingpage(){
+	document.getElementById("txt_url").value=vis_url;
+	document.getElementById("txt_lang").value=vis_lang;
+	document.getElementById("txt_client").value=vis_client_id;
+	document.getElementById("txt_role").value=vis_role;
+	document.getElementById("txt_warehouse").value=vis_whouse_id;
+	document.getElementById("txt_organizer").value=vis_ord_id;
+}
+function onSettingUpdate(){
+	vis_url=document.getElementById("txt_url").value;
+	vis_lang=document.getElementById("txt_lang").value;
+	vis_client_id=document.getElementById("txt_client").value;
+	vis_role=document.getElementById("txt_role").value;
+	vis_whouse_id=document.getElementById("txt_warehouse").value;
+	vis_ord_id=document.getElementById("txt_organizer").value;
+	console.log("url="+vis_url+"\nlang="+vis_lang+"\nclient="+vis_client_id+"\nrole="+vis_role+"\nwarehouse="+vis_whouse_id+"\norg="+vis_ord_id);
+	if(vis_url=="" && vis_lang=="" && vis_client_id=="" && vis_role=="" && vis_whouse_id=="" && vis_ord_id=="")
+	{
+		navigator.notification.alert('No Any Field Should Blank!',onSettingPage,'Invalid Value','Ok');
+		successCB();
+	}else{
+		db.transaction(updateSettingDb, errorCB);
+		onLoginpage();
+	}
+	
+}
 function onPhotoDataSuccess(imageData) {
 	$('#smallImage').attr('src',"data:image/png;base64," + imageData);
 	loadPage("imagePrev");
@@ -41,11 +81,46 @@ function onPhotoDataSuccess(imageData) {
 }
 
 function onDeviceReady() {
-	
+	db = window.openDatabase("vis_inspection", "1.0", "vis_inspection", 100000);
+   	db.transaction(populateDB, errorCB, successCB);
 	pictureSource = navigator.camera.PictureSourceType;
 	destinationType = navigator.camera.DestinationType;
 	loadPage("home");
 }
+//db process
+function errorCB(err) {
+    //console.log("Error processing SQL: "+err.code);
+    db.transaction(queryDB, errorCB);
+}
+function successCB() {
+    db.transaction(queryDB, errorCB);
+}
+function updateSettingDb(tx) {
+	tx.executeSql('UPDATE vis_setting SET vis_url = "'+vis_url+'" ,vis_lang ="'+vis_lang +'",vis_client_id ="'+vis_client_id +'",vis_role ="'+vis_role +'",vis_whouse_id ="'+ vis_whouse_id+'",vis_ord_id ="'+vis_ord_id +'"');
+	successCB();
+}
+function queryDB(tx) {
+    tx.executeSql('SELECT * FROM vis_setting', [], querySuccess,function(err){console.log("Error SQL: "+err.code);} );
+	
+}
+function querySuccess(tx, results) {
+    var len = results.rows.length;
+    console.log("DEMO table: " + len + " rows found.");
+    for (var i=0; i<len; i++){
+       vis_url=results.rows.item(i).vis_url;
+	   vis_role=results.rows.item(i).vis_role;
+	   vis_lang=results.rows.item(i).vis_lang;
+	   vis_client_id=results.rows.item(i).vis_client_id;
+	   vis_whouse_id=results.rows.item(i).vis_whouse_id;
+	   vis_ord_id=results.rows.item(i).vis_ord_id;
+    }
+}
+function populateDB(tx) {
+  /*  tx.executeSql('DROP TABLE vis_setting');*/
+    tx.executeSql('CREATE TABLE vis_setting(vis_url,vis_lang,vis_client_id,vis_role,vis_whouse_id,vis_ord_id)');
+    tx.executeSql('INSERT INTO vis_setting (vis_url,vis_lang,vis_client_id,vis_role,vis_whouse_id,vis_ord_id) VALUES ("uri","lang","clientid", "role","whouse","org")');
+}
+
 function captureI() {
 	navigator.camera.getPicture(onPhotoDataSuccess, onFail, {
 		quality : 90,
