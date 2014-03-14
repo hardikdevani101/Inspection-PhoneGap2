@@ -4,11 +4,14 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF8">
 <title>VIS-Inspection Phonegap</title>
 <script src="cordova.js"></script>
+<script src="scripts/fileFunction.js"></script>
+<script src="scripts/dbFunction.js"></script>
+<script src="scripts/webserviceFunctions.js"></script>
 <script src="scripts/indexJS.js"></script>
+<script src="scripts/validationFunctions.js"></script>
 <script src="scripts/jquery.min.js"></script>
 <script src="scripts/jquery.Jcrop.js"></script>
 <script src="scripts/base64-binary.js"></script>
-
 <LINK href="styles/indexStyle.css" rel="stylesheet" type="text/css">
 <LINK href="styles/jquery.Jcrop.css" rel="stylesheet" type="text/css">
 <style type="text/css"><!--
@@ -26,17 +29,17 @@
 		<span>
 		<h2>VIS Login</h2>
 		</span>
-		Username : <input id="txt_user" type="text" value="webservice" /><br><br> 
-		Password : <input id="txt_password" type="text" value="webservice" /><br><br>
-		<input id="loginbtn" onClick="onLogin()" type="button" value="Login">&nbsp;&nbsp;
-		<input id="settingpagebtn" onClick="onSettingPage()" type="button" value="Setting">&nbsp;&nbsp;
-		<input id="exitbtn" onClick="" type="button" value="Exit"><br><br>
+		Username : <input id="txt_user" type="text" value="webservice"/><br><br> 
+		Password : <input id="txt_password" type="text" value="webservice"/><br><br>
+		<input id="loginbtn" class="login_btns" onClick="validateLogin()" type="button" value="Login">&nbsp;&nbsp;
+		<input id="settingpagebtn" class="login_btns" onClick="onSettingPage()" type="button" value="Setting">&nbsp;&nbsp;
+		<input id="exitbtn" class="login_btns" onClick="onExit()" type="button" value="Exit"><br><br>
 		<div id="login_error"></div>
 	</div>
 	
 	<div class="page" id="home">
 		<span>
-		<div id="user_lbl"></div><br>
+		<div id="user_lbl"></div>
 		<h1>VIS-Inspection Phonegap</h1>
 		</span><input
 			class="menuButton" id="startNewInspectionBtn"
@@ -45,7 +48,7 @@
 			class="menuButton" id="resumeInspectionBtn"
 			onclick="onResumeInspection()" type="button"
 			value="Resume Inspection"><br> <input class="menuButton"
-			id="setupBtn" onClick="onSetup()" type="button" value="Setup"><br>
+			id="exitBtn" onClick="onExit()" type="button" value="Exit"><br>
 	</div>
 	
 	
@@ -69,8 +72,9 @@
 		<tr>
 		<td>Organizer : </td><td><input id="txt_organizer" type="text" /></td></tr>
 		</table>
-		<input id="btn_update" onClick="onSettingUpdate()" type="button" value="Save">
+		<input id="btn_update" onClick="validationSetting()" type="button" value="Save">
 		<input id="btn_cancel" onClick="onLoginpage()" type="button" value="Cancel">
+		<div id="setting_error"></div>
 		</center>
 	</div>
 	
@@ -80,27 +84,26 @@
 		<span> Line No: <input type="text" id="lineNoTxt" />
 		</span>
 		<hr>
-		<div style="height: 50%; overflow: auto; text-align: center;">
+		<div style="height: auto;width:100%;text-align: center; padding:0px 5%;">
 			<center>
 				<div class="divButton" onClick="captureI()">Top</div>
 				<div class="divButton" onClick="captureI()">Bottom</div>
 				<div class="divButton" onClick="captureI()">Contacts</div>
 				<div class="divButton" onClick="captureI()">Box</div>
-				<div class="divButton" onClick="captureI()">Data
-					Sheet</div>
+				<div class="divButton" onClick="captureI()">Data Sheet</div>
 				<div class="divButton" onClick="captureI()">XRF</div>
 				<div class="divButton" onClick="captureI()">X-Ray</div>
-				<div class="divButton" onClick="onInspSet('Not Sent')">Not
-					Sent</div>
+				<div class="divButton" onClick="onInspSet('Not Sent')">Not Sent</div>
 			</center>
 		</div>
-
-		<div
-			style="height: 20%; width: 100%; bottom: 0; left: 0; position: absolute;">
+		
+		<div style="height: 17%; width:95%; bottom: 0; left: 0; float:left; position:absolute;padding:0% 2%;">	
 			<hr>
-			<div class="divButton">Discard</div>
-			<div class="divButton">Close</div>
-			<div class="divButton">Finish</div>
+			<center>
+			<div class="divMenuButton">Discard</div>
+			<div class="divMenuButton">Close</div>
+			<div class="divMenuButton">Finish</div>
+			</center>
 		</div>
 	</div>
 
@@ -132,15 +135,15 @@
 	<div id="cropView" class="page" >
 		<center>
 		<div>
-			<Span style="margin:0px; padding:0px;" > Crop Image </Span> 
+			<Span style="margin:0px; padding:0px;" > <h3> Crop Image </h3></Span> 
 		</div>
-		<div id="cropImage">
+		<div id="cropImage" style="width:80%; height:90%; float:left;">
 			
 		</div>
-		<div>
-			<input type="button" value="Crop" onClick="onCropSaved()"/>
-			<input type="button" value="Skip" onClick="onCropSkip()" />
-			<input type="button" value="Discard" />
+		<div style="width:15%; height:100%;float:left; padding:0%; margin:0%;">
+			<input class="crop_btn" type="button" value="Crop" onClick="onCropSaved()"/>
+			<input class="crop_btn" type="button" value="Skip" onClick="onCropSkip()" />
+			<input class="crop_btn" type="button" value="Discard" />
 		</div>
 		</center>
 	</div>
@@ -148,20 +151,20 @@
 	<div id="waterImgPrev" class="page" >
 		<center>
 		<div>
-			<Span > Water Mark </Span> 
+			<Span > <h3>Water Mark</h3> </Span> 
 		</div>
-		<div id="waterDivContainer">
+		<div id="waterDivContainer" style="width:80%; height:90%; float:left;">
 			<img id="waterImage" name="waterImage"
 				style="width: 80%; height: 80%;"  />
 			</div>
-		</center>
-		<div style="position: relative;">
-			
-			<input type="button" value="Save" onClick="saveImage()" />
-			<input type="button" value="Back" onClick="onCrop()" />
-			<input type="button" value="Discard" />
-		</div>
 		
+		<div style="width:15%; height:100%;float:left; padding:0%; margin:0%;">
+			
+			<input class="crop_btn" type="button" value="Save" onClick="saveImage()" />
+			<input class="crop_btn" type="button" value="Back" onClick="onCrop()" />
+			<input class="crop_btn" type="button" value="Discard" />
+		</div>
+		</center>
 	
 	
 </body>
