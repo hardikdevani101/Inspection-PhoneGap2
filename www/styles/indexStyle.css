@@ -44,6 +44,16 @@
 	font-weight:bold;
 	cursor: pointer;
 }
+.gallary_menubtn{
+float: right; 
+border: 1px solid black; 
+border-radius:3px; 
+padding: 2px; 
+margin-left:10px; 
+height:20px;
+width:70px;
+background-color:#3399CC;
+}
 .crop_btn{
 border:1px solid #000000;
 border-radius:3px;

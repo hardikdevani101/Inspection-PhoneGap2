@@ -86,13 +86,13 @@
 		<hr>
 		<div style="height: auto;width:100%;text-align: center; padding:0px 5%;">
 			<center>
-				<div class="divButton" onClick="captureI()">Top</div>
-				<div class="divButton" onClick="captureI()">Bottom</div>
-				<div class="divButton" onClick="captureI()">Contacts</div>
-				<div class="divButton" onClick="captureI()">Box</div>
-				<div class="divButton" onClick="captureI()">Data Sheet</div>
-				<div class="divButton" onClick="captureI()">XRF</div>
-				<div class="divButton" onClick="captureI()">X-Ray</div>
+				<div class="divButton" onClick="onInspSet('Top')">Top</div>
+				<div class="divButton" onClick="onInspSet('Bottom')">Bottom</div>
+				<div class="divButton" onClick="onInspSet('Contacts')">Contacts</div>
+				<div class="divButton" onClick="onInspSet('Box')">Box</div>
+				<div class="divButton" onClick="onInspSet('Data Sheet')">Data Sheet</div>
+				<div class="divButton" onClick="onInspSet('XRF')">XRF</div>
+				<div class="divButton" onClick="onInspSet('X-Ray')">X-Ray</div>
 				<div class="divButton" onClick="onInspSet('Not Sent')">Not Sent</div>
 			</center>
 		</div>
@@ -109,14 +109,18 @@
 
 	<div id="gallery" class="page">
 		<div>
-			<Span id="gallery_head" style="float: left;"> </Span> <Span
-				style="float: right; border: 1px solid black; padding: 2px; margin-left: 2px;">Discard</Span>
-			<Span
-				style="float: right; border: 1px solid black; padding: 2px; margin-left: 2px;" onClick="captureI()">Acquire</Span>
+			<Span id="gallery_head" style="float: left;"> </Span>
+			<Span class="gallary_menubtn" onClick="onStartNewInspection()">Discard</Span>
+			<Span class="gallary_menubtn" onClick="captureI()">Acquire</Span>
 		</div>
 		<br>
-		<div>
+		<div style="padding:2px; margin:0px;">
 			<hr />
+		</div>
+		<div style="padding:0px; margin:0px;">
+			<img src="" height="25%" width="30%" />
+			<img src="" height="25%" width="30%" />
+			<img src="" height="25%" width="30%" />
 		</div>
 	</div>
 	

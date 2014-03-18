@@ -18,7 +18,7 @@ function settingSelectSuccess(tx, results) {
     var len = results.rows.length;
 	if(len<1)
 	{
-		tx.executeSql('INSERT INTO vis_setting (vis_url,vis_lang,vis_client_id,vis_role,vis_whouse_id,vis_ord_id) VALUES ("uri","lang","clientid", "role","whouse","org")');
+		tx.executeSql('INSERT INTO vis_setting (vis_url,vis_lang,vis_client_id,vis_role,vis_whouse_id,vis_ord_id) VALUES ("http://192.168.0.121:8088","en_US","1000000", "1000000","0","0")');
 		loadSetting();
 	}else
 	{
