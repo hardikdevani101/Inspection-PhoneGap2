@@ -34,3 +34,39 @@ function datafile(directory){
 function dirFail(error) {
 	console.log("DIRError = "+error);
 }
+
+
+
+function readImages(){
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotreadFileSystem,function(error){ console.log("request FSError = "+error); });
+}
+function gotreadFileSystem(fileSystem) {
+	fileSystem.root.getDirectory("VIS_Inspection", {create : true},readdatafile, dirFail);
+}
+function readdatafile(directory){
+	var directoryReader = directory.createReader();
+	console.log("Directory ====== ="+directory.fullPath);
+	directoryReader.readEntries(readSuccess,function(error){ console.log("Error on read = "+error); });
+}
+function readSuccess(entries){
+	var i;
+	var ft = new FileTransfer();
+	var options = new FileUploadOptions();
+		options.fileKey="file";
+		options.mimeType="image/png";
+    for (i=0; i<entries.length; i++) {
+		options.fileName=entries[i].name;
+		ft.upload(entries[i].toURL(), encodeURI(vis_url+"/VISService/fileUpload"), win, fail, options);
+        console.log("images ="+entries[i].toURI());
+    }
+}
+function win(r) {
+            console.log("Code = " + r.responseCode);
+            console.log("Response = " + r.response);
+            console.log("Sent = " + r.bytesSent);
+}
+
+function fail(error) {
+   console.log("Sent = " + error.code);
+}
+		

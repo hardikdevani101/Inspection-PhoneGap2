@@ -20,6 +20,9 @@ function onLoad() {
 function onExit(){
 	loadPage("exit");
 }
+function picupload(){
+	readImages();
+}
 function onDeviceReady() {
 	db = window.openDatabase("vis_inspection", "1.0", "vis_inspection", 100000);
    	db.transaction(settingDbSetup, errorCB, loadSetting);
