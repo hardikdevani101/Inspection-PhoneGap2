@@ -3,7 +3,7 @@ function onLogin(){
 	$.ajax({type: "POST",
 			url: vis_url+"/VISService/services/"+"ModelADService",
 			dataType: "xml",
-			contentType: 'text/xml; charset=utf-8',
+			contentType: 'text/xml; charset=\"utf-8\"',
 			data: '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
 				   +'<soapenv:Header/>'
 				   +'<soapenv:Body>'
@@ -53,6 +53,6 @@ function onLogin(){
 
                 function processError(data, status, req) {
 					loadPage("login");
-					document.getElementById("login_error").innerHTML="Something Going Wrong !!!";
+					document.getElementById("login_error").innerHTML="Something Going Wrong!!!";
                 }  
 }

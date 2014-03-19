@@ -23,6 +23,9 @@ function gotFileEntry(fileEntry) {
 	fileEntry.createWriter(gotFileWriter, function(error){ console.log("file entry FSError = "+error.code); });
 }
 function gotFileWriter(writer){
+	 writer.onwrite = function(evt) {
+            onStartNewInspection();
+        };
 	 writer.write(imageURI);	
 }
 function gotFileSystem(fileSystem) {
