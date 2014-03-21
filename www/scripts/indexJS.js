@@ -9,6 +9,12 @@ var opacity = (255/(100/50));
 var gctx;
 var origImg;
 var username;
+var userid;
+var INSPECTOR_ID;
+var M_InOutLine_ID=0;
+var M_line_name;
+var X_INSTRUCTIONLINE_ID;
+var X_instruction_name;
 
 function onLoad() {
 	document.addEventListener("deviceready", onDeviceReady, false);
@@ -96,11 +102,19 @@ function onBackButton() {
 
 function onStartNewInspection() {
 	loadPage("startNewInsp");
+	setlinedrop();
 }
 
-function onInspSet(name) {
+function onInspSet(nid,iname) {
 	loadPage('gallery');
-	document.getElementById("gallery_head").innerHTML = name;
+	X_INSTRUCTIONLINE_ID=nid;
+	X_instruction_name=iname;
+	document.getElementById("gallery_head").innerHTML = M_line_name+"("+X_instruction_name+")";
+}
+
+function backtogallary(){
+	loadPage('gallery');
+	document.getElementById("gallery_head").innerHTML = M_line_name+"("+X_instruction_name+")";
 }
 
 function onCrop() {

@@ -29,8 +29,8 @@
 		<span>
 		<h2>VIS Login</h2>
 		</span>
-		Username : <input id="txt_user" type="text" value="webservice"/><br><br> 
-		Password : <input id="txt_password" type="text" value="webservice"/><br><br>
+		Username : <input id="txt_user" type="text" value="jjowers"/><br><br> 
+		Password : <input id="txt_password" type="password" value="password"/><br><br>
 		<input id="loginbtn" class="login_btns" onClick="validateLogin()" type="button" value="Login">&nbsp;&nbsp;
 		<input id="settingpagebtn" class="login_btns" onClick="onSettingPage()" type="button" value="Setting">&nbsp;&nbsp;
 		<input id="exitbtn" class="login_btns" onClick="onExit()" type="button" value="Exit"><br><br>
@@ -81,27 +81,19 @@
 	
 
 	<div class="page" id="startNewInsp">
-		<span> Line No: <input type="text" id="lineNoTxt" />
+		<span> Line No: <!--<input type="text" id="lineNoTxt" />-->
+		<select id="linedrop"></select>
 		</span>
 		<hr>
-		<div style="height: auto;width:100%;text-align: center; padding:0px 5%;">
-			<center>
-				<div class="divButton" onClick="onInspSet('Top')">Top</div>
-				<div class="divButton" onClick="onInspSet('Bottom')">Bottom</div>
-				<div class="divButton" onClick="onInspSet('Contacts')">Contacts</div>
-				<div class="divButton" onClick="onInspSet('Box')">Box</div>
-				<div class="divButton" onClick="onInspSet('Data Sheet')">Data Sheet</div>
-				<div class="divButton" onClick="onInspSet('XRF')">XRF</div>
-				<div class="divButton" onClick="onInspSet('X-Ray')">X-Ray</div>
-				<div class="divButton" onClick="onInspSet('Not Sent')">Not Sent</div>
-			</center>
+		<div style="height: auto;width:100%;text-align: center; padding:0px 5%;" id="outNewIns">
+		
 		</div>
 		
 		<div style="height: 17%; width:95%; bottom: 0; left: 0; float:left; position:absolute;padding:0% 2%;">	
 			<hr>
 			<center>
 			<div class="divMenuButton">Discard</div>
-			<div class="divMenuButton">Close</div>
+			<div class="divMenuButton" onClick="onExit()">Close</div>
 			<div class="divMenuButton" onClick="picupload()">Finish</div>
 			</center>
 		</div>
@@ -110,6 +102,7 @@
 	<div id="gallery" class="page">
 		<div>
 			<Span id="gallery_head" style="float: left;"> </Span>
+			<Span class="gallary_menubtn" onClick="onStartNewInspection()">Back</Span>
 			<Span class="gallary_menubtn" onClick="onStartNewInspection()">Discard</Span>
 			<Span class="gallary_menubtn" onClick="captureI()">Acquire</Span>
 		</div>

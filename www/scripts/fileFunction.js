@@ -24,7 +24,7 @@ function gotFileEntry(fileEntry) {
 }
 function gotFileWriter(writer){
 	 writer.onwrite = function(evt) {
-            onStartNewInspection();
+            backtogallary();
         };
 	 writer.write(imageURI);	
 }
