@@ -1,8 +1,9 @@
 var fileName;
 var imageURI;
 var gcanvas;
+var readEntries;
 function saveImage(){
-	
+	navigator.notification.activityStart("Please Wait", "Saving Image");
 	var date = new Date;
 	var sec = date.getSeconds();
 	var mi = date.getMinutes();
@@ -24,9 +25,11 @@ function gotFileEntry(fileEntry) {
 }
 function gotFileWriter(writer){
 	 writer.onwrite = function(evt) {
+		 	db.transaction(insertimage, errorCB);
             backtogallary();
+			readImages();
         };
-	 writer.write(imageURI);	
+	 writer.write(imageURI);
 }
 function gotFileSystem(fileSystem) {
 	fileSystem.root.getDirectory("VIS_Inspection", {create : true},datafile, dirFail);
@@ -52,16 +55,7 @@ function readdatafile(directory){
 	directoryReader.readEntries(readSuccess,function(error){ console.log("Error on read = "+error); });
 }
 function readSuccess(entries){
-	var i;
-	var ft = new FileTransfer();
-	var options = new FileUploadOptions();
-		options.fileKey="file";
-		options.mimeType="image/png";
-    for (i=0; i<entries.length; i++) {
-		options.fileName=entries[i].name;
-		ft.upload(entries[i].toURL(), encodeURI(vis_url+"/VISService/fileUpload"), win, fail, options);
-        console.log("images ="+entries[i].toURI());
-    }
+	readEntries=entries;
 }
 function win(r) {
             console.log("Code = " + r.responseCode);
@@ -70,6 +64,6 @@ function win(r) {
 }
 
 function fail(error) {
-   console.log("Sent = " + error.code);
+   console.log("Error = " + error.code);
 }
 		

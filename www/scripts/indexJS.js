@@ -23,17 +23,69 @@ function onLoad() {
 	origImg = new Image();
 	watermark.src = "img/Velocity_Watermark.png";
 }
-function onExit(){
-	loadPage("exit");
-}
-function picupload(){
-	readImages();
-}
+
 function onDeviceReady() {
 	db = window.openDatabase("vis_inspection", "1.0", "vis_inspection", 100000);
    	db.transaction(settingDbSetup, errorCB, loadSetting);
 	loadPage("login");
 }
+
+function onExit(){
+	loadPage("exit");
+}
+
+function picupload(){
+	readImages();
+	window.setTimeout(function(){
+		var i;
+		var ft = new FileTransfer();
+		var options = new FileUploadOptions();
+			options.fileKey="file";
+			options.mimeType="image/png";
+		for (i=0; i<readEntries.length; i++) {
+			options.fileName=readEntries[i].name;
+			ft.upload(readEntries[i].toURL(), encodeURI(vis_url+"/VISService/fileUpload"), win, fail, options);
+			console.log("images ="+readEntries[i].toURL());
+		}
+	},100);
+}
+
+function showPhotos(){
+	navigator.notification.activityStart("Please Wait", "loading Photos");
+	readImages();
+	db.transaction(loadimagelist, errorCB);
+	window.setTimeout(function(){
+		for (i=0; i<readEntries.length; i++) {
+			if(imagelistarray.indexOf(readEntries[i].name) > -1)
+			{
+				
+				readEntries[i].file(gotrFile,function(){});
+				function gotrFile(rfile){
+						readDataUrl(rfile);
+				}
+				
+				function readDataUrl(rfile) {
+					var reader = new FileReader();
+					reader.onloadend = function(evt) {
+						console.log(evt.target.result);
+						var imgelem = document.createElement("img");
+						imgelem.setAttribute("height", "25%");
+						imgelem.setAttribute("width", "30%");
+						imgelem.setAttribute("style", "margin:5px;");
+						imgelem.setAttribute("src",evt.target.result);
+						document.getElementById("imglist").appendChild(imgelem);
+					};
+					reader.readAsDataURL(rfile);
+				}
+				
+				console.log("images ="+imagelistarray[i]+"img="+readEntries[i].toURL());
+			}
+		}
+		navigator.notification.activityStop();
+	},300);
+	
+}
+
 function onLoginpage(){
 	loadPage("login");
 	document.getElementById("login_error").innerHTML="";
@@ -102,18 +154,22 @@ function onBackButton() {
 
 function onStartNewInspection() {
 	loadPage("startNewInsp");
+	navigator.notification.activityStart("Please Wait", "loading");
 	setlinedrop();
 }
 
 function onInspSet(nid,iname) {
 	loadPage('gallery');
+	showPhotos();
 	X_INSTRUCTIONLINE_ID=nid;
 	X_instruction_name=iname;
 	document.getElementById("gallery_head").innerHTML = M_line_name+"("+X_instruction_name+")";
+	
 }
 
 function backtogallary(){
 	loadPage('gallery');
+	showPhotos();
 	document.getElementById("gallery_head").innerHTML = M_line_name+"("+X_instruction_name+")";
 }
 
@@ -147,8 +203,8 @@ function onCrop() {
 }	
 
 function onCropSaved() {
+	navigator.notification.activityStart("Please Wait", "Croping");
 	canvas = document.createElement('canvas');
-	
 	var tempImage = new Image();
     tempImage.src = crop_img.src;
 	xsize = tempImage.width,
@@ -178,11 +234,11 @@ function onCropSaved() {
 	window.setTimeout(function(){
 	reApplyatterMark();
 	},50);
+	
 }
 
 function onCropSkip(){
 	$('#waterImage').attr('src',document.getElementById('smallImage').src);
-	
 	origImg.src=document.getElementById('waterImage').src;
 	loadPage("waterImgPrev");
 	//Using timer to reApplyWaterMark
@@ -193,6 +249,7 @@ function onCropSkip(){
 //For Water Mark
 function applyWatermark(){
 	
+			navigator.notification.activityStart("Please Wait", "Water Marking");
 			console.log("applyWatermark");
 			gcanvas =  document.createElement('canvas');
 			if (!gcanvas) {
@@ -210,6 +267,7 @@ function applyWatermark(){
 			y=(gcanvas.height-20)-(watermark.height);
 			gctx.drawImage(watermark, x, y);
 			$('#waterImage').attr('src',gcanvas.toDataURL());	
+			navigator.notification.activityStop();
 }
 function reApplyatterMark(){
 	applyWatermark();

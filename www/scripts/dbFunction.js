@@ -1,5 +1,6 @@
 //db process
 var db;
+var imagelistarray;
 var vis_url,vis_lang,vis_client_id,vis_role,vis_whouse_id,vis_org_id;
 function errorCB(err) {
     console.log("Error processing SQL: "+err.code);
@@ -34,4 +35,23 @@ function settingSelectSuccess(tx, results) {
 }
 function settingDbSetup(tx) {
     tx.executeSql('CREATE TABLE IF NOT EXISTS vis_setting(vis_url,vis_lang,vis_client_id,vis_role,vis_whouse_id,vis_ord_id)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS vis_gallery(mr_line,insp_line,image)');
+}
+
+
+
+function insertimage(tx){
+	tx.executeSql('INSERT INTO vis_gallery(mr_line,insp_line,image) VALUES ("'+M_InOutLine_ID+'","'+X_INSTRUCTIONLINE_ID+'","'+fileName+'")');
+}
+
+function loadimagelist(tx){
+	tx.executeSql('SELECT image FROM vis_gallery WHERE mr_line="'+M_InOutLine_ID+'" and insp_line="'+X_INSTRUCTIONLINE_ID+'"', [], loadimageSelectSuccess,function(err){console.log("Error SQL: "+err.code);} );
+}
+function loadimageSelectSuccess(tx, results){
+	imagelistarray=[];
+	//imagelistarray=results;
+	 for (var i=0; i<results.rows.length; i++){
+		 imagelistarray.push(results.rows.item(i).image);
+		   console.log("image name = "+results.rows.item(i).image);
+		}
 }

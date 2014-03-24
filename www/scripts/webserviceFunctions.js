@@ -1,5 +1,5 @@
 function onLogin(){
-
+	navigator.notification.activityStart("Please Wait", "logging");
 	$.ajax({type: "POST",
 			url: vis_url+"/VISService/services/"+"ModelADService",
 			dataType: "xml",
@@ -60,11 +60,13 @@ function onLogin(){
 							loadPage("home");
 							document.getElementById("user_lbl").innerHTML="Hello : "+username;
 							console.log("usernumber="+INSPECTOR_ID);
+							navigator.notification.activityStop();
 						}
 						else{
 							//navigator.notification.alert(req.responseText + " " + status);
 							loadPage("login");
 							document.getElementById("login_error").innerHTML="Not Valid User";
+							navigator.notification.activityStop();
 						}
 					}
 					
@@ -73,6 +75,7 @@ function onLogin(){
                 function processError(data, status, req) {
 					loadPage("login");
 					document.getElementById("login_error").innerHTML="Something Going Wrong!!!";
+					navigator.notification.activityStop();
                 }  
 }
 
@@ -248,4 +251,5 @@ function setNewInsp(){
 					loadPage("login");
 					document.getElementById("login_error").innerHTML="Something Going Wrong!!!";
                 }
+				navigator.notification.activityStop();
 }
