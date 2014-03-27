@@ -28,6 +28,9 @@ function gotFileWriter(writer){
 		 	db.transaction(insertimage, errorCB);
             backtogallary();
 			readImages();
+			window.setTimeout(function(){
+			readImg();
+			},100);
         };
 	 writer.write(imageURI);
 }
@@ -42,7 +45,7 @@ function dirFail(error) {
 }
 
 
-
+//Read All Images
 function readImages(){
 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotreadFileSystem,function(error){ console.log("request FSError = "+error); });
 }
@@ -66,4 +69,24 @@ function win(r) {
 function fail(error) {
    console.log("Error = " + error.code);
 }
-		
+
+
+//Single image Read
+function readImg(){
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotImgDirFileSystem,function(error){ console.log("request FSError = "+error.code); });
+}
+function gotImgDirFileSystem(DirSystem) {
+	DirSystem.root.getDirectory("VIS_Inspection", {create : true},gotImgFileSystem, function(error){ console.log(" FSError = "+error.code); });
+}
+function gotImgFileSystem(fileSystem) {
+	console.log("Get imag file system");
+	fileSystem.getFile(fileName,null,imgSuccess,function(error){ console.log(" FSError = "+error.code); });
+}
+function readImgfile(img){
+	img.file(imgSuccess,function(error){ console.log("Error on read = "+error.code); });
+}
+function imgSuccess(imgEntries){
+		singleImgUpload(imgEntries);
+}
+
+

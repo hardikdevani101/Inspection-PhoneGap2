@@ -59,7 +59,6 @@ function onLogin(){
 							INSPECTOR_ID=dval;
 							loadPage("home");
 							document.getElementById("user_lbl").innerHTML="Hello : "+username;
-							console.log("usernumber="+INSPECTOR_ID);
 							navigator.notification.activityStop();
 						}
 						else{
@@ -125,10 +124,6 @@ function setlinedrop(){
 							var select = document.getElementById("linedrop");
 							var xmlResponse =req.responseXML.documentElement;
 							var fullNodeList = xmlResponse.getElementsByTagName("DataRow");
-							/*var selectoption=document.createElement('option');
-							selectoption.text='Select';
-							selectoption.value='-1';
-							select.add(selectoption);*/
 							for (var i=0; i < fullNodeList.length; i++)
 							{
 								var dlab,dval;
@@ -207,7 +202,6 @@ function setNewInsp(){
                     error: processError
                 });
 				function processSuccess(data, status, req) {
-					console.log(req.responseText);
                     if (status == "success")
 					{		
 							var div = document.getElementById("outNewIns");
@@ -229,22 +223,75 @@ function setNewInsp(){
 								  		dval = eachnode.text;
 							  		}
 								}
-							  	/*eachnode.text = fullNodeList[i].childNodes[0].childNodes[0].textContent;
-							  	eachnode.value = fullNodeList[i].childNodes[0].attributes[0].value;*/
 							   	
 								tmpdiv.className = "divButton";
 								tmpdiv.innerHTML=dlab;
 								var clickstr="onInspSet('"+dval+"','"+dlab+"')";
-								console.log("clickstr"+clickstr);
-								//tmpdiv.onclick=clickstr;
 								tmpdiv.setAttribute('onclick',clickstr);
-								console.log("click"+tmpdiv.onclick);
-								console.log(dlab+" = "+dval);
 							  	div.appendChild(tmpdiv);
 							}
 						
 					}
 					
+                }
+
+                function processError(data, status, req) {
+					loadPage("login");
+					document.getElementById("login_error").innerHTML="Something Going Wrong!!!";
+                }
+				navigator.notification.activityStop();
+}
+
+
+function imagetoserver(imginspline,imgname){
+	
+	$.ajax({type: "POST",
+			url: vis_url+"/VISService/services/"+"ModelADService",
+			dataType: "xml",
+			contentType: 'text/xml; charset=\"utf-8\"',
+			data: '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
+				   +'<soapenv:Header/>'
+				   +'<soapenv:Body>'
+					  +'<_0:runProcess>'
+					  	+'<_0:ModelRunProcessRequest>'
+							+'<_0:ModelRunProcess AD_Record_ID="2272195">'
+								   +'<_0:serviceType>AttachImage</_0:serviceType>'
+								   +'<_0:ParamValues>'
+									  +'<_0:field column="X_InstructionLine_ID">'
+										 +'<_0:val>'+imginspline+'</_0:val>'
+									  +'</_0:field>'
+									  +'<_0:field column="imgName">'
+										 +'<_0:val>'+imgname+'</_0:val>'
+									  +'</_0:field>'
+								   +'</_0:ParamValues>'
+								+'</_0:ModelRunProcess>'
+							+'<_0:ADLoginRequest>'
+							   +'<_0:user>'+document.getElementById("txt_user").value+'</_0:user>'
+							   +'<_0:pass>'+document.getElementById("txt_password").value+'</_0:pass>'
+							   +'<_0:lang>'+vis_lang+'</_0:lang>'
+							   +'<_0:ClientID>'+vis_client_id+'</_0:ClientID>'
+							   +'<_0:RoleID>'+vis_role+'</_0:RoleID>'
+							   +'<_0:OrgID>'+vis_org_id+'</_0:OrgID>'
+							   +'<_0:WarehouseID>'+vis_whouse_id+'</_0:WarehouseID>'
+							   +'<_0:stage>9</_0:stage>'
+							+'</_0:ADLoginRequest>'
+						 +'</_0:ModelRunProcessRequest>'
+					  +'</_0:runProcess>'
+				   +'</soapenv:Body>'
+				+'</soapenv:Envelope>',
+                    success: processSuccess,
+                    error: processError
+                });
+				function processSuccess(data, status, req) {
+					var xmlResponse =req.responseXML.documentElement;
+					var fullNodeList = xmlResponse.getElementsByTagName("Summary");
+					if(fullNodeList[0].textContent=='success')
+					{
+						console.log(fullNodeList[0].textContent);
+						
+					}else{
+						console.log(fullNodeList[0].textContent);
+					}
                 }
 
                 function processError(data, status, req) {

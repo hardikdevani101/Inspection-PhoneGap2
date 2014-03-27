@@ -36,6 +36,7 @@ function onExit(){
 
 function picupload(){
 	readImages();
+	db.transaction(uploadimagelist, errorCB);
 	window.setTimeout(function(){
 		var i;
 		var ft = new FileTransfer();
@@ -43,11 +44,47 @@ function picupload(){
 			options.fileKey="file";
 			options.mimeType="image/png";
 		for (i=0; i<readEntries.length; i++) {
-			options.fileName=readEntries[i].name;
-			ft.upload(readEntries[i].toURL(), encodeURI(vis_url+"/VISService/fileUpload"), win, fail, options);
-			console.log("images ="+readEntries[i].toURL());
+			for(var j=0;j<imagelistarray.rows.length; j++)
+			{	
+				if(imagelistarray.rows.item(j).image==readEntries[i].name && imagelistarray.rows.item(j).imgUpload=="F")
+				{
+					options.fileName=readEntries[i].name;
+					ft.upload(readEntries[i].toURL(), encodeURI(vis_url+"/VISService/fileUpload"), function(r){
+											db.transaction(chngealluploadstate, errorCB);
+											function chngealluploadstate(tx){
+												tx.executeSql('UPDATE vis_gallery SET imgUpload="T" WHERE image="'+readEntries[i].name+'"');
+												console.log("updated truuuu========");
+											}
+					}, uploadfail, options);
+					imagetoserver(imagelistarray.rows.item(j).insp_line,readEntries[i].name);
+					console.log("images ="+readEntries[i].toURL());
+				}else if(imagelistarray.rows.item(j).image==readEntries[i].name && imagelistarray.rows.item(j).imgUpload=="T"){
+					imagetoserver(imagelistarray.rows.item(j).insp_line,readEntries[i].name);
+				}
+			}
 		}
 	},100);
+}
+function singleImgUpload(imgnm){
+	console.log("img file system ======"+imgnm);
+	var ft = new FileTransfer();
+	var options = new FileUploadOptions();
+		options.fileKey="file";
+		options.mimeType="image/png";
+		options.fileName=fileName;
+		ft.upload(imgnm.toURL(), encodeURI(vis_url+"/VISService/fileUpload"), singleuploadwin, uploadfail, options);
+}
+
+function singleuploadwin(){
+	db.transaction(chngeuploadstate, errorCB);
+}
+
+function uploadwin(r) {
+            console.log("Sent = " + r.bytesSent);
+}
+
+function uploadfail(error) {
+   console.log("Error = " + error.code);
 }
 
 function showPhotos(){
@@ -58,7 +95,6 @@ function showPhotos(){
 		for (i=0; i<readEntries.length; i++) {
 			if(imagelistarray.indexOf(readEntries[i].name) > -1)
 			{
-				
 				readEntries[i].file(gotrFile,function(){});
 				function gotrFile(rfile){
 						readDataUrl(rfile);
@@ -67,11 +103,11 @@ function showPhotos(){
 				function readDataUrl(rfile) {
 					var reader = new FileReader();
 					reader.onloadend = function(evt) {
-						console.log(evt.target.result);
+						//console.log(evt.target.result);
 						var imgelem = document.createElement("img");
 						imgelem.setAttribute("height", "25%");
 						imgelem.setAttribute("width", "30%");
-						imgelem.setAttribute("style", "margin:5px;");
+						imgelem.setAttribute("style", "margin:3px 5px;");
 						imgelem.setAttribute("src",evt.target.result);
 						document.getElementById("imglist").appendChild(imgelem);
 					};
@@ -83,7 +119,6 @@ function showPhotos(){
 		}
 		navigator.notification.activityStop();
 	},300);
-	
 }
 
 function onLoginpage(){

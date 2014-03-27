@@ -35,7 +35,8 @@ function settingSelectSuccess(tx, results) {
 }
 function settingDbSetup(tx) {
     tx.executeSql('CREATE TABLE IF NOT EXISTS vis_setting(vis_url,vis_lang,vis_client_id,vis_role,vis_whouse_id,vis_ord_id)');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS vis_gallery(mr_line,insp_line,image)');
+	//tx.executeSql('DROP TABLE IF EXISTS vis_gallery'); 
+	tx.executeSql('CREATE TABLE IF NOT EXISTS vis_gallery(mr_line,insp_line,image,imgUpload DEFAULT "F")');
 }
 
 
@@ -52,6 +53,21 @@ function loadimageSelectSuccess(tx, results){
 	//imagelistarray=results;
 	 for (var i=0; i<results.rows.length; i++){
 		 imagelistarray.push(results.rows.item(i).image);
-		   console.log("image name = "+results.rows.item(i).image);
+		   console.log("image name = "+results.rows.item(i).imgUpload);
 		}
+}
+
+
+function uploadimagelist(tx){
+	tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="'+M_InOutLine_ID+'"', [], uploadimageSelectSuccess,function(err){console.log("Error SQL: "+err.code);} );
+}
+function uploadimageSelectSuccess(tx, results){
+	imagelistarray=results;
+	console.log("image name = "+results.rows.item(results.rows.length-1).imgUpload);
+	}
+
+
+function chngeuploadstate(tx){
+	tx.executeSql('UPDATE vis_gallery SET imgUpload="T" WHERE image="'+fileName+'"');
+	console.log("updated truuuu========");
 }
