@@ -63,8 +63,57 @@ function picupload(){
 				}
 			}
 		}
+	deleteMRgallary();
 	},100);
 }
+function deleteMRgallary(){
+	db.transaction(deleteimagelist, errorCB);
+	function deleteimagelist(tx){
+		tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="'+M_InOutLine_ID+'" and imgUpload="F"', [], deleteimageSelect,function(err){console.log("Error SQL: "+err.code);} );
+	}
+	function deleteimageSelect(tx,result){
+		if(result.rows.length>0){
+			console.log("Upload Not Finished");
+		}else{
+			tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="'+M_InOutLine_ID+'" and imgUpload="T"', [], deleteimageSelectsuccess,function(err){console.log("Error SQL: "+err.code);} );
+		}
+	}
+}
+
+function deleteimageSelectsuccess(tx,results){
+	
+		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotdeleteFileSystem,function(error){ console.log("request FSError = "+error.code); });
+		function gotdeleteFileSystem(filesystem){
+			filesystem.root.getDirectory("VIS_Inspection", {create : true},deletedatafile, dirFail);
+		}
+		function deletedatafile(directory){
+			var directoryReader = directory.createReader();
+			console.log("Directory ====== ="+directory.fullPath);
+			directoryReader.readEntries(deleteFileSuccess,function(error){ console.log("Error on read = "+error.code); });
+		}
+		function deleteFileSuccess(entries){
+			console.log("delete call===="+results.rows.length);
+			for(var i=0;i<results.rows.length;i++){
+				console.log("Result  call===="+entries.length);
+				for(var j=0;j<entries.length;j++){
+					console.log("Entries call====");
+					if(entries[j].name==results.rows.item(i).image)
+					{ console.log("file=="+entries[j].name);
+						entries[j].remove(imgdelSuccess,function(error){ console.log("Error on read = "+error.code); });
+						function imgdelSuccess(entry){
+							tx.executeSql('DELETE FROM vis_gallery WHERE image="'+entries[j].name+'"');
+							console.log("deleted");
+						}
+					}
+				}
+			}
+			
+		}
+		window.setTimeout(function(){
+		onStartNewInspection();
+		},300);
+}
+
 function singleImgUpload(imgnm){
 	console.log("img file system ======"+imgnm);
 	var ft = new FileTransfer();
