@@ -36,25 +36,46 @@ function settingSelectSuccess(tx, results) {
 function settingDbSetup(tx) {
     tx.executeSql('CREATE TABLE IF NOT EXISTS vis_setting(vis_url,vis_lang,vis_client_id,vis_role,vis_whouse_id,vis_ord_id)');
 	//tx.executeSql('DROP TABLE IF EXISTS vis_gallery'); 
-	tx.executeSql('CREATE TABLE IF NOT EXISTS vis_gallery(mr_line,insp_line,image,imgUpload DEFAULT "F")');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS vis_gallery(mr_line,insp_line,image,file,imgUpload DEFAULT "F")');
 }
 
 
-
+function fileDbEntry(entry){
+	fileName=entry.substring(1);
+	if(DataTypes.indexOf(getExtention(getFileName(fileName)).toUpperCase()) > -1){
+		navigator.notification.activityStart("Please Wait", "loading");
+		getGallaryFileSystem();
+	}else
+	{
+		db.transaction(insertFile, errorCB);
+		backtogallary();
+		readImages();
+		window.setTimeout(function(){
+				uploadSingleFile(fileName);
+				},100);
+	}
+}
+function getExtention(Fname){
+	var tmpArray=Fname.split('.');
+	return tmpArray.pop();
+}
 function insertimage(tx){
 	tx.executeSql('INSERT INTO vis_gallery(mr_line,insp_line,image) VALUES ("'+M_InOutLine_ID+'","'+X_INSTRUCTIONLINE_ID+'","'+fileName+'")');
 }
+function insertFile(tx){
+	tx.executeSql('INSERT INTO vis_gallery(mr_line,insp_line,file) VALUES ("'+M_InOutLine_ID+'","'+X_INSTRUCTIONLINE_ID+'","'+fileName+'")');
+}
 
 function loadimagelist(tx){
-	tx.executeSql('SELECT image FROM vis_gallery WHERE mr_line="'+M_InOutLine_ID+'" and insp_line="'+X_INSTRUCTIONLINE_ID+'"', [], loadimageSelectSuccess,function(err){console.log("Error SQL: "+err.code);} );
+	tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="'+M_InOutLine_ID+'" and insp_line="'+X_INSTRUCTIONLINE_ID+'"', [], loadimageSelectSuccess,function(err){console.log("Error SQL: "+err.code);} );
 }
 function loadimageSelectSuccess(tx, results){
-	imagelistarray=[];
-	//imagelistarray=results;
-	 for (var i=0; i<results.rows.length; i++){
+	//imagelistarray=[];
+	imagelistarray=results;
+	/* for (var i=0; i<results.rows.length; i++){
 		 imagelistarray.push(results.rows.item(i).image);
 		   console.log("image name = "+results.rows.item(i).imgUpload);
-		}
+		}*/
 }
 
 

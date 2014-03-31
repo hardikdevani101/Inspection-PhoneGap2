@@ -89,4 +89,101 @@ function imgSuccess(imgEntries){
 		singleImgUpload(imgEntries);
 }
 
+//file explorer
+var root;
+var currentDir;
+var parentDir;
+var parlist;
+var DataTypes=["JPEG","JPG","BMP","PNG"];
+function fileexplore(){
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFileExplore,function(error){ console.log("request FSError = "+error); });
+	parlist=[];
+}
+function gotFileExplore(fileSystem) {
+	root=fileSystem.root;
+	parlist.push(root);
+	listDir(root);
+}
+function backFile(){
+	var tmppar=parlist.pop();
+	listDir(tmppar);
+}
+function listDir(DirEntry){
+	console.log("Current ================"+DirEntry.name);
+	if( !DirEntry.isDirectory ) console.log('listDir incorrect type');
+	currentDir=DirEntry;
+	
+	var DirReader = DirEntry.createReader();
+	DirReader.readEntries(function(entries){
+			var dirContent = $('#dirContent');
+			dirContent.empty();
+			var dirArr = new Array();
+			var fileArr = new Array();
+			var div=document.createElement('div');
+			div.innerHTML=DirEntry.name+".....";
+			dirContent.append(div);
+			for(var i=0; i<entries.length; ++i){ // sort entries
+				var entry = entries[i];
+				var div=document.createElement('div');
+				if( entry.isDirectory && entry.name[0] != '.' ){
+						div.className="folder";
+						console.log("entry file====="+entry.name);
+						var tmpstr="listsub('"+entry.name+"')";
+						div.setAttribute('onclick',tmpstr);
+						div.innerHTML=entry.name;
+					}
+				else if( entry.isFile && entry.name[0] != '.' ){
+						div.className="file";
+						//div.onclick='fileDbEntry('+entry+')';
+						var tmpstr="fileDbEntry('"+entry.fullPath+"')";
+						div.setAttribute('onclick',tmpstr);
+						div.innerHTML=entry.name;
+					}
+					dirContent.append(div);
+			}
+			
+   }, function(error){
+        console.log('listDir readEntries error: '+error.code);
+    });
+}
+function listsub(DirName){
+	parlist.push(currentDir);
+	currentDir.getDirectory(DirName, null, function (dir){listDir(dir);}, function(error){ console.log("Error = "+error.code); });
+}
+
+//upload File After Select
+function uploadSingleFile(fName){
+	root.getFile(fName,null,FnameSuccess,function(error){ console.log(" FSError = "+error.code); });
+}
+function FnameSuccess(FnEntries){
+		var ft = new FileTransfer();
+		var options = new FileUploadOptions();
+		options.fileKey="file";
+		options.fileName=FnEntries.name;
+		ft.upload(FnEntries.toURL(), encodeURI(vis_url+"/VISService/fileUpload"), singleFilewin, uploadfail, options);
+		function singleFilewin(){
+			db.transaction( function(tx){tx.executeSql('UPDATE vis_gallery SET imgUpload="T" WHERE file="'+fileName+'"');}, errorCB);
+		}
+}
+
+function getGallaryFileSystem(){
+	root.getFile(fileName,null,GallaryImgSuccess,function(error){ console.log(" FSError = "+error.code); });
+}
+
+function GallaryImgSuccess(FnEntries){
+	FnEntries.file(gotGallaryImg,function(){});
+	function gotGallaryImg(rfile){readGallaryDataUrl(rfile);}
+	function readGallaryDataUrl(rfile) {
+		var reader = new FileReader();
+		reader.onloadend = function(evt) {
+			$('#smallImage').attr('src',evt.target.result);
+			loadPage("imagePrev");
+			onCrop();
+		};
+		reader.readAsDataURL(rfile);
+	}
+}
+
+		
+
 

@@ -104,7 +104,7 @@
 			<Span id="gallery_head" style="float: left;"> </Span>
 			<Span class="gallary_menubtn" onClick="onStartNewInspection()">Back</Span>
 			<Span class="gallary_menubtn" onClick="onStartNewInspection()">Discard</Span>
-			<Span class="gallary_menubtn" onClick="captureI()">Acquire</Span>
+			<Span class="gallary_menubtn" onClick="loadAccureChoise()">Acquire</Span>
 		</div>
 		<br>
 		<div style="padding:2px; margin:0px;">
@@ -137,7 +137,7 @@
 		<div style="width:15%; height:100%;float:left; padding:0%; margin:0%;">
 			<input class="crop_btn" type="button" value="Crop" onClick="onCropSaved()"/>
 			<input class="crop_btn" type="button" value="Skip" onClick="onCropSkip()" />
-			<input class="crop_btn" type="button" value="Discard" onClick="onStartNewInspection()"/>
+			<input class="crop_btn" type="button" value="Discard" onClick="backtogallary()"/>
 		</div>
 		</center>
 	</div>
@@ -156,9 +156,32 @@
 			
 			<input class="crop_btn" type="button" value="Save" onClick="saveImage()" />
 			<input class="crop_btn" type="button" value="Back" onClick="onCrop()" />
-			<input class="crop_btn" type="button" value="Discard" onClick="onStartNewInspection()"/>
+			<input class="crop_btn" type="button" value="Discard" onClick="backtogallary()"/>
 		</div>
 		</center>
+	</div>
+	
+	<div id="fileExpo" class="page">
+      <div id="header" style="left:40%; background:#0099CC; width:100%">
+            <a id="backBtn" href="#" onClick="backFile()" data-icon="arrow-l">Back</a>&nbsp;&nbsp;
+			<a id="homeBtn" href="#" onClick="fileexplore()" data-icon="home" data-transition="pop">Home</a>
+			<h4 onClick="backtogallary()" style="position:fixed;">Back To App</h4>
+         <h3>File Explorer</h3>
+      </div>
+      <div id="dirContent" style="height:70%; overflow:scroll; text-align:left; position:absolute;">
+      </div>
+	</div>
+	
+	<div id="AccureChoise" class="page">
+      <center>
+		<div>
+			<Span > <h3>Acquire From</h3> </Span> 
+		</div>
+      <div>
+	  		<h2 onClick="captureI()" style="border:1px solid #666666; border-radius:5px; background-color:#0099CC;">Camera</h2>
+            <h2 onClick="loadgallaryChoise()" style="border:1px solid #666666; border-radius:5px; background-color:#0099CC;">Gallary</h2><br>
+      </div>
+	  </center>
 	</div>
 	
 </body>
