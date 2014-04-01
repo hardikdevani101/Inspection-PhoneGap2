@@ -42,27 +42,37 @@ function picupload(){
 		var ft = new FileTransfer();
 		var options = new FileUploadOptions();
 			options.fileKey="file";
-			options.mimeType="image/png";
-		for (i=0; i<readEntries.length; i++) {
-			for(var j=0;j<imagelistarray.rows.length; j++)
-			{	
-				if(imagelistarray.rows.item(j).image==readEntries[i].name && imagelistarray.rows.item(j).imgUpload=="F")
-				{
-					options.fileName=readEntries[i].name;
-					ft.upload(readEntries[i].toURL(), encodeURI(vis_url+"/VISService/fileUpload"), function(r){
-											db.transaction(chngealluploadstate, errorCB);
-											function chngealluploadstate(tx){
-												tx.executeSql('UPDATE vis_gallery SET imgUpload="T" WHERE image="'+readEntries[i].name+'"');
-												console.log("updated truuuu========");
-											}
-					}, uploadfail, options);
-					imagetoserver(imagelistarray.rows.item(j).insp_line,readEntries[i].name);
-					console.log("images ="+readEntries[i].toURL());
-				}else if(imagelistarray.rows.item(j).image==readEntries[i].name && imagelistarray.rows.item(j).imgUpload=="T"){
-					imagetoserver(imagelistarray.rows.item(j).insp_line,readEntries[i].name);
+			
+		for(var j=0; j<imagelistarray.rows.length; j++)
+	   	{
+		   		if(imagelistarray.rows.item(j).file != null  && imagelistarray.rows.item(j).imgUpload=="F")
+				{		
+						fileName=imagelistarray.rows.item(j).file;
+						uploadSingleFile(fileName);		
 				}
-			}
-		}
+				else{
+					for (i=0; i<readEntries.length; i++) {
+			
+							if(imagelistarray.rows.item(j).image==readEntries[i].name && imagelistarray.rows.item(j).imgUpload=="F")
+							{
+								options.mimeType="image/png";
+								options.fileName=readEntries[i].name;
+								ft.upload(readEntries[i].toURL(), encodeURI(vis_url+"/VISService/fileUpload"), function(r){
+														db.transaction(chngealluploadstate, errorCB);
+														function chngealluploadstate(tx){
+															tx.executeSql('UPDATE vis_gallery SET imgUpload="T" WHERE image="'+readEntries[i].name+'"');
+															console.log("updated truuuu========");
+														}
+								}, uploadfail, options);
+								imagetoserver(imagelistarray.rows.item(j).insp_line,readEntries[i].name);
+								console.log("images ="+readEntries[i].toURL());
+							}else if(imagelistarray.rows.item(j).image==readEntries[i].name && imagelistarray.rows.item(j).imgUpload=="T"){
+								imagetoserver(imagelistarray.rows.item(j).insp_line,readEntries[i].name);
+							}
+					}
+					
+				}
+	   }
 	deleteMRgallary();
 	},100);
 }
@@ -109,6 +119,7 @@ function deleteimageSelectsuccess(tx,results){
 			}
 			
 		}
+		tx.executeSql('DELETE FROM vis_gallery WHERE mr_line="'+M_InOutLine_ID+'"');
 		window.setTimeout(function(){
 		onStartNewInspection();
 		},300);
@@ -209,6 +220,7 @@ function loadAccureChoise(){
 function loadgallaryChoise(){
 	loadPage("fileExpo");
 	fileexplore();
+	window.setTimeout(function(){fileexplore();},50);
 }
 
 function onSettingPage(){

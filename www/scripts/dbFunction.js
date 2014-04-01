@@ -41,10 +41,13 @@ function settingDbSetup(tx) {
 
 
 function fileDbEntry(entry){
-	fileName=entry.substring(1);
+	fileName=getSDPath(entry).substring(1);
+	console.log("Entry="+entry);
+	console.log("File Name="+fileName);
 	if(DataTypes.indexOf(getExtention(getFileName(fileName)).toUpperCase()) > -1){
 		navigator.notification.activityStart("Please Wait", "loading");
-		getGallaryFileSystem();
+		//getGallaryFileSystem();
+		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, getGallaryFileSystem,function(error){ console.log("request FSError = "+error); });
 	}else
 	{
 		db.transaction(insertFile, errorCB);
@@ -54,6 +57,10 @@ function fileDbEntry(entry){
 				uploadSingleFile(fileName);
 				},100);
 	}
+}
+function getSDPath(Fname){
+	var tmpArray=Fname.split('mnt/sdcard');
+	return tmpArray.pop();
 }
 function getExtention(Fname){
 	var tmpArray=Fname.split('.');
@@ -78,7 +85,7 @@ function loadimageSelectSuccess(tx, results){
 		}*/
 }
 
-
+//load All Mrline data From Db For upload
 function uploadimagelist(tx){
 	tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="'+M_InOutLine_ID+'"', [], uploadimageSelectSuccess,function(err){console.log("Error SQL: "+err.code);} );
 }

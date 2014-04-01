@@ -101,6 +101,7 @@ function fileexplore(){
 }
 function gotFileExplore(fileSystem) {
 	root=fileSystem.root;
+	
 	parlist.push(root);
 	listDir(root);
 }
@@ -166,8 +167,9 @@ function FnameSuccess(FnEntries){
 		}
 }
 
-function getGallaryFileSystem(){
-	root.getFile(fileName,null,GallaryImgSuccess,function(error){ console.log(" FSError = "+error.code); });
+function getGallaryFileSystem(fileSystem){
+	console.log("File Name"+fileName);
+	fileSystem.root.getFile(fileName,null,GallaryImgSuccess,function(error){ console.log(" FSError = "+error.code); });
 }
 
 function GallaryImgSuccess(FnEntries){
