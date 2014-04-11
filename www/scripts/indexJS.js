@@ -15,6 +15,8 @@ var M_InOutLine_ID=0;
 var M_line_name;
 var X_INSTRUCTIONLINE_ID;
 var X_instruction_name;
+var vis_user;
+var vis_pass;
 
 function onLoad() {
 	document.addEventListener("deviceready", onDeviceReady, false);
@@ -150,21 +152,33 @@ function uploadfail(error) {
 function showPhotos(){
 	navigator.notification.activityStart("Please Wait", "loading Photos");
 	readImages();
+	document.getElementById("imglist").style.height=(window.innerHeight*.70)+"px";
+	document.getElementById("imglist").setAttribute("style", "overflow-x: auto; overflow-y: hidden;");
 	db.transaction(loadimagelist, errorCB);
 	window.setTimeout(function(){
 		console.log("langht==="+imagelistarray.rows.length);
+		var uiBlock = ['a','b','c'];
+		var blockLetter;
 	   for(var j=0; j<imagelistarray.rows.length; j++)
 	   {
 		   if(imagelistarray.rows.item(j).file != null)
 				{
+					
+					console.log("block latter="+blockLetter);
 					var tmpFile=imagelistarray.rows.item(j).file;
 					var imgelem = document.createElement("div");
-					//imgelem.setAttribute("height", "25%");
-					//imgelem.setAttribute("width", "30%");
-					imgelem.setAttribute("style", "margin:3px 5px; border:1px solid #000; width:30%; word-wrap:break-word; float: left;");
+					var td = document.createElement("td");
+					imgelem.setAttribute("style", "margin:3px 5px; border:1px solid #000;float:left; word-wrap:break-word;");
+					imgelem.style.width=(window.innerWidth*.30)+"px";
 					imgelem.style.height=(window.innerHeight*.25)+"px";
+					imgelem.setAttribute("height", "25%");
+					imgelem.setAttribute("width", "30%");
 					imgelem.innerHTML=getFileName(tmpFile);
-					document.getElementById("imglist").appendChild(imgelem);
+					td.setAttribute("style", "margin:0px; padding:0px;");
+					td.appendChild(imgelem);
+					blockLetter="ui-block-"+uiBlock[j%3];
+					document.getElementById(blockLetter).appendChild(td);
+					console.log("images="+getFileName(tmpFile));
 				}
 		   else{
 			   
@@ -172,20 +186,29 @@ function showPhotos(){
 				//if(imagelistarray.indexOf(readEntries[i].name) > -1)
 					if(imagelistarray.rows.item(j).image==readEntries[i].name)
 					{
+						
 						readEntries[i].file(gotrFile,function(){});
 						function gotrFile(rfile){readDataUrl(rfile);}
-						
+						console.log("block latter="+blockLetter);
+						var td = document.createElement("td");
+						td.setAttribute("style", "margin:0px; padding:0px;");
+						var tdID="tdImg"+j;
+						td.setAttribute("id",tdID);
+						blockLetter="ui-block-"+uiBlock[j%3];
+						document.getElementById(blockLetter).appendChild(td);
 						function readDataUrl(rfile) {
 							var reader = new FileReader();
-							reader.onloadend = function(evt) {
-								//console.log(evt.target.result);
-								var imgelem = document.createElement("img");
-								imgelem.setAttribute("height", "25%");
-								imgelem.setAttribute("width", "30%");
-								imgelem.setAttribute("style", "margin:3px 5px;");
-								imgelem.setAttribute("src",evt.target.result);
-								document.getElementById("imglist").appendChild(imgelem);
-							};
+							reader.onloadend =  function(evt) {
+															//console.log(evt.target.result);
+															var imgelem = document.createElement("img");
+															imgelem.setAttribute("height", (window.innerHeight*.25)+"px");
+															imgelem.setAttribute("width", (window.innerWidth*.30)+"px");
+															imgelem.setAttribute("style", "margin:3px 5px; float:left;");
+															imgelem.setAttribute("src",evt.target.result);
+															document.getElementById(tdID).appendChild(imgelem);
+															//td.appendChild(imgelem);
+															console.log("Img loaded on tag =" + tdID);
+														};
 							reader.readAsDataURL(rfile);
 						}
 						

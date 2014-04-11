@@ -29,8 +29,8 @@
 		<span>
 		<h2>VIS Login</h2>
 		</span>
-		Username : <input id="txt_user" type="text" value="jjowers"/><br><br> 
-		Password : <input id="txt_password" type="password" value="password"/><br><br>
+		Username : <input id="txt_user" type="text" value=""/><br><br> 
+		Password : <input id="txt_password" type="password" value=""/><br><br>
 		<input id="loginbtn" class="login_btns" onClick="validateLogin()" type="button" value="Login">&nbsp;&nbsp;
 		<input id="settingpagebtn" class="login_btns" onClick="onSettingPage()" type="button" value="Setting">&nbsp;&nbsp;
 		<input id="exitbtn" class="login_btns" onClick="onExit()" type="button" value="Exit"><br><br>
@@ -111,6 +111,26 @@
 			<hr />
 		</div>
 		<div id="imglist" style="padding:0px; margin:0px;">
+			<table style="margin:0px; padding:0px;" cellspacing="0" cellpadding="0">
+				<tr id="ui-block-a" style="margin:0px; padding:0px;">
+					
+				</tr>
+				<tr id="ui-block-b" style="margin:0px; padding:0px;">
+					
+				</tr>
+				<tr id="ui-block-c" style="margin:0px; padding:0px;">
+					
+				</tr>
+			</table>
+			<!--<div id="ui-block-a" style="margin:0px; padding:0px; border:1px solid #000;">
+				
+			</div>
+			<div id="ui-block-b" style="margin:0px; padding:0px;border:1px solid #000;">
+				
+			</div>
+			<div id="ui-block-c" style="margin:0px; padding:0px;border:1px solid #000;">
+				
+			</div>-->
 		</div>
 	</div>
 	
@@ -165,7 +185,7 @@
       <div id="header" style="left:40%; background:#0099CC; width:100%">
             <a id="backBtn" href="#" onClick="backFile()" data-icon="arrow-l">Back</a>&nbsp;&nbsp;
 			<a id="homeBtn" href="#" onClick="fileexplore()" data-icon="home" data-transition="pop">Home</a>
-			<h4 onClick="backtogallary()" style="position:fixed;">Back To App</h4>
+			<h4 onClick="loadAccureChoise()" style="position:fixed;">Back To App</h4>
          <h3>File Explorer</h3>
       </div>
       <div id="dirContent" style="height:70%; overflow:scroll; text-align:left; position:absolute;">
@@ -180,6 +200,7 @@
       <div>
 	  		<h2 onClick="captureI()" style="border:1px solid #666666; border-radius:5px; background-color:#0099CC;">Camera</h2>
             <h2 onClick="loadgallaryChoise()" style="border:1px solid #666666; border-radius:5px; background-color:#0099CC;">Gallary</h2><br>
+			<h2 onClick="backtogallary()" style="border:1px solid #666666; border-radius:5px; background-color:#0099CC;">Cancel</h2><br>
       </div>
 	  </center>
 	</div>
