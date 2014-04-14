@@ -226,7 +226,7 @@ function setNewInsp(){
 							   	
 								tmpdiv.className = "divButton";
 								tmpdiv.innerHTML=dlab;
-								var clickstr="onInspSet('"+dval+"','"+dlab+"')";
+								var clickstr="onInspSet('"+dval+"','"+ dlab.replace('\'', '\\\'')+"')";
 								tmpdiv.setAttribute('onclick',clickstr);
 							  	div.appendChild(tmpdiv);
 							}
