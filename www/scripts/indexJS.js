@@ -386,10 +386,11 @@ function onCropSaved() {
 	ctx.drawImage(crop_img, x1, y1, w, h, 0, 0, w, h);
 	$('#waterImage').attr('src', canvas.toDataURL());
 	origImg.src=canvas.toDataURL();
-	loadPage("waterImgPrev");
+	//loadPage("waterImgPrev");
 	//Using timer to reApplyWaterMark
 	window.setTimeout(function(){
 	reApplyatterMark();
+	saveImage();
 	},50);
 	
 }
@@ -397,10 +398,11 @@ function onCropSaved() {
 function onCropSkip(){
 	$('#waterImage').attr('src',document.getElementById('smallImage').src);
 	origImg.src=document.getElementById('waterImage').src;
-	loadPage("waterImgPrev");
+	//loadPage("waterImgPrev");
 	//Using timer to reApplyWaterMark
 	window.setTimeout(function(){
 	reApplyatterMark();
+	saveImage();
 	},50);
 }
 //For Water Mark
