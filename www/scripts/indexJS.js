@@ -17,6 +17,8 @@ var X_INSTRUCTIONLINE_ID;
 var X_instruction_name;
 var vis_user;
 var vis_pass;
+var Disp_row;
+var Disp_col;
 
 function onLoad() {
 	document.addEventListener("deviceready", onDeviceReady, false);
@@ -157,28 +159,40 @@ function showPhotos(){
 	db.transaction(loadimagelist, errorCB);
 	window.setTimeout(function(){
 		console.log("langht==="+imagelistarray.rows.length);
-		var uiBlock = ['a','b','c'];
-		var blockLetter;
-	   for(var j=0; j<imagelistarray.rows.length; j++)
+		console.log("Total col="+Math.ceil(imagelistarray.rows.length/3));
+		for(var j=0; j<3; j++)
+	   {
+			var tr = document.createElement('tr');
+			tr.setAttribute("style", "margin:0px; padding:0px;");
+			
+			for(var i=0; i<Math.ceil(imagelistarray.rows.length/3); i++)
+			{
+				var td = document.createElement('td');
+				td.setAttribute("id","td-"+j+"-"+i);
+				td.setAttribute("style", "margin:0px; padding:0px;");
+				tr.appendChild(td);
+				console.log("tr=="+j+"td="+i);
+			}
+			document.getElementById("disp-tab1").appendChild(tr);
+	   }
+	   Disp_col=0;Disp_row=0;
+	   for(var j=0; j < imagelistarray.rows.length; j++)
 	   {
 		   if(imagelistarray.rows.item(j).file != null)
 				{
 					
-					console.log("block latter="+blockLetter);
 					var tmpFile=imagelistarray.rows.item(j).file;
 					var imgelem = document.createElement("div");
-					var td = document.createElement("td");
 					imgelem.setAttribute("style", "margin:3px 5px; border:1px solid #000;float:left; word-wrap:break-word;");
 					imgelem.style.width=(window.innerWidth*.30)+"px";
 					imgelem.style.height=(window.innerHeight*.25)+"px";
 					imgelem.setAttribute("height", "25%");
 					imgelem.setAttribute("width", "30%");
 					imgelem.innerHTML=getFileName(tmpFile);
-					td.setAttribute("style", "margin:0px; padding:0px;");
-					td.appendChild(imgelem);
-					blockLetter="ui-block-"+uiBlock[j%3];
-					document.getElementById(blockLetter).appendChild(td);
-					console.log("images="+getFileName(tmpFile));
+					if(Disp_col>=Math.ceil(imagelistarray.rows.length/3)){Disp_col=0;Disp_row=Disp_row+1;}
+					console.log("tr=="+Disp_row+"td="+Disp_col);
+					document.getElementById("td-"+Disp_row+"-"+Disp_col).appendChild(imgelem);
+					Disp_col=Disp_col+1;
 				}
 		   else{
 			   
@@ -189,13 +203,6 @@ function showPhotos(){
 						
 						readEntries[i].file(gotrFile,function(){});
 						function gotrFile(rfile){readDataUrl(rfile);}
-						console.log("block latter="+blockLetter);
-						var td = document.createElement("td");
-						td.setAttribute("style", "margin:0px; padding:0px;");
-						var tdID="tdImg"+j;
-						td.setAttribute("id",tdID);
-						blockLetter="ui-block-"+uiBlock[j%3];
-						document.getElementById(blockLetter).appendChild(td);
 						function readDataUrl(rfile) {
 							var reader = new FileReader();
 							reader.onloadend =  function(evt) {
@@ -205,9 +212,10 @@ function showPhotos(){
 															imgelem.setAttribute("width", (window.innerWidth*.30)+"px");
 															imgelem.setAttribute("style", "margin:3px 5px; float:left;");
 															imgelem.setAttribute("src",evt.target.result);
-															document.getElementById(tdID).appendChild(imgelem);
-															//td.appendChild(imgelem);
-															console.log("Img loaded on tag =" + tdID);
+															if(Disp_col>=Math.ceil(imagelistarray.rows.length/3)){Disp_col=0;Disp_row=Disp_row+1;}
+															console.log("tr=="+Disp_row+"td="+Disp_col);
+															document.getElementById("td-"+Disp_row+"-"+Disp_col).appendChild(imgelem);
+															Disp_col=Disp_col+1;
 														};
 							reader.readAsDataURL(rfile);
 						}
@@ -215,11 +223,12 @@ function showPhotos(){
 						console.log("images="+readEntries[i].toURL());
 					}
 				}
-		   }
+		   } 
+		   console.log("JJJJJJJJ========"+j);
 	   }
-		
 		navigator.notification.activityStop();
 	},300);
+	
 }
 
 function loadGallarySuccess(){
