@@ -21,11 +21,25 @@
 {
 	float:left;
 	width:18%;
-	padding:20px 5%;
+	padding:25px 5%;
 	background-color:#0099CC;
 	border: 2px solid #000000;
 	border-radius:4px;
 	margin: .7%;
+	font-family: sans-serif;
+	font-weight:bold;
+	cursor: pointer;
+}
+
+.InspButton
+{
+	word-wrap:break-word;
+	float:left;
+	padding:20px 5%;
+	background-color:#0099CC;
+	border: 2px solid #000000;
+	border-radius:4px;
+	margin: 2%;
 	font-family: sans-serif;
 	font-weight:bold;
 	cursor: pointer;

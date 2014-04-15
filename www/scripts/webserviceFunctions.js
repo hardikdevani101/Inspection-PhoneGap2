@@ -205,11 +205,29 @@ function setNewInsp(){
                     if (status == "success")
 					{		
 							var div = document.getElementById("outNewIns");
-							div.innerHTML="";
+							document.getElementById("disp-Insp").innerHTML="";
+							div.setAttribute("style", "overflow-x: auto; overflow-y: hidden;");
+							div.style.width="auto";
+							div.style.height=(window.innerHeight*.65)+"px";
 							var xmlResponse =req.responseXML.documentElement;
 							var fullNodeList = xmlResponse.getElementsByTagName("DataRow");
+							for(var j=0; j<2; j++)
+							   {
+									var tr = document.createElement('tr');
+									tr.setAttribute("style", "margin:0px; padding:0px;");
+									for(var i=0; i<Math.ceil(fullNodeList.length/2); i++)
+									{
+										var td = document.createElement('td');
+										td.setAttribute("id","InsTd-"+j+"-"+i);
+										td.setAttribute("style", "margin:1px; padding:1px;");
+										tr.appendChild(td);
+									}
+									document.getElementById("disp-Insp").appendChild(tr);
+							   }
+							Disp_col=0;Disp_row=0;
+							console.log("Insp length==="+fullNodeList.length);
 							for (var i=0; i < fullNodeList.length; i++)
-							{
+							{	
 								var dlab,dval;
 								var tmpdiv = document.createElement('div');
 							 	var eachnode = new Option();
@@ -224,11 +242,16 @@ function setNewInsp(){
 							  		}
 								}
 							   	
-								tmpdiv.className = "divButton";
+								tmpdiv.className = "InspButton";
+								tmpdiv.setAttribute("style", "margin:2px 10px;");
 								tmpdiv.innerHTML=dlab;
+								tmpdiv.style.height=(window.innerHeight*.15)+"px";
+								tmpdiv.style.width=(window.innerWidth*.20)+"px";
 								var clickstr="onInspSet('"+dval+"','"+ dlab.replace('\'', '\\\'')+"')";
 								tmpdiv.setAttribute('onclick',clickstr);
-							  	div.appendChild(tmpdiv);
+								if(Disp_col>=Math.ceil(fullNodeList.length/2)){Disp_col=0;Disp_row=Disp_row+1;}
+								document.getElementById("InsTd-"+Disp_row+"-"+Disp_col).appendChild(tmpdiv);
+								Disp_col=Disp_col+1;
 							}
 						
 					}

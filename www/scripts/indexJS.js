@@ -158,8 +158,6 @@ function showPhotos(){
 	document.getElementById("imglist").setAttribute("style", "overflow-x: auto; overflow-y: hidden;");
 	db.transaction(loadimagelist, errorCB);
 	window.setTimeout(function(){
-		console.log("langht==="+imagelistarray.rows.length);
-		console.log("Total col="+Math.ceil(imagelistarray.rows.length/3));
 		for(var j=0; j<3; j++)
 	   {
 			var tr = document.createElement('tr');
@@ -190,7 +188,6 @@ function showPhotos(){
 					imgelem.setAttribute("width", "30%");
 					imgelem.innerHTML=getFileName(tmpFile);
 					if(Disp_col>=Math.ceil(imagelistarray.rows.length/3)){Disp_col=0;Disp_row=Disp_row+1;}
-					console.log("tr=="+Disp_row+"td="+Disp_col);
 					document.getElementById("td-"+Disp_row+"-"+Disp_col).appendChild(imgelem);
 					Disp_col=Disp_col+1;
 				}
@@ -213,18 +210,14 @@ function showPhotos(){
 															imgelem.setAttribute("style", "margin:3px 5px; float:left;");
 															imgelem.setAttribute("src",evt.target.result);
 															if(Disp_col>=Math.ceil(imagelistarray.rows.length/3)){Disp_col=0;Disp_row=Disp_row+1;}
-															console.log("tr=="+Disp_row+"td="+Disp_col);
 															document.getElementById("td-"+Disp_row+"-"+Disp_col).appendChild(imgelem);
 															Disp_col=Disp_col+1;
 														};
 							reader.readAsDataURL(rfile);
 						}
-						
-						console.log("images="+readEntries[i].toURL());
 					}
 				}
 		   } 
-		   console.log("JJJJJJJJ========"+j);
 	   }
 		navigator.notification.activityStop();
 	},300);
