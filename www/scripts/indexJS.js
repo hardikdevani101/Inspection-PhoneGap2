@@ -19,6 +19,7 @@ var vis_user;
 var vis_pass;
 var Disp_row;
 var Disp_col;
+var DefaultFolder;
 
 function onLoad() {
 	document.addEventListener("deviceready", onDeviceReady, false);
@@ -174,6 +175,7 @@ function showPhotos(){
 			document.getElementById("disp-tab1").appendChild(tr);
 	   }
 	   Disp_col=0;Disp_row=0;
+	   console.log("No of files=="+imagelistarray.rows.length);
 	   for(var j=0; j < imagelistarray.rows.length; j++)
 	   {
 		   if(imagelistarray.rows.item(j).file != null)
@@ -226,6 +228,46 @@ function showPhotos(){
 
 function loadGallarySuccess(){
 	
+}
+
+function discardInspections(){
+	navigator.notification.confirm('Arw you sure ???', confirmDiscardInspections, 'Discard All Inspections', 'Ok,Cancel');
+}
+
+function confirmDiscardInspections(buttonIndex){
+	if(buttonIndex==1){
+		db.transaction(uploadimagelist, errorCB);
+		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, setRoot,function(error){ console.log("request FSError = "+error); });
+		window.setTimeout(function(){
+			var tmpfile;
+			for(var j=0; j<imagelistarray.rows.length; j++)
+			{
+					if(imagelistarray.rows.item(j).image != null)
+					{
+						tmpfile=imagelistarray.rows.item(j).image;
+						DefaultFolder.getFile(tmpfile,null,function(Img){
+							Img.remove(function(entry){
+								db.transaction(function(tx){
+									tx.executeSql('DELETE FROM vis_gallery WHERE image="'+tmpfile+'"');
+								}, errorCB);
+							},function(error){ console.log("Error on read = "+error.code); });
+						},function(error){ console.log(" FSError = "+error.code); });
+					}
+			}
+				db.transaction(function(tx){
+					tx.executeSql('DELETE FROM vis_gallery WHERE mr_line="'+M_InOutLine_ID+'"');
+				}, errorCB);	
+			navigator.notification.alert('Discard All Inspections success', function(){}, 'Success', 'OK')
+		},100);
+	}
+}
+function setRoot(fileSystem){
+	root=fileSystem.root;
+	fileSystem.root.getDirectory("VIS_Inspection", {create : true},setDefaultFolder, function(error){ console.log(" FSError = "+error.code); });
+}
+
+function setDefaultFolder(fileSystem){
+	DefaultFolder=fileSystem;
 }
 
 function getFileName(tmpFile){
