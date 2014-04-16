@@ -79,10 +79,6 @@ function loadimagelist(tx){
 function loadimageSelectSuccess(tx, results){
 	//imagelistarray=[];
 	imagelistarray=results;
-	/* for (var i=0; i<results.rows.length; i++){
-		 imagelistarray.push(results.rows.item(i).image);
-		   console.log("image name = "+results.rows.item(i).imgUpload);
-		}*/
 }
 
 //load All Mrline data From Db For upload
@@ -91,11 +87,9 @@ function uploadimagelist(tx){
 }
 function uploadimageSelectSuccess(tx, results){
 	imagelistarray=results;
-	console.log("image name = "+results.rows.item(results.rows.length-1).imgUpload);
-	}
+}
 
 
 function chngeuploadstate(tx){
 	tx.executeSql('UPDATE vis_gallery SET imgUpload="T" WHERE image="'+fileName+'"');
-	console.log("updated truuuu========");
 }

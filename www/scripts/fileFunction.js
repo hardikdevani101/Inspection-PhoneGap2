@@ -54,16 +54,15 @@ function gotreadFileSystem(fileSystem) {
 }
 function readdatafile(directory){
 	var directoryReader = directory.createReader();
-	console.log("Directory ====== ="+directory.fullPath);
 	directoryReader.readEntries(readSuccess,function(error){ console.log("Error on read = "+error); });
 }
 function readSuccess(entries){
 	readEntries=entries;
 }
 function win(r) {
-            console.log("Code = " + r.responseCode);
+            //console.log("Code = " + r.responseCode);
             console.log("Response = " + r.response);
-            console.log("Sent = " + r.bytesSent);
+            //console.log("Sent = " + r.bytesSent);
 }
 
 function fail(error) {
@@ -110,7 +109,6 @@ function backFile(){
 	listDir(tmppar);
 }
 function listDir(DirEntry){
-	console.log("Current ================"+DirEntry.name);
 	if( !DirEntry.isDirectory ) console.log('listDir incorrect type');
 	currentDir=DirEntry;
 	
@@ -135,7 +133,6 @@ function listDir(DirEntry){
 					}
 				else if( entry.isFile && entry.name[0] != '.' ){
 						div.className="file";
-						//div.onclick='fileDbEntry('+entry+')';
 						var tmpstr="fileDbEntry('"+entry.fullPath+"')";
 						div.setAttribute('onclick',tmpstr);
 						div.innerHTML=entry.name;
@@ -168,7 +165,6 @@ function FnameSuccess(FnEntries){
 }
 
 function getGallaryFileSystem(fileSystem){
-	console.log("File Name"+fileName);
 	fileSystem.root.getFile(fileName,null,GallaryImgSuccess,function(error){ console.log(" FSError = "+error.code); });
 }
 

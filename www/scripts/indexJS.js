@@ -20,6 +20,8 @@ var vis_pass;
 var Disp_row;
 var Disp_col;
 var DefaultFolder;
+var SelectedGallaryList;
+
 
 function onLoad() {
 	document.addEventListener("deviceready", onDeviceReady, false);
@@ -66,11 +68,9 @@ function picupload(){
 														db.transaction(chngealluploadstate, errorCB);
 														function chngealluploadstate(tx){
 															tx.executeSql('UPDATE vis_gallery SET imgUpload="T" WHERE image="'+readEntries[i].name+'"');
-															console.log("updated truuuu========");
 														}
 								}, uploadfail, options);
 								imagetoserver(imagelistarray.rows.item(j).insp_line,readEntries[i].name);
-								console.log("images ="+readEntries[i].toURL());
 							}else if(imagelistarray.rows.item(j).image==readEntries[i].name && imagelistarray.rows.item(j).imgUpload=="T"){
 								imagetoserver(imagelistarray.rows.item(j).insp_line,readEntries[i].name);
 							}
@@ -103,21 +103,16 @@ function deleteimageSelectsuccess(tx,results){
 		}
 		function deletedatafile(directory){
 			var directoryReader = directory.createReader();
-			console.log("Directory ====== ="+directory.fullPath);
 			directoryReader.readEntries(deleteFileSuccess,function(error){ console.log("Error on read = "+error.code); });
 		}
 		function deleteFileSuccess(entries){
-			console.log("delete call===="+results.rows.length);
 			for(var i=0;i<results.rows.length;i++){
-				console.log("Result  call===="+entries.length);
 				for(var j=0;j<entries.length;j++){
-					console.log("Entries call====");
 					if(entries[j].name==results.rows.item(i).image)
-					{ console.log("file=="+entries[j].name);
+					{ 
 						entries[j].remove(imgdelSuccess,function(error){ console.log("Error on read = "+error.code); });
 						function imgdelSuccess(entry){
 							tx.executeSql('DELETE FROM vis_gallery WHERE image="'+entries[j].name+'"');
-							console.log("deleted");
 						}
 					}
 				}
@@ -131,7 +126,6 @@ function deleteimageSelectsuccess(tx,results){
 }
 
 function singleImgUpload(imgnm){
-	console.log("img file system ======"+imgnm);
 	var ft = new FileTransfer();
 	var options = new FileUploadOptions();
 		options.fileKey="file";
@@ -152,6 +146,159 @@ function uploadfail(error) {
    console.log("Error = " + error.code);
 }
 
+function confirmGallaryDiscard(){
+	navigator.notification.confirm('Arw you sure ???', DiscardGallary, 'Discard selected gallarys', 'Ok,Cancel');
+}
+
+function DiscardGallary(buttonIndex){
+	if(buttonIndex==1){
+		readImages();
+		db.transaction(loadimagelist, errorCB);
+		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, setRoot,function(error){ console.log("request FSError = "+error); });
+		window.setTimeout(function(){
+		for(var j=0; j < imagelistarray.rows.length; j++)
+	    {
+				if(imagelistarray.rows.item(j).file != null)
+				{	
+					var tmpfile=imagelistarray.rows.item(j).file;
+					if(SelectedGallaryList.indexOf(getFileName(tmpfile)) >= 0)
+					{	
+						db.transaction(function(tx){
+									tx.executeSql("DELETE FROM vis_gallery WHERE file='"+tmpfile+"'");
+						}, errorCB);
+					}
+				}
+				else{
+					if(SelectedGallaryList.indexOf(imagelistarray.rows.item(j).image) >= 0)
+					{
+						
+						var tmpfile=imagelistarray.rows.item(j).image;
+						DefaultFolder.getFile(tmpfile,null,function(Img){
+							Img.remove(function(entry){
+								db.transaction(function(tx){
+									tx.executeSql('DELETE FROM vis_gallery WHERE image="'+tmpfile+'"');
+								}, errorCB);
+							},function(error){ console.log("Error on read = "+error.code); });
+						},function(error){ console.log(" FSError = "+error.code); });
+					}
+				}
+		}
+		backtogallary();
+		},100);
+		
+	}
+}
+
+function showSelectionFiles(){
+	SelectedGallaryList=[];
+	readImages();
+	document.getElementById("disp-selGal").innerHTML="";
+	db.transaction(loadimagelist, errorCB);
+	window.setTimeout(function(){
+		for(var j=0; j<3; j++)
+	   {
+			var tr = document.createElement('tr');
+			tr.setAttribute("style", "margin:0px; padding:0px;");
+			
+			for(var i=0; i<Math.ceil(imagelistarray.rows.length/3); i++)
+			{
+				var td = document.createElement('td');
+				td.setAttribute("id","Seltd-"+j+"-"+i);
+				td.setAttribute("style", "margin:0px; padding:0px;");
+				tr.appendChild(td);
+			}
+			document.getElementById("disp-selGal").appendChild(tr);
+	   }
+	   Disp_col=0;Disp_row=0;
+	   for(var j=0; j < imagelistarray.rows.length; j++)
+	   {
+		   if(imagelistarray.rows.item(j).file != null)
+				{
+					
+					var tmpFile=imagelistarray.rows.item(j).file;
+					var imgelem = document.createElement("div");
+					imgelem.setAttribute("style", "margin:3px 5px; border:1px solid #000;float:left; word-wrap:break-word;");
+					imgelem.style.width=(window.innerWidth*.30)+"px";
+					imgelem.style.height=(window.innerHeight*.25)+"px";
+					imgelem.setAttribute("height", "25%");
+					imgelem.setAttribute("width", "30%");
+					imgelem.innerHTML=getFileName(tmpFile);
+					
+					var chkImg = document.createElement("img");
+					chkImg.setAttribute("style", "left:-50; margin-left:-50;position:absolute;display:none;");
+					chkImg.setAttribute("src","img/checkbox_full.png");
+					
+					if(Disp_col>=Math.ceil(imagelistarray.rows.length/3)){Disp_col=0;Disp_row=Disp_row+1;}
+					var clickstr="onGallerySelect('Seltd-"+Disp_row+"-"+Disp_col+"','"+getFileName(tmpFile)+"')";
+					chkImg.setAttribute("id","chkSeltd-"+Disp_row+"-"+Disp_col);
+					document.getElementById("Seltd-"+Disp_row+"-"+Disp_col).appendChild(chkImg);
+					document.getElementById("Seltd-"+Disp_row+"-"+Disp_col).appendChild(imgelem);
+					document.getElementById("Seltd-"+Disp_row+"-"+Disp_col).setAttribute('onclick',clickstr);
+					Disp_col=Disp_col+1;
+				}
+		   else{
+			   
+			   for (var i=0; i<readEntries.length; i++) {
+					if(imagelistarray.rows.item(j).image==readEntries[i].name)
+					{
+						
+						readEntries[i].file(gotrFile,function(){});
+						function gotrFile(rfile){readDataUrl(rfile);}
+						function readDataUrl(rfile) {
+							var reader = new FileReader();
+							reader.onloadend =  function(evt) {
+															var imgelem = document.createElement("img");
+															imgelem.setAttribute("height", (window.innerHeight*.25)+"px");
+															imgelem.setAttribute("width", (window.innerWidth*.30)+"px");
+															imgelem.setAttribute("style", "margin:3px 5px; float:left;");
+															imgelem.setAttribute("src",evt.target.result);
+															
+															var chkImg = document.createElement("img");
+															chkImg.setAttribute("style", "left:-50; margin-left:-50;position:absolute;display:none;");
+															chkImg.setAttribute("src","img/checkbox_full.png");
+															
+															if(Disp_col>=Math.ceil(imagelistarray.rows.length/3)){Disp_col=0;Disp_row=Disp_row+1;}
+															var clickstr="onGallerySelect('Seltd-"+Disp_row+"-"+Disp_col+"','"+rfile.name+"')";
+															chkImg.setAttribute("id","chkSeltd-"+Disp_row+"-"+Disp_col);
+															document.getElementById("Seltd-"+Disp_row+"-"+Disp_col).appendChild(chkImg);
+															document.getElementById("Seltd-"+Disp_row+"-"+Disp_col).appendChild(imgelem);
+															document.getElementById("Seltd-"+Disp_row+"-"+Disp_col).setAttribute('onclick',clickstr);
+															Disp_col=Disp_col+1;
+														};
+							reader.readAsDataURL(rfile);
+						}
+					}
+				}
+		   } 
+	   }
+		navigator.notification.activityStop();
+		loadPage('SelectGallary');
+	},300);
+	
+}
+
+function onGallerySelect(selectTdId, galName){
+	
+	if(SelectedGallaryList.indexOf(galName)<0)
+	{
+		SelectedGallaryList.push(galName);
+		document.getElementById("chk"+selectTdId).setAttribute("style", "display: block;position:absolute;");
+		console.log("selected lengh="+SelectedGallaryList.length);
+		
+	}else{
+		
+		document.getElementById("chk"+selectTdId).setAttribute("style", "display: none;");
+		SelectedGallaryList=remFile(SelectedGallaryList,galName);
+		console.log("selected lengh="+SelectedGallaryList.length);
+	}
+	
+	function remFile(ary, elem) {
+    var i = ary.indexOf(elem);
+    if (i >= 0) ary.splice(i, 1);
+    return ary;
+	}
+}
+
 function showPhotos(){
 	navigator.notification.activityStart("Please Wait", "loading Photos");
 	readImages();
@@ -170,12 +317,10 @@ function showPhotos(){
 				td.setAttribute("id","td-"+j+"-"+i);
 				td.setAttribute("style", "margin:0px; padding:0px;");
 				tr.appendChild(td);
-				console.log("tr=="+j+"td="+i);
 			}
 			document.getElementById("disp-tab1").appendChild(tr);
 	   }
 	   Disp_col=0;Disp_row=0;
-	   console.log("No of files=="+imagelistarray.rows.length);
 	   for(var j=0; j < imagelistarray.rows.length; j++)
 	   {
 		   if(imagelistarray.rows.item(j).file != null)
@@ -196,7 +341,6 @@ function showPhotos(){
 		   else{
 			   
 			   for (var i=0; i<readEntries.length; i++) {
-				//if(imagelistarray.indexOf(readEntries[i].name) > -1)
 					if(imagelistarray.rows.item(j).image==readEntries[i].name)
 					{
 						
@@ -205,7 +349,6 @@ function showPhotos(){
 						function readDataUrl(rfile) {
 							var reader = new FileReader();
 							reader.onloadend =  function(evt) {
-															//console.log(evt.target.result);
 															var imgelem = document.createElement("img");
 															imgelem.setAttribute("height", (window.innerHeight*.25)+"px");
 															imgelem.setAttribute("width", (window.innerWidth*.30)+"px");

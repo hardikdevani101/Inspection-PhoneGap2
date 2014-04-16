@@ -158,6 +158,7 @@ function setlinedrop(){
                 function processError(data, status, req) {
 					loadPage("login");
 					document.getElementById("login_error").innerHTML="Something Going Wrong!!!";
+					navigator.notification.activityStop();
                 }
 }
 function setNewInsp(){
@@ -261,6 +262,7 @@ function setNewInsp(){
                 function processError(data, status, req) {
 					loadPage("login");
 					document.getElementById("login_error").innerHTML="Something Going Wrong!!!";
+					navigator.notification.activityStop();
                 }
 				navigator.notification.activityStop();
 }
@@ -320,6 +322,7 @@ function imagetoserver(imginspline,imgname){
                 function processError(data, status, req) {
 					loadPage("login");
 					document.getElementById("login_error").innerHTML="Something Going Wrong!!!";
+					navigator.notification.activityStop();
                 }
 				navigator.notification.activityStop();
 }

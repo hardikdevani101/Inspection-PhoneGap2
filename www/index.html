@@ -102,7 +102,7 @@
 		<div>
 			<Span id="gallery_head" style="float: left;"> </Span>
 			<Span class="gallary_menubtn" onClick="onStartNewInspection()">Back</Span>
-			<Span class="gallary_menubtn" onClick="onStartNewInspection()">Discard</Span>
+			<Span class="gallary_menubtn" onClick="showSelectionFiles()">Discard</Span>
 			<Span class="gallary_menubtn" onClick="loadAccureChoise()">Acquire</Span>
 		</div>
 		<br>
@@ -162,6 +162,23 @@
 			<input class="crop_btn" type="button" value="Discard" onClick="backtogallary()"/>
 		</div>
 		</center>
+	</div>
+	
+	<div id="SelectGallary" class="page">
+      <div style="width:100%; ">
+			<Span id="gallery_head" style="float: left; position:fixed;">Select files for discard</Span>
+			<Span class="gallary_menubtn" onClick="backtogallary()">Cancel</Span>
+			<Span class="gallary_menubtn" onClick="confirmGallaryDiscard()">Discard</Span>
+      </div>
+	  <br>
+		<div style="padding:2px; margin:0px;">
+			<hr />
+		</div>
+      <div id="fileList" style="height:70%; overflow:scroll; text-align:left; position:absolute;">
+			<table id="disp-selGal" style="margin:0px; padding:0px;" cellspacing="0" cellpadding="0">
+			
+			</table>
+      </div>
 	</div>
 	
 	<div id="fileExpo" class="page">
