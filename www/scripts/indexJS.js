@@ -430,7 +430,7 @@ function loadAccureChoise(){
 function loadgallaryChoise(){
 	loadPage("fileExpo");
 	fileexplore();
-	window.setTimeout(function(){fileexplore();},50);
+	window.setTimeout(function(){fileexplore();},100);
 }
 
 function onSettingPage(){
