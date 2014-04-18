@@ -91,7 +91,7 @@
 		<div style="height: 17%; width:95%; bottom: 0; left: 0; float:left; position:absolute;padding:0% 2%;">	
 			<hr>
 			<center>
-			<div class="divMenuButton" onClick="discardInspections()">Discard</div>
+			<div class="divMenuButton" onClick="discardInspections()">Delete</div>
 			<div class="divMenuButton" onClick="loadPage('home')">Close</div>
 			<div class="divMenuButton" onClick="picupload()">Finish</div>
 			</center>
@@ -99,21 +99,25 @@
 	</div>
 
 	<div id="gallery" class="page">
-		<div>
-			<Span id="gallery_head" style="float: left;"> </Span>
+		<div style="width:100%;">
+			<center><Span id="gallery_head"></Span></center>
+		</div>
+		<div style="width:80%; margin:0px; padding:0px;float:none;">
+			<Span style="float:left;">Acquire:</span>
+			<Span class="gallary_menubtn" onClick="loadgallaryChoise()">Gallary</Span>
+			<Span class="gallary_menubtn" onClick="captureI()">Camera</Span>
+			<Span style="float:left;border:1px solid black;height:20px;margin-left:10px;"></span>
 			<Span class="gallary_menubtn" onClick="onStartNewInspection()">Back</Span>
-			<Span class="gallary_menubtn" onClick="showSelectionFiles()">Discard</Span>
-			<Span class="gallary_menubtn" onClick="loadAccureChoise()">Acquire</Span>
+			<Span class="gallary_menubtn" onClick="showSelectionFiles()">Delete</Span>
 		</div>
 		<br>
-		<div style="padding:2px; margin:0px;">
+		<div style="padding:0px 2px; margin:0px;">
 			<hr />
 		</div>
 		<div id="imglist" style="padding:0px; margin:0px;">
 			<table id="disp-tab1" style="margin:0px; padding:0px;" cellspacing="0" cellpadding="0">
 			
 			</table>
-			
 		</div>
 	</div>
 	
@@ -186,23 +190,10 @@
 			<h3 style="margin:0px; padding:0px;">File Explorer</h3>
             <a id="backBtn" href="#" onClick="backFile()"><img src="img/backward.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<a id="homeBtn" href="#" onClick="fileexplore()"><img src="img/home.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<a href="#" onClick="loadAccureChoise()"  ><img src="img/undo.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>
+			<a href="#" onClick="backtogallary()"  ><img src="img/undo.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>
       </div>
       <div id="dirContent" style="height:70%; overflow:scroll; text-align:left; position:absolute;">
       </div>
-	</div>
-	
-	<div id="AccureChoise" class="page">
-      <center>
-		<div>
-			<Span > <h3>Acquire From</h3> </Span> 
-		</div>
-      <div>
-	  		<h2 onClick="captureI()" style="border:1px solid #666666; border-radius:5px; background-color:#0099CC;">Camera</h2>
-            <h2 onClick="loadgallaryChoise()" style="border:1px solid #666666; border-radius:5px; background-color:#0099CC;">Gallary</h2><br>
-			<h2 onClick="backtogallary()" style="border:1px solid #666666; border-radius:5px; background-color:#0099CC;">Cancel</h2><br>
-      </div>
-	  </center>
 	</div>
 	
 </body>

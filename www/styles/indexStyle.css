@@ -59,10 +59,10 @@
 	cursor: pointer;
 }
 .gallary_menubtn{
-float: right; 
+float: left; 
 border: 1px solid black; 
 border-radius:3px; 
-padding: 2px; 
+padding: 1px; 
 margin-left:10px; 
 height:20px;
 width:70px;

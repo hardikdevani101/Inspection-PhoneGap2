@@ -150,7 +150,7 @@ function uploadfail(error) {
 }
 
 function confirmGallaryDiscard(){
-	navigator.notification.confirm('Arw you sure ???', DiscardGallary, 'Discard selected gallarys', 'Ok,Cancel');
+	navigator.notification.confirm('Are you sure ???', DiscardGallary, 'Delete selected photos', 'Ok,Cancel');
 }
 
 function DiscardGallary(buttonIndex){
@@ -377,7 +377,7 @@ function loadGallarySuccess(){
 }
 
 function discardInspections(){
-	navigator.notification.confirm('Arw you sure ???', confirmDiscardInspections, 'Discard All Inspections', 'Ok,Cancel');
+	navigator.notification.confirm('Are you sure ???', confirmDiscardInspections, 'Discard All Inspections', 'Ok,Cancel');
 }
 
 function confirmDiscardInspections(buttonIndex){
