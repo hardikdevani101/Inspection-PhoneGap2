@@ -57,6 +57,9 @@ function onLogin(){
 							}
 							username=dlab;
 							INSPECTOR_ID=dval;
+							db.transaction(function(tx){
+								tx.executeSql('UPDATE vis_setting SET username = "'+username+'"');
+							}, errorCB);
 							loadPage("home");
 							document.getElementById("user_lbl").innerHTML="Hello : "+username;
 							navigator.notification.activityStop();

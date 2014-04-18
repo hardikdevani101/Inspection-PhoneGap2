@@ -30,12 +30,13 @@ function settingSelectSuccess(tx, results) {
 		   vis_client_id=results.rows.item(i).vis_client_id;
 		   vis_whouse_id=results.rows.item(i).vis_whouse_id;
 		   vis_org_id=results.rows.item(i).vis_ord_id;
+		   username=results.rows.item(i).username;
 		}
 	}
 }
 function settingDbSetup(tx) {
-    tx.executeSql('CREATE TABLE IF NOT EXISTS vis_setting(vis_url,vis_lang,vis_client_id,vis_role,vis_whouse_id,vis_ord_id)');
-	//tx.executeSql('DROP TABLE IF EXISTS vis_gallery'); 
+	//tx.executeSql('DROP TABLE IF EXISTS vis_setting'); 
+    tx.executeSql('CREATE TABLE IF NOT EXISTS vis_setting(vis_url,vis_lang,vis_client_id,vis_role,vis_whouse_id,vis_ord_id,username)');
 	tx.executeSql('CREATE TABLE IF NOT EXISTS vis_gallery(mr_line,insp_line,image,file,imgUpload DEFAULT "F")');
 }
 

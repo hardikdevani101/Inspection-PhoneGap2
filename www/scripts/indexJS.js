@@ -8,7 +8,7 @@ var watermark;
 var opacity = (255/(100/50));
 var gctx;
 var origImg;
-var username;
+var username="";
 var userid;
 var INSPECTOR_ID;
 var M_InOutLine_ID=0;
@@ -34,7 +34,10 @@ function onLoad() {
 function onDeviceReady() {
 	db = window.openDatabase("vis_inspection", "1.0", "vis_inspection", 100000);
    	db.transaction(settingDbSetup, errorCB, loadSetting);
+	window.setTimeout(function(){
 	loadPage("login");
+	document.getElementById("txt_user").value=username;
+	},100);
 }
 
 function onExit(){
