@@ -39,7 +39,7 @@
 	
 	<div class="page" id="home">
 		<span>
-		<div id="user_lbl"></div>
+		<div id="user_lbl" style="float:left;"></div><br>
 		<h1>VIS-Inspection Phonegap</h1>
 		</span><input
 			class="menuButton" id="startNewInspectionBtn"
@@ -93,7 +93,7 @@
 			<center>
 			<div class="divMenuButton" onClick="discardInspections()">Delete</div>
 			<div class="divMenuButton" onClick="loadPage('home')">Close</div>
-			<div class="divMenuButton" onClick="picupload()">Finish</div>
+			<div class="divMenuButton" onClick="onFinish()">Finish</div>
 			</center>
 		</div>
 	</div>
@@ -107,8 +107,8 @@
 			<Span class="gallary_menubtn" onClick="loadgallaryChoise()">Gallary</Span>
 			<Span class="gallary_menubtn" onClick="captureI()">Camera</Span>
 			<Span style="float:left;border:1px solid black;height:20px;margin-left:10px;"></span>
-			<Span class="gallary_menubtn" onClick="onStartNewInspection()">Back</Span>
-			<Span class="gallary_menubtn" onClick="showSelectionFiles()">Delete</Span>
+			<Span class="gallary_menubtn" onClick="onBackToStartInspection('gallary')">Back</Span>
+			<Span class="gallary_menubtn" onClick="onDeleteGallaryPage()">Delete</Span>
 		</div>
 		<br>
 		<div style="padding:0px 2px; margin:0px;">
@@ -170,9 +170,9 @@
 	
 	<div id="SelectGallary" class="page">
       <div style="width:100%; ">
-			<Span id="gallery_head" style="float: left; position:fixed;">Select files for discard</Span>
-			<Span class="gallary_menubtn" onClick="backtogallary()">Cancel</Span>
-			<Span class="gallary_menubtn" onClick="confirmGallaryDiscard()">Discard</Span>
+			<Span id="gallery_head" style="float: left; position:fixed;">Select files for delete</Span>
+			<Span class="gallary_menubtn" onClick="backtogallary()" style="float:right;">Cancel</Span>
+			<Span class="gallary_menubtn" onClick="confirmGallaryDiscard()" style="float:right;">Delete</Span>
       </div>
 	  <br>
 		<div style="padding:2px; margin:0px;">

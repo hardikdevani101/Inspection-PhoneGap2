@@ -1,111 +1,92 @@
-var fileName;
 var imageURI;
 var gcanvas;
-var readEntries;
+var root;
+var dirVISInspection;
+var currentDir;
+var parentDir;
+var parlistArray;
+var DataTypes=["JPEG","JPG","BMP","PNG"];
+
+function setRootDirectory(fileSystem){
+	root=fileSystem.root;
+	root.getDirectory("VIS_Inspection", {create : true},setVISDirectory, dirFail);
+}
+
+function setVISDirectory(fileSystem){
+	dirVISInspection=fileSystem;
+}
+
 function saveImage(){
-	navigator.notification.activityStart("Please Wait", "Saving Image");
+	navigator.notification.activityStart("Please Wait", "Saving Image.....");
 	var date = new Date;
 	var sec = date.getSeconds();
 	var mi = date.getMinutes();
 	var hh = date.getHours();
-
 	var yy = date.getFullYear();
 	var mm = date.getMonth();
 	var dd = date.getDate();
-	fileName="vis_inspection_"+mm+dd+yy+"_"+hh+mi+sec+".png";
-	
+	var fileName="vis_inspection_"+mm+dd+yy+"_"+hh+mi+sec+".png";
 	var img64 = gcanvas.toDataURL("image/png").replace(/data:image\/png;base64,/,''); 
 	imageURI=Base64Binary.decodeArrayBuffer(img64);
-	
-	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFileSystem,function(error){ console.log("request FSError = "+error); });
+	dirVISInspection.getFile(fileName, {create: true, exclusive: false}, CreateImgWriter,function(error){ console.log("File Create FSError = "+error.code); });
+
 }
 
-function gotFileEntry(fileEntry) {
-	fileEntry.createWriter(gotFileWriter, function(error){ console.log("file entry FSError = "+error.code); });
+function CreateImgWriter(fileEntry) { 
+	var fileFullPath=getSDPath(fileEntry.fullPath).substring(1);
+	fileEntry.createWriter(function (writer){
+		OnImgWriter(writer,fileFullPath,fileEntry.name);
+	}, function(error){ console.log("file entry FSError = "+error.code); });
 }
-function gotFileWriter(writer){
+function OnImgWriter(writer,fileFullPath,fileName){ 
 	 writer.onwrite = function(evt) {
-		 	db.transaction(insertimage, errorCB);
+		 	db.transaction(function (tx){
+				tx.executeSql('INSERT INTO vis_gallery(mr_line,insp_line,name,file) VALUES ("'+M_InOutLine_ID+'","'+X_INSTRUCTIONLINE_ID+'","'+fileName+'","'+fileFullPath+'")');
+			}, errorCB);
             backtogallary();
-			readImages();
-			window.setTimeout(function(){
-			readImg();
-			},100);
+			onUploadFile(fileFullPath,X_INSTRUCTIONLINE_ID,callUploadVerify);
         };
 	 writer.write(imageURI);
 }
-function gotFileSystem(fileSystem) {
-	fileSystem.root.getDirectory("VIS_Inspection", {create : true},datafile, dirFail);
-}
-function datafile(directory){
-	directory.getFile(fileName, {create: true, exclusive: false}, gotFileEntry,function(error){ console.log("File Create FSError = "+error.code); });
-}
+
 function dirFail(error) {
 	console.log("DIRError = "+error);
 }
 
+function onUploadFile(filePath, InspNumber,callBack) {
+    root.getFile(filePath, null, SingleFileSuccess, function (error) {
+        console.log(" FSError = " + error.code);
+    });
 
-//Read All Images
-function readImages(){
-	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotreadFileSystem,function(error){ console.log("request FSError = "+error); });
-}
-function gotreadFileSystem(fileSystem) {
-	fileSystem.root.getDirectory("VIS_Inspection", {create : true},readdatafile, dirFail);
-}
-function readdatafile(directory){
-	var directoryReader = directory.createReader();
-	directoryReader.readEntries(readSuccess,function(error){ console.log("Error on read = "+error); });
-}
-function readSuccess(entries){
-	readEntries=entries;
-}
-function win(r) {
-            //console.log("Code = " + r.responseCode);
-            console.log("Response = " + r.response);
-            //console.log("Sent = " + r.bytesSent);
-}
-
-function fail(error) {
-   console.log("Error = " + error.code);
+    function SingleFileSuccess(FnEntries) {
+        var ft = new FileTransfer();
+        var options = new FileUploadOptions();
+        options.fileKey = "file";
+        options.fileName = FnEntries.name;
+        ft.upload(FnEntries.toURL(), encodeURI(vis_url + "/VISService/fileUpload"), function () {
+            fileName = getFileName(getSDPath(FnEntries.fullPath));
+            db.transaction(function (tx) {
+                tx.executeSql('UPDATE vis_gallery SET imgUpload="T" WHERE file="' + filePath + '" and insp_line="' + InspNumber + '"');
+            }, errorCB);
+            imgUploadCount = imgUploadCount - 1;
+            callBack();
+        }, uploadFail, options);
+    }
 }
 
-
-//Single image Read
-function readImg(){
-	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotImgDirFileSystem,function(error){ console.log("request FSError = "+error.code); });
-}
-function gotImgDirFileSystem(DirSystem) {
-	DirSystem.root.getDirectory("VIS_Inspection", {create : true},gotImgFileSystem, function(error){ console.log(" FSError = "+error.code); });
-}
-function gotImgFileSystem(fileSystem) {
-	console.log("Get imag file system");
-	fileSystem.getFile(fileName,null,imgSuccess,function(error){ console.log(" FSError = "+error.code); });
-}
-function readImgfile(img){
-	img.file(imgSuccess,function(error){ console.log("Error on read = "+error.code); });
-}
-function imgSuccess(imgEntries){
-		singleImgUpload(imgEntries);
+function uploadFail(error) {
+    console.log("Error = " + error.code);
+    navigator.notification.alert('All files not uploaded', function () {}, 'Failure', 'OK');
+    navigator.notification.activityStop();
 }
 
-//file explorer
-var root;
-var currentDir;
-var parentDir;
-var parlist;
-var DataTypes=["JPEG","JPG","BMP","PNG"];
 function fileexplore(){
-	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFileExplore,function(error){ console.log("request FSError = "+error); });
-	parlist=[];
-}
-function gotFileExplore(fileSystem) {
-	root=fileSystem.root;
-	
-	parlist.push(root);
+	parlistArray=[];
+	parlistArray.push(root);
 	listDir(root);
 }
 function backFile(){
-	var tmppar=parlist.pop();
+	var tmppar=parlistArray.pop();
 	listDir(tmppar);
 }
 function listDir(DirEntry){
@@ -126,14 +107,13 @@ function listDir(DirEntry){
 				var div=document.createElement('div');
 				if( entry.isDirectory && entry.name[0] != '.' ){
 						div.className="folder";
-						console.log("entry file====="+entry.name);
 						var tmpstr="listsub('"+entry.name+"')";
 						div.setAttribute('onclick',tmpstr);
 						div.innerHTML=entry.name;
 					}
 				else if( entry.isFile && entry.name[0] != '.' ){
 						div.className="file";
-						var tmpstr="fileDbEntry('"+entry.fullPath+"')";
+						var tmpstr="onFileExplorerClick('"+entry.fullPath+"')";
 						div.setAttribute('onclick',tmpstr);
 						div.innerHTML=entry.name;
 					}
@@ -145,30 +125,22 @@ function listDir(DirEntry){
     });
 }
 function listsub(DirName){
-	parlist.push(currentDir);
+	parlistArray.push(currentDir);
 	currentDir.getDirectory(DirName, null, function (dir){listDir(dir);}, function(error){ console.log("Error = "+error.code); });
 }
 
-//upload File After Select
-function uploadSingleFile(fName){
-	root.getFile(fName,null,FnameSuccess,function(error){ console.log(" FSError = "+error.code); });
-}
-function FnameSuccess(FnEntries){
-		var ft = new FileTransfer();
-		var options = new FileUploadOptions();
-		options.fileKey="file";
-		options.fileName=FnEntries.name;
-		ft.upload(FnEntries.toURL(), encodeURI(vis_url+"/VISService/fileUpload"), singleFilewin, uploadfail, options);
-		function singleFilewin(){
-			db.transaction( function(tx){tx.executeSql('UPDATE vis_gallery SET imgUpload="T" WHERE file="'+fileName+'"');}, errorCB);
-		}
+function onReadFileDataUrl(FnEntries,callBack){
+	FnEntries.file(function (rfile){
+		var reader = new FileReader();
+			reader.onloadend = function (evt) {
+			console.log("yes this is img");
+			callBack(evt,rfile);
+		};
+		reader.readAsDataURL(rfile);
+	}, function () {});
 }
 
-function getGallaryFileSystem(fileSystem){
-	fileSystem.root.getFile(fileName,null,GallaryImgSuccess,function(error){ console.log(" FSError = "+error.code); });
-}
-
-function GallaryImgSuccess(FnEntries){
+function onImgFileSystem(FnEntries){
 	FnEntries.file(gotGallaryImg,function(){});
 	function gotGallaryImg(rfile){readGallaryDataUrl(rfile);}
 	function readGallaryDataUrl(rfile) {
@@ -182,6 +154,12 @@ function GallaryImgSuccess(FnEntries){
 	}
 }
 
-		
+function getSDPath(Fname){
+	var tmpArray=Fname.split('mnt/sdcard');
+	return tmpArray.pop();
+}
 
-
+function getExtention(Fname){
+	var tmpArray=Fname.split('.');
+	return tmpArray.pop();
+}

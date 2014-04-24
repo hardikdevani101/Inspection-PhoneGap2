@@ -1,7 +1,7 @@
 function onLogin(){
-	navigator.notification.activityStart("Please Wait", "logging");
+	navigator.notification.activityStart("Please Wait", "Logging.....");
 	$.ajax({type: "POST",
-			url: vis_url+"/VISService/services/"+"ModelADService",
+			url: getWsUrl("ModelADService"),
 			dataType: "xml",
 			contentType: 'text/xml; charset=\"utf-8\"',
 			data: '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
@@ -16,16 +16,7 @@ function onLogin(){
 							   +'<_0:DataRow>'
 							   +'</_0:DataRow>'
 							+'</_0:ModelCRUD>'
-							+'<_0:ADLoginRequest>'
-							   +'<_0:user>'+ vis_user +'</_0:user>'
-							   +'<_0:pass>'+ vis_pass +'</_0:pass>'
-							   +'<_0:lang>'+vis_lang+'</_0:lang>'
-							   +'<_0:ClientID>'+vis_client_id+'</_0:ClientID>'
-							   +'<_0:RoleID>'+vis_role+'</_0:RoleID>'
-							   +'<_0:OrgID>'+vis_org_id+'</_0:OrgID>'
-							   +'<_0:WarehouseID>'+vis_whouse_id+'</_0:WarehouseID>'
-							   +'<_0:stage>9</_0:stage>'
-							+'</_0:ADLoginRequest>'
+							+ getWsDataLoginString()
 						 +'</_0:ModelCRUDRequest>'
 					  +'</_0:readData>'
 				   +'</soapenv:Body>'
@@ -40,34 +31,31 @@ function onLogin(){
 						{
 							var xmlResponse =req.responseXML.documentElement;
 							var fullNodeList = xmlResponse.getElementsByTagName("DataRow");
+							var dlab,dval;
 							for (var i=0; i < fullNodeList.length; i++)
 							{
-							  var eachnode = new Option();
 							  for (var j=0; j < fullNodeList[i].childNodes.length; j++)
 								{	
-									var dlab,dval;
-									eachnode.text = fullNodeList[i].childNodes[j].childNodes[0].textContent;
-									eachnode.value = fullNodeList[i].childNodes[j].attributes[0].value;
-									if(eachnode.value=='Name'){
-								  		dlab = eachnode.text;
-									}else if(eachnode.value=='AD_User_ID'){
-								  		dval = eachnode.text;
+									if( fullNodeList[i].childNodes[j].attributes[0].value == 'Name'){
+								  		dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent;
+									}else if( fullNodeList[i].childNodes[j].attributes[0].value == 'AD_User_ID'){
+								  		dval = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 							  		}
 								}
 							}
-							username=dlab;
+							userName=dlab;
 							INSPECTOR_ID=dval;
 							db.transaction(function(tx){
-								tx.executeSql('UPDATE vis_setting SET username = "'+username+'"');
+								tx.executeSql('UPDATE vis_setting SET username = "'+userName+'"');
 							}, errorCB);
 							loadPage("home");
-							document.getElementById("user_lbl").innerHTML="Hello : "+username;
+							document.getElementById("user_lbl").innerHTML="User : "+userName;
 							navigator.notification.activityStop();
 						}
 						else{
 							//navigator.notification.alert(req.responseText + " " + status);
 							loadPage("login");
-							document.getElementById("login_error").innerHTML="Not Valid User";
+							document.getElementById("login_error").innerHTML="Login Failed!!!!";
 							navigator.notification.activityStop();
 						}
 					}
@@ -75,17 +63,21 @@ function onLogin(){
                 }
 
                 function processError(data, status, req) {
+					console.log("Error ="+data.status);
+					console.log("Error ="+data.statusText );
+					console.log("Error ="+data.responseText);
 					loadPage("login");
-					document.getElementById("login_error").innerHTML="Something Going Wrong!!!";
+					document.getElementById("txt_user").value=userName;
+					navigator.notification.alert('Failer!!',function(){},getErrorMessage(data, status, req),'Ok');
 					navigator.notification.activityStop();
                 }  
 }
 
 
-function setlinedrop(){
+function fillMrLines(){
 	
 	$.ajax({type: "POST",
-			url: vis_url+"/VISService/services/"+"ModelADService",
+			url: getWsUrl("ModelADService"),
 			dataType: "xml",
 			contentType: 'text/xml; charset=\"utf-8\"',
 			data: '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
@@ -103,16 +95,7 @@ function setlinedrop(){
 								  +'</_0:field>'
 							   +'</_0:DataRow>'
 						 +'</_0:ModelCRUD>'
-							+'<_0:ADLoginRequest>'
-							   +'<_0:user>'+ vis_user +'</_0:user>'
-							   +'<_0:pass>'+ vis_pass +'</_0:pass>'
-							   +'<_0:lang>'+vis_lang+'</_0:lang>'
-							   +'<_0:ClientID>'+vis_client_id+'</_0:ClientID>'
-							   +'<_0:RoleID>'+vis_role+'</_0:RoleID>'
-							   +'<_0:OrgID>'+vis_org_id+'</_0:OrgID>'
-							   +'<_0:WarehouseID>'+vis_whouse_id+'</_0:WarehouseID>'
-							   +'<_0:stage>9</_0:stage>'
-							+'</_0:ADLoginRequest>'
+							+ getWsDataLoginString()
 						 +'</_0:ModelCRUDRequest>'
 					  +'</_0:queryData>'
 				   +'</soapenv:Body>'
@@ -121,56 +104,51 @@ function setlinedrop(){
                     error: processError
                 });
 				function processSuccess(data, status, req) {
-					console.log(req.responseText);
                     if (status == "success")
-					{		
-							var select = document.getElementById("linedrop");
+					{		mrLinesArray = new Array();
 							var xmlResponse =req.responseXML.documentElement;
 							var fullNodeList = xmlResponse.getElementsByTagName("DataRow");
 							for (var i=0; i < fullNodeList.length; i++)
 							{
 								var dlab,dval;
 								var option = document.createElement('option');
-							 	var eachnode = new Option();
 								for (var j=0; j < fullNodeList[i].childNodes.length; j++)
 								{
-									eachnode.text = fullNodeList[i].childNodes[j].childNodes[0].textContent;
-									eachnode.value = fullNodeList[i].childNodes[j].attributes[0].value;
-									if(eachnode.value=='LABEL'){
-								  		dlab = eachnode.text;
-									}else if(eachnode.value=='M_InOutLine_ID'){
-								  		dval = eachnode.text;
+									if( fullNodeList[i].childNodes[j].attributes[0].value == 'LABEL'){
+								  		dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
+									}else if( fullNodeList[i].childNodes[j].attributes[0].value == 'M_InOutLine_ID'){
+								  		dval = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
 							  		}
 								}
-								option.text=dlab;
-								option.value=dval;
-								console.log(option.text+" = "+option.value);
-							  	select.add(option);
+								mrLinesArray[i]=new Array();
+								mrLinesArray[i][0]=dlab;
+								mrLinesArray[i][1]=dval;
 							}
-							select.setAttribute("onchange","setNewInsp()");
-							for(var i=0; i < select.options.length; i++){
-								console.log(select.options[i].value);
-								if(select.options[i].value==M_InOutLine_ID)
-									{select.options[i].selected =true;console.log("selected="+select.options[i].value);}
-							}
-							setNewInsp();
+							onBackToStartInspection('home');
 					}
 					
                 }
 
                 function processError(data, status, req) {
-					loadPage("login");
-					document.getElementById("login_error").innerHTML="Something Going Wrong!!!";
+					if(backPage=='gallary')
+						backtogallary();
+					else
+						{
+							loadPage("home");
+							document.getElementById("user_lbl").innerHTML="User : "+userName;
+						}
 					navigator.notification.activityStop();
+					navigator.notification.alert('Failer!!',function(){},getErrorMessage(data, status, req),'Ok');
                 }
+				
 }
-function setNewInsp(){
+function fillInspectionsLines(){
 	
 	var e = document.getElementById("linedrop");
 	M_InOutLine_ID=e.options[e.selectedIndex].value;
 	M_line_name=e.options[e.selectedIndex].text;
 	$.ajax({type: "POST",
-			url: vis_url+"/VISService/services/"+"ModelADService",
+			url: getWsUrl("ModelADService"),
 			dataType: "xml",
 			contentType: 'text/xml; charset=\"utf-8\"',
 			data: '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
@@ -188,16 +166,7 @@ function setNewInsp(){
 								  +'</_0:field>'
 							   +'</_0:DataRow>'
 						 +'</_0:ModelCRUD>'
-							+'<_0:ADLoginRequest>'
-							   +'<_0:user>'+ vis_user +'</_0:user>'
-							   +'<_0:pass>'+ vis_pass +'</_0:pass>'
-							   +'<_0:lang>'+vis_lang+'</_0:lang>'
-							   +'<_0:ClientID>'+vis_client_id+'</_0:ClientID>'
-							   +'<_0:RoleID>'+vis_role+'</_0:RoleID>'
-							   +'<_0:OrgID>'+vis_org_id+'</_0:OrgID>'
-							   +'<_0:WarehouseID>'+vis_whouse_id+'</_0:WarehouseID>'
-							   +'<_0:stage>9</_0:stage>'
-							+'</_0:ADLoginRequest>'
+							+ getWsDataLoginString()
 						 +'</_0:ModelCRUDRequest>'
 					  +'</_0:queryData>'
 				   +'</soapenv:Body>'
@@ -229,20 +198,16 @@ function setNewInsp(){
 									document.getElementById("disp-Insp").appendChild(tr);
 							   }
 							Disp_col=0;Disp_row=0;
-							console.log("Insp length==="+fullNodeList.length);
 							for (var i=0; i < fullNodeList.length; i++)
 							{	
 								var dlab,dval;
 								var tmpdiv = document.createElement('div');
-							 	var eachnode = new Option();
 								for (var j=0; j < fullNodeList[i].childNodes.length; j++)
 								{
-									eachnode.text = fullNodeList[i].childNodes[j].childNodes[0].textContent;
-									eachnode.value = fullNodeList[i].childNodes[j].attributes[0].value;
-									if(eachnode.value=='Name'){
-								  		dlab = eachnode.text;
-									}else if(eachnode.value=='X_INSTRUCTIONLINE_ID'){
-								  		dval = eachnode.text;
+									if( fullNodeList[i].childNodes[j].attributes[0].value == 'Name'){
+								  		dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
+									}else if( fullNodeList[i].childNodes[j].attributes[0].value == 'X_INSTRUCTIONLINE_ID'){
+								  		dval = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
 							  		}
 								}
 							   	
@@ -257,24 +222,30 @@ function setNewInsp(){
 								document.getElementById("InsTd-"+Disp_row+"-"+Disp_col).appendChild(tmpdiv);
 								Disp_col=Disp_col+1;
 							}
-						
+						navigator.notification.activityStop();
 					}
 					
                 }
 
                 function processError(data, status, req) {
-					loadPage("login");
-					document.getElementById("login_error").innerHTML="Something Going Wrong!!!";
+					if(backPage=='gallary')
+						backtogallary();
+					else
+						{
+							loadPage("home");
+							document.getElementById("user_lbl").innerHTML="User : "+userName;
+						}
 					navigator.notification.activityStop();
+					navigator.notification.alert('Failer!!',function(){},getErrorMessage(data, status, req),'Ok');
                 }
-				navigator.notification.activityStop();
 }
 
 
-function imagetoserver(imginspline,imgname){
+function callAttachImageWs(imginspline,imgname){
 	
+	console.log("insp=="+imginspline+"imgnam=="+imgname);
 	$.ajax({type: "POST",
-			url: vis_url+"/VISService/services/"+"ModelADService",
+			url: getWsUrl("ModelADService"),
 			dataType: "xml",
 			contentType: 'text/xml; charset=\"utf-8\"',
 			data: '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
@@ -289,20 +260,11 @@ function imagetoserver(imginspline,imgname){
 										 +'<_0:val>'+imginspline+'</_0:val>'
 									  +'</_0:field>'
 									  +'<_0:field column="imgName">'
-										 +'<_0:val>'+imgname+'</_0:val>'
+										 +'<_0:val>'+getFileName(imgname)+'</_0:val>'
 									  +'</_0:field>'
 								   +'</_0:ParamValues>'
 								+'</_0:ModelRunProcess>'
-							+'<_0:ADLoginRequest>'
-							   +'<_0:user>'+ vis_user +'</_0:user>'
-							   +'<_0:pass>'+ vis_pass +'</_0:pass>'
-							   +'<_0:lang>'+vis_lang+'</_0:lang>'
-							   +'<_0:ClientID>'+vis_client_id+'</_0:ClientID>'
-							   +'<_0:RoleID>'+vis_role+'</_0:RoleID>'
-							   +'<_0:OrgID>'+vis_org_id+'</_0:OrgID>'
-							   +'<_0:WarehouseID>'+vis_whouse_id+'</_0:WarehouseID>'
-							   +'<_0:stage>9</_0:stage>'
-							+'</_0:ADLoginRequest>'
+							+ getWsDataLoginString()
 						 +'</_0:ModelRunProcessRequest>'
 					  +'</_0:runProcess>'
 				   +'</soapenv:Body>'
@@ -315,17 +277,55 @@ function imagetoserver(imginspline,imgname){
 					var fullNodeList = xmlResponse.getElementsByTagName("Summary");
 					if(fullNodeList[0].textContent=='success')
 					{
-						console.log(fullNodeList[0].textContent);
-						
+						db.transaction(function(tx){
+							tx.executeSql('UPDATE vis_gallery SET imgAttach="T" WHERE file="'+imgname+'" and insp_line="'+imginspline+'"');
+							attachCount=attachCount-1;
+							if(attachCount==0){
+								deleteMRgallary();
+							}
+						}, errorCB);
 					}else{
-						console.log(fullNodeList[0].textContent);
+						var tmpArray=fullNodeList[0].textContent.split('-');
+						if(tmpArray[0]==2){
+								db.transaction(function (tx){
+									tx.executeSql('UPDATE vis_gallery SET imgUpload="F" WHERE file="'+imgname+'" and insp_line="'+imginspline+'"');
+								}, errorCB);
+							navigator.notification.alert('Attachment file not found on Server, Try again', function(){}, 'Failure', 'OK');
+							navigator.notification.activityStop();
+						}else{
+							navigator.notification.activityStop();
+							navigator.notification.alert('Error while Attaching : ' + fullNodeList[0].textContent , function(){}, 'Failure', 'OK');
+						}
 					}
                 }
 
                 function processError(data, status, req) {
-					loadPage("login");
-					document.getElementById("login_error").innerHTML="Something Going Wrong!!!";
 					navigator.notification.activityStop();
+					navigator.notification.alert('Failer!!',function(){},getErrorMessage(data, status, req),'Ok');
                 }
-				navigator.notification.activityStop();
+				
+}
+function getWsUrl(services){
+	return vis_url+"/VISService/services/"+services;
+}
+function getWsDataLoginString(){
+	return '<_0:ADLoginRequest>'
+							   +'<_0:user>'+ vis_user +'</_0:user>'
+							   +'<_0:pass>'+ vis_pass +'</_0:pass>'
+							   +'<_0:lang>'+vis_lang+'</_0:lang>'
+							   +'<_0:ClientID>'+vis_client_id+'</_0:ClientID>'
+							   +'<_0:RoleID>'+vis_role+'</_0:RoleID>'
+							   +'<_0:OrgID>'+vis_org_id+'</_0:OrgID>'
+							   +'<_0:WarehouseID>'+vis_whouse_id+'</_0:WarehouseID>'
+							   +'<_0:stage>9</_0:stage>'
+		+'</_0:ADLoginRequest>';
+}
+function getErrorMessage(data, status, req){
+	if(data.status == 0){
+	return data.statusText +" : Error getting response, Connection refused";
+	}else if(data.status == 500){
+	return data.statusText +" : "+ $(data.responseXML).find('faultstring').text();
+	}else{
+	return data.statusText +" : Something goint wrong !!!";
+	}
 }
