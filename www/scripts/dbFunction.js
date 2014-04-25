@@ -32,10 +32,11 @@ function settingSelectSuccess(tx, results) {
 		   vis_org_id=results.rows.item(i).vis_ord_id;
 		   userName=results.rows.item(i).username;
 		}
+		document.getElementById("txt_user").value = userName;
 	}
 }
 function settingDbSetup(tx) {
-	tx.executeSql('DROP TABLE IF EXISTS vis_gallery'); 
+	//tx.executeSql('DROP TABLE IF EXISTS vis_gallery'); 
     tx.executeSql('CREATE TABLE IF NOT EXISTS vis_setting(vis_url,vis_lang,vis_client_id,vis_role,vis_whouse_id,vis_ord_id,username)');
 	tx.executeSql('CREATE TABLE IF NOT EXISTS vis_gallery(mr_line,insp_line,name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F")');
 }
@@ -53,10 +54,8 @@ function onFileExplorerClick(entry){
 		db.transaction(function (tx){
 			tx.executeSql('INSERT INTO vis_gallery(mr_line,insp_line,name,file) VALUES ("'+M_InOutLine_ID+'","'+X_INSTRUCTIONLINE_ID+'","'+fileName+'","'+fileFullPath+'")');
 		}, errorCB);
-		backtogallary();
-		//window.setTimeout(function(){
+		onAfterSaveFile(fileFullPath);
 		onUploadFile(fileFullPath,X_INSTRUCTIONLINE_ID,callUploadVerify);
-		//},100);
 	}
 }
 
@@ -105,4 +104,15 @@ function onDeleteGallaryPage() {
         });
     }, errorCB);
     document.getElementById("disp-selGal").innerHTML = "";
+}
+function getUploadCounts(mInNumber,dlab,InspNumber,callBack){
+	db.transaction(function (tx) {
+        tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="' + mInNumber + '" and insp_line="' + InspNumber + '"', [], function (tx, results) {
+            var totImg = results.rows.length;
+            tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="' + mInNumber + '" and insp_line="' + InspNumber + '" and imgUpload="T"', [], function (tx, results){
+				var totImgUpload=results.rows.length;
+				callBack(dlab,InspNumber,totImg,totImgUpload);
+			},function (err) {console.log("Error SQL: " + err.code);});
+        }, function (err) {console.log("Error SQL: " + err.code);});
+    }, errorCB);
 }

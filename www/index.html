@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF8">
 <title>VIS-Inspection Phonegap</title>
 <script src="cordova.js"></script>
+<script src="scripts/aboutUs.js"></script>
 <script src="scripts/fileFunction.js"></script>
 <script src="scripts/dbFunction.js"></script>
 <script src="scripts/webserviceFunctions.js"></script>
@@ -33,7 +34,9 @@
 		Password : <input id="txt_password" type="password" value=""/><br><br>
 		<input id="loginbtn" class="login_btns" onClick="validateLogin()" type="button" value="Login">&nbsp;&nbsp;
 		<input id="settingpagebtn" class="login_btns" onClick="onSettingPage()" type="button" value="Setting">&nbsp;&nbsp;
-		<input id="exitbtn" class="login_btns" onClick="onExit()" type="button" value="Exit"><br><br>
+		<input id="aboutBtn" class="login_btns" onClick="onAboutUs()" type="button" value="AboutUs">&nbsp;&nbsp;
+		<input id="exitbtn" class="login_btns" onClick="onExit()" type="button" value="Exit">
+		
 		<div id="login_error"></div>
 	</div>
 	
@@ -80,6 +83,7 @@
 	<div class="page" id="startNewInsp">
 		<span> Line No: <!--<input type="text" id="lineNoTxt" />-->
 		<select id="linedrop"></select>
+		<input id="btnReload" class="login_btns" onClick="fillMrLines()" type="button" value="Reload">
 		</span>
 		<hr>
 		<div style="height: auto;width:100%;text-align: center; padding:0px 5%;" id="outNewIns">
@@ -178,7 +182,7 @@
 		<div style="padding:2px; margin:0px;">
 			<hr />
 		</div>
-      <div id="fileList" style="height:70%; overflow:scroll; text-align:left; position:absolute;">
+      <div id="fileList" style="height:80%; overflow:scroll; text-align:left; position:absolute;">
 			<table id="disp-selGal" style="margin:0px; padding:0px;" cellspacing="0" cellpadding="0">
 			
 			</table>
@@ -195,6 +199,9 @@
       <div id="dirContent" style="height:70%; overflow:scroll; text-align:left; position:absolute;">
       </div>
 	</div>
+	<div id="aboutUs" class="page" >
+	</div>
+	
 	
 </body>
 </html>

@@ -201,7 +201,6 @@ function fillInspectionsLines(){
 							for (var i=0; i < fullNodeList.length; i++)
 							{	
 								var dlab,dval;
-								var tmpdiv = document.createElement('div');
 								for (var j=0; j < fullNodeList[i].childNodes.length; j++)
 								{
 									if( fullNodeList[i].childNodes[j].attributes[0].value == 'Name'){
@@ -210,7 +209,13 @@ function fillInspectionsLines(){
 								  		dval = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
 							  		}
 								}
-							   	
+							   	getUploadCounts(M_InOutLine_ID,dlab,dval,FillInspectionDiv);
+								function FillInspectionDiv(dlab,dval,totCnt,uploadCnt){
+								console.log("Total="+totCnt);
+								var tmpdiv = document.createElement('div');
+								var totDiv= document.createElement('div');
+								totDiv.setAttribute("style", "position:absolute;margin-top:5px;margin-left:50px;");
+								totDiv.innerHTML=totCnt+" ( "+uploadCnt+" ) ";
 								tmpdiv.className = "InspButton";
 								tmpdiv.setAttribute("style", "margin:2px 10px;");
 								tmpdiv.innerHTML=dlab;
@@ -219,8 +224,10 @@ function fillInspectionsLines(){
 								var clickstr="onInspSet('"+dval+"','"+ dlab.replace('\'', '\\\'')+"')";
 								tmpdiv.setAttribute('onclick',clickstr);
 								if(Disp_col>=Math.ceil(fullNodeList.length/2)){Disp_col=0;Disp_row=Disp_row+1;}
+								document.getElementById("InsTd-"+Disp_row+"-"+Disp_col).appendChild(totDiv);
 								document.getElementById("InsTd-"+Disp_row+"-"+Disp_col).appendChild(tmpdiv);
 								Disp_col=Disp_col+1;
+								}
 							}
 						navigator.notification.activityStop();
 					}
