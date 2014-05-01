@@ -31,6 +31,9 @@ function settingSelectSuccess(tx, results) {
 		   vis_whouse_id=results.rows.item(i).vis_whouse_id;
 		   vis_org_id=results.rows.item(i).vis_ord_id;
 		   userName=results.rows.item(i).username;
+		   if(userName=='undefined'){
+				userName = '';
+		   }
 		}
 		document.getElementById("txt_user").value = userName;
 	}

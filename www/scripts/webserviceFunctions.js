@@ -49,6 +49,7 @@ function onLogin(){
 								tx.executeSql('UPDATE vis_setting SET username = "'+userName+'"');
 							}, errorCB);
 							loadPage("home");
+							pageState = 1;
 							document.getElementById("user_lbl").innerHTML="User : "+userName;
 							navigator.notification.activityStop();
 						}
@@ -108,23 +109,30 @@ function fillMrLines(){
 					{		mrLinesArray = new Array();
 							var xmlResponse =req.responseXML.documentElement;
 							var fullNodeList = xmlResponse.getElementsByTagName("DataRow");
-							for (var i=0; i < fullNodeList.length; i++)
+							if (fullNodeList.length == 0){
+								navigator.notification.activityStop();
+								navigator.notification.alert('No MR Lines to perform Inspection for you.','','Alert');
+								loadPage("home");
+							} else
 							{
-								var dlab,dval;
-								var option = document.createElement('option');
-								for (var j=0; j < fullNodeList[i].childNodes.length; j++)
+								for (var i=0; i < fullNodeList.length; i++)
 								{
-									if( fullNodeList[i].childNodes[j].attributes[0].value == 'LABEL'){
-								  		dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
-									}else if( fullNodeList[i].childNodes[j].attributes[0].value == 'M_InOutLine_ID'){
-								  		dval = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
-							  		}
+									var dlab,dval;
+									var option = document.createElement('option');
+									for (var j=0; j < fullNodeList[i].childNodes.length; j++)
+									{
+										if( fullNodeList[i].childNodes[j].attributes[0].value == 'LABEL'){
+											dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
+										}else if( fullNodeList[i].childNodes[j].attributes[0].value == 'M_InOutLine_ID'){
+											dval = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
+										}
+									}
+									mrLinesArray[i]=new Array();
+									mrLinesArray[i][0]=dlab;
+									mrLinesArray[i][1]=dval;
 								}
-								mrLinesArray[i]=new Array();
-								mrLinesArray[i][0]=dlab;
-								mrLinesArray[i][1]=dval;
+								onBackToStartInspection('home');
 							}
-							onBackToStartInspection('home');
 					}
 					
                 }
@@ -317,7 +325,7 @@ function getWsUrl(services){
 }
 function getWsDataLoginString(){
 	return '<_0:ADLoginRequest>'
-							   +'<_0:user>'+ vis_user +'</_0:user>'
+							   +'<_0:user>'+ userName +'</_0:user>'
 							   +'<_0:pass>'+ vis_pass +'</_0:pass>'
 							   +'<_0:lang>'+vis_lang+'</_0:lang>'
 							   +'<_0:ClientID>'+vis_client_id+'</_0:ClientID>'

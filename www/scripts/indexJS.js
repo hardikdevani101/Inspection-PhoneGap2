@@ -14,7 +14,6 @@ var M_InOutLine_ID = 0;
 var M_line_name;
 var X_INSTRUCTIONLINE_ID;
 var X_instruction_name;
-var vis_user;
 var vis_pass;
 var Disp_row;
 var Disp_col;
@@ -26,6 +25,7 @@ var mrLinesArray = new Array();
 var backPage;
 var gallaryTable="";
 var totColumns=0;
+var pageState = 0;
 
 function onLoad() {
     document.addEventListener("deviceready", onDeviceReady, false);
@@ -42,7 +42,9 @@ function onDeviceReady() {
         console.log("request FSError = " + error);
     });
     window.setTimeout(function () {
-        loadPage("login");
+        if(pageState==0){
+			loadPage("login");
+		}
         document.getElementById("txt_user").value = userName;
     }, 100);
 }
@@ -396,6 +398,7 @@ function getFileName(tmpFile) {
 
 function onLoginpage() {
     loadPage("login");
+	pageState = 0;
     document.getElementById("login_error").innerHTML = "";
 }
 

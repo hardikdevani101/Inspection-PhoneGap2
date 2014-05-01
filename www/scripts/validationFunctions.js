@@ -10,7 +10,7 @@ function validateLogin(){
 		document.getElementById("login_error").innerHTML="Password Should Not Blank";
 		document.getElementById("txt_password").focus();
 	}else{
-		vis_user = u_name;
+		userName = u_name;
 		vis_pass = u_pass;
 		onLogin();
 	}
