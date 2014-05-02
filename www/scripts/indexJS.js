@@ -26,6 +26,7 @@ var backPage;
 var gallaryTable="";
 var totColumns=0;
 var pageState = 0;
+var deleteCount=0;
 
 function onLoad() {
     document.addEventListener("deviceready", onDeviceReady, false);
@@ -109,8 +110,7 @@ function AttachAllImage() {
 }
 
 function deleteImageSelectSuccess(tx, results) {
-
-        for (var i = 0; i < results.rows.length; i++) {
+		for (var i = 0; i < results.rows.length; i++) {
 			if(DataTypes.indexOf(getExtention(results.rows.item(i).name).toUpperCase()) >= 0)
 			{
 				onRemoveVISDirFile(results.rows.item(i).file,results.rows.item(i).insp_line);
@@ -130,6 +130,8 @@ function onRemoveVISDirFile(tmpfile,InspNumber){
 		file.remove(function (entry) {
 			db.transaction(function (tx) {
 				tx.executeSql('DELETE FROM vis_gallery WHERE file="' + tmpfile + '" and insp_line="' + InspNumber + '"');
+				deleteCount=deleteCount-1;
+				varifyAllDelete();
 			}, errorCB);
 		}, function (error) { console.log("Error on read = " + error.code); });
     }, function (error) { console.log(" FSError = " + error.code); });
@@ -139,8 +141,16 @@ function confirmGallaryDiscard() {
     navigator.notification.confirm('Are you sure ???', DiscardGallary, 'Delete selected files..', 'Ok,Cancel');
 }
 
+function varifyAllDelete(){
+	if(deleteCount==0){
+		gallaryTable="";
+		backtogallary();
+	}
+}
+
 function deleteSelectedGallary() {
 	console.log("Array="+SelectedGallaryList.toString());
+	deleteCount = imagelistarray.rows.length;
     for (var j = 0; j < imagelistarray.rows.length; j++) {
         if (DataTypes.indexOf(getExtention(getFileName(imagelistarray.rows.item(j).file)).toUpperCase()) < 0) {
             var tmpfile = imagelistarray.rows.item(j).file;
@@ -148,6 +158,8 @@ function deleteSelectedGallary() {
 				console.log("yes");
                 db.transaction(function (tx) {
                     tx.executeSql('DELETE FROM vis_gallery WHERE file="' + tmpfile + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"');
+					deleteCount=deleteCount-1;
+					varifyAllDelete();
                 }, errorCB);
             }
         } else {
@@ -156,8 +168,6 @@ function deleteSelectedGallary() {
             }
         }
     }
-	gallaryTable="";
-    backtogallary();
 }
 
 function fillGallaryForDelete() {
@@ -291,6 +301,10 @@ function onCreateTR_TD(tableName,callBack){
 
 function fillGallaryPhotos() {
     itemCount = 0;
+	console.log("Total img="+imagelistarray.rows.length);
+	if(imagelistarray.rows.length==0){
+		navigator.notification.activityStop();
+	}
     for (var j = 0; j < imagelistarray.rows.length; j++) {
         if (DataTypes.indexOf(getExtention(imagelistarray.rows.item(j).name).toUpperCase()) < 0) {
 
@@ -348,8 +362,8 @@ function fillGallaryPhotos() {
             }
         }
     }
-	console.log("total tr="+$(document.getElementById("disp-tab1")).children('tr').length);
-	console.log("total td="+$(document.getElementById("disp-tab1")).children('tr').children('td').length);
+	//console.log("total tr="+$(document.getElementById("disp-tab1")).children('tr').length);
+	//console.log("total td="+$(document.getElementById("disp-tab1")).children('tr').children('td').length);
 }
 
 function onRenderTable(){
