@@ -27,6 +27,7 @@ var gallaryTable="";
 var totColumns=0;
 var pageState = 0;
 var deleteCount=0;
+var inspLinesArray = new Array();
 
 function onLoad() {
     document.addEventListener("deviceready", onDeviceReady, false);
@@ -509,10 +510,50 @@ function onBackToStartInspection(backPageName) {
             select.add(option);
         }
         select.setAttribute("onchange", "fillInspectionsLines()");
-        fillInspectionsLines();
+        onfillInspectionsLines();
     }
 }
 
+function onfillInspectionsLines(){
+	var e = document.getElementById("linedrop");
+	var selMrLine=e.options[e.selectedIndex].value;
+	console.log("MR="+M_InOutLine_ID);
+	console.log("MR="+selMrLine);
+	if(M_InOutLine_ID==selMrLine){
+		renderInspectionFromCache();
+	}else{
+		fillInspectionsLines();
+	}
+}
+
+function renderInspectionFromCache(){
+	var div = document.getElementById("outNewIns");
+	document.getElementById("disp-Insp").innerHTML="";
+	div.setAttribute("style", "overflow-x: auto; overflow-y: hidden;");
+	div.style.width="auto";
+	div.style.height=(window.innerHeight*.65)+"px";
+	for(var j=0; j<2; j++)
+	{
+		var tr = document.createElement('tr');
+		tr.setAttribute("style", "margin:0px; padding:0px;");
+		for(var i=0; i<Math.ceil(inspLinesArray.length/2); i++)
+		{
+			var td = document.createElement('td');
+			td.setAttribute("id","InsTd-"+j+"-"+i);
+			td.setAttribute("style", "margin:1px; padding:1px;");
+			tr.appendChild(td);
+		}
+		document.getElementById("disp-Insp").appendChild(tr);
+	}
+	Disp_col=0;Disp_row=0;
+	console.log("Total insp="+ inspLinesArray.length );
+	for(var i=0 ; i < inspLinesArray.length ; i++){
+		var dval = inspLinesArray[i][1];
+		var dlab = inspLinesArray[i][0];
+		getUploadCounts(M_InOutLine_ID,dlab,dval,FillInspectionDiv);
+	}
+	navigator.notification.activityStop();
+}
 
 function onInspSet(nid, iname) {
 	navigator.notification.activityStart("Please Wait", "loading.....");

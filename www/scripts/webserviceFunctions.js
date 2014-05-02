@@ -185,27 +185,9 @@ function fillInspectionsLines(){
 				function processSuccess(data, status, req) {
                     if (status == "success")
 					{		
-							var div = document.getElementById("outNewIns");
-							document.getElementById("disp-Insp").innerHTML="";
-							div.setAttribute("style", "overflow-x: auto; overflow-y: hidden;");
-							div.style.width="auto";
-							div.style.height=(window.innerHeight*.65)+"px";
+							inspLinesArray = new Array();
 							var xmlResponse =req.responseXML.documentElement;
 							var fullNodeList = xmlResponse.getElementsByTagName("DataRow");
-							for(var j=0; j<2; j++)
-							   {
-									var tr = document.createElement('tr');
-									tr.setAttribute("style", "margin:0px; padding:0px;");
-									for(var i=0; i<Math.ceil(fullNodeList.length/2); i++)
-									{
-										var td = document.createElement('td');
-										td.setAttribute("id","InsTd-"+j+"-"+i);
-										td.setAttribute("style", "margin:1px; padding:1px;");
-										tr.appendChild(td);
-									}
-									document.getElementById("disp-Insp").appendChild(tr);
-							   }
-							Disp_col=0;Disp_row=0;
 							for (var i=0; i < fullNodeList.length; i++)
 							{	
 								var dlab,dval;
@@ -217,27 +199,11 @@ function fillInspectionsLines(){
 								  		dval = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
 							  		}
 								}
-							   	getUploadCounts(M_InOutLine_ID,dlab,dval,FillInspectionDiv);
-								function FillInspectionDiv(dlab,dval,totCnt,uploadCnt){
-								console.log("Total="+totCnt);
-								var tmpdiv = document.createElement('div');
-								var totDiv= document.createElement('div');
-								totDiv.setAttribute("style", "position:absolute;margin-top:5px;margin-left:50px;");
-								totDiv.innerHTML=totCnt+" ( "+uploadCnt+" ) ";
-								tmpdiv.className = "InspButton";
-								tmpdiv.setAttribute("style", "margin:2px 10px;");
-								tmpdiv.innerHTML=dlab;
-								tmpdiv.style.height=(window.innerHeight*.15)+"px";
-								tmpdiv.style.width=(window.innerWidth*.20)+"px";
-								var clickstr="onInspSet('"+dval+"','"+ dlab.replace('\'', '\\\'')+"')";
-								tmpdiv.setAttribute('onclick',clickstr);
-								if(Disp_col>=Math.ceil(fullNodeList.length/2)){Disp_col=0;Disp_row=Disp_row+1;}
-								document.getElementById("InsTd-"+Disp_row+"-"+Disp_col).appendChild(totDiv);
-								document.getElementById("InsTd-"+Disp_row+"-"+Disp_col).appendChild(tmpdiv);
-								Disp_col=Disp_col+1;
-								}
+								inspLinesArray[i]=new Array();
+								inspLinesArray[i][0]=dlab;
+								inspLinesArray[i][1]=dval;
 							}
-						navigator.notification.activityStop();
+							renderInspectionFromCache();
 					}
 					
                 }
@@ -255,6 +221,24 @@ function fillInspectionsLines(){
                 }
 }
 
+function FillInspectionDiv(dlab,dval,totCnt,uploadCnt){
+	console.log("Total="+totCnt);
+	var tmpdiv = document.createElement('div');
+	var totStr= document.createElement('div');
+	totStr.setAttribute("style", "position:absolute;margin-top:5px;margin-left:50px;");
+	totStr.innerHTML=totCnt+" ( "+uploadCnt+" ) ";
+	tmpdiv.className = "InspButton";
+	tmpdiv.setAttribute("style", "margin:2px 10px;");
+	tmpdiv.innerHTML=dlab;
+	tmpdiv.style.height=(window.innerHeight*.15)+"px";
+	tmpdiv.style.width=(window.innerWidth*.20)+"px";
+	var clickstr="onInspSet('"+dval+"','"+ dlab.replace('\'', '\\\'')+"')";
+	tmpdiv.setAttribute('onclick',clickstr);
+	if(Disp_col>=Math.ceil(inspLinesArray.length/2)){Disp_col=0;Disp_row=Disp_row+1;}
+	document.getElementById("InsTd-"+Disp_row+"-"+Disp_col).appendChild(totStr);
+	document.getElementById("InsTd-"+Disp_row+"-"+Disp_col).appendChild(tmpdiv);
+	Disp_col=Disp_col+1;
+}
 
 function callAttachImageWs(imginspline,imgname){
 	
