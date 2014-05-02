@@ -41,12 +41,6 @@ function onDeviceReady() {
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, setRootDirectory, function (error) {
         console.log("request FSError = " + error);
     });
-    window.setTimeout(function () {
-        if(pageState==0){
-			loadPage("login");
-		}
-        document.getElementById("txt_user").value = userName;
-    }, 100);
 }
 
 function onExit() {
@@ -252,7 +246,7 @@ function onDeleteFileSelect(selectTdId, galName) {
 }
 
 function renderGallary() {
-    navigator.notification.activityStart("Please Wait", "loading.....");
+    
 	if(gallaryTable=="")
 	{
 		db.transaction(function (tx) {
@@ -356,13 +350,13 @@ function fillGallaryPhotos() {
     }
 	console.log("total tr="+$(document.getElementById("disp-tab1")).children('tr').length);
 	console.log("total td="+$(document.getElementById("disp-tab1")).children('tr').children('td').length);
-    navigator.notification.activityStop();
 }
 
 function onRenderTable(){
 	if(itemCount==imagelistarray.rows.length)
 	{
 		gallaryTable=document.getElementById("disp-tab1").innerHTML;
+		navigator.notification.activityStop();
 	}
 }
 
@@ -409,9 +403,6 @@ function loadAccureChoise() {
 function loadgallaryChoise() {
     loadPage("fileExpo");
     fileexplore();
-    window.setTimeout(function () {
-        fileexplore();
-    }, 100);
 }
 
 function onSettingPage() {
@@ -510,6 +501,7 @@ function onBackToStartInspection(backPageName) {
 
 
 function onInspSet(nid, iname) {
+	navigator.notification.activityStart("Please Wait", "loading.....");
     loadPage('gallery');
 	gallaryTable="";
     renderGallary();
@@ -520,6 +512,7 @@ function onInspSet(nid, iname) {
 }
 
 function backtogallary() {
+	navigator.notification.activityStart("Please Wait", "loading.....");
     loadPage('gallery');
     renderGallary();
     document.getElementById("gallery_head").innerHTML = M_line_name + "(" + X_instruction_name + ")";
@@ -581,12 +574,14 @@ function onCropSaved() {
     ctx.drawImage(crop_img, x1, y1, w, h, 0, 0, w, h);
     $('#waterImage').attr('src', canvas.toDataURL());
     origImg.src = canvas.toDataURL();
+	console.log("IM First");
     //loadPage("waterImgPrev");
     //Using timer to reApplyWaterMark
-    window.setTimeout(function () {
-        reApplyatterMark();
-        saveImage();
-    }, 50);
+	origImg.onload=function(){
+		console.log("IM First");
+		reApplyatterMark();
+		//saveImage();
+	}
 
 }
 
@@ -595,10 +590,10 @@ function onCropSkip() {
     origImg.src = document.getElementById('waterImage').src;
     //loadPage("waterImgPrev");
     //Using timer to reApplyWaterMark
-    window.setTimeout(function () {
-        reApplyatterMark();
-        saveImage();
-    }, 50);
+	origImg.onload=function(){
+		reApplyatterMark();
+		//saveImage();
+	}
 }
 //For Water Mark
 function applyWatermark() {
@@ -621,6 +616,7 @@ function applyWatermark() {
     gctx.drawImage(watermark, x, y);
     $('#waterImage').attr('src', gcanvas.toDataURL());
     navigator.notification.activityStop();
+	saveImage();
 }
 
 function reApplyatterMark() {

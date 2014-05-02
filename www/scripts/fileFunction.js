@@ -1,4 +1,4 @@
-var imageURI;
+//var imageURI;
 var gcanvas;
 var root;
 var dirVISInspection;
@@ -27,18 +27,20 @@ function saveImage(){
 	var dd = date.getDate();
 	var fileName="vis_inspection_"+mm+dd+yy+"_"+hh+mi+sec+".png";
 	var img64 = gcanvas.toDataURL("image/png").replace(/data:image\/png;base64,/,''); 
-	imageURI=Base64Binary.decodeArrayBuffer(img64);
-	dirVISInspection.getFile(fileName, {create: true, exclusive: false}, CreateImgWriter,function(error){ console.log("File Create FSError = "+error.code); });
-
+	var imageURI=Base64Binary.decodeArrayBuffer(img64);
+	dirVISInspection.getFile(fileName, {create: true, exclusive: false}, function (fileEntry){
+		CreateImgWriter(fileEntry,imageURI);
+	},function(error){ console.log("File Create FSError = "+error.code); });
+	//writeImg(imageURI,fileName);
 }
 
-function CreateImgWriter(fileEntry) { 
+function CreateImgWriter(fileEntry,imageURI) { 
 	var fileFullPath=getSDPath(fileEntry.fullPath).substring(1);
 	fileEntry.createWriter(function (writer){
-		OnImgWriter(writer,fileFullPath,fileEntry.name);
+		OnImgWriter(writer,fileFullPath,fileEntry.name,imageURI);
 	}, function(error){ console.log("file entry FSError = "+error.code); });
 }
-function OnImgWriter(writer,fileFullPath,fileName){ 
+function OnImgWriter(writer,fileFullPath,fileName,imageURI){ 
 	 writer.onwrite = function(evt) {
 		 	db.transaction(function (tx){
 				tx.executeSql('INSERT INTO vis_gallery(mr_line,insp_line,name,file) VALUES ("'+M_InOutLine_ID+'","'+X_INSTRUCTIONLINE_ID+'","'+fileName+'","'+fileFullPath+'")');
@@ -58,44 +60,8 @@ function onAfterSaveFile(fileFullPath){
 			console.log("Toot col ="+totColumns+"Row count"+ results.rows.length);
 				imagelistarray = results;
 				if(totColumns >= results.rows.length){
-					fillSingleTD();
-					function fillSingleTD(){
-						if (DataTypes.indexOf(getExtention(getFileName(fileFullPath)).toUpperCase()) > 0) {
-							var imgelem = document.createElement("img");
-							imgelem.setAttribute("height", (window.innerHeight * .25) + "px");
-							imgelem.setAttribute("width", (window.innerWidth * .30) + "px");
-							imgelem.setAttribute("style", "margin:3px 5px; float:left;");
-							imgelem.setAttribute("src", gcanvas.toDataURL());
-							console.log(gcanvas.toDataURL());
-							console.log("td-" + Disp_row + "-" + Disp_col);
-							console.log(Math.ceil(imagelistarray.rows.length / 3));
-							if (Disp_row > 2 ) {
-								Disp_row = 0;Disp_col = Disp_col + 1;
-							}
-							document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(imgelem);
-							console.log("td-" + Disp_row + "-" + Disp_col);
-							itemCount = itemCount + 1;
-							Disp_row = Disp_row + 1;
-							gallaryTable=document.getElementById("disp-tab1").innerHTML;
-						}else{
-							var imgelem = document.createElement("div");
-							imgelem.setAttribute("style", "margin:3px 5px; border:1px solid #000;float:left; word-wrap:break-word;");
-							imgelem.style.width = (window.innerWidth * .30) + "px";
-							imgelem.style.height = (window.innerHeight * .25) + "px";
-							imgelem.setAttribute("height", "25%");
-							imgelem.setAttribute("width", "30%");
-							imgelem.innerHTML = getFileName(fileFullPath);
-							console.log("td-" + Disp_row + "-" + Disp_col);
-							if (Disp_row > 2 ) {
-										Disp_row = 0;Disp_col = Disp_col + 1;
-							}
-							document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(imgelem);
-							itemCount = itemCount + 1;
-							Disp_row = Disp_row + 1;
-							gallaryTable=document.getElementById("disp-tab1").innerHTML;
-						}
-						backtogallary();
-					}
+					fillSingleTD(fileFullPath);
+					
 				}else
 				{
 					var colNum = Math.ceil( imagelistarray.rows.length / 3 );
@@ -111,7 +77,7 @@ function onAfterSaveFile(fileFullPath){
 						totColumns=totColumns+1;
 						console.log("Adding col ="+j+" "+colNum);
 					}
-					fillSingleTD();
+					fillSingleTD(fileFullPath);
 				}						
 			}, function (err) { console.log("Error SQL: " + err.code);	});
 		},  function (err) { console.log("Error SQL: " + err.code);	});
@@ -119,6 +85,44 @@ function onAfterSaveFile(fileFullPath){
 	else{
 		backtogallary();
 	}
+}
+
+function fillSingleTD(fileFullPath){
+	if (DataTypes.indexOf(getExtention(getFileName(fileFullPath)).toUpperCase()) > 0) {
+		var imgelem = document.createElement("img");
+		imgelem.setAttribute("height", (window.innerHeight * .25) + "px");
+		imgelem.setAttribute("width", (window.innerWidth * .30) + "px");
+		imgelem.setAttribute("style", "margin:3px 5px; float:left;");
+		imgelem.setAttribute("src", gcanvas.toDataURL());
+		console.log(gcanvas.toDataURL());
+		console.log("td-" + Disp_row + "-" + Disp_col);
+		console.log(Math.ceil(imagelistarray.rows.length / 3));
+		if (Disp_row > 2 ) {
+			Disp_row = 0;Disp_col = Disp_col + 1;
+		}
+		document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(imgelem);
+		console.log("td-" + Disp_row + "-" + Disp_col);
+		itemCount = itemCount + 1;
+		Disp_row = Disp_row + 1;
+		gallaryTable=document.getElementById("disp-tab1").innerHTML;
+	}else{
+		var imgelem = document.createElement("div");
+		imgelem.setAttribute("style", "margin:3px 5px; border:1px solid #000;float:left; word-wrap:break-word;");
+		imgelem.style.width = (window.innerWidth * .30) + "px";
+		imgelem.style.height = (window.innerHeight * .25) + "px";
+		imgelem.setAttribute("height", "25%");
+		imgelem.setAttribute("width", "30%");
+		imgelem.innerHTML = getFileName(fileFullPath);
+		console.log("td-" + Disp_row + "-" + Disp_col);
+		if (Disp_row > 2 ) {
+					Disp_row = 0;Disp_col = Disp_col + 1;
+		}
+		document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(imgelem);
+		itemCount = itemCount + 1;
+		Disp_row = Disp_row + 1;
+		gallaryTable=document.getElementById("disp-tab1").innerHTML;
+	}
+	backtogallary();
 }
 
 function dirFail(error) {

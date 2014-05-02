@@ -35,6 +35,9 @@ function settingSelectSuccess(tx, results) {
 				userName = '';
 		   }
 		}
+		if(pageState==0){
+			loadPage("login");
+		}
 		document.getElementById("txt_user").value = userName;
 	}
 }
