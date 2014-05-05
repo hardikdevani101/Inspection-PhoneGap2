@@ -29,7 +29,7 @@
     <preference name="disable-cursor" value="false" />
     <preference name="android-minSdkVersion" value="7" />
     <preference name="android-installLocation" value="auto" />
-	<preference name="phonegap-version" value="3.3.0" />
+	<preference name="phonegap-version" value="3.4.0" />
 	<preference name="AndroidPersistentFileLocation" value="Compatibility" />
 	
     <icon src="icon.png" />

@@ -69,6 +69,7 @@ function onSyncFiles(){
 
 function callSyncVerify(){
 	 if (imgUploadCount == 0) {
+		navigator.notification.activityStop();
 		navigator.notification.alert('Synchronized all files', function () {}, 'Success', 'OK');
 		gallaryTable="";
 		backtogallary();
@@ -273,7 +274,6 @@ function fillGallaryForDelete() {
         }
     }
     navigator.notification.activityStop();
-    
 }
 
 function onDeleteFileSelect(selectTdId, galName) {
@@ -337,7 +337,7 @@ function onCreateTR_TD(tableName,callBack){
 function fillGallaryPhotos() {
     itemCount = 0;
 	pandingCounts= 0;
-	if(imagelistarray.rows.length==0){
+	if(imagelistarray.rows.length == 0){
 		navigator.notification.activityStop();
 	}
     for (var j = 0; j < imagelistarray.rows.length; j++) {
@@ -415,7 +415,7 @@ function fillGallaryPhotos() {
 function onRenderTable(){
 	if(itemCount==imagelistarray.rows.length)
 	{
-		gallaryTable=document.getElementById("disp-tab1").innerHTML;
+		gallaryTable = document.getElementById("disp-tab1").innerHTML;
 		navigator.notification.activityStop();
 	}
 }
@@ -557,6 +557,7 @@ function onBackToStartInspection(backPageName) {
     loadPage("startNewInsp");
     backPage = backPageName;
     navigator.notification.activityStart("Please Wait", "loading.....");
+	console.log(mrLinesArray.toString());
     if (mrLinesArray.length == 0) {
         fillMrLines();
     } else {
@@ -579,6 +580,7 @@ function onfillInspectionsLines(){
 	var selMrLine=e.options[e.selectedIndex].value;
 	if(M_InOutLine_ID==selMrLine){
 		renderInspectionFromCache();
+		navigator.notification.activityStop();
 	}else{
 		fillInspectionsLines();
 	}
@@ -604,6 +606,7 @@ function renderInspectionFromCache(){
 		document.getElementById("disp-Insp").appendChild(tr);
 	}
 	Disp_col=0;Disp_row=0;
+	console.log(inspLinesArray.toString());
 	for(var i=0 ; i < inspLinesArray.length ; i++){
 		var dval = inspLinesArray[i][1];
 		var dlab = inspLinesArray[i][0];
