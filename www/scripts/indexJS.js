@@ -28,6 +28,8 @@ var totColumns=0;
 var pageState = 0;
 var deleteCount=0;
 var inspLinesArray = new Array();
+var pandingUploads = new Array();
+var pandingCounts = 0;
 
 function onLoad() {
     document.addEventListener("deviceready", onDeviceReady, false);
@@ -49,6 +51,30 @@ function onExit() {
     loadPage("exit");
 }
 
+function onSyncFiles(){
+	navigator.notification.activityStart("Please Wait", "Uploading files.....");
+    db.transaction(function (tx) {
+        tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"  and imgUpload="F"', [], function (tx, results) {
+            imagelistarray = results;
+            imgUploadCount = imagelistarray.rows.length;
+			callSyncVerify();
+			for (var j = 0; j < imagelistarray.rows.length; j++) {
+				onUploadFile(imagelistarray.rows.item(j).file, imagelistarray.rows.item(j).insp_line,callSyncVerify);
+			}
+        }, function (err) {
+            console.log("Error SQL: " + err.code);
+        });
+    }, errorCB);
+}
+
+function callSyncVerify(){
+	 if (imgUploadCount == 0) {
+		navigator.notification.alert('Synchronized all files', function () {}, 'Success', 'OK');
+		gallaryTable="";
+		backtogallary();
+	 }
+}
+
 function onFinish() {
     navigator.notification.activityStart("Please Wait", "Uploading files.....");
     db.transaction(function (tx) {
@@ -63,7 +89,6 @@ function onFinish() {
 
 function callFilesUpload() {
     imgUploadCount = imagelistarray.rows.length;
-	console.log("cnt"+imgUploadCount);
     callUploadVerify();
     for (var j = 0; j < imagelistarray.rows.length; j++) {
         onUploadFile(imagelistarray.rows.item(j).file, imagelistarray.rows.item(j).insp_line,callUploadVerify);
@@ -92,23 +117,34 @@ function callUploadVerify() {
 
 function AttachAllImage() {
     navigator.notification.activityStart("Please Wait", "Attaching Files");
-    db.transaction(function (tx) {
-        tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and imgUpload="T" and imgAttach="F"', [], AllAttachSelect, function (err) {
-            console.log("Error SQL: " + err.code);
-        });
-    }, errorCB);
-
-    function AllAttachSelect(tx, result) {
-        if (result.rows.length > 0) {
-            attachCount = result.rows.length;
-            for (var i = 0; i < result.rows.length; i++) {
-                callAttachImageWs(result.rows.item(i).insp_line, result.rows.item(i).file);
-            }
-        } else {
-            navigator.notification.activityStop();
-        }
-    }
+	attachCount = inspLinesArray.length;
+	for(var i=0; i < inspLinesArray.length ; i++){
+			getResultOfInsp(inspLinesArray[i][1]);
+	}
+	
+	function getResultOfInsp(inspNumber){
+		db.transaction(function (tx) {
+			tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + inspNumber  + '" and imgUpload="T" and imgAttach="F"', [], 
+			function (tx, result){
+				if(result.rows.length > 0)
+					AllAttachSelect(result);
+				else
+					attachCount=attachCount-1;
+			}, function (err) {
+				console.log("Error SQL: " + err.code);
+			});
+		}, errorCB);
+	}
 }
+
+function AllAttachSelect(result) {
+		var filesListStr="";
+            for (var i = 0; i < result.rows.length; i++) {
+				filesListStr=filesListStr + result.rows.item(i).name + ",";
+            }
+			filesListStr=filesListStr.substring(0, filesListStr.length - 1);
+			callAttachImageWs(result.rows.item(0).insp_line, filesListStr);
+    }
 
 function deleteImageSelectSuccess(tx, results) {
 		for (var i = 0; i < results.rows.length; i++) {
@@ -119,9 +155,10 @@ function deleteImageSelectSuccess(tx, results) {
 			else
 			{
 				tx.executeSql('DELETE FROM vis_gallery WHERE file="' + results.rows.item(i).file + '" and insp_line="' + results.rows.item(i).insp_line + '"');
+				deleteCount=deleteCount-1;
 			}
         }
-        onBackToStartInspection();
+        onBackToStartInspection('home');
         navigator.notification.activityStop();
         navigator.notification.alert('All Files attached', function () {}, 'Success', 'OK');
 }
@@ -150,13 +187,11 @@ function varifyAllDelete(){
 }
 
 function deleteSelectedGallary() {
-	console.log("Array="+SelectedGallaryList.toString());
-	deleteCount = imagelistarray.rows.length;
+	deleteCount = SelectedGallaryList.length;
     for (var j = 0; j < imagelistarray.rows.length; j++) {
         if (DataTypes.indexOf(getExtention(getFileName(imagelistarray.rows.item(j).file)).toUpperCase()) < 0) {
             var tmpfile = imagelistarray.rows.item(j).file;
             if (SelectedGallaryList.indexOf(getFileName(tmpfile)) >= 0) {
-				console.log("yes");
                 db.transaction(function (tx) {
                     tx.executeSql('DELETE FROM vis_gallery WHERE file="' + tmpfile + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"');
 					deleteCount=deleteCount-1;
@@ -172,6 +207,7 @@ function deleteSelectedGallary() {
 }
 
 function fillGallaryForDelete() {
+	loadPage('SelectGallary');
     for (var j = 0; j < 3; j++) {
         var tr = document.createElement('tr');
         tr.setAttribute("style", "margin:0px; padding:0px;");
@@ -237,7 +273,7 @@ function fillGallaryForDelete() {
         }
     }
     navigator.notification.activityStop();
-    loadPage('SelectGallary');
+    
 }
 
 function onDeleteFileSelect(selectTdId, galName) {
@@ -266,7 +302,6 @@ function renderGallary() {
 				Disp_col = 0;
 				Disp_row = 0;
 				onCreateTR_TD('disp-tab1',fillGallaryPhotos);
-				//fillGallaryPhotos();
 			}, function (err) {
 				console.log("Error SQL: " + err.code);
 			});
@@ -293,7 +328,6 @@ function onCreateTR_TD(tableName,callBack){
             td.setAttribute("style", "margin:0px; padding:0px;");
             tr.appendChild(td);
 			totColumns=totColumns+1;
-			console.log("td-" + j + "-" + i);
         }
         document.getElementById("disp-tab1").appendChild(tr);
     }
@@ -302,31 +336,36 @@ function onCreateTR_TD(tableName,callBack){
 
 function fillGallaryPhotos() {
     itemCount = 0;
-	console.log("Total img="+imagelistarray.rows.length);
+	pandingCounts= 0;
 	if(imagelistarray.rows.length==0){
 		navigator.notification.activityStop();
 	}
     for (var j = 0; j < imagelistarray.rows.length; j++) {
         if (DataTypes.indexOf(getExtention(imagelistarray.rows.item(j).name).toUpperCase()) < 0) {
 
-            //var tmpFile = imagelistarray.rows.item(j).file;
-			fillToTDDiv(imagelistarray.rows.item(j).file,j);
+            fillToTDDiv(imagelistarray.rows.item(j).file,j);
 			function fillToTDDiv(tmpFile,ItemNumber){
 				var imgelem = document.createElement("div");
 				imgelem.setAttribute("style", "margin:3px 5px; border:1px solid #000;float:left; word-wrap:break-word;");
-				imgelem.style.width = (window.innerWidth * .30) + "px";
-				imgelem.style.height = (window.innerHeight * .25) + "px";
-				imgelem.setAttribute("height", "25%");
-				imgelem.setAttribute("width", "30%");
+				imgelem.setAttribute("height", (window.innerHeight * .24) + "px");
+                imgelem.setAttribute("width", (window.innerWidth * .30) + "px");
 				imgelem.innerHTML = getFileName(tmpFile);
 				if (Disp_row > 2 ) {
 							Disp_row = 0;Disp_col = Disp_col + 1;
 				}
-				if (imagelistarray.rows.item(ItemNumber).imgUpload == 'T') {
-					var chkImg = document.createElement("img");
-					chkImg.setAttribute("style", "position:absolute;height:35px;width:35px;");
+				var chkImg = document.createElement("img");
+					chkImg.setAttribute("style", "position:absolute;height:35px;width:35px;display:none;");
 					chkImg.setAttribute("src", "img/up.png");
+					chkImg.setAttribute("id","tdUpload-" + Disp_row + "-" + Disp_col);
 					document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(chkImg);
+					
+				if (imagelistarray.rows.item(ItemNumber).imgUpload == 'T') {
+					document.getElementById("tdUpload-" + Disp_row + "-" + Disp_col).setAttribute("style", "position:absolute;height:35px;width:35px;display:block;");
+				}else{
+					pandingUploads[pandingCounts] = new Array();
+					pandingUploads[pandingCounts][0]="tdUpload-" + Disp_row + "-" + Disp_col;
+					pandingUploads[pandingCounts++][1]=getFileName(tmpFile);
+					document.getElementById("tdUpload-" + Disp_row + "-" + Disp_col).setAttribute("style", "display:none;");
 				}
 				document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(imgelem);
 				itemCount = itemCount + 1;
@@ -343,19 +382,27 @@ function fillGallaryPhotos() {
 			}
             function fillToImage(evt,ItemNumber,rfile) {
                     var imgelem = document.createElement("img");
-                    imgelem.setAttribute("height", (window.innerHeight * .25) + "px");
+                    imgelem.setAttribute("height", (window.innerHeight * .24) + "px");
                     imgelem.setAttribute("width", (window.innerWidth * .30) + "px");
                     imgelem.setAttribute("style", "margin:3px 5px; float:left;");
                     imgelem.setAttribute("src", evt.target.result);
                     if (Disp_row > 2 ) {
 							Disp_row = 0;Disp_col = Disp_col + 1;
 					}
+					var chkImg = document.createElement("img");
+					chkImg.setAttribute("style", "position:absolute;height:35px;width:35px;display:none;");
+					chkImg.setAttribute("src", "img/up.png");
+					chkImg.setAttribute("id","tdUpload-" + Disp_row + "-" + Disp_col);
+					document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(chkImg);
+					
                     if (imagelistarray.rows.item(ItemNumber).imgUpload == 'T') {
-                        var chkImg = document.createElement("img");
-                        chkImg.setAttribute("style", "position:absolute;height:35px;width:35px;");
-                        chkImg.setAttribute("src", "img/up.png");
-                        document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(chkImg);
-                    }
+                        document.getElementById("tdUpload-" + Disp_row + "-" + Disp_col).setAttribute("style", "position:absolute;height:35px;width:35px;display:block;");
+                    }else{
+						pandingUploads[pandingCounts] = new Array();
+						pandingUploads[pandingCounts][0] = "tdUpload-" + Disp_row + "-" + Disp_col;
+						pandingUploads[pandingCounts++][1] = rfile.name;
+						document.getElementById("tdUpload-" + Disp_row + "-" + Disp_col).setAttribute("style", "display:none;");
+					}
                     document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(imgelem);
                     itemCount = itemCount + 1;
                     Disp_row = Disp_row + 1;
@@ -363,8 +410,6 @@ function fillGallaryPhotos() {
             }
         }
     }
-	//console.log("total tr="+$(document.getElementById("disp-tab1")).children('tr').length);
-	//console.log("total td="+$(document.getElementById("disp-tab1")).children('tr').children('td').length);
 }
 
 function onRenderTable(){
@@ -430,7 +475,13 @@ function setSettingpage() {
     document.getElementById("txt_url").value = vis_url;
     document.getElementById("txt_lang").value = vis_lang;
     document.getElementById("txt_client").value = vis_client_id;
-    document.getElementById("txt_role").value = vis_role;
+	var e = document.getElementById("txt_role");
+	for(var i=0 ; i < e.options.length ; i++){
+		if(e.options[i].value==vis_role)
+			e.options[i].selected = true;
+	}
+	M_InOutLine_ID=e.options[e.selectedIndex].value;
+	
     document.getElementById("txt_warehouse").value = vis_whouse_id;
     document.getElementById("txt_organizer").value = vis_org_id;
 }
@@ -439,7 +490,8 @@ function onSettingUpdate() {
     vis_url = document.getElementById("txt_url").value;
     vis_lang = document.getElementById("txt_lang").value;
     vis_client_id = document.getElementById("txt_client").value;
-    vis_role = document.getElementById("txt_role").value;
+	var e = document.getElementById("txt_role");
+	vis_role = e.options[e.selectedIndex].value;
     vis_whouse_id = document.getElementById("txt_warehouse").value;
     vis_org_id = document.getElementById("txt_organizer").value;
     if (vis_url == "" && vis_lang == "" && vis_client_id == "" && vis_role == "" && vis_whouse_id == "" && vis_org_id == "") {
@@ -450,6 +502,15 @@ function onSettingUpdate() {
         loadPage("login");
     }
 
+}
+
+function displayUserName(){
+	document.getElementsByName("user_lbl")[0].innerHTML="User : "+userName;
+	document.getElementsByName("user_lbl")[1].innerHTML="User : "+userName;
+	document.getElementsByName("user_lbl")[2].innerHTML="User : "+userName;
+	document.getElementsByName("user_lbl")[3].innerHTML="User : "+userName;
+	document.getElementsByName("user_lbl")[4].innerHTML="User : "+userName;
+	document.getElementsByName("user_lbl")[5].innerHTML="User : "+userName;
 }
 
 function onPhotoDataSuccess(imageData) {
@@ -477,8 +538,7 @@ function loadPage(id1) {
     if (id1 == 'exit') {
         navigator.app.exitApp();
     } else {
-        document.getElementById("disp").innerHTML = document
-            .getElementById(id1).innerHTML;
+        document.getElementById("disp").innerHTML = document.getElementById(id1).innerHTML;
     }
 }
 
@@ -517,8 +577,6 @@ function onBackToStartInspection(backPageName) {
 function onfillInspectionsLines(){
 	var e = document.getElementById("linedrop");
 	var selMrLine=e.options[e.selectedIndex].value;
-	console.log("MR="+M_InOutLine_ID);
-	console.log("MR="+selMrLine);
 	if(M_InOutLine_ID==selMrLine){
 		renderInspectionFromCache();
 	}else{
@@ -546,7 +604,6 @@ function renderInspectionFromCache(){
 		document.getElementById("disp-Insp").appendChild(tr);
 	}
 	Disp_col=0;Disp_row=0;
-	console.log("Total insp="+ inspLinesArray.length );
 	for(var i=0 ; i < inspLinesArray.length ; i++){
 		var dval = inspLinesArray[i][1];
 		var dlab = inspLinesArray[i][0];
@@ -629,13 +686,8 @@ function onCropSaved() {
     ctx.drawImage(crop_img, x1, y1, w, h, 0, 0, w, h);
     $('#waterImage').attr('src', canvas.toDataURL());
     origImg.src = canvas.toDataURL();
-	console.log("IM First");
-    //loadPage("waterImgPrev");
-    //Using timer to reApplyWaterMark
 	origImg.onload=function(){
-		console.log("IM First");
 		reApplyatterMark();
-		//saveImage();
 	}
 
 }
@@ -643,11 +695,8 @@ function onCropSaved() {
 function onCropSkip() {
     $('#waterImage').attr('src', document.getElementById('smallImage').src);
     origImg.src = document.getElementById('waterImage').src;
-    //loadPage("waterImgPrev");
-    //Using timer to reApplyWaterMark
 	origImg.onload=function(){
 		reApplyatterMark();
-		//saveImage();
 	}
 }
 //For Water Mark

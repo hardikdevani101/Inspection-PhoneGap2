@@ -50,11 +50,10 @@ function onLogin(){
 							}, errorCB);
 							loadPage("home");
 							pageState = 1;
-							document.getElementById("user_lbl").innerHTML="User : "+userName;
+							displayUserName();
 							navigator.notification.activityStop();
 						}
 						else{
-							//navigator.notification.alert(req.responseText + " " + status);
 							loadPage("login");
 							document.getElementById("login_error").innerHTML="Login Failed!!!!";
 							navigator.notification.activityStop();
@@ -143,7 +142,7 @@ function fillMrLines(){
 					else
 						{
 							loadPage("home");
-							document.getElementById("user_lbl").innerHTML="User : "+userName;
+							displayUserName();
 						}
 					navigator.notification.activityStop();
 					navigator.notification.alert('Failer!!',function(){},getErrorMessage(data, status, req),'Ok');
@@ -214,7 +213,7 @@ function fillInspectionsLines(){
 					else
 						{
 							loadPage("home");
-							document.getElementById("user_lbl").innerHTML="User : "+userName;
+							displayUserName();
 						}
 					navigator.notification.activityStop();
 					navigator.notification.alert('Failer!!',function(){},getErrorMessage(data, status, req),'Ok');
@@ -222,7 +221,6 @@ function fillInspectionsLines(){
 }
 
 function FillInspectionDiv(dlab,dval,totCnt,uploadCnt){
-	console.log("Total="+totCnt);
 	var tmpdiv = document.createElement('div');
 	var totStr= document.createElement('div');
 	totStr.setAttribute("style", "position:absolute;margin-top:5px;margin-left:50px;");
@@ -242,7 +240,6 @@ function FillInspectionDiv(dlab,dval,totCnt,uploadCnt){
 
 function callAttachImageWs(imginspline,imgname){
 	
-	console.log("insp=="+imginspline+"imgnam=="+imgname);
 	$.ajax({type: "POST",
 			url: getWsUrl("ModelADService"),
 			dataType: "xml",
@@ -259,7 +256,7 @@ function callAttachImageWs(imginspline,imgname){
 										 +'<_0:val>'+imginspline+'</_0:val>'
 									  +'</_0:field>'
 									  +'<_0:field column="imgName">'
-										 +'<_0:val>'+getFileName(imgname)+'</_0:val>'
+										 +'<_0:val>'+imgname+'</_0:val>'
 									  +'</_0:field>'
 								   +'</_0:ParamValues>'
 								+'</_0:ModelRunProcess>'
@@ -274,27 +271,32 @@ function callAttachImageWs(imginspline,imgname){
 				function processSuccess(data, status, req) {
 					var xmlResponse =req.responseXML.documentElement;
 					var fullNodeList = xmlResponse.getElementsByTagName("Summary");
-					if(fullNodeList[0].textContent=='success')
-					{
+					var tmpArray=fullNodeList[0].textContent.split(']$[');
+					if(tmpArray[1]==""){
 						db.transaction(function(tx){
-							tx.executeSql('UPDATE vis_gallery SET imgAttach="T" WHERE file="'+imgname+'" and insp_line="'+imginspline+'"');
+							tx.executeSql('UPDATE vis_gallery SET imgAttach="T" WHERE insp_line="'+imginspline+'"');
 							attachCount=attachCount-1;
 							if(attachCount==0){
 								deleteMRgallary();
 							}
 						}, errorCB);
 					}else{
-						var tmpArray=fullNodeList[0].textContent.split('-');
-						if(tmpArray[0]==2){
-								db.transaction(function (tx){
-									tx.executeSql('UPDATE vis_gallery SET imgUpload="F" WHERE file="'+imgname+'" and insp_line="'+imginspline+'"');
-								}, errorCB);
-							navigator.notification.alert('Attachment file not found on Server, Try again', function(){}, 'Failure', 'OK');
-							navigator.notification.activityStop();
-						}else{
-							navigator.notification.activityStop();
-							navigator.notification.alert('Error while Attaching : ' + fullNodeList[0].textContent , function(){}, 'Failure', 'OK');
+						var successArrayList=tmpArray[0].split('$$');
+						var failedArrayList=tmpArray[1].split('$$');
+						if(successArrayList.length > 0){
+							for(var i=0; i < successArrayList.length ; i++){
+								onchangeSuccessState(successArrayList[i],imginspline);
+							}
 						}
+						if(failedArrayList.length > 0){
+							for(var i=0; i < failedArrayList.length ; i++){
+								var failerMsgArray=failedArrayList[i].split('::');
+								onchangeFailerState(failerMsgArray,imginspline);
+							}
+						}
+						onBackToStartInspection('home');
+						navigator.notification.activityStop();
+						navigator.notification.alert('Error while Attaching : ' + failedArrayList.toString() , function(){}, 'Failure', 'OK');
 					}
                 }
 

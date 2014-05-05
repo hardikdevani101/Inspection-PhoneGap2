@@ -122,3 +122,22 @@ function getUploadCounts(mInNumber,dlab,InspNumber,callBack){
         }, function (err) {console.log("Error SQL: " + err.code);});
     }, errorCB);
 }
+
+function onchangeSuccessState(fileName,imginspline){
+	db.transaction(function(tx){
+		tx.executeSql('UPDATE vis_gallery SET imgAttach="T",imgUpload="T" WHERE name="'+fileName+'" and insp_line="'+imginspline+'"');
+	}, errorCB);
+}
+
+function onchangeFailerState(failerMsgArray,imginspline){
+	if(failerMsgArray[1].substring(0,1) == "2")
+	{
+		db.transaction(function (tx){
+			tx.executeSql('UPDATE vis_gallery SET imgUpload="F",imgAttach="F" WHERE name="'+failerMsgArray[0]+'" and insp_line="'+imginspline+'"');
+		}, errorCB);
+	}else{
+		db.transaction(function (tx){
+			tx.executeSql('UPDATE vis_gallery SET imgAttach="F",imgAttach="F" WHERE name="'+failerMsgArray[0]+'" and insp_line="'+imginspline+'"');
+		}, errorCB);
+	}
+}

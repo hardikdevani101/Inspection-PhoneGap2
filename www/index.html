@@ -42,7 +42,7 @@
 	
 	<div class="page" id="home">
 		<span>
-		<div id="user_lbl" style="float:left;"></div><br>
+		<div name="user_lbl" style="float:left;font-weight:bold;"></div><br>
 		<h1>VIS-Inspection Phonegap</h1>
 		</span><input
 			class="menuButton" id="startNewInspectionBtn"
@@ -66,7 +66,16 @@
 		<tr>
 		<td>Client : </td><td><input id="txt_client" type="text" /></td></tr>
 		<tr>
-		<td>Role : </td><td><input id="txt_role" type="text" /></td></tr>
+		<td>Role : </td><td><!--<input id="txt_role" type="text" />-->
+			<select id="txt_role">
+				<option value="1000043">Warehouse QA Team</option>
+				<option value="1000055">Warehouse QA Manager</option>
+				<option value="1000044">Warehouse Manager</option>
+				<option value="1000052">Warehouse IC Team</option>
+				<option value="1000054">Warehouse IC Manager</option>
+				<option value="1000000">Velocity Admin</option>
+			</select>
+		</td></tr>
 		<tr>
 		<td>Warehouse : </td><td><input id="txt_warehouse" type="text" /></td></tr>
 		<tr>
@@ -81,19 +90,23 @@
 	
 
 	<div class="page" id="startNewInsp">
-		<span> Line No: <!--<input type="text" id="lineNoTxt" />-->
+		<div name="user_lbl" style="float:left;font-weight:bold;"></div>
+		<span style="float:right; margin:0px; padding:0px;">Line No: <!--<input type="text" id="lineNoTxt" />-->
 		<select id="linedrop"></select>
 		<input id="btnReload" class="login_btns" onClick="fillMrLines()" type="button" value="Reload">
 		</span>
-		<hr>
+		<br><br>
+		<div style="padding:0px 2px; margin:0px 0px 0px 0px;">
+			<hr />
+		</div>
 		<div style="height: auto;width:100%;text-align: center; padding:0px 5%;" id="outNewIns">
 			<table id="disp-Insp" style="margin:0px; padding:0px;" cellspacing="0" cellpadding="0" >
 				
 			</table>
 		</div>
 		
-		<div style="height: 17%; width:95%; bottom: 0; left: 0; float:left; position:absolute;padding:0% 2%;">	
-			<hr>
+		<div style="width:95%; bottom: 0; left: 0; float:left; position:absolute;padding:0% 2%;">	
+			<hr style="margin:0px; padding : 0px;">
 			<center>
 			<div class="divMenuButton" onClick="discardInspections()">Delete</div>
 			<div class="divMenuButton" onClick="loadPage('home')">Close</div>
@@ -103,22 +116,24 @@
 	</div>
 
 	<div id="gallery" class="page">
-		<div style="width:100%;">
-			<center><Span id="gallery_head"></Span></center>
+		<div style="width:100%;margin:0px; padding:0px;">
+			<div name="user_lbl" style="float:left;font-weight:bold;"></div> 
+			<center><Span id="gallery_head" style="float:right;"></Span></center>
 		</div>
-		<div style="width:80%; margin:0px; padding:0px;float:none;">
+		<div style="width:100%; margin:1px 0px 2px 0px; padding:0px;float:left;">
 			<Span style="float:left;">Acquire:</span>
-			<Span class="gallary_menubtn" onClick="loadgallaryChoise()">Gallary</Span>
+			<Span class="gallary_menubtn" onClick="loadgallaryChoise()">Gallery</Span>
 			<Span class="gallary_menubtn" onClick="captureI()">Camera</Span>
 			<Span style="float:left;border:1px solid black;height:20px;margin-left:10px;"></span>
 			<Span class="gallary_menubtn" onClick="onBackToStartInspection('gallary')">Back</Span>
 			<Span class="gallary_menubtn" onClick="onDeleteGallaryPage()">Delete</Span>
+			<Span class="gallary_menubtn" onClick="onSyncFiles()">Sync</Span>
 		</div>
 		<br>
 		<div style="padding:0px 2px; margin:0px;">
 			<hr />
 		</div>
-		<div id="imglist" style="padding:0px; margin:0px;">
+		<div id="imglist" style="padding:0px; margin:0px;height:75%;">
 			<table id="disp-tab1" style="margin:0px; padding:0px;" cellspacing="0" cellpadding="0">
 			
 			</table>
@@ -140,7 +155,7 @@
 	<div id="cropView" class="page" >
 		<center>
 		<div>
-			<Span style="margin:0px; padding:0px;" > <h3> Crop Image </h3></Span> 
+			<div name="user_lbl" style="float:left;font-weight:bold;"></div> <Span style="margin:0px; padding:0px;" > <h3> Crop Image </h3></Span> 
 		</div>
 		<div id="cropImage" style="width:80%; height:90%; float:left;">
 			
@@ -173,10 +188,11 @@
 	</div>
 	
 	<div id="SelectGallary" class="page">
-      <div style="width:100%; ">
-			<Span id="gallery_head" style="float: left; position:fixed;">Select files for delete</Span>
+      <div style="width:100%; "><div name="user_lbl" style="float:left;font-weight:bold;"></div> 
+			
 			<Span class="gallary_menubtn" onClick="backtogallary()" style="float:right;">Cancel</Span>
 			<Span class="gallary_menubtn" onClick="confirmGallaryDiscard()" style="float:right;">Delete</Span>
+			<Span id="gallery_head" style="float: right;">Select files for delete : </Span>
       </div>
 	  <br>
 		<div style="padding:2px; margin:0px;">

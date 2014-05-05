@@ -31,7 +31,6 @@ function saveImage(){
 	dirVISInspection.getFile(fileName, {create: true, exclusive: false}, function (fileEntry){
 		CreateImgWriter(fileEntry,imageURI);
 	},function(error){ console.log("File Create FSError = "+error.code); });
-	//writeImg(imageURI,fileName);
 }
 
 function CreateImgWriter(fileEntry,imageURI) { 
@@ -46,18 +45,18 @@ function OnImgWriter(writer,fileFullPath,fileName,imageURI){
 				tx.executeSql('INSERT INTO vis_gallery(mr_line,insp_line,name,file) VALUES ("'+M_InOutLine_ID+'","'+X_INSTRUCTIONLINE_ID+'","'+fileName+'","'+fileFullPath+'")');
 			}, errorCB);
 			onAfterSaveFile(fileFullPath);
-			onUploadFile(fileFullPath,X_INSTRUCTIONLINE_ID,callUploadVerify);
         };
 	 writer.write(imageURI);
 }
 
 function onAfterSaveFile(fileFullPath){
+	navigator.notification.activityStart("Please Wait", "loading.....");
+    loadPage('gallery');
 	if(gallaryTable != "")
 	{
 		document.getElementById("disp-tab1").innerHTML=gallaryTable;
 		db.transaction(function (tx) {
 		tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"', [], function (tx, results) {
-			console.log("Toot col ="+totColumns+"Row count"+ results.rows.length);
 				imagelistarray = results;
 				if(totColumns >= results.rows.length){
 					fillSingleTD(fileFullPath);
@@ -66,8 +65,6 @@ function onAfterSaveFile(fileFullPath){
 				{
 					var colNum = Math.ceil( imagelistarray.rows.length / 3 );
 					colNum=colNum-1;
-					console.log("Column no"+imagelistarray);
-					console.log("Column no"+colNum);
 					for (var j = 0; j < 3; j++) {
 						var tr = document.getElementById("tr-" + j);
 						var td = document.createElement('td');
@@ -75,7 +72,6 @@ function onAfterSaveFile(fileFullPath){
 						td.setAttribute("style", "margin:0px; padding:0px;");
 						tr.appendChild(td);
 						totColumns=totColumns+1;
-						console.log("Adding col ="+j+" "+colNum);
 					}
 					fillSingleTD(fileFullPath);
 				}						
@@ -85,38 +81,56 @@ function onAfterSaveFile(fileFullPath){
 	else{
 		backtogallary();
 	}
+	onUploadFile(fileFullPath,X_INSTRUCTIONLINE_ID,callUploadVerify);
 }
 
 function fillSingleTD(fileFullPath){
 	if (DataTypes.indexOf(getExtention(getFileName(fileFullPath)).toUpperCase()) > 0) {
 		var imgelem = document.createElement("img");
-		imgelem.setAttribute("height", (window.innerHeight * .25) + "px");
+		imgelem.setAttribute("height", (window.innerHeight * .24) + "px");
 		imgelem.setAttribute("width", (window.innerWidth * .30) + "px");
 		imgelem.setAttribute("style", "margin:3px 5px; float:left;");
 		imgelem.setAttribute("src", gcanvas.toDataURL());
-		console.log(gcanvas.toDataURL());
-		console.log("td-" + Disp_row + "-" + Disp_col);
-		console.log(Math.ceil(imagelistarray.rows.length / 3));
 		if (Disp_row > 2 ) {
 			Disp_row = 0;Disp_col = Disp_col + 1;
 		}
+		
+		var chkImg = document.createElement("img");
+		chkImg.setAttribute("style", "position:absolute;height:35px;width:35px;display:none;");
+		chkImg.setAttribute("src", "img/up.png");
+		chkImg.setAttribute("id","tdUpload-" + Disp_row + "-" + Disp_col);
+		document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(chkImg);
+		
+		pandingUploads[pandingCounts] = new Array();
+		pandingUploads[pandingCounts][0] = "tdUpload-" + Disp_row + "-" + Disp_col;
+		pandingUploads[pandingCounts++][1] = getFileName(fileFullPath);
 		document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(imgelem);
-		console.log("td-" + Disp_row + "-" + Disp_col);
 		itemCount = itemCount + 1;
 		Disp_row = Disp_row + 1;
 		gallaryTable=document.getElementById("disp-tab1").innerHTML;
-	}else{
+	}
+	else
+	{
 		var imgelem = document.createElement("div");
 		imgelem.setAttribute("style", "margin:3px 5px; border:1px solid #000;float:left; word-wrap:break-word;");
 		imgelem.style.width = (window.innerWidth * .30) + "px";
-		imgelem.style.height = (window.innerHeight * .25) + "px";
+		imgelem.style.height = (window.innerHeight * .24) + "px";
 		imgelem.setAttribute("height", "25%");
 		imgelem.setAttribute("width", "30%");
 		imgelem.innerHTML = getFileName(fileFullPath);
-		console.log("td-" + Disp_row + "-" + Disp_col);
 		if (Disp_row > 2 ) {
 					Disp_row = 0;Disp_col = Disp_col + 1;
 		}
+		
+		var chkImg = document.createElement("img");
+		chkImg.setAttribute("style", "position:absolute;height:35px;width:35px;display:none;");
+		chkImg.setAttribute("src", "img/up.png");
+		chkImg.setAttribute("id","tdUpload-" + Disp_row + "-" + Disp_col);
+		document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(chkImg);
+		
+		pandingUploads[pandingCounts] = new Array();
+		pandingUploads[pandingCounts][0] = "tdUpload-" + Disp_row + "-" + Disp_col;
+		pandingUploads[pandingCounts++][1] = getFileName(fileFullPath);
 		document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(imgelem);
 		itemCount = itemCount + 1;
 		Disp_row = Disp_row + 1;
@@ -143,11 +157,23 @@ function onUploadFile(filePath, InspNumber,callBack) {
             fileName = getFileName(getSDPath(FnEntries.fullPath));
             db.transaction(function (tx) {
                 tx.executeSql('UPDATE vis_gallery SET imgUpload="T" WHERE file="' + filePath + '" and insp_line="' + InspNumber + '"');
+				setUploadedImg(FnEntries.name);
             }, errorCB);
             imgUploadCount = imgUploadCount - 1;
             callBack();
         }, uploadFail, options);
     }
+}
+
+function setUploadedImg(fileName){
+	backtogallary();
+	for(var i=0; i < pandingUploads.length ; i++){
+		if(pandingUploads[i][1]==fileName){
+			var tdDiv=document.getElementById(pandingUploads[i][0]);
+			tdDiv.setAttribute("style", "position:absolute;height:35px;width:35px;display:block;");
+		}
+	}
+	gallaryTable=document.getElementById("disp-tab1").innerHTML;
 }
 
 function uploadFail(error) {
@@ -209,7 +235,6 @@ function onReadFileDataUrl(FnEntries,ItemNumber,callBack){
 	FnEntries.file(function (rfile){
 		var reader = new FileReader();
 			reader.onloadend = function (evt) {
-			console.log("yes this is img");
 			callBack(evt,ItemNumber,rfile);
 		};
 		reader.readAsDataURL(rfile);
