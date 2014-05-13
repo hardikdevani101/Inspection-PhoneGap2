@@ -51,12 +51,12 @@ function onLogin(){
 							loadPage("home");
 							pageState = 1;
 							displayUserName();
-							navigator.notification.activityStop();
+							onStopNotification();
 						}
 						else{
 							loadPage("login");
 							document.getElementById("login_error").innerHTML="Login Failed!!!!";
-							navigator.notification.activityStop();
+							onStopNotification();
 						}
 					}
 					
@@ -69,7 +69,7 @@ function onLogin(){
 					loadPage("login");
 					document.getElementById("txt_user").value=userName;
 					navigator.notification.alert('Failer!!',function(){},getErrorMessage(data, status, req),'Ok');
-					navigator.notification.activityStop();
+					onStopNotification();
                 }  
 }
 
@@ -109,7 +109,7 @@ function fillMrLines(){
 							var xmlResponse =req.responseXML.documentElement;
 							var fullNodeList = xmlResponse.getElementsByTagName("DataRow");
 							if (fullNodeList.length == 0){
-								navigator.notification.activityStop();
+								onStopNotification();
 								navigator.notification.alert('No MR Lines to perform Inspection for you.','','Alert');
 								loadPage("home");
 							} else
@@ -144,7 +144,7 @@ function fillMrLines(){
 							loadPage("home");
 							displayUserName();
 						}
-					navigator.notification.activityStop();
+					onStopNotification();
 					navigator.notification.alert('Failer!!',function(){},getErrorMessage(data, status, req),'Ok');
                 }
 				
@@ -215,7 +215,7 @@ function fillInspectionsLines(){
 							loadPage("home");
 							displayUserName();
 						}
-					navigator.notification.activityStop();
+					onStopNotification();
 					navigator.notification.alert('Failer!!',function(){},getErrorMessage(data, status, req),'Ok');
                 }
 }
@@ -228,7 +228,7 @@ function FillInspectionDiv(dlab,dval,totCnt,uploadCnt){
 	tmpdiv.className = "InspButton";
 	tmpdiv.setAttribute("style", "margin:2px 10px;");
 	tmpdiv.innerHTML=dlab;
-	tmpdiv.style.height=(window.innerHeight*.15)+"px";
+	tmpdiv.style.height=(window.innerHeight*.10)+"px";
 	tmpdiv.style.width=(window.innerWidth*.20)+"px";
 	var clickstr="onInspSet('"+dval+"','"+ dlab.replace('\'', '\\\'')+"')";
 	tmpdiv.setAttribute('onclick',clickstr);
@@ -295,13 +295,13 @@ function callAttachImageWs(imginspline,imgname){
 							}
 						}
 						onBackToStartInspection('home');
-						navigator.notification.activityStop();
+						onStopNotification();
 						navigator.notification.alert('Error while Attaching : ' + failedArrayList.toString() , function(){}, 'Failure', 'OK');
 					}
                 }
 
                 function processError(data, status, req) {
-					navigator.notification.activityStop();
+					onStopNotification();
 					navigator.notification.alert('Failer!!',function(){},getErrorMessage(data, status, req),'Ok');
                 }
 				

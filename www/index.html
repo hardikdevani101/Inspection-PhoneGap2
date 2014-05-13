@@ -48,7 +48,7 @@
 			class="menuButton" id="startNewInspectionBtn"
 			onclick="onStartNewInspection()" type="button"
 			value="Start Inspection"><br> <input class="menuButton"
-			id="exitBtn" onClick="onExit()" type="button" value="Exit"><br>
+			id="exitBtn" onClick="onLoginpage()" type="button" value="Exit"><br>
 	</div>
 	
 	
@@ -60,14 +60,14 @@
 		<center>
 		<table border="0px">
 		<tr>
-		<td>Url : </td><td><input id="txt_url" type="text" /></td></tr>
+		<td>Url : </td><td><input id="txt_url" type="text" size="30"/></td></tr>
 		<tr>
-		<td>Language : </td><td><input id="txt_lang" type="text" /></td></tr>
+		<td>Language : </td><td><input id="txt_lang" type="text" size="30" /></td></tr>
 		<tr>
-		<td>Client : </td><td><input id="txt_client" type="text" /></td></tr>
+		<td>Client : </td><td><input id="txt_client" type="text" size="30" /></td></tr>
 		<tr>
 		<td>Role : </td><td><!--<input id="txt_role" type="text" />-->
-			<select id="txt_role">
+			<select id="txt_role" >
 				<option value="1000043">Warehouse QA Team</option>
 				<option value="1000055">Warehouse QA Manager</option>
 				<option value="1000044">Warehouse Manager</option>
@@ -77,9 +77,82 @@
 			</select>
 		</td></tr>
 		<tr>
-		<td>Warehouse : </td><td><input id="txt_warehouse" type="text" /></td></tr>
+		<td>Warehouse : </td><td><!--<input id="txt_warehouse" type="text" />-->
+			<select id="txt_warehouse">
+				<option value="1000029">Austin GT in Austin</option>
+				<option value="1000030">Austin GT in Singapore</option>
+				<option value="1000031">Singapore GT in Austin</option>
+				<option value="1000032">Singapore GT in Singapore</option>
+				<option value="1000001">Velocity Asia Warehouse</option>
+				<option value="103">HQ Warehouse</option>
+				<option value="104">Store Warehouse</option>
+				<option value="1000000">Standard</option>
+				<option value="1000002">Austin Stock in Singapore</option>
+				<option value="1000003">Austin Stock in Austin</option>
+				<option value="1000004">Austin Stock in Vienna</option>
+				<option value="1000005">Singapore Stock in Vienna</option>
+				<option value="1000006">Singapore Stock in Singapore</option>
+				<option value="1000007">Singapore PreSold in Singapore</option>
+				<option value="1000008">Singapore Stock in Austin</option>
+				<option value="1000009">Singapore PreSold in Austin</option>
+				<option value="1000010">Singapore PreSold in Vienna</option>
+				<option value="1000011">Austin PreSold in Austin</option>
+				<option value="1000012">Austin QS in Austin</option>
+				<option value="1000013">Austin PreSold in Singapore</option>
+				<option value="1000014">Austin QS in Singapore</option>
+				<option value="1000015">Austin PreSold in Vienna</option>
+				<option value="1000016">Austin QS in Vienna</option>
+				<option value="1000017">Vienna Stock in Vienna</option>
+				<option value="1000018">Vienna PreSold in Vienna</option>
+				<option value="1000019">Vienna Stock in Singapore</option>
+				<option value="1000020">Vienna PreSold in Singapore</option>
+				<option value="1000021">Vienna Stock in Austin</option>
+				<option value="1000022">Vienna Presold in Austin</option>
+				<option value="1000023">Austin Stock</option>
+				<option value="1000024">Austin Presold</option>
+				<option value="1000025">Singapore Stock</option>
+				<option value="1000026">Singapore Presold</option>
+				<option value="1000027">Vienna Stock</option>
+				<option value="1000028">Vienna Presold</option>
+				<option value="1000037">Amsterdam PreSold in Amsterdam</option>
+				<option value="1000038">Amsterdam PreSold in Austin</option>
+				<option value="1000039">Amsterdam PreSold in Singapore</option>
+				<option value="1000040">Amsterdam Stock in Amsterdam</option>
+				<option value="1000041">Amsterdam Stock in Austin</option>
+				<option value="1000042">Amsterdam Stock in Singapore</option>
+				<option value="1000043">Austin PreSold in Amsterdam</option>
+				<option value="1000044">Austin Stock in Amsterdam</option>
+				<option value="1000045">Singapore PreSold in Amsterdam</option>
+				<option value="1000046">Singapore Stock in Amsterdam</option>
+			</select>
+		</td></tr>
 		<tr>
-		<td>Organizer : </td><td><input id="txt_organizer" type="text" /></td></tr>
+		<td>Organizer : </td><td>
+			<select id="txt_organizer">
+				<option value="0">*</option>
+				<option value="11">HQ</option>
+				<option value="12">Store</option>
+				<option value="1000001">Singapore</option>
+				<option value="1000000">Consolidated VE Global</option>
+				<option value="1000002">Consolidated VE Americas</option>
+				<option value="1000003">Austin</option>
+				<option value="1000004">Irvine</option>
+				<option value="1000005">Guadalajara</option>
+				<option value="1000006">Consolidated VE Europe</option>
+				<option value="1000007">Vienna</option>
+				<option value="1000008">Phoenix</option>
+				<option value="1000009">Consolidated VE Asia</option>
+				<option value="1000011">Velocity Eletronics LP (America)</option>
+				<option value="1000012">Velocity Electronics LP & GmBH</option>
+				<option value="1000013">Velocity Electronics LP & Pte. Ltd</option>
+				<option value="1000019">Amsterdam</option>
+				<option value="1000018">Velocity Electronics Hong Kong Ltd</option>
+				<option value="1000014">France</option>
+				<option value="1000015">Hong.Kong</option>
+				<option value="1000016">China</option>
+			</select>
+			<!--<input id="txt_organizer" type="text" />-->
+		</td></tr>
 		</table>
 		<input id="btn_update" onClick="validationSetting()" type="button" value="Save">
 		<input id="btn_cancel" onClick="onLoginpage()" type="button" value="Cancel">
@@ -99,44 +172,40 @@
 		<div style="padding:0px 2px; margin:0px 0px 0px 0px;">
 			<hr />
 		</div>
-		<div style="height: auto;width:100%;text-align: center; padding:0px 5%;" id="outNewIns">
+		<div style="height:75%; width:80%;text-align: center; padding:0px 2%; float: left; overflow-x: auto; overflow-y: hidden;" id="outNewIns">
 			<table id="disp-Insp" style="margin:0px; padding:0px;" cellspacing="0" cellpadding="0" >
 				
 			</table>
 		</div>
-		
-		<div style="width:95%; bottom: 0; left: 0; float:left; position:absolute;padding:0% 2%;">	
-			<hr style="margin:0px; padding : 0px;">
-			<center>
-			<div class="divMenuButton" onClick="discardInspections()">Delete</div>
-			<div class="divMenuButton" onClick="loadPage('home')">Close</div>
-			<div class="divMenuButton" onClick="onFinish()">Finish</div>
-			</center>
+		<div style="width:12%; float:right; height:65%; padding : 0px 2%;  border-left:2px solid black;">
+			<div class="divMenuButton" onClick="discardInspections()" style="margin: 20% 4% 5% 2%;">Delete</div>
+			<div class="divMenuButton" onClick="loadPage('home')" style="margin: 30% 4% 5% 2%;">Back</div>
+			<div class="divMenuButton" onClick="onFinish()" style="margin: 150% 4% 5% 2%;">Finish</div>
 		</div>
 	</div>
 
 	<div id="gallery" class="page">
 		<div style="width:100%;margin:0px; padding:0px;">
 			<div name="user_lbl" style="float:left;font-weight:bold;"></div> 
-			<center><Span id="gallery_head" style="float:right;"></Span></center>
+			<Span class="login_btns" style="float:right;width:15%;" onClick="onSyncFiles()">Sync</Span>
+			<center><Span id="gallery_head" style="float:right;"></Span></center>&nbsp;	
 		</div>
-		<div style="width:100%; margin:1px 0px 2px 0px; padding:0px;float:left;">
-			<Span style="float:left;">Acquire:</span>
-			<Span class="gallary_menubtn" onClick="loadgallaryChoise()">Gallery</Span>
-			<Span class="gallary_menubtn" onClick="captureI()">Camera</Span>
-			<Span style="float:left;border:1px solid black;height:20px;margin-left:10px;"></span>
-			<Span class="gallary_menubtn" onClick="onBackToStartInspection('gallary')">Back</Span>
-			<Span class="gallary_menubtn" onClick="onDeleteGallaryPage()">Delete</Span>
-			<Span class="gallary_menubtn" onClick="onSyncFiles()">Sync</Span>
-		</div>
-		<br>
 		<div style="padding:0px 2px; margin:0px;">
 			<hr />
 		</div>
-		<div id="imglist" style="padding:0px; margin:0px;height:75%;">
+		<div id="imglist" style="padding:0px; margin:0px;height:75%; overflow-x: auto; overflow-y: hidden; width:80%; float:left;">
 			<table id="disp-tab1" style="margin:0px; padding:0px;" cellspacing="0" cellpadding="0">
 			
 			</table>
+		</div>
+		
+		<div style="width:12%; padding:0px 2%; float:right; border-left:2px solid black; ">
+
+			<Span class="divMenuButton" onClick="onBackToStartInspection('gallary')" style="margin: 15% 4% 5% 2%;">Back</Span>
+			<Span class="divMenuButton" onClick="onDeleteGallaryPage()">Delete</Span>
+			<Span style="float:left; margin : 100% 0px 15% 5%;">Acquire</span>
+			<Span class="divMenuButton" onClick="loadgallaryChoise()">Gallery</Span>
+			<Span class="divMenuButton" onClick="captureI()">Camera</Span>
 		</div>
 	</div>
 	
@@ -188,17 +257,17 @@
 	</div>
 	
 	<div id="SelectGallary" class="page">
-      <div style="width:100%; "><div name="user_lbl" style="float:left;font-weight:bold;"></div> 
-			
+      <div style="width:100%; margin:0px; padding:0px; ">
+			<div name="user_lbl" style="float:left;font-weight:bold;"></div> 
 			<Span class="gallary_menubtn" onClick="backtogallary()" style="float:right;">Cancel</Span>
 			<Span class="gallary_menubtn" onClick="confirmGallaryDiscard()" style="float:right;">Delete</Span>
 			<Span id="gallery_head" style="float: right;">Select files for delete : </Span>
       </div>
 	  <br>
-		<div style="padding:2px; margin:0px;">
+		<div style="padding:0px 2px; margin:0px;">
 			<hr />
 		</div>
-      <div id="fileList" style="height:80%; overflow:scroll; text-align:left; position:absolute;">
+      <div id="fileList" style="height:82%; padding:0px; margin:0px; text-align:left; position:absolute; overflow-x: auto; overflow-y: hidden;">
 			<table id="disp-selGal" style="margin:0px; padding:0px;" cellspacing="0" cellpadding="0">
 			
 			</table>

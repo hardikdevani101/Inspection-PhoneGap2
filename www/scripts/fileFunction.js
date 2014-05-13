@@ -45,6 +45,7 @@ function OnImgWriter(writer,fileFullPath,fileName,imageURI){
 				tx.executeSql('INSERT INTO vis_gallery(mr_line,insp_line,name,file) VALUES ("'+M_InOutLine_ID+'","'+X_INSTRUCTIONLINE_ID+'","'+fileName+'","'+fileFullPath+'")');
 			}, errorCB);
 			onAfterSaveFile(fileFullPath);
+			onUploadFile(fileFullPath,X_INSTRUCTIONLINE_ID,callUploadVerify);
         };
 	 writer.write(imageURI);
 }
@@ -52,8 +53,8 @@ function OnImgWriter(writer,fileFullPath,fileName,imageURI){
 function onAfterSaveFile(fileFullPath){
 	navigator.notification.activityStart("Please Wait", "loading.....");
     loadPage('gallery');
-	if(gallaryTable != "")
-	{
+	if(gallaryTable != "" && gallaryTable != null)
+	{	console.log("hiii");
 		document.getElementById("disp-tab1").innerHTML=gallaryTable;
 		db.transaction(function (tx) {
 		tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"', [], function (tx, results) {
@@ -81,14 +82,13 @@ function onAfterSaveFile(fileFullPath){
 	else{
 		backtogallary();
 	}
-	onUploadFile(fileFullPath,X_INSTRUCTIONLINE_ID,callUploadVerify);
 }
 
 function fillSingleTD(fileFullPath){
 	if (DataTypes.indexOf(getExtention(getFileName(fileFullPath)).toUpperCase()) > 0) {
 		var imgelem = document.createElement("img");
-		imgelem.setAttribute("height", (window.innerHeight * .24) + "px");
-		imgelem.setAttribute("width", (window.innerWidth * .30) + "px");
+		imgelem.setAttribute("height", (window.innerHeight * .27) + "px");
+		imgelem.setAttribute("width", (window.innerHeight * .36) + "px");
 		imgelem.setAttribute("style", "margin:3px 5px; float:left;");
 		imgelem.setAttribute("src", gcanvas.toDataURL());
 		if (Disp_row > 2 ) {
@@ -113,10 +113,8 @@ function fillSingleTD(fileFullPath){
 	{
 		var imgelem = document.createElement("div");
 		imgelem.setAttribute("style", "margin:3px 5px; border:1px solid #000;float:left; word-wrap:break-word;");
-		imgelem.style.width = (window.innerWidth * .30) + "px";
-		imgelem.style.height = (window.innerHeight * .24) + "px";
-		imgelem.setAttribute("height", "25%");
-		imgelem.setAttribute("width", "30%");
+		imgelem.style.width = (window.innerHeight * .36) + "px";
+		imgelem.style.height = (window.innerHeight * .27) + "px";
 		imgelem.innerHTML = getFileName(fileFullPath);
 		if (Disp_row > 2 ) {
 					Disp_row = 0;Disp_col = Disp_col + 1;
@@ -179,7 +177,7 @@ function setUploadedImg(fileName){
 function uploadFail(error) {
     console.log("Error = " + error.code);
     navigator.notification.alert('All files not uploaded', function () {}, 'Failure', 'OK');
-    navigator.notification.activityStop();
+    onStopNotification();
 }
 
 function fileexplore(){
