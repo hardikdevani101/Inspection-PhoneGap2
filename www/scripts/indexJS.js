@@ -823,7 +823,6 @@ function onBackToStartInspection(backPageName) {
     loadPage("startNewInsp");
     backPage = backPageName;
     navigator.notification.activityStart("Please Wait", "loading.....");
-	console.log(mrLinesArray.toString());
     if (mrLinesArray.length == 0) {
         fillMrLines();
     } else {

@@ -105,7 +105,8 @@ function fillMrLines(){
                 });
 				function processSuccess(data, status, req) {
                     if (status == "success")
-					{		mrLinesArray = new Array();
+					{		M_InOutLine_ID="";
+							mrLinesArray = new Array();
 							var xmlResponse =req.responseXML.documentElement;
 							var fullNodeList = xmlResponse.getElementsByTagName("DataRow");
 							if (fullNodeList.length == 0){

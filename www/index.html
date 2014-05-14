@@ -32,10 +32,10 @@
 		</span>
 		Username : <input id="txt_user" type="text" value=""/><br><br> 
 		Password : <input id="txt_password" type="password" value=""/><br><br>
-		<input id="loginbtn" class="login_btns" onClick="validateLogin()" type="button" value="Login">&nbsp;&nbsp;
-		<input id="settingpagebtn" class="login_btns" onClick="onSettingPage()" type="button" value="Setting">&nbsp;&nbsp;
-		<input id="aboutBtn" class="login_btns" onClick="onAboutUs()" type="button" value="AboutUs">&nbsp;&nbsp;
-		<input id="exitbtn" class="login_btns" onClick="onExit()" type="button" value="Exit">
+		<input id="loginbtn" class="login_btns" style="padding:3px 0px;" onClick="validateLogin()" type="button" value="Login">&nbsp;&nbsp;
+		<input id="settingpagebtn" class="login_btns" style="padding:3px 0px;" onClick="onSettingPage()" type="button" value="Setting">&nbsp;&nbsp;
+		<input id="aboutBtn" class="login_btns" style="padding:3px 0px;" onClick="onAboutUs()" type="button" value="AboutUs">&nbsp;&nbsp;
+		<input id="exitbtn" class="login_btns" style="padding:3px 0px;" onClick="onExit()" type="button" value="Exit">
 		
 		<div id="login_error"></div>
 	</div>
@@ -106,7 +106,7 @@
 	<div class="page" id="startNewInsp">
 		<div name="user_lbl" style="float:left;font-weight:bold;"></div>
 		<span style="float:right; margin:0px; padding:0px;">Line No:
-		<select id="linedrop"></select>
+		<select id="linedrop" style="padding:0px;"></select>
 		<input id="btnReload" class="login_btns" onClick="fillMrLines()" type="button" value="Reload">
 		</span>
 		<br><br>
