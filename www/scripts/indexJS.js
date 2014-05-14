@@ -31,6 +31,7 @@ var inspLinesArray = new Array();
 var pandingUploads = new Array();
 var pandingCounts = 0;
 var currentPage="";
+var warehouseListArray = new Array();
 
 function onLoad() {
     document.addEventListener("deviceready", onDeviceReady, false);
@@ -43,11 +44,228 @@ function onLoad() {
 }
 
 function onDeviceReady() {
+	renderWarehouseDropdown();
     db = window.openDatabase("vis_inspection", "1.0", "vis_inspection", 100000);
     db.transaction(settingDbSetup, errorCB, loadSetting);
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, setRootDirectory, function (error) {
         console.log("request FSError = " + error);
     });
+}
+
+function onOrgChange(){
+	$("#txt_warehouse").empty();
+	var e = document.getElementById("txt_organizer");
+	var wareHouseDrop = document.getElementById("txt_warehouse");
+	var org_id = e.options[e.selectedIndex].value;
+	console.log(org_id);
+	if(org_id == 0){
+		for(var i=0; i < warehouseListArray.length ; i++)
+		{
+			var option = document.createElement('option');
+			option.text = warehouseListArray[i][2];
+			option.value = warehouseListArray[i][1];
+			if (option.value == vis_whouse_id)
+				option.selected = true;
+			wareHouseDrop.add(option);
+		}
+	}
+	else{
+		for(var i=0; i < warehouseListArray.length ; i++)
+		{
+			if(warehouseListArray[i][0] == org_id)
+			{
+				var option = document.createElement('option');
+				option.text = warehouseListArray[i][2];
+				option.value = warehouseListArray[i][1];
+				if (option.value == vis_whouse_id)
+					option.selected = true;
+				wareHouseDrop.add(option);
+			}
+		}
+	}
+}
+
+function renderWarehouseDropdown(){
+	warehouseListArray[0]=new Array();
+	warehouseListArray[0][0]="1000000";
+	warehouseListArray[0][1]="1000001";
+	warehouseListArray[0][2]="Velocity Asia Warehouse";
+	warehouseListArray[1]=new Array();
+	warehouseListArray[1][0]="1000000";
+	warehouseListArray[1][1]="1000000";
+	warehouseListArray[1][2]="Standard";
+	warehouseListArray[2]=new Array();
+	warehouseListArray[2][0]="1000001";
+	warehouseListArray[2][1]="1000031";
+	warehouseListArray[2][2]="Singapore GT in Austin";
+	warehouseListArray[3]=new Array();
+	warehouseListArray[3][0]="1000001";
+	warehouseListArray[3][1]="1000032";
+	warehouseListArray[3][2]="Singapore GT in Singapore";
+	warehouseListArray[4]=new Array();
+	warehouseListArray[4][0]="1000001";
+	warehouseListArray[4][1]="1000005";
+	warehouseListArray[4][2]="Singapore Stock in Vienna";
+	warehouseListArray[5]=new Array();
+	warehouseListArray[5][0]="1000001";
+	warehouseListArray[5][1]="1000006";
+	warehouseListArray[5][2]="Singapore Stock in Singapore";
+	warehouseListArray[6]=new Array();
+	warehouseListArray[6][0]="1000001";
+	warehouseListArray[6][1]="1000007";
+	warehouseListArray[6][2]="Singapore PreSold in Singapore";
+	warehouseListArray[7]=new Array();
+	warehouseListArray[7][0]="1000001";
+	warehouseListArray[7][1]="1000008";
+	warehouseListArray[7][2]="Singapore Stock in Austin";
+	warehouseListArray[8]=new Array();
+	warehouseListArray[8][0]="1000001";
+	warehouseListArray[8][1]="1000009";
+	warehouseListArray[8][2]="Singapore PreSold in Austin";
+	warehouseListArray[9]=new Array();
+	warehouseListArray[9][0]="1000001";
+	warehouseListArray[9][1]="1000010";
+	warehouseListArray[9][2]="Singapore PreSold in Vienna";
+	warehouseListArray[10]=new Array();
+	warehouseListArray[10][0]="1000001";
+	warehouseListArray[10][1]="1000025";
+	warehouseListArray[10][2]="Singapore Stock";
+	warehouseListArray[11]=new Array();
+	warehouseListArray[11][0]="1000001";
+	warehouseListArray[11][1]="1000026";
+	warehouseListArray[11][2]="Singapore Presold";
+	warehouseListArray[12]=new Array();
+	warehouseListArray[12][0]="1000001";
+	warehouseListArray[12][1]="1000045";
+	warehouseListArray[12][2]="Singapore PreSold in Amsterdam";
+	warehouseListArray[13]=new Array();
+	warehouseListArray[13][0]="1000001";
+	warehouseListArray[13][1]="1000046";
+	warehouseListArray[13][2]="Singapore Stock in Amsterdam";
+	warehouseListArray[14]=new Array();
+	warehouseListArray[14][0]="1000003";
+	warehouseListArray[14][1]="1000029";
+	warehouseListArray[14][2]="Austin GT in Austin";
+	warehouseListArray[15]=new Array();
+	warehouseListArray[15][0]="1000003";
+	warehouseListArray[15][1]="1000030";
+	warehouseListArray[15][2]="Austin GT in Singapore";
+	warehouseListArray[16]=new Array();
+	warehouseListArray[16][0]="1000003";
+	warehouseListArray[16][1]="1000002";
+	warehouseListArray[16][2]="Austin Stock in Singapore";
+	warehouseListArray[17]=new Array();
+	warehouseListArray[17][0]="1000003";
+	warehouseListArray[17][1]="1000003";
+	warehouseListArray[17][2]="Austin Stock in Austin";
+	warehouseListArray[18]=new Array();
+	warehouseListArray[18][0]="1000003";
+	warehouseListArray[18][1]="1000004";
+	warehouseListArray[18][2]="Austin Stock in Vienna";
+	warehouseListArray[19]=new Array();
+	warehouseListArray[19][0]="1000003";
+	warehouseListArray[19][1]="1000011";
+	warehouseListArray[19][2]="Austin PreSold in Austin";
+	warehouseListArray[20]=new Array();
+	warehouseListArray[20][0]="1000003";
+	warehouseListArray[20][1]="1000012";
+	warehouseListArray[20][2]="Austin QS in Austin";
+	warehouseListArray[21]=new Array();
+	warehouseListArray[21][0]="1000003";
+	warehouseListArray[21][1]="1000013";
+	warehouseListArray[21][2]="Austin PreSold in Singapore";
+	warehouseListArray[22]=new Array();
+	warehouseListArray[22][0]="1000003";
+	warehouseListArray[22][1]="1000014";
+	warehouseListArray[22][2]="Austin QS in Singapore";
+	warehouseListArray[23]=new Array();
+	warehouseListArray[23][0]="1000003";
+	warehouseListArray[23][1]="1000015";
+	warehouseListArray[23][2]="Austin PreSold in Vienna";
+	warehouseListArray[24]=new Array();
+	warehouseListArray[24][0]="1000003";
+	warehouseListArray[24][1]="1000016";
+	warehouseListArray[24][2]="Austin QS in Vienna";
+	warehouseListArray[25]=new Array();
+	warehouseListArray[25][0]="1000003";
+	warehouseListArray[25][1]="1000023";
+	warehouseListArray[25][2]="Austin Stock";
+	warehouseListArray[26]=new Array();
+	warehouseListArray[26][0]="1000003";
+	warehouseListArray[26][1]="1000024";
+	warehouseListArray[26][2]="Austin Presold";
+	warehouseListArray[27]=new Array();
+	warehouseListArray[27][0]="1000003";
+	warehouseListArray[27][1]="1000043";
+	warehouseListArray[27][2]="Austin PreSold in Amsterdam";
+	warehouseListArray[28]=new Array();
+	warehouseListArray[28][0]="1000003";
+	warehouseListArray[28][1]="1000044";
+	warehouseListArray[28][2]="Austin Stock in Amsterdam";
+	warehouseListArray[29]=new Array();
+	warehouseListArray[29][0]="1000007";
+	warehouseListArray[29][1]="1000017";
+	warehouseListArray[29][2]="Vienna Stock in Vienna";
+	warehouseListArray[30]=new Array();
+	warehouseListArray[30][0]="1000007";
+	warehouseListArray[30][1]="1000018";
+	warehouseListArray[30][2]="Vienna PreSold in Vienna";
+	warehouseListArray[31]=new Array();
+	warehouseListArray[31][0]="1000007";
+	warehouseListArray[31][1]="1000019";
+	warehouseListArray[31][2]="Vienna Stock in Singapore";
+	warehouseListArray[32]=new Array();
+	warehouseListArray[32][0]="1000007";
+	warehouseListArray[32][1]="1000020";
+	warehouseListArray[32][2]="Vienna PreSold in Singapore";
+	warehouseListArray[33]=new Array();
+	warehouseListArray[33][0]="1000007";
+	warehouseListArray[33][1]="1000021";
+	warehouseListArray[33][2]="Vienna Stock in Austin";
+	warehouseListArray[34]=new Array();
+	warehouseListArray[34][0]="1000007";
+	warehouseListArray[34][1]="1000022";
+	warehouseListArray[34][2]="Vienna Presold in Austin";
+	warehouseListArray[35]=new Array();
+	warehouseListArray[35][0]="1000007";
+	warehouseListArray[35][1]="1000027";
+	warehouseListArray[35][2]="Vienna Stock";
+	warehouseListArray[36]=new Array();
+	warehouseListArray[36][0]="1000007";
+	warehouseListArray[36][1]="1000028";
+	warehouseListArray[36][2]="Vienna Presold";
+	warehouseListArray[37]=new Array();
+	warehouseListArray[37][0]="1000019";
+	warehouseListArray[37][1]="1000037";
+	warehouseListArray[37][2]="Amsterdam PreSold in Amsterdam";
+	warehouseListArray[38]=new Array();
+	warehouseListArray[38][0]="1000019";
+	warehouseListArray[38][1]="1000038";
+	warehouseListArray[38][2]="Amsterdam PreSold in Austin";
+	warehouseListArray[39]=new Array();
+	warehouseListArray[39][0]="1000019";
+	warehouseListArray[39][1]="1000039";
+	warehouseListArray[39][2]="Amsterdam PreSold in Singapore";
+	warehouseListArray[40]=new Array();
+	warehouseListArray[40][0]="1000019";
+	warehouseListArray[40][1]="1000040";
+	warehouseListArray[40][2]="Amsterdam Stock in Amsterdam";
+	warehouseListArray[41]=new Array();
+	warehouseListArray[41][0]="1000019";
+	warehouseListArray[41][1]="1000041";
+	warehouseListArray[41][2]="Amsterdam Stock in Austin";
+	warehouseListArray[42]=new Array();
+	warehouseListArray[42][0]="1000019";
+	warehouseListArray[42][1]="1000042";
+	warehouseListArray[42][2]="Amsterdam Stock in Singapore";
+	warehouseListArray[43]=new Array();
+	warehouseListArray[43][0]="11";
+	warehouseListArray[43][1]="103";
+	warehouseListArray[43][2]="HQ Warehouse";
+	warehouseListArray[44]=new Array();
+	warehouseListArray[44][0]="12";
+	warehouseListArray[44][1]="104";
+	warehouseListArray[44][2]="Store Warehouse";
 }
 
 function onExit() {
@@ -487,17 +705,13 @@ function setSettingpage() {
 	}
 	M_InOutLine_ID=e.options[e.selectedIndex].value;
 	
-	e = document.getElementById("txt_warehouse");
-	for(var i=0 ; i < e.options.length ; i++){
-		if(e.options[i].value==vis_whouse_id)
-			e.options[i].selected = true;
-	}
-	
 	e = document.getElementById("txt_organizer");
 	for(var i=0 ; i < e.options.length ; i++){
 		if(e.options[i].value==vis_org_id)
 			e.options[i].selected = true;
 	}
+	e.setAttribute("onchange", "onOrgChange()");
+	onOrgChange();
 }
 
 function onSettingUpdate() {
@@ -640,10 +854,6 @@ function onfillInspectionsLines(){
 function renderInspectionFromCache(){
 	var div = document.getElementById("outNewIns");
 	document.getElementById("disp-Insp").innerHTML="";
-	//div.setAttribute("style", "overflow-x: auto; overflow-y: hidden;");
-	//div.style.width="auto";
-	//div.style.width=(window.innerHeight*.75)+"px";
-	//div.style.height=(window.innerHeight*.65)+"px";
 	for(var j=0; j<2; j++)
 	{
 		var tr = document.createElement('tr');

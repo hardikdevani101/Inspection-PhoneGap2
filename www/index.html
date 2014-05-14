@@ -66,8 +66,8 @@
 		<tr>
 		<td>Client : </td><td><input id="txt_client" type="text" size="30" /></td></tr>
 		<tr>
-		<td>Role : </td><td><!--<input id="txt_role" type="text" />-->
-			<select id="txt_role" >
+		<td>Role : </td><td>
+			<select id="txt_role"  style="width:100%;">
 				<option value="1000043">Warehouse QA Team</option>
 				<option value="1000055">Warehouse QA Manager</option>
 				<option value="1000044">Warehouse Manager</option>
@@ -77,81 +77,22 @@
 			</select>
 		</td></tr>
 		<tr>
-		<td>Warehouse : </td><td><!--<input id="txt_warehouse" type="text" />-->
-			<select id="txt_warehouse">
-				<option value="1000029">Austin GT in Austin</option>
-				<option value="1000030">Austin GT in Singapore</option>
-				<option value="1000031">Singapore GT in Austin</option>
-				<option value="1000032">Singapore GT in Singapore</option>
-				<option value="1000001">Velocity Asia Warehouse</option>
-				<option value="103">HQ Warehouse</option>
-				<option value="104">Store Warehouse</option>
-				<option value="1000000">Standard</option>
-				<option value="1000002">Austin Stock in Singapore</option>
-				<option value="1000003">Austin Stock in Austin</option>
-				<option value="1000004">Austin Stock in Vienna</option>
-				<option value="1000005">Singapore Stock in Vienna</option>
-				<option value="1000006">Singapore Stock in Singapore</option>
-				<option value="1000007">Singapore PreSold in Singapore</option>
-				<option value="1000008">Singapore Stock in Austin</option>
-				<option value="1000009">Singapore PreSold in Austin</option>
-				<option value="1000010">Singapore PreSold in Vienna</option>
-				<option value="1000011">Austin PreSold in Austin</option>
-				<option value="1000012">Austin QS in Austin</option>
-				<option value="1000013">Austin PreSold in Singapore</option>
-				<option value="1000014">Austin QS in Singapore</option>
-				<option value="1000015">Austin PreSold in Vienna</option>
-				<option value="1000016">Austin QS in Vienna</option>
-				<option value="1000017">Vienna Stock in Vienna</option>
-				<option value="1000018">Vienna PreSold in Vienna</option>
-				<option value="1000019">Vienna Stock in Singapore</option>
-				<option value="1000020">Vienna PreSold in Singapore</option>
-				<option value="1000021">Vienna Stock in Austin</option>
-				<option value="1000022">Vienna Presold in Austin</option>
-				<option value="1000023">Austin Stock</option>
-				<option value="1000024">Austin Presold</option>
-				<option value="1000025">Singapore Stock</option>
-				<option value="1000026">Singapore Presold</option>
-				<option value="1000027">Vienna Stock</option>
-				<option value="1000028">Vienna Presold</option>
-				<option value="1000037">Amsterdam PreSold in Amsterdam</option>
-				<option value="1000038">Amsterdam PreSold in Austin</option>
-				<option value="1000039">Amsterdam PreSold in Singapore</option>
-				<option value="1000040">Amsterdam Stock in Amsterdam</option>
-				<option value="1000041">Amsterdam Stock in Austin</option>
-				<option value="1000042">Amsterdam Stock in Singapore</option>
-				<option value="1000043">Austin PreSold in Amsterdam</option>
-				<option value="1000044">Austin Stock in Amsterdam</option>
-				<option value="1000045">Singapore PreSold in Amsterdam</option>
-				<option value="1000046">Singapore Stock in Amsterdam</option>
+		<td>Warehouse : </td><td>
+			<select id="txt_warehouse" style="width:100%;">
+				
 			</select>
 		</td></tr>
 		<tr>
 		<td>Organizer : </td><td>
-			<select id="txt_organizer">
+			<select id="txt_organizer" onchange="onOrgChange()" style="width:100%;">
 				<option value="0">*</option>
 				<option value="11">HQ</option>
 				<option value="12">Store</option>
 				<option value="1000001">Singapore</option>
-				<option value="1000000">Consolidated VE Global</option>
-				<option value="1000002">Consolidated VE Americas</option>
 				<option value="1000003">Austin</option>
-				<option value="1000004">Irvine</option>
-				<option value="1000005">Guadalajara</option>
-				<option value="1000006">Consolidated VE Europe</option>
 				<option value="1000007">Vienna</option>
-				<option value="1000008">Phoenix</option>
-				<option value="1000009">Consolidated VE Asia</option>
-				<option value="1000011">Velocity Eletronics LP (America)</option>
-				<option value="1000012">Velocity Electronics LP & GmBH</option>
-				<option value="1000013">Velocity Electronics LP & Pte. Ltd</option>
 				<option value="1000019">Amsterdam</option>
-				<option value="1000018">Velocity Electronics Hong Kong Ltd</option>
-				<option value="1000014">France</option>
-				<option value="1000015">Hong.Kong</option>
-				<option value="1000016">China</option>
 			</select>
-			<!--<input id="txt_organizer" type="text" />-->
 		</td></tr>
 		</table>
 		<input id="btn_update" onClick="validationSetting()" type="button" value="Save">
@@ -164,7 +105,7 @@
 
 	<div class="page" id="startNewInsp">
 		<div name="user_lbl" style="float:left;font-weight:bold;"></div>
-		<span style="float:right; margin:0px; padding:0px;">Line No: <!--<input type="text" id="lineNoTxt" />-->
+		<span style="float:right; margin:0px; padding:0px;">Line No:
 		<select id="linedrop"></select>
 		<input id="btnReload" class="login_btns" onClick="fillMrLines()" type="button" value="Reload">
 		</span>

@@ -1,5 +1,5 @@
-var releaseVersion='Version : 0.0.3Beta';
-var releaseDate='Release Date : 13-5-2014';
+var releaseVersion='Version : 0.0.4Beta';
+var releaseDate='Release Date : 14-5-2014';
 var applicationName='Velocity Inspection Application';
 function onAboutUs(){
 	document.getElementById('aboutUs').innerHTML="";
