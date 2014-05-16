@@ -247,7 +247,7 @@ function onImgFileSystem(FnEntries){
 		reader.onloadend = function(evt) {
 			$('#smallImage').attr('src',evt.target.result);
 			loadPage("imagePrev");
-			onCrop();
+			onCropCall(evt.target.result);
 		};
 		reader.readAsDataURL(rfile);
 	}

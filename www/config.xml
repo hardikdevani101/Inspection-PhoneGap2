@@ -61,5 +61,6 @@
 	<gap:plugin name="org.apache.cordova.file"/>
 	<gap:plugin name="org.apache.cordova.file-transfer"/>
 	<gap:plugin name="org.apache.cordova.dialogs" />
+	<gap:plugin name="com.synconset.imagepicker" />
     <access origin="*" />	
 </widget>

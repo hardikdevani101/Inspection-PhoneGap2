@@ -32,6 +32,7 @@ var pandingUploads = new Array();
 var pandingCounts = 0;
 var currentPage="";
 var warehouseListArray = new Array();
+var cropImageW,cropImageH;
 
 function onLoad() {
     document.addEventListener("deviceready", onDeviceReady, false);
@@ -750,7 +751,7 @@ function onPhotoDataSuccess(imageData) {
     navigator.notification.activityStart("Please Wait", "loading.....");
     $('#smallImage').attr('src', "data:image/png;base64," + imageData);
     loadPage("imagePrev");
-    onCrop();
+    onCropCall("data:image/png;base64," + imageData);
 }
 
 function captureI() {
@@ -882,7 +883,7 @@ function onStopNotification(){
 		navigator.notification.activityStop();
 	}, 300);
 }
-
+new Image
 function onInspSet(nid, iname) {
 	navigator.notification.activityStart("Please Wait", "loading.....");
     loadPage('gallery');
@@ -901,10 +902,42 @@ function backtogallary() {
     document.getElementById("gallery_head").innerHTML = M_line_name + "(" + X_instruction_name + ")";
 }
 
+function onImagePicker(){
+	window.imagePicker.getPictures(
+    function(results) {
+        for (var i = 0; i < results.length; i++) {
+            console.log('Image URI: ' + results[i]);
+			$('#smallImage').attr('src',results[i]);
+			onCropCall(results[i]);
+        }
+    }, function (error) {
+        console.log('Error: ' + error);
+    }, {
+        maximumImagesCount: 1
+    }
+);
+}
+
+function onCropCall(results){
+	var tmpImg = new Image();
+	tmpImg.onload = function() {
+		var randerHeight = window.innerHeight * 0.75 ;
+		if(this.height < this.width && !((this.height/this.width) > .75)){
+			cropImageW = (randerHeight * 4)/3;
+			cropImageH = (cropImageW/this.width) * this.height ;
+		}else{
+			cropImageH = randerHeight;
+			cropImageW = (cropImageH/this.height) * this.width ;
+		}
+		onCrop();
+		tmpImg = "";
+	}
+	tmpImg.src = results;
+}
+
 function onCrop() {
     loadPage('cropView');
-
-    $('#cropImage').html(['<img src="', document.getElementById('smallImage').src, '" width="80%" height="80%" />'].join(''));
+    $('#cropImage').html(['<img src="', document.getElementById('smallImage').src, '" width="'+cropImageW+'" height="'+cropImageH+'" />'].join(''));
     crop_img = $('#cropImage img')[0];
 	if(crop_img.width*3/4 > crop_img.height){
 		ysize = crop_img.height;
@@ -948,36 +981,37 @@ function onCropSaved() {
 
     canvas.width = Math.round(rx * finalSelection.w);
     canvas.height = Math.round(ry * finalSelection.h);
-
     if (canvas.width < 1024 && canvas.height < 768)
         navigator.notification.alert('Select Bigger Size!', onCrop, 'Crop Not Correct', 'Ok');
+	else
+	{
+		var x1 = Math.round(rx * finalSelection.x);
+		var y1 = Math.round(ry * finalSelection.y);
+		var w = canvas.width;
+		var h = canvas.height;
 
-    var x1 = Math.round(rx * finalSelection.x);
-    var y1 = Math.round(ry * finalSelection.y);
-
-    var w = canvas.width;
-    var h = canvas.height;
-
-    var ctx = canvas.getContext('2d');
-    ctx.drawImage(crop_img, x1, y1, w, h, 0, 0, w, h);
-    $('#waterImage').attr('src', canvas.toDataURL());
-    origImg.src = canvas.toDataURL();
-	origImg.onload=function(){
-		reApplyatterMark();
+		var ctx = canvas.getContext('2d');
+		ctx.drawImage(crop_img, x1, y1, w, h, 0, 0, w, h);
+		$('#waterImage').attr('src', canvas.toDataURL());
+		origImg.src = canvas.toDataURL();
+		origImg.onload=function(){
+			applyWatermark();
+		}
 	}
-
+	tempImage = "";
 }
 
 function onCropSkip() {
-    $('#waterImage').attr('src', document.getElementById('smallImage').src);
+	$('#waterImage').attr('src', document.getElementById('smallImage').src);
     origImg.src = document.getElementById('waterImage').src;
 	origImg.onload=function(){
-		reApplyatterMark();
+		applyWatermark();
 	}
 }
 //For Water Mark
 function applyWatermark() {
-
+	$('#cropImage').innerHTML="";
+	$('#smallImage').attr('src',"");
     navigator.notification.activityStart("Please Wait", "Water Marking.....");
     gcanvas = document.createElement('canvas');
     if (!gcanvas) {
@@ -985,7 +1019,6 @@ function applyWatermark() {
         return;
     }
     gctx = gcanvas.getContext("2d");
-
     if (origImg.width > 1024 && origImg.height > 768) {
         gcanvas.width = 1024;
         gcanvas.height = 768;
@@ -994,11 +1027,7 @@ function applyWatermark() {
     x = (gcanvas.width - 20) - (watermark.width);
     y = (gcanvas.height - 20) - (watermark.height);
     gctx.drawImage(watermark, x, y);
-    $('#waterImage').attr('src', gcanvas.toDataURL());
+    //$('#waterImage').attr('src', gcanvas.toDataURL());
     onStopNotification();
 	saveImage();
-}
-
-function reApplyatterMark() {
-    applyWatermark();
 }
