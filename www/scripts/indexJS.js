@@ -384,6 +384,7 @@ function deleteImageSelectSuccess(tx, results) {
 				deleteCount=deleteCount-1;
 			}
         }
+		mrLinesArray = new Array();
         onBackToStartInspection('home');
         onStopNotification();
         navigator.notification.alert('All Files attached', function () {}, 'Success', 'OK');
@@ -1019,10 +1020,8 @@ function applyWatermark() {
         return;
     }
     gctx = gcanvas.getContext("2d");
-    if (origImg.width > 1024 && origImg.height > 768) {
-        gcanvas.width = 1024;
-        gcanvas.height = 768;
-    }
+    gcanvas.width = 1024;
+    gcanvas.height = 768;
     gctx.drawImage(origImg, 0, 0, origImg.width, origImg.height, 0, 0, 1024, 768);
     x = (gcanvas.width - 20) - (watermark.width);
     y = (gcanvas.height - 20) - (watermark.height);
