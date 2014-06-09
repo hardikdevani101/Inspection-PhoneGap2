@@ -233,7 +233,7 @@ function FillInspectionDiv(dlab,dval,totCnt,uploadCnt){
 	tmpdiv.style.width=(window.innerWidth*.20)+"px";
 	var clickstr="onInspSet('"+dval+"','"+ dlab.replace('\'', '\\\'')+"')";
 	tmpdiv.setAttribute('onclick',clickstr);
-	if(Disp_col>=Math.ceil(inspLinesArray.length/2)){Disp_col=0;Disp_row=Disp_row+1;}
+	if(Disp_col>=Math.ceil(inspLinesArray.length/3)){Disp_col=0;Disp_row=Disp_row+1;}
 	document.getElementById("InsTd-"+Disp_row+"-"+Disp_col).appendChild(totStr);
 	document.getElementById("InsTd-"+Disp_row+"-"+Disp_col).appendChild(tmpdiv);
 	Disp_col=Disp_col+1;
@@ -324,7 +324,7 @@ function getWsDataLoginString(){
 }
 function getErrorMessage(data, status, req){
 	if(data.status == 0){
-	return data.statusText +" : Error getting response, Connection refused";
+	return data.statusText +" : Error getting response, Connection refused Or Timeout ";
 	}else if(data.status == 500){
 	return data.statusText +" : "+ $(data.responseXML).find('faultstring').text();
 	}else{

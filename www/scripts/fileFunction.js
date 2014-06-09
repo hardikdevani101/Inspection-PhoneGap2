@@ -1,9 +1,6 @@
-//var imageURI;
-var gcanvas;
 var root;
 var dirVISInspection;
 var currentDir;
-var parentDir;
 var parlistArray;
 var DataTypes=["JPEG","JPG","BMP","PNG"];
 
@@ -16,7 +13,7 @@ function setVISDirectory(fileSystem){
 	dirVISInspection=fileSystem;
 }
 
-function saveImage(){
+function saveImage(imageURI){
 	navigator.notification.activityStart("Please Wait", "Saving Image.....");
 	var date = new Date;
 	var sec = date.getSeconds();
@@ -25,9 +22,7 @@ function saveImage(){
 	var yy = date.getFullYear();
 	var mm = date.getMonth();
 	var dd = date.getDate();
-	var fileName="vis_inspection_"+mm+dd+yy+"_"+hh+mi+sec+".png";
-	var img64 = gcanvas.toDataURL("image/png").replace(/data:image\/png;base64,/,''); 
-	var imageURI=Base64Binary.decodeArrayBuffer(img64);
+	var fileName="vis_inspection_"+mm+dd+yy+"_"+hh+mi+sec+".jpeg";
 	dirVISInspection.getFile(fileName, {create: true, exclusive: false}, function (fileEntry){
 		CreateImgWriter(fileEntry,imageURI);
 	},function(error){ console.log("File Create FSError = "+error.code); });
@@ -54,7 +49,7 @@ function onAfterSaveFile(fileFullPath){
 	navigator.notification.activityStart("Please Wait", "loading.....");
     loadPage('gallery');
 	if(gallaryTable != "" && gallaryTable != null)
-	{	console.log("hiii");
+	{	
 		document.getElementById("disp-tab1").innerHTML=gallaryTable;
 		db.transaction(function (tx) {
 		tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"', [], function (tx, results) {
@@ -85,7 +80,7 @@ function onAfterSaveFile(fileFullPath){
 }
 
 function fillSingleTD(fileFullPath){
-	if (DataTypes.indexOf(getExtention(getFileName(fileFullPath)).toUpperCase()) > 0) {
+	if (DataTypes.indexOf(getExtention(getFileName(fileFullPath)).toUpperCase()) >= 0) {
 		var imgelem = document.createElement("img");
 		imgelem.setAttribute("height", (window.innerHeight * .27) + "px");
 		imgelem.setAttribute("width", (window.innerHeight * .36) + "px");
@@ -227,6 +222,7 @@ function listDir(DirEntry){
 function listsub(DirName){
 	parlistArray.push(currentDir);
 	currentDir.getDirectory(DirName, null, function (dir){listDir(dir);}, function(error){ console.log("Error = "+error.code); });
+	currentDir = null;
 }
 
 function onReadFileDataUrl(FnEntries,ItemNumber,callBack){
@@ -245,8 +241,6 @@ function onImgFileSystem(FnEntries){
 	function readGallaryDataUrl(rfile) {
 		var reader = new FileReader();
 		reader.onloadend = function(evt) {
-			$('#smallImage').attr('src',evt.target.result);
-			loadPage("imagePrev");
 			onCropCall(evt.target.result);
 		};
 		reader.readAsDataURL(rfile);

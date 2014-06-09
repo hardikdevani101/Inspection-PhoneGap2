@@ -1,13 +1,10 @@
 var canvas;
+var gcanvas;
 var boundX, BoundY;
-var xsize, ysize;
 var jcrop_api;
 var finalSelection;
 var crop_img;
-var watermark;
-var opacity = (255 / (100 / 50));
-var gctx;
-var origImg;
+var origImg = new Image();
 var userName = "";
 var INSPECTOR_ID;
 var M_InOutLine_ID = 0;
@@ -33,15 +30,11 @@ var pandingCounts = 0;
 var currentPage="";
 var warehouseListArray = new Array();
 var cropImageW,cropImageH;
+var scrollValue,scrollHeight;
 
 function onLoad() {
     document.addEventListener("deviceready", onDeviceReady, false);
     document.addEventListener("backbutton", onBackButton, false);
-    watermark = new Image();
-    origImg = new Image();
-    watermark.src = "img/Velocity_Watermark.png";
-	console.log(window.innerHeight);
-	console.log(window.innerWidth);
 }
 
 function onDeviceReady() {
@@ -58,7 +51,6 @@ function onOrgChange(){
 	var e = document.getElementById("txt_organizer");
 	var wareHouseDrop = document.getElementById("txt_warehouse");
 	var org_id = e.options[e.selectedIndex].value;
-	console.log(org_id);
 	if(org_id == 0){
 		for(var i=0; i < warehouseListArray.length ; i++)
 		{
@@ -290,7 +282,6 @@ function onSyncFiles(){
 }
 
 function callSyncVerify(){
-	console.log(imgUploadCount);
 	 if (imgUploadCount == 0) {
 		onStopNotification();
 		navigator.notification.alert('Synchronized all files', function () {
@@ -602,7 +593,7 @@ function fillGallaryPhotos() {
 			function getFileFunction(ItemNumber,FilePath){
 				root.getFile(FilePath, null, function (FnEntries) {
 						onReadFileDataUrl(FnEntries,ItemNumber,fillToImage);
-				}, function (error) {console.log(" FSError = " + error.code);});
+				}, function (error) {console.log(" FSError = " + error.code); onStopNotification(); });
 			}
             function fillToImage(evt,ItemNumber,rfile) {
                     var imgelem = document.createElement("img");
@@ -750,18 +741,15 @@ function displayUserName(){
 
 function onPhotoDataSuccess(imageData) {
     navigator.notification.activityStart("Please Wait", "loading.....");
-    $('#smallImage').attr('src', "data:image/png;base64," + imageData);
-    loadPage("imagePrev");
-    onCropCall("data:image/png;base64," + imageData);
+    onCropCall("data:image/jpeg;base64," + imageData);
 }
 
 function captureI() {
     navigator.camera.getPicture(onPhotoDataSuccess, onFail, {
-        quality: 90,
+        quality: 60,
         destinationType: Camera.DestinationType.DATA_URL,
         allowEdit: true
     });
-
 }
 
 function onFail(message) {
@@ -855,11 +843,11 @@ function onfillInspectionsLines(){
 function renderInspectionFromCache(){
 	var div = document.getElementById("outNewIns");
 	document.getElementById("disp-Insp").innerHTML="";
-	for(var j=0; j<2; j++)
+	for(var j=0; j<3; j++)
 	{
 		var tr = document.createElement('tr');
 		tr.setAttribute("style", "margin:0px; padding:0px;");
-		for(var i=0; i < Math.ceil(inspLinesArray.length/2); i++)
+		for(var i=0; i < Math.ceil(inspLinesArray.length/3); i++)
 		{
 			var td = document.createElement('td');
 			td.setAttribute("id","InsTd-"+j+"-"+i);
@@ -869,7 +857,6 @@ function renderInspectionFromCache(){
 		document.getElementById("disp-Insp").appendChild(tr);
 	}
 	Disp_col=0;Disp_row=0;
-	console.log(inspLinesArray.toString());
 	for(var i=0 ; i < inspLinesArray.length ; i++){
 		var dval = inspLinesArray[i][1];
 		var dlab = inspLinesArray[i][0];
@@ -877,6 +864,8 @@ function renderInspectionFromCache(){
 	}
 	
 	onStopNotification();
+	if(inspLinesArray.length >= 10 )
+		navigator.notification.alert('Swipe to see more buttons..', null, 'Message !!', 'Ok');
 }
 
 function onStopNotification(){
@@ -884,7 +873,7 @@ function onStopNotification(){
 		navigator.notification.activityStop();
 	}, 300);
 }
-new Image
+
 function onInspSet(nid, iname) {
 	navigator.notification.activityStart("Please Wait", "loading.....");
     loadPage('gallery');
@@ -904,19 +893,12 @@ function backtogallary() {
 }
 
 function onImagePicker(){
-	window.imagePicker.getPictures(
-    function(results) {
-        for (var i = 0; i < results.length; i++) {
-            console.log('Image URI: ' + results[i]);
-			$('#smallImage').attr('src',results[i]);
-			onCropCall(results[i]);
-        }
-    }, function (error) {
-        console.log('Error: ' + error);
-    }, {
-        maximumImagesCount: 1
-    }
-);
+	 navigator.camera.getPicture(onPhotoDataSuccess, onFail, {
+        quality: 60,
+		sourceType : Camera.PictureSourceType.PHOTOLIBRARY,
+        destinationType: Camera.DestinationType.DATA_URL,
+        allowEdit: true
+    });
 }
 
 function onCropCall(results){
@@ -930,16 +912,17 @@ function onCropCall(results){
 			cropImageH = randerHeight;
 			cropImageW = (cropImageH/this.height) * this.width ;
 		}
-		onCrop();
+		onCrop(results);
 		tmpImg = "";
 	}
 	tmpImg.src = results;
 }
 
-function onCrop() {
+function onCrop(results) {
     loadPage('cropView');
-    $('#cropImage').html(['<img src="', document.getElementById('smallImage').src, '" width="'+cropImageW+'" height="'+cropImageH+'" />'].join(''));
+    $('#cropImage').html(['<img src="', results , '" width="'+cropImageW+'" height="'+cropImageH+'" />'].join(''));
     crop_img = $('#cropImage img')[0];
+	var xsize, ysize, totH;
 	if(crop_img.width*3/4 > crop_img.height){
 		ysize = crop_img.height;
 		xsize = crop_img.height*4/3; 
@@ -947,10 +930,11 @@ function onCrop() {
 		xsize = crop_img.width;
 		ysize = crop_img.width*3/4;
 	}
+	scrollHeight = scrollValue = ysize;
     $('#cropImage img').Jcrop({
         bgColor: 'black',
         bgOpacity: .3,
-        onSelect: cropAreaChanged,
+		onSelect: cropAreaChanged,
         onChange: cropAreaChanged,
         aspectRatio: 4 / 3,
         setSelect: [(crop_img.width-xsize)/2, (crop_img.height - ysize)/2, xsize, ysize]
@@ -965,11 +949,48 @@ function onCrop() {
     onStopNotification();
     function cropAreaChanged(selection) {
         if (selection.w > 0 && selection.h > 0)
-            finalSelection = selection;
+        {
+				finalSelection = selection;
+		}
     }
+	document.getElementById("slider-vertical").setAttribute("style","height:"+(cropImageH-50)+"px;margin:15px 0px 10px 0px;");
+	$('#slider-vertical').slider({
+		orientation: "vertical",
+		min: 5,
+		max: ysize,
+		value:ysize,
+		slide: function( event, ui ) {
+				selectCropArea(ui.value);
+			}
+	});
+}
+
+function selectCropArea(changeValue)
+{
+	scrollValue = changeValue;
+	var totSelW = (scrollValue*4)/3 + finalSelection.x;
+	var totSelH = scrollValue + finalSelection.y;
+	var xPos, yPos;
+	if(totSelH > scrollHeight && totSelW > (scrollHeight*4)/3)
+		{xPos = finalSelection.x - (totSelW - (scrollHeight*4)/3); yPos = finalSelection.y - (totSelH - scrollHeight);}
+	else if(totSelH > scrollHeight)
+		{yPos = finalSelection.y - (totSelH - scrollHeight); xPos = finalSelection.x;}
+	else if(totSelW > (scrollHeight*4)/3)
+		{xPos = finalSelection.x - (totSelW - (scrollHeight*4)/3); yPos = finalSelection.y;}
+	else
+		{xPos = finalSelection.x; yPos = finalSelection.y;}
+	jcrop_api.animateTo([xPos,yPos,(scrollValue*4)/3,scrollValue]);
+}
+
+function onSliderChange(value)
+{
+	value = $("#slider-vertical").slider("option", "value" ) + value;
+	$("#slider-vertical").slider("option", "value", value );
+	selectCropArea(value);
 }
 
 function onCropSaved() {
+	var xsize, ysize;
     navigator.notification.activityStart("Please Wait", "Croping.....");
     canvas = document.createElement('canvas');
     var tempImage = new Image();
@@ -983,7 +1004,7 @@ function onCropSaved() {
     canvas.width = Math.round(rx * finalSelection.w);
     canvas.height = Math.round(ry * finalSelection.h);
     if (canvas.width < 1024 && canvas.height < 768)
-        navigator.notification.alert('Select Bigger Size!', onCrop, 'Crop Not Correct', 'Ok');
+        navigator.notification.alert('Select Bigger Size!', onCrop(crop_img.src), 'Crop Not Correct', 'Ok');
 	else
 	{
 		var x1 = Math.round(rx * finalSelection.x);
@@ -993,40 +1014,42 @@ function onCropSaved() {
 
 		var ctx = canvas.getContext('2d');
 		ctx.drawImage(crop_img, x1, y1, w, h, 0, 0, w, h);
-		$('#waterImage').attr('src', canvas.toDataURL());
 		origImg.src = canvas.toDataURL();
 		origImg.onload=function(){
 			applyWatermark();
 		}
 	}
-	tempImage = "";
+	jcrop_api = null;
+	finalSelection = null;
 }
 
 function onCropSkip() {
-	$('#waterImage').attr('src', document.getElementById('smallImage').src);
-    origImg.src = document.getElementById('waterImage').src;
-	origImg.onload=function(){
-		applyWatermark();
-	}
+	origImg.src = crop_img.src ;
 }
 //For Water Mark
 function applyWatermark() {
-	$('#cropImage').innerHTML="";
-	$('#smallImage').attr('src',"");
+	var gctx;
+	var watermark = new Image();
+    watermark.src = "img/Velocity_Watermark.png";
+	watermark.onload=function(){
+		gcanvas = document.createElement('canvas');
+		if (!gcanvas) {
+			alert('Error: I cannot create a new canvas element!');
+			return;
+		}
+		gctx = gcanvas.getContext("2d");
+		gcanvas.width = 1024;
+		gcanvas.height = 768;
+		gctx.drawImage(origImg, 0, 0, origImg.width, origImg.height, 0, 0, 1024, 768);
+		x = (gcanvas.width - 20) - (watermark.width);
+		y = (gcanvas.height - 20) - (watermark.height);
+		gctx.drawImage(watermark, x, y);
+		var encoder = new JPEGEncoder();
+        var img64 = encoder.encode(gctx.getImageData(0,0,1024,768), 70).replace(/data:image\/jpeg;base64,/,'');
+		var imageURI=Base64Binary.decodeArrayBuffer(img64);
+		onStopNotification();
+		saveImage(imageURI);
+		watermark = null;
+	}
     navigator.notification.activityStart("Please Wait", "Water Marking.....");
-    gcanvas = document.createElement('canvas');
-    if (!gcanvas) {
-        alert('Error: I cannot create a new canvas element!');
-        return;
-    }
-    gctx = gcanvas.getContext("2d");
-    gcanvas.width = 1024;
-    gcanvas.height = 768;
-    gctx.drawImage(origImg, 0, 0, origImg.width, origImg.height, 0, 0, 1024, 768);
-    x = (gcanvas.width - 20) - (watermark.width);
-    y = (gcanvas.height - 20) - (watermark.height);
-    gctx.drawImage(watermark, x, y);
-    //$('#waterImage').attr('src', gcanvas.toDataURL());
-    onStopNotification();
-	saveImage();
 }
