@@ -717,7 +717,7 @@ function JPEGEncoder(quality) {
 	
 	function init(){
 		var time_start = new Date().getTime();
-		if(!quality) quality = 50;
+		if(!quality) quality = 100;
 		// Create tables
 		initCharLookupTable()
 		initHuffmanTbl();

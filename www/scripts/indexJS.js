@@ -746,9 +746,8 @@ function onPhotoDataSuccess(imageData) {
 
 function captureI() {
     navigator.camera.getPicture(onPhotoDataSuccess, onFail, {
-        quality: 60,
-        destinationType: Camera.DestinationType.DATA_URL,
-        allowEdit: true
+		quality: 100,
+        destinationType: Camera.DestinationType.DATA_URL
     });
 }
 
@@ -894,10 +893,9 @@ function backtogallary() {
 
 function onImagePicker(){
 	 navigator.camera.getPicture(onPhotoDataSuccess, onFail, {
-        quality: 60,
+		quality: 100,
 		sourceType : Camera.PictureSourceType.PHOTOLIBRARY,
-        destinationType: Camera.DestinationType.DATA_URL,
-        allowEdit: true
+        destinationType: Camera.DestinationType.DATA_URL
     });
 }
 
@@ -949,8 +947,8 @@ function onCrop(results) {
     onStopNotification();
     function cropAreaChanged(selection) {
         if (selection.w > 0 && selection.h > 0)
-        {
-				finalSelection = selection;
+        {	
+			finalSelection = selection;
 		}
     }
 	document.getElementById("slider-vertical").setAttribute("style","height:"+(cropImageH-50)+"px;margin:15px 0px 10px 0px;");
@@ -959,7 +957,10 @@ function onCrop(results) {
 		min: 5,
 		max: ysize,
 		value:ysize,
-		slide: function( event, ui ) {
+		change:function( event, ui ) {
+				selectCropArea(ui.value);
+			},
+		slide:function( event, ui ) {
 				selectCropArea(ui.value);
 			}
 	});
@@ -981,12 +982,18 @@ function selectCropArea(changeValue)
 		{xPos = finalSelection.x; yPos = finalSelection.y;}
 	jcrop_api.animateTo([xPos,yPos,(scrollValue*4)/3,scrollValue]);
 }
+var myVar = 0;
+function onSliderChange(cValue)
+{	
+	myVar = setInterval(function (){
+		value = $("#slider-vertical").slider("option", "value" ) + cValue;
+		$("#slider-vertical").slider("option", "value", value );
+		}, 100);
+}
 
-function onSliderChange(value)
+function stopSliderChange()
 {
-	value = $("#slider-vertical").slider("option", "value" ) + value;
-	$("#slider-vertical").slider("option", "value", value );
-	selectCropArea(value);
+	clearInterval(myVar);
 }
 
 function onCropSaved() {
@@ -1019,8 +1026,6 @@ function onCropSaved() {
 			applyWatermark();
 		}
 	}
-	jcrop_api = null;
-	finalSelection = null;
 }
 
 function onCropSkip() {
@@ -1045,7 +1050,7 @@ function applyWatermark() {
 		y = (gcanvas.height - 20) - (watermark.height);
 		gctx.drawImage(watermark, x, y);
 		var encoder = new JPEGEncoder();
-        var img64 = encoder.encode(gctx.getImageData(0,0,1024,768), 70).replace(/data:image\/jpeg;base64,/,'');
+        var img64 = encoder.encode(gctx.getImageData(0,0,1024,768), 100).replace(/data:image\/jpeg;base64,/,'');
 		var imageURI=Base64Binary.decodeArrayBuffer(img64);
 		onStopNotification();
 		saveImage(imageURI);

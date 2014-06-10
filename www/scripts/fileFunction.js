@@ -22,7 +22,7 @@ function saveImage(imageURI){
 	var yy = date.getFullYear();
 	var mm = date.getMonth();
 	var dd = date.getDate();
-	var fileName="vis_inspection_"+mm+dd+yy+"_"+hh+mi+sec+".jpeg";
+	var fileName="vis_inspection_"+mm+dd+yy+"_"+hh+mi+sec+".jpg";
 	dirVISInspection.getFile(fileName, {create: true, exclusive: false}, function (fileEntry){
 		CreateImgWriter(fileEntry,imageURI);
 	},function(error){ console.log("File Create FSError = "+error.code); });

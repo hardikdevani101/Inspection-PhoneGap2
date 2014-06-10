@@ -1,18 +1,36 @@
 @CHARSET "ISO-8859-1";
-input:hover[type="button"] {
+input:active[type="button"] {
 color:#FFFFFF;
 }
-.divMenuButton:hover{
+.divMenuButton:active{
 color:#FFFFFF;
 }
-.login_btns:hover{
+.login_btns:active{
 color:#FFFFFF;
 }
-.gallary_menubtn:hover {
+.gallary_menubtn:active {
 color:#FFFFFF;
 }
-.InspButton:hover {
+.InspButton:active {
 color:#FFFFFF;
+}
+input#zoom-in{
+background:url(../img/minus.png);
+background-size:25px 25px;
+background-repeat:no-repeat;
+padding:0px;
+border:none;
+width:25px;
+height:25px;
+}
+input#zoom-out{
+background:url(../img/plus.png);
+background-size:25px 25px;
+background-repeat:no-repeat;
+padding:0px;
+border:none;
+width:25px;
+height:25px;
 }
 .menuButton {
 	margin-top: 5%;

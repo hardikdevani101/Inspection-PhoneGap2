@@ -16,6 +16,7 @@
 <script src="scripts/jquery.ui.core.js"></script>
 <script src="scripts/jquery.ui.widget.js"></script>
 <script src="scripts/jquery.ui.mouse.js"></script>
+<script src="scripts/jquery.ui.touch-punch.min.js"></script>
 <script src="scripts/jquery.ui.slider.js"></script>
 <script src="scripts/jpeg_encoder_basic.js"></script>
 <link rel="stylesheet" href="styles/jquery.ui.all.css">
@@ -38,10 +39,10 @@
 		</span>
 		Username : <input id="txt_user" type="text" value=""/><br><br> 
 		Password : <input id="txt_password" type="password" value=""/><br><br>
-		<input id="loginbtn" class="login_btns" style="padding:3px 0px;background-color:#0B9E2E;" onClick="validateLogin()" type="button" value="Login">&nbsp;&nbsp;
-		<input id="settingpagebtn" class="login_btns" style="padding:3px 0px;" onClick="onSettingPage()" type="button" value="Setting">&nbsp;&nbsp;
-		<input id="aboutBtn" class="login_btns" style="padding:3px 0px;" onClick="onAboutUs()" type="button" value="AboutUs">&nbsp;&nbsp;
-		<input id="exitbtn" class="login_btns" style="padding:3px 0px;background-color:#F29645 ;" onClick="onExit()" type="button" value="Exit">
+		<input id="loginbtn" class="login_btns" ontouchstart="return true;" style="padding:3px 0px;background-color:#0B9E2E;" onClick="validateLogin()" type="button" value="Login">&nbsp;&nbsp;
+		<input id="settingpagebtn" class="login_btns" ontouchstart="return true;" style="padding:3px 0px;" onClick="onSettingPage()" type="button" value="Setting">&nbsp;&nbsp;
+		<input id="aboutBtn" class="login_btns" ontouchstart="return true;" style="padding:3px 0px;" onClick="onAboutUs()" type="button" value="AboutUs">&nbsp;&nbsp;
+		<input id="exitbtn" class="login_btns" ontouchstart="return true;" style="padding:3px 0px;background-color:#F29645 ;" onClick="onExit()" type="button" value="Exit">
 		
 		<div id="login_error"></div>
 	</div>
@@ -52,8 +53,8 @@
 		<h1>VIS-Inspection Phonegap</h1>
 		</span><input
 			class="menuButton" id="startNewInspectionBtn"
-			onclick="onStartNewInspection()" type="button" style="background-color:#0B9E2E;"
-			value="Start Inspection"><br> <input class="menuButton"
+			onclick="onStartNewInspection()" type="button" ontouchstart="return true;" style="background-color:#0B9E2E;"
+			value="Start Inspection"><br> <input class="menuButton" ontouchstart="return true;"
 			id="exitBtn" onClick="onLoginpage()" type="button" value="Exit" style="background-color:#F29645 ;"><br>
 	</div>
 	
@@ -101,8 +102,8 @@
 			</select>
 		</td></tr>
 		</table>
-		<input id="btn_update" onClick="validationSetting()" type="button" style="background-color:#0B9E2E;" value="Save">
-		<input id="btn_cancel" onClick="onLoginpage()" type="button" value="Cancel" style="background-color:#F29645 ;">
+		<input id="btn_update" onClick="validationSetting()" type="button" style="background-color:#0B9E2E;" value="Save" ontouchstart="return true;">
+		<input id="btn_cancel" onClick="onLoginpage()" type="button" value="Cancel" style="background-color:#F29645 ;" ontouchstart="return true;">
 		<div id="setting_error"></div>
 		</center>
 	</div>
@@ -113,7 +114,7 @@
 		<div name="user_lbl" style="float:left;font-weight:bold;"></div>
 		<span style="float:right; margin:0px; padding:0px;">Line No:
 		<select id="linedrop" style="padding:0px;"></select>
-		<input id="btnReload" class="login_btns" onClick="fillMrLines()" type="button" value="Reload">
+		<input id="btnReload" class="login_btns" onClick="fillMrLines()" type="button" value="Reload" ontouchstart="return true;">
 		</span>
 		<br><br>
 		<div style="padding:0px 2px; margin:0px 0px 0px 0px;">
@@ -125,16 +126,16 @@
 			</table>
 		</div>
 		<div style="width:12%; float:right; height:65%; padding : 0px 2%;  border-left:2px solid black;">
-			<div class="divMenuButton" onClick="discardInspections()" style="margin: 20% 4% 5% 2%;background-color:#F29645 ;">Delete</div>
-			<div class="divMenuButton" onClick="loadPage('home')" style="margin: 30% 4% 5% 2%;background-color:#F29645 ;">Back</div>
-			<div class="divMenuButton" onClick="onFinish()" style="margin: 150% 4% 5% 2%;background-color:#0B9E2E;">Finish</div>
+			<div class="divMenuButton" onClick="discardInspections()" style="margin: 20% 4% 5% 2%;background-color:#F29645 ;" ontouchstart="return true;">Delete</div>
+			<div class="divMenuButton" onClick="loadPage('home')" style="margin: 30% 4% 5% 2%;background-color:#F29645 ;" ontouchstart="return true;">Back</div>
+			<div class="divMenuButton" onClick="onFinish()" style="margin: 150% 4% 5% 2%;background-color:#0B9E2E;" ontouchstart="return true;">Finish</div>
 		</div>
 	</div>
 
 	<div id="gallery" class="page">
 		<div style="width:100%;margin:0px; padding:0px;">
 			<div name="user_lbl" style="float:left;font-weight:bold;"></div> 
-			<Span class="login_btns" style="float:right;width:15%;" onClick="onSyncFiles()">Sync</Span>
+			<Span class="login_btns" style="float:right;width:15%;" onClick="onSyncFiles()" ontouchstart="return true;">Sync</Span>
 			<center><Span id="gallery_head" style="float:right;"></Span></center>&nbsp;	
 		</div>
 		<div style="padding:0px 2px; margin:0px;">
@@ -148,12 +149,12 @@
 		
 		<div style="width:12%; padding:0px 2%; float:right; border-left:2px solid black; ">
 
-			<Span class="divMenuButton" onClick="onBackToStartInspection('gallary')" style="margin: 15% 4% 5% 2%;background-color:#F29645 ;">Back</Span>
-			<Span class="divMenuButton" onClick="onDeleteGallaryPage()" style="background-color:#F29645 ;">Delete</Span>
+			<Span class="divMenuButton" ontouchstart="return true;" onClick="onBackToStartInspection('gallary')" style="margin: 15% 4% 5% 2%;background-color:#F29645 ;">Back</Span>
+			<Span class="divMenuButton" ontouchstart="return true;" onClick="onDeleteGallaryPage()" style="background-color:#F29645 ;">Delete</Span>
 			<Span style="float:left; margin : 50% 0px 15% 5%;">Acquire</span>
-			<Span class="divMenuButton" onClick="loadgallaryChoise()" style="background-color:#058A78 ;">File</Span>
-			<Span class="divMenuButton" onClick="onImagePicker()" style="background-color:#058A78 ;">Gallery</Span>
-			<Span class="divMenuButton" onClick="captureI()" style="background-color:#058A78 ;">Camera</Span>
+			<Span class="divMenuButton" ontouchstart="return true;" onClick="loadgallaryChoise()" style="background-color:#058A78 ;">File</Span>
+			<Span class="divMenuButton" ontouchstart="return true;" onClick="onImagePicker()" style="background-color:#058A78 ;">Gallery</Span>
+			<Span class="divMenuButton" ontouchstart="return true;" onClick="captureI()" style="background-color:#058A78 ;">Camera</Span>
 		</div>
 	</div>
 	
@@ -165,10 +166,10 @@
 		<div id="cropImage" style="width:70%; height:70%; float:left; margin:0px; padding: 0px;">
 			
 		</div>
-		<div style="width:15%; height:100%;float:left; padding:0%; margin:-5px 0px 0px 0px;">
-			<a href="#" onmousedown="onSliderChange(1)" style="width:25px;height:25px;" ><img src="img/plus.png" height="25" width="25" /></a><br>
+		<div style="width:15%; height:100%;float:left; padding:0%; margin:-15px 0px 0px 0px;">
+			<input type="button" ontouchstart="onSliderChange(1)" ontouchend="stopSliderChange()" id="zoom-out" />
 			<div id="slider-vertical" style=""></div>
-			<a href="#" onmousedown="onSliderChange(-1)" style="margin:0px; padding:0px;width:25px;"><img src="img/minus.png" height="25" width="25" /></a>
+			<input type="button" ontouchstart="onSliderChange(-1)" ontouchend="stopSliderChange()" id="zoom-in" />
 		</div>
 		<div style="width:15%; height:100%;float:left; padding:0%; margin:0%;">
 			<input class="crop_btn" type="button" value="Crop" style="background-color:#088A08 ;" onClick="onCropSaved()"/>
@@ -181,8 +182,8 @@
 	<div id="SelectGallary" class="page">
       <div style="width:100%; margin:0px; padding:0px; ">
 			<div name="user_lbl" style="float:left;font-weight:bold;"></div> 
-			<Span class="gallary_menubtn" onClick="backtogallary()" style="float:right;">Cancel</Span>
-			<Span class="gallary_menubtn" onClick="confirmGallaryDiscard()" style="float:right;background-color:#F29645 ;">Delete</Span>
+			<Span class="gallary_menubtn" onClick="backtogallary()" style="float:right;" ontouchstart="return true;">Cancel</Span>
+			<Span class="gallary_menubtn" onClick="confirmGallaryDiscard()" style="float:right;background-color:#F29645 ;" ontouchstart="return true;">Delete</Span>
 			<Span id="gallery_head" style="float: right;">Select files for delete : </Span>
       </div>
 	  <br>
