@@ -755,7 +755,7 @@ function captureI() {
 
 function onFail(message) {
     //alert('Failed because: ' + message);
-	navigator.notification.alert('Failer!!',function(){},message,'Ok');
+	navigator.notification.alert('Failure!!',function(){},message,'Ok');
     backtogallary();
 }
 

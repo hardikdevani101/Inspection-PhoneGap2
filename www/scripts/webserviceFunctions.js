@@ -68,7 +68,7 @@ function onLogin(){
 					console.log("Error ="+data.responseText);
 					loadPage("login");
 					document.getElementById("txt_user").value=userName;
-					navigator.notification.alert('Failer!!',function(){},getErrorMessage(data, status, req),'Ok');
+					navigator.notification.alert('Failure!!',function(){},getErrorMessage(data, status, req),'Ok');
 					onStopNotification();
                 }  
 }
@@ -146,7 +146,7 @@ function fillMrLines(){
 							displayUserName();
 						}
 					onStopNotification();
-					navigator.notification.alert('Failer!!',function(){},getErrorMessage(data, status, req),'Ok');
+					navigator.notification.alert('Failure!!',function(){},getErrorMessage(data, status, req),'Ok');
                 }
 				
 }
@@ -217,7 +217,7 @@ function fillInspectionsLines(){
 							displayUserName();
 						}
 					onStopNotification();
-					navigator.notification.alert('Failer!!',function(){},getErrorMessage(data, status, req),'Ok');
+					navigator.notification.alert('Failure!!',function(){},getErrorMessage(data, status, req),'Ok');
                 }
 }
 
@@ -303,7 +303,7 @@ function callAttachImageWs(imginspline,imgname){
 
                 function processError(data, status, req) {
 					onStopNotification();
-					navigator.notification.alert('Failer!!',function(){},getErrorMessage(data, status, req),'Ok');
+					navigator.notification.alert('Failure!!',function(){},getErrorMessage(data, status, req),'Ok');
                 }
 				
 }
