@@ -30,7 +30,7 @@ var pandingCounts = 0;
 var currentPage="";
 var warehouseListArray = new Array();
 var cropImageW,cropImageH;
-var scrollValue,scrollHeight;
+var scrollHeight;
 
 function onLoad() {
     document.addEventListener("deviceready", onDeviceReady, false);
@@ -691,6 +691,7 @@ function setSettingpage() {
     document.getElementById("txt_url").value = vis_url;
     document.getElementById("txt_lang").value = vis_lang;
     document.getElementById("txt_client").value = vis_client_id;
+	document.getElementById("txt_imgQua").value = vis_img_qulty;
 	var e = document.getElementById("txt_role");
 	for(var i=0 ; i < e.options.length ; i++){
 		if(e.options[i].value==vis_role)
@@ -719,8 +720,9 @@ function onSettingUpdate() {
 	
 	e = document.getElementById("txt_organizer");
 	vis_org_id = e.options[e.selectedIndex].value;
+	vis_img_qulty = document.getElementById("txt_imgQua").value;
 	
-    if (vis_url == "" && vis_lang == "" && vis_client_id == "" && vis_role == "" && vis_whouse_id == "" && vis_org_id == "") {
+    if (vis_url == "" && vis_lang == "" && vis_client_id == "" && vis_role == "" && vis_whouse_id == "" && vis_org_id == "" && vis_img_qulty == "") {
         navigator.notification.alert('No Any Field Should Blank!', onSettingPage, 'Invalid Value', 'Ok');
         loadSetting();
     } else {
@@ -928,13 +930,14 @@ function onCrop(results) {
 		xsize = crop_img.width;
 		ysize = crop_img.width*3/4;
 	}
-	scrollHeight = scrollValue = ysize;
+	scrollHeight = ysize;
     $('#cropImage img').Jcrop({
         bgColor: 'black',
         bgOpacity: .3,
 		onSelect: cropAreaChanged,
         onChange: cropAreaChanged,
         aspectRatio: 4 / 3,
+		allowResize: false,
         setSelect: [(crop_img.width-xsize)/2, (crop_img.height - ysize)/2, xsize, ysize]
     }, function () {
         // Use the API to get the real image size
@@ -966,21 +969,28 @@ function onCrop(results) {
 	});
 }
 
-function selectCropArea(changeValue)
+function selectCropArea(scrollValue)
 {
-	scrollValue = changeValue;
 	var totSelW = (scrollValue*4)/3 + finalSelection.x;
 	var totSelH = scrollValue + finalSelection.y;
 	var xPos, yPos;
-	if(totSelH > scrollHeight && totSelW > (scrollHeight*4)/3)
-		{xPos = finalSelection.x - (totSelW - (scrollHeight*4)/3); yPos = finalSelection.y - (totSelH - scrollHeight);}
-	else if(totSelH > scrollHeight)
-		{yPos = finalSelection.y - (totSelH - scrollHeight); xPos = finalSelection.x;}
-	else if(totSelW > (scrollHeight*4)/3)
-		{xPos = finalSelection.x - (totSelW - (scrollHeight*4)/3); yPos = finalSelection.y;}
+	if(totSelH > crop_img.height && scrollValue > finalSelection.h)
+	{
+		yPos = Math.ceil(finalSelection.y - (scrollValue - finalSelection.h));
+	}
 	else
-		{xPos = finalSelection.x; yPos = finalSelection.y;}
-	jcrop_api.animateTo([xPos,yPos,(scrollValue*4)/3,scrollValue]);
+	{ 
+		yPos = finalSelection.y;
+	}
+	if(totSelW > crop_img.width && (scrollValue*4)/3 > finalSelection.w)
+	{
+		xPos = Math.ceil(finalSelection.x - ((scrollValue*4)/3 - finalSelection.w));
+	}
+	else
+	{
+		xPos = finalSelection.x;
+	}
+	jcrop_api.setSelect([parseInt(xPos),parseInt(yPos),parseInt((scrollValue*4)/3)+xPos,parseInt(scrollValue)+yPos]);
 }
 var myVar = 0;
 function onSliderChange(cValue)
@@ -1050,7 +1060,7 @@ function applyWatermark() {
 		y = (gcanvas.height - 20) - (watermark.height);
 		gctx.drawImage(watermark, x, y);
 		var encoder = new JPEGEncoder();
-        var img64 = encoder.encode(gctx.getImageData(0,0,1024,768), 100).replace(/data:image\/jpeg;base64,/,'');
+		var img64 = encoder.encode(gctx.getImageData(0,0,1024,768), parseInt(vis_img_qulty)).replace(/data:image\/jpeg;base64,/,'');
 		var imageURI=Base64Binary.decodeArrayBuffer(img64);
 		onStopNotification();
 		saveImage(imageURI);
