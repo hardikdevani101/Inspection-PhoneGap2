@@ -389,18 +389,19 @@ function onRemoveVISDirFile(tmpfile,InspNumber){
 				deleteCount=deleteCount-1;
 				varifyAllDelete();
 			}, errorCB);
-		}, function (error) { console.log("Error on read = " + error.code); });
+		}, function (error) { console.log("Error on Delete = " + error.code); });
     }, function (error) { console.log(" FSError = " + error.code); });
 }
 
 function confirmGallaryDiscard() {
-    navigator.notification.confirm('Are you sure ???', DiscardGallary, 'Delete selected files..', 'Ok,Cancel');
+    navigator.notification.confirm('Are you sure ???', DiscardGallary, 'Delete selected files..', ['Ok','Cancel']);
 }
 
 function varifyAllDelete(){
 	if(deleteCount==0){
 		gallaryTable="";
 		backtogallary();
+		document.getElementById("disp-selGal").innerHTML = "";
 	}
 }
 
@@ -749,7 +750,8 @@ function onPhotoDataSuccess(imageData) {
 function captureI() {
     navigator.camera.getPicture(onPhotoDataSuccess, onFail, {
 		quality: 100,
-        destinationType: Camera.DestinationType.DATA_URL
+        destinationType: Camera.DestinationType.DATA_URL,
+		encodingType: Camera.EncodingType.JPEG
     });
 }
 
@@ -839,10 +841,10 @@ function onfillInspectionsLines(){
 	}else{
 		fillInspectionsLines();
 	}
+	e = selMrLine = null ;
 }
 
 function renderInspectionFromCache(){
-	var div = document.getElementById("outNewIns");
 	document.getElementById("disp-Insp").innerHTML="";
 	for(var j=0; j<3; j++)
 	{
@@ -862,6 +864,7 @@ function renderInspectionFromCache(){
 		var dval = inspLinesArray[i][1];
 		var dlab = inspLinesArray[i][0];
 		getUploadCounts(M_InOutLine_ID,dlab,dval,FillInspectionDiv);
+		dval = dlab = null ;
 	}
 	
 	onStopNotification();
@@ -894,10 +897,11 @@ function backtogallary() {
 }
 
 function onImagePicker(){
-	 navigator.camera.getPicture(onPhotoDataSuccess, onFail, {
+	navigator.camera.getPicture(onPhotoDataSuccess, onFail, {
 		quality: 100,
 		sourceType : Camera.PictureSourceType.PHOTOLIBRARY,
-        destinationType: Camera.DestinationType.DATA_URL
+        destinationType: Camera.DestinationType.DATA_URL,
+		encodingType: Camera.EncodingType.JPEG
     });
 }
 
@@ -913,7 +917,7 @@ function onCropCall(results){
 			cropImageW = (cropImageH/this.height) * this.width ;
 		}
 		onCrop(results);
-		tmpImg = "";
+		tmpImg = null;
 	}
 	tmpImg.src = results;
 }
@@ -991,6 +995,7 @@ function selectCropArea(scrollValue)
 		xPos = finalSelection.x;
 	}
 	jcrop_api.setSelect([parseInt(xPos),parseInt(yPos),parseInt((scrollValue*4)/3)+xPos,parseInt(scrollValue)+yPos]);
+	totSelW = totSelH = xPos = yPos = null ;
 }
 var myVar = 0;
 function onSliderChange(cValue)
@@ -1020,21 +1025,17 @@ function onCropSaved() {
 
     canvas.width = Math.round(rx * finalSelection.w);
     canvas.height = Math.round(ry * finalSelection.h);
-    if (canvas.width < 1024 && canvas.height < 768)
-        navigator.notification.alert('Select Bigger Size!', onCrop(crop_img.src), 'Crop Not Correct', 'Ok');
-	else
-	{
-		var x1 = Math.round(rx * finalSelection.x);
-		var y1 = Math.round(ry * finalSelection.y);
-		var w = canvas.width;
-		var h = canvas.height;
+	var x1 = Math.round(rx * finalSelection.x);
+	var y1 = Math.round(ry * finalSelection.y);
+	var w = canvas.width;
+	var h = canvas.height;
 
-		var ctx = canvas.getContext('2d');
-		ctx.drawImage(crop_img, x1, y1, w, h, 0, 0, w, h);
-		origImg.src = canvas.toDataURL();
-		origImg.onload=function(){
-			applyWatermark();
-		}
+	var ctx = canvas.getContext('2d');
+	ctx.drawImage(crop_img, x1, y1, w, h, 0, 0, w, h);
+	origImg.src = canvas.toDataURL();
+	origImg.onload=function(){
+		applyWatermark();
+		xsize = ysize = tempImage = rx = ry = null ;
 	}
 }
 
@@ -1064,7 +1065,7 @@ function applyWatermark() {
 		var imageURI=Base64Binary.decodeArrayBuffer(img64);
 		onStopNotification();
 		saveImage(imageURI);
-		watermark = null;
+		watermark = encoder = img64 = null;
 	}
     navigator.notification.activityStart("Please Wait", "Water Marking.....");
 }

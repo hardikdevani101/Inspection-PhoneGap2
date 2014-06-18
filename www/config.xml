@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.vis.inspector" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>Velocity Inspection</name>
+    <name>VISion</name>
     <description>
         Velocity quality inspection tool.
     </description>
@@ -28,6 +28,7 @@
     <preference name="auto-hide-splash-screen" value="true" />
     <preference name="disable-cursor" value="false" />
     <preference name="android-minSdkVersion" value="7" />
+    <preference name="android-targetSdkVersion" value="19" />
     <preference name="android-installLocation" value="auto" />
 	<preference name="phonegap-version" value="3.4.0" />
 	<preference name="AndroidPersistentFileLocation" value="Compatibility" />
@@ -56,11 +57,9 @@
     <gap:splash gap:platform="ios" height="1024" src="res/screen/ios/screen-ipad-portrait.png" width="768" />
     <gap:splash gap:platform="ios" height="768" src="res/screen/ios/screen-ipad-landscape.png" width="1024" />
     <gap:splash gap:platform="winphone" src="res/screen/windows-phone/screen-portrait.jpg" />
-	<gap:plugin name="org.apache.cordova.media-capture" />
 	<gap:plugin name="org.apache.cordova.camera" />
 	<gap:plugin name="org.apache.cordova.file"/>
 	<gap:plugin name="org.apache.cordova.file-transfer"/>
 	<gap:plugin name="org.apache.cordova.dialogs" />
-	<gap:plugin name="com.synconset.imagepicker" />
     <access origin="*" />	
 </widget>
