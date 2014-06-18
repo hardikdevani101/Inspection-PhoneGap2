@@ -637,7 +637,7 @@ function onRenderTable(){
 }
 
 function discardInspections() {
-    navigator.notification.confirm('Are you sure ???', confirmDiscardInspections, 'Discard All Inspections...', 'Ok,Cancel');
+    navigator.notification.confirm('Are you sure ???', confirmDiscardInspections, 'Discard All Inspections...', ['Ok','Cancel']);
 }
 
 function confirmDiscardInspections(buttonIndex) {
@@ -740,6 +740,7 @@ function displayUserName(){
 	document.getElementsByName("user_lbl")[3].innerHTML="User : "+userName;
 	document.getElementsByName("user_lbl")[4].innerHTML="User : "+userName;
 	document.getElementsByName("user_lbl")[5].innerHTML="User : "+userName;
+	document.getElementsByName("user_lbl")[6].innerHTML="User : "+userName;
 }
 
 function onPhotoDataSuccess(imageData) {
@@ -782,7 +783,7 @@ function onBackButton() {
             "Are you sure you want to EXIT ?",
             checkButtonSelection,
             'EXIT APP:',
-            'Cancel,OK');
+            ['Cancel','OK']);
 	}else if(currentPage=='home'){
 		loadPage("login");
 		document.getElementById("txt_user").value = userName;
@@ -800,6 +801,8 @@ function onBackButton() {
 		onLoginpage();
 	}else if(currentPage=='aboutUs'){
 		onLoginpage();
+	}else if(currentPage=='editView'){
+		onBackToCropView();
 	}else{
          navigator.app.backHistory();
     }
@@ -908,8 +911,8 @@ function onImagePicker(){
 function onCropCall(results){
 	var tmpImg = new Image();
 	tmpImg.onload = function() {
-		var randerHeight = window.innerHeight * 0.75 ;
-		if(this.height < this.width && !((this.height/this.width) > .75)){
+		var randerHeight = window.innerHeight * 0.70 ;
+		if(this.height < this.width && !((this.height/this.width) > .70)){
 			cropImageW = (randerHeight * 4)/3;
 			cropImageH = (cropImageW/this.width) * this.height ;
 		}else{
@@ -924,6 +927,8 @@ function onCropCall(results){
 
 function onCrop(results) {
     loadPage('cropView');
+	console.log(cropImageW);
+	console.log(cropImageH);
     $('#cropImage').html(['<img src="', results , '" width="'+cropImageW+'" height="'+cropImageH+'" />'].join(''));
     crop_img = $('#cropImage img')[0];
 	var xsize, ysize, totH;
@@ -1068,4 +1073,74 @@ function applyWatermark() {
 		watermark = encoder = img64 = null;
 	}
     navigator.notification.activityStart("Please Wait", "Water Marking.....");
+}
+
+function onImageEdit()
+{
+	loadPage('editView');
+	gcanvas = document.getElementById('editCanvas');
+	var editCtx = gcanvas.getContext("2d");
+	gcanvas.height = cropImageH;
+	gcanvas.width = cropImageW;
+	editCtx.drawImage(crop_img,0,0,cropImageW,cropImageH);
+	var editImageData = editCtx.getImageData(0,0,gcanvas.width,gcanvas.height);
+	
+	document.getElementById("slider-brightness").setAttribute("style","height:"+(crop_img.height-50)+"px; margin:15px 0px 10px 0px;");
+	var bValue=50,cValue=50;
+	$('#slider-brightness').slider({
+		orientation: "vertical",
+		min: 0,
+		max: 100,
+		value:50,
+		slide:function( event, ui ) {
+				onBrightnessChange(ui.value-bValue,editImageData);
+				bValue = ui.value;
+			}
+	});
+	
+	function onBrightnessChange(brightValue, brightImageData)
+	{
+		var pixels = brightImageData.data;
+		for(var i = 0; i < pixels.length; i+=4){
+			pixels[i] += brightValue;
+			pixels[i+1] += brightValue;
+			pixels[i+2] += brightValue;
+		}
+		editCtx.putImageData(brightImageData,0,0);
+	}
+	
+	document.getElementById("slider-contrass").setAttribute("style","height:"+(crop_img.height-50)+"px;margin:15px 0px 10px 0px;");
+	$('#slider-contrass').slider({
+		orientation: "vertical",
+		min: 0,
+		max: 100,
+		value:50,
+		slide:function( event, ui ) {
+				onContrassChange(ui.value-cValue,editImageData);
+				cValue = ui.value;
+			}
+	});
+	
+	function onContrassChange(contraValue,contraImageData)
+	{	
+		var data = contraImageData.data;
+		var factor = (259 * (contraValue + 255)) / (255 * (259 - contraValue));
+		for(var i=0;i<data.length;i+=4)
+		{
+			data[i] = factor * (data[i] - 128) + 128;
+			data[i+1] = factor * (data[i+1] - 128) + 128;
+			data[i+2] = factor * (data[i+2] - 128) + 128;
+		}
+		editCtx.putImageData(contraImageData,0,0);
+	}
+}
+
+function onBackToCropView()
+{
+	onCropCall(crop_img.src);
+}
+	
+function saveEditImage()
+{
+	onCropCall(gcanvas.toDataURL());
 }

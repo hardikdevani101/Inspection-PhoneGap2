@@ -176,6 +176,7 @@
 		<div style="width:15%; height:100%;float:left; padding:0%; margin:0%;">
 			<input class="crop_btn" type="button" value="Crop" style="background-color:#088A08 ;" onClick="onCropSaved()"/>
 			<input class="crop_btn" type="button" value="Continue" style="background-color:#088A08 ;" onClick="onCropSkip()"  />
+			<input class="crop_btn" type="button" value="Edit" style="background-color:#088A08 ;" onClick="onImageEdit()"/>
 			<input class="crop_btn" type="button" value="Discard" onClick="backtogallary()" style="background-color:#F29645 ;"/>
 		</div>
 		</center>
@@ -212,6 +213,30 @@
 	<div id="aboutUs" class="page" >
 	</div>
 	
+	<div id="editView" class="page" >
+		<center>
+		<div>
+			<div name="user_lbl" style="float:left;font-weight:bold;"></div> <Span style="margin:0px; padding:0px;" > <h3> Edit Image </h3></Span> 
+		</div>
+		<div id="editImage" style="width:65%; height:70%; float:left; margin:0px; padding: 0px;">
+			<canvas id="editCanvas"></canvas>
+		</div>
+		
+		<div style="width:15%; height:100%;float:left; padding:0%; margin:-15px 0px 0px 0px;">
+			<img src="img/brightness.png" height="25" width="25"/>
+			<div id="slider-brightness" style=""></div>
+		</div>
+		<div style="width:15%; height:100%;float:left; padding:0%; margin:-15px 0px 0px 0px;">
+			<img src="img/contrast.png" height="25" width="25"/>
+			<div id="slider-contrass" style=""></div>
+		</div>
+		
+		<div style="width:70%; height:20%;float:left; padding:0%; margin:0%;">
+			<input class="crop_btn" type="button" value="Save" style="background-color:#088A08 ; width:100px; margin:0px 20px; height:20%;" onClick="saveEditImage()"/>
+			<input class="crop_btn" type="button" value="Cancel" onClick="onBackToCropView()" style="background-color:#F29645 ; float:left; width:100px; margin:0px 20px; height:20%;"/>
+		</div>
+		</center>
+	</div>
 	
 </body>
 </html>
