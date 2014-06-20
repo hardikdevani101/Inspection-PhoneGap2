@@ -4,7 +4,6 @@ var boundX, BoundY;
 var jcrop_api;
 var finalSelection;
 var crop_img;
-var origImg = new Image();
 var userName = "";
 var INSPECTOR_ID;
 var M_InOutLine_ID = 0;
@@ -1021,7 +1020,13 @@ function stopSliderChange()
 	clearInterval(myVar);
 }
 
-function onCropSaved() {
+function onCropSaved()
+{
+	CropSaved(applyWatermark);
+}
+function CropSaved(callBack) {
+	
+	var origImg = new Image();
 	var xsize, ysize;
     navigator.notification.activityStart("Please Wait", "Croping.....");
     canvas = document.createElement('canvas');
@@ -1044,16 +1049,28 @@ function onCropSaved() {
 	ctx.drawImage(crop_img, x1, y1, w, h, 0, 0, w, h);
 	origImg.src = canvas.toDataURL();
 	origImg.onload=function(){
-		applyWatermark();
+		var randerHeight = window.innerHeight * 0.70 ;
+		if(this.height < this.width && !((this.height/this.width) > .70)){
+			cropImageW = (randerHeight * 4)/3;
+			cropImageH = (cropImageW/this.width) * this.height ;
+		}else{
+			cropImageH = randerHeight;
+			cropImageW = (cropImageH/this.height) * this.width ;
+		}
+		callBack(origImg);
 		xsize = ysize = tempImage = rx = ry = null ;
 	}
 }
 
 function onCropSkip() {
+	var origImg = new Image();
 	origImg.src = crop_img.src ;
+	origImg.onload=function(){
+		applyWatermark(origImg);
+	}
 }
 //For Water Mark
-function applyWatermark() {
+function applyWatermark(origImg) {
 	var gctx;
 	var watermark = new Image();
     watermark.src = "img/Velocity_Watermark.png";
@@ -1080,7 +1097,30 @@ function applyWatermark() {
     navigator.notification.activityStart("Please Wait", "Water Marking.....");
 }
 
-function onImageEdit()
+function onCropImageEdit()
+{
+	CropSaved(onImageEdit);
+}
+
+function callImageEdit()
+{
+	onImageEdit(crop_img);
+}
+
+function onImageEdit(origImg)
+{
+	edit_image = new Image();
+	edit_image.src = origImg.src;
+	edit_image.onload=function(){
+		this.height = cropImageH;
+		this.width = cropImageW;
+		ImageEdit();
+		navigator.notification.activityStop();
+	}
+}
+var edit_image;
+
+function ImageEdit()
 {
 	canX=0,canY=0,canX1=0,canY1=0;
 	aNo=-1;
@@ -1089,15 +1129,15 @@ function onImageEdit()
 	actArray = new Array();
 	gcanvas = document.getElementById('editCanvas');
 	editCtx = gcanvas.getContext("2d");
-	gcanvas.height = cropImageH;
-	gcanvas.width = cropImageW;
-	editCtx.drawImage(crop_img,0,0,cropImageW,cropImageH);
+	gcanvas.height = edit_image.height;
+	gcanvas.width = edit_image.width;
+	editCtx.drawImage(edit_image,0,0,edit_image.width,edit_image.height);
 	gcanvas.addEventListener("touchmove", touchMove, true);
 	gcanvas.addEventListener("touchstart", touchDown, false);
 	gcanvas.addEventListener("touchend", touchEnd, false);
 	var tmpEditData = "" ;
 	
-	document.getElementById("slider-brightness").setAttribute("style","height:"+(crop_img.height-50)+"px; margin:15px 0px 10px 0px;");
+	document.getElementById("slider-brightness").setAttribute("style","height:"+(edit_image.height-50)+"px; margin:15px 0px 10px 0px;");
 	$('#slider-brightness').slider({
 		orientation: "vertical",
 		min: 0,
@@ -1127,7 +1167,7 @@ function onImageEdit()
 		}
 	});
 	
-	document.getElementById("slider-contrass").setAttribute("style","height:"+(crop_img.height-50)+"px;margin:15px 0px 10px 0px;");
+	document.getElementById("slider-contrass").setAttribute("style","height:"+(edit_image.height-50)+"px;margin:15px 0px 10px 0px;");
 	$('#slider-contrass').slider({
 		orientation: "vertical",
 		min: 0,
@@ -1176,7 +1216,7 @@ function onImageEdit()
 		e.preventDefault();
 		canX1 = e.targetTouches[0].pageX - gcanvas.offsetLeft;
 		canY1 = e.targetTouches[0].pageY - gcanvas.offsetTop;
-		editCtx.clearRect(0,0,cropImageW,cropImageH);
+		editCtx.clearRect(0,0,edit_image.width,edit_image.hight);
 		editCtx.putImageData(tmpEditData,0,0);
 		drowRect(canX,canY,canX1-canX,canY1-canY);
 	}
@@ -1206,7 +1246,11 @@ function onBackToCropView()
 	
 function saveEditImage()
 {
-	onCropCall(gcanvas.toDataURL());
+	var origImg = new Image();
+	origImg.src = gcanvas.toDataURL();
+	origImg.onload=function(){
+		applyWatermark(origImg);
+	}
 }
 
 function onUndoEdit()
@@ -1216,7 +1260,7 @@ function onUndoEdit()
 		actArray.pop();
 		--aNo;
 		editCtx.clearRect(0,0,cropImageW,cropImageH);
-		editCtx.drawImage(crop_img,0,0,cropImageW,cropImageH);
+		editCtx.drawImage(edit_image,0,0,cropImageW,cropImageH);
 		var b=50,c=50;
 		for(var j=0;j<actArray.length;j++)
 		{
