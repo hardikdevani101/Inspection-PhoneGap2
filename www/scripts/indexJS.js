@@ -9,6 +9,7 @@ var INSPECTOR_ID;
 var M_InOutLine_ID = 0;
 var M_line_name;
 var X_INSTRUCTIONLINE_ID;
+var M_INOUT_ID=0;
 var X_instruction_name;
 var vis_pass;
 var Disp_row;
@@ -273,12 +274,20 @@ function onExit() {
 function onSyncFiles(){
 	navigator.notification.activityStart("Please Wait", "Uploading files.....");
     db.transaction(function (tx) {
-        tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"  and imgUpload="F"', [], function (tx, results) {
+		var sqlQuery;
+		if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
+			sqlQuery ='SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and in_out_id="' + M_INOUT_ID + '"  and imgUpload="F"';
+		else
+			sqlQuery ='SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"  and imgUpload="F"';
+        tx.executeSql(sqlQuery, [], function (tx, results) {
             imagelistarray = results;
             imgUploadCount = imagelistarray.rows.length;
 			callSyncVerify();
 			for (var j = 0; j < imagelistarray.rows.length; j++) {
-				onUploadFile(imagelistarray.rows.item(j).file, imagelistarray.rows.item(j).insp_line,callSyncVerify);
+				if(imagelistarray.rows.item(j).insp_line == 0)
+					onUploadFile(imagelistarray.rows.item(j).file, imagelistarray.rows.item(j).in_out_id,callSyncVerify);
+				else
+					onUploadFile(imagelistarray.rows.item(j).file, imagelistarray.rows.item(j).insp_line,callSyncVerify);
 			}
         }, function (err) {
             console.log("Error SQL: " + err.code);
@@ -313,7 +322,10 @@ function callFilesUpload() {
     imgUploadCount = imagelistarray.rows.length;
     callUploadVerify();
     for (var j = 0; j < imagelistarray.rows.length; j++) {
-        onUploadFile(imagelistarray.rows.item(j).file, imagelistarray.rows.item(j).insp_line,callUploadVerify);
+		if(imagelistarray.rows.item(j).insp_line == 0)
+			onUploadFile(imagelistarray.rows.item(j).file, imagelistarray.rows.item(j).in_out_id,callUploadVerify);
+		else
+			onUploadFile(imagelistarray.rows.item(j).file, imagelistarray.rows.item(j).insp_line,callUploadVerify);
     }
 }
 
@@ -340,16 +352,23 @@ function callUploadVerify() {
 function AttachAllImage() {
     navigator.notification.activityStart("Please Wait", "Attaching Files");
 	attachCount = inspLinesArray.length;
-	for(var i=0; i < inspLinesArray.length ; i++){
-			getResultOfInsp(inspLinesArray[i][1]);
+	
+	getResultOfInsp(inspLinesArray[0][1],0);
+	for(var i=1; i < inspLinesArray.length ; i++){
+		getResultOfInsp(inspLinesArray[i][1],1);
 	}
 	
-	function getResultOfInsp(inspNumber){
+	function getResultOfInsp(inspNumber , isInsp){
 		db.transaction(function (tx) {
-			tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + inspNumber  + '" and imgUpload="T" and imgAttach="F"', [], 
+			var sqlQuery;
+			if(isInsp == 0)
+				sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and in_out_id="' + inspNumber  + '" and imgUpload="T" and imgAttach="F"';
+			else
+				sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + inspNumber  + '" and imgUpload="T" and imgAttach="F"';
+			tx.executeSql(sqlQuery, [], 
 			function (tx, result){
 				if(result.rows.length > 0)
-					AllAttachSelect(result);
+					AllAttachSelect(result,isInsp);
 				else
 					attachCount=attachCount-1;
 			}, function (err) {
@@ -359,24 +378,35 @@ function AttachAllImage() {
 	}
 }
 
-function AllAttachSelect(result) {
+function AllAttachSelect(result, isInsp) {
 		var filesListStr="";
             for (var i = 0; i < result.rows.length; i++) {
 				filesListStr=filesListStr + result.rows.item(i).name + ",";
             }
 			filesListStr=filesListStr.substring(0, filesListStr.length - 1);
-			callAttachImageWs(result.rows.item(0).insp_line, filesListStr);
+			if(isInsp == 0)
+				callAttachM_InoutWs(result.rows.item(0).in_out_id,'M_InOut', filesListStr);
+			else
+				callAttachImageWs(result.rows.item(0).insp_line, filesListStr);
     }
 
 function deleteImageSelectSuccess(tx, results) {
 		for (var i = 0; i < results.rows.length; i++) {
 			if(DataTypes.indexOf(getExtention(results.rows.item(i).name).toUpperCase()) >= 0)
 			{
-				onRemoveVISDirFile(results.rows.item(i).file,results.rows.item(i).insp_line);
+				if(results.rows.item(i).insp_line == 0)
+					onRemoveVISDirFile(results.rows.item(i).file,results.rows.item(i).in_out_id,0);
+				else
+					onRemoveVISDirFile(results.rows.item(i).file,results.rows.item(i).insp_line,1);
 			}
 			else
 			{
-				tx.executeSql('DELETE FROM vis_gallery WHERE file="' + results.rows.item(i).file + '" and insp_line="' + results.rows.item(i).insp_line + '"');
+				var sqlQuery;
+				if(results.rows.item(i).insp_line == 0)
+					sqlQuery = 'DELETE FROM vis_gallery WHERE file="' + results.rows.item(i).file + '" and in_out_id="' + results.rows.item(i).in_out_id + '"';
+				else
+					sqlQuery = 'DELETE FROM vis_gallery WHERE file="' + results.rows.item(i).file + '" and insp_line="' + results.rows.item(i).insp_line + '"';
+				tx.executeSql(sqlQuery);
 				deleteCount=deleteCount-1;
 			}
         }
@@ -386,11 +416,16 @@ function deleteImageSelectSuccess(tx, results) {
         navigator.notification.alert('All Files attached', function () {}, 'Success', 'OK');
 }
 
-function onRemoveVISDirFile(tmpfile,InspNumber){
+function onRemoveVISDirFile(tmpfile,InspNumber,isInsp){
 	root.getFile(tmpfile, null, function (file) {
 		file.remove(function (entry) {
 			db.transaction(function (tx) {
-				tx.executeSql('DELETE FROM vis_gallery WHERE file="' + tmpfile + '" and insp_line="' + InspNumber + '"');
+				var sqlQuery;
+				if(isInsp == 0)
+					sqlQuery = 'DELETE FROM vis_gallery WHERE file="' + tmpfile + '" and in_out_id="' + InspNumber + '"';
+				else
+					sqlQuery = 'DELETE FROM vis_gallery WHERE file="' + tmpfile + '" and insp_line="' + InspNumber + '"';
+				tx.executeSql(sqlQuery);
 				deleteCount=deleteCount-1;
 				varifyAllDelete();
 			}, errorCB);
@@ -417,14 +452,22 @@ function deleteSelectedGallary() {
             var tmpfile = imagelistarray.rows.item(j).file;
             if (SelectedGallaryList.indexOf(getFileName(tmpfile)) >= 0) {
                 db.transaction(function (tx) {
-                    tx.executeSql('DELETE FROM vis_gallery WHERE file="' + tmpfile + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"');
+					var sqlQuery;
+					if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
+						sqlQuery = 'DELETE FROM vis_gallery WHERE file="' + tmpfile + '" and in_out_id="' + M_INOUT_ID + '"';
+					else
+						sqlQuery = 'DELETE FROM vis_gallery WHERE file="' + tmpfile + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"';
+                    tx.executeSql(sqlQuery);
 					deleteCount=deleteCount-1;
 					varifyAllDelete();
                 }, errorCB);
             }
         } else {
             if (SelectedGallaryList.indexOf(imagelistarray.rows.item(j).name) >= 0) {
-				onRemoveVISDirFile(imagelistarray.rows.item(j).file,X_INSTRUCTIONLINE_ID);
+				if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
+					onRemoveVISDirFile(imagelistarray.rows.item(j).file,M_INOUT_ID,0);
+				else
+					onRemoveVISDirFile(imagelistarray.rows.item(j).file,X_INSTRUCTIONLINE_ID,1);
             }
         }
     }
@@ -520,7 +563,12 @@ function renderGallary() {
 	if(gallaryTable=="")
 	{
 		db.transaction(function (tx) {
-			tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"', [], function (tx, results) {
+			var sqlQuery;
+			if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
+				sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and in_out_id="' + M_INOUT_ID + '"';
+			else
+				sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"';
+			tx.executeSql(sqlQuery, [], function (tx, results) {
 				imagelistarray = results;
 				Disp_col = 0;
 				Disp_row = 0;
@@ -653,11 +701,17 @@ function confirmDiscardInspections(buttonIndex) {
 				for (var i = 0; i < results.rows.length; i++) {
 					if(DataTypes.indexOf(getExtention(results.rows.item(i).name).toUpperCase()) >= 0)
 					{
-						onRemoveVISDirFile(results.rows.item(i).file,results.rows.item(i).insp_line);
+						if(results.rows.item(i).insp_line == 0)
+							onRemoveVISDirFile(results.rows.item(i).file,results.rows.item(i).in_out_id,0);
+						else
+							onRemoveVISDirFile(results.rows.item(i).file,results.rows.item(i).insp_line,1);
 					}
 					else
 					{
-						tx.executeSql('DELETE FROM vis_gallery WHERE file="' + results.rows.item(i).file + '" and insp_line="' + results.rows.item(i).insp_line + '"');
+						if(results.rows.item(i).insp_line == 0)
+							tx.executeSql('DELETE FROM vis_gallery WHERE file="' + results.rows.item(i).file + '" and in_out_id="' + results.rows.item(i).in_out_id + '"');
+						else
+							tx.executeSql('DELETE FROM vis_gallery WHERE file="' + results.rows.item(i).file + '" and insp_line="' + results.rows.item(i).insp_line + '"');
 					}
 				}
 				navigator.notification.alert('Discard All Inspections success', function () {}, 'Success', 'OK');
@@ -868,10 +922,11 @@ function renderInspectionFromCache(){
 		document.getElementById("disp-Insp").appendChild(tr);
 	}
 	Disp_col=0;Disp_row=0;
-	for(var i=0 ; i < inspLinesArray.length ; i++){
+	getUploadCounts(M_InOutLine_ID,inspLinesArray[0][0],inspLinesArray[0][1],FillInspectionDiv,0);
+	for(var i=1 ; i < inspLinesArray.length ; i++){
 		var dval = inspLinesArray[i][1];
 		var dlab = inspLinesArray[i][0];
-		getUploadCounts(M_InOutLine_ID,dlab,dval,FillInspectionDiv);
+		getUploadCounts(M_InOutLine_ID,dlab,dval,FillInspectionDiv,1);
 		dval = dlab = null ;
 	}
 	
@@ -889,12 +944,22 @@ function onStopNotification(){
 function onInspSet(nid, iname) {
 	navigator.notification.activityStart("Please Wait", "loading.....");
     loadPage('gallery');
-	gallaryTable="";
-    renderGallary();
     X_INSTRUCTIONLINE_ID = nid;
     X_instruction_name = iname;
+	gallaryTable="";
+    renderGallary();
     document.getElementById("gallery_head").innerHTML = M_line_name + "(" + X_instruction_name + ")";
 
+}
+function onDefualtInspSet(nid, iname) {
+	navigator.notification.activityStart("Please Wait", "loading.....");
+    loadPage('gallery');
+    M_INOUT_ID = nid;
+	X_INSTRUCTIONLINE_ID = 0;
+    X_instruction_name = iname;
+	gallaryTable="";
+    renderGallary();
+    document.getElementById("gallery_head").innerHTML = M_line_name + "(" + X_instruction_name + ")";
 }
 
 function backtogallary() {

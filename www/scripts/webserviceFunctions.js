@@ -1,4 +1,4 @@
-function onLogin(){
+﻿function onLogin(){
 	navigator.notification.activityStart("Please Wait", "Logging.....");
 	$.ajax({type: "POST",
 			url: getWsUrl("ModelADService"),
@@ -117,7 +117,7 @@ function fillMrLines(){
 							{
 								for (var i=0; i < fullNodeList.length; i++)
 								{
-									var dlab,dval;
+									var dlab,dval,inOut;
 									var option = document.createElement('option');
 									for (var j=0; j < fullNodeList[i].childNodes.length; j++)
 									{
@@ -125,11 +125,14 @@ function fillMrLines(){
 											dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
 										}else if( fullNodeList[i].childNodes[j].attributes[0].value == 'M_InOutLine_ID'){
 											dval = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
+										}else if( fullNodeList[i].childNodes[j].attributes[0].value == 'M_InOut_ID'){
+											inOut = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
 										}
 									}
 									mrLinesArray[i]=new Array();
 									mrLinesArray[i][0]=dlab;
 									mrLinesArray[i][1]=dval;
+									mrLinesArray[i][2]=inOut;
 								}
 								onBackToStartInspection('home');
 							}
@@ -186,6 +189,15 @@ function fillInspectionsLines(){
                     if (status == "success")
 					{		
 							inspLinesArray = new Array();
+							for(var i=0; i< mrLinesArray.length ; i++)
+							{
+								if(mrLinesArray[i][1] == M_InOutLine_ID)
+								{
+									inspLinesArray[0]=new Array();
+									inspLinesArray[0][0]="Vendor Paper work";
+									inspLinesArray[0][1]=mrLinesArray[i][2];
+								}
+							}
 							var xmlResponse =req.responseXML.documentElement;
 							var fullNodeList = xmlResponse.getElementsByTagName("DataRow");
 							for (var i=0; i < fullNodeList.length; i++)
@@ -199,9 +211,9 @@ function fillInspectionsLines(){
 								  		dval = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
 							  		}
 								}
-								inspLinesArray[i]=new Array();
-								inspLinesArray[i][0]=dlab;
-								inspLinesArray[i][1]=dval;
+								inspLinesArray[i+1]=new Array();
+								inspLinesArray[i+1][0]=dlab;
+								inspLinesArray[i+1][1]=dval;
 							}
 							renderInspectionFromCache();
 					}
@@ -227,11 +239,15 @@ function FillInspectionDiv(dlab,dval,totCnt,uploadCnt){
 	totStr.setAttribute("style", "position:absolute;margin-top:5px;margin-left:50px;");
 	totStr.innerHTML=totCnt+" ( "+uploadCnt+" ) ";
 	tmpdiv.className = "InspButton";
-	tmpdiv.setAttribute("style", "margin:2px 10px;");
+	tmpdiv.setAttribute("style", "margin:2px 10px; line-height:15px;");
 	tmpdiv.innerHTML=dlab;
 	tmpdiv.style.height=(window.innerHeight*.10)+"px";
 	tmpdiv.style.width=(window.innerWidth*.20)+"px";
-	var clickstr="onInspSet('"+dval+"','"+ dlab.replace('\'', '\\\'')+"')";
+	var clickstr;
+	if(dlab == 'Vendor Paperwork Attachment')
+		clickstr="onDefualtInspSet('"+dval+"','"+ dlab.replace('\'', '\\\'')+"')";
+	else
+		clickstr="onInspSet('"+dval+"','"+ dlab.replace('\'', '\\\'')+"')";
 	tmpdiv.setAttribute('onclick',clickstr);
 	if(Disp_col>=Math.ceil(inspLinesArray.length/3)){Disp_col=0;Disp_row=Disp_row+1;}
 	document.getElementById("InsTd-"+Disp_row+"-"+Disp_col).appendChild(totStr);
@@ -286,13 +302,13 @@ function callAttachImageWs(imginspline,imgname){
 						var failedArrayList=tmpArray[1].split('$$');
 						if(successArrayList.length > 0){
 							for(var i=0; i < successArrayList.length ; i++){
-								onchangeSuccessState(successArrayList[i],imginspline);
+								onchangeSuccessState(successArrayList[i],imginspline,1);
 							}
 						}
 						if(failedArrayList.length > 0){
 							for(var i=0; i < failedArrayList.length ; i++){
 								var failerMsgArray=failedArrayList[i].split('::');
-								onchangeFailerState(failerMsgArray,imginspline);
+								onchangeFailerState(failerMsgArray,imginspline,1);
 							}
 						}
 						onBackToStartInspection('home');
@@ -307,6 +323,75 @@ function callAttachImageWs(imginspline,imgname){
                 }
 				
 }
+
+function callAttachM_InoutWs(rec_id,tab_name,imgname){
+	$.ajax({type: "POST",
+			url: getWsUrl("ModelADService"),
+			dataType: "xml",
+			contentType: 'text/xml; charset=\"utf-8\"',
+			data: '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
+				   +'<soapenv:Header/>'
+				   +'<soapenv:Body>'
+					  +'<_0:runProcess>'
+					  	+'<_0:ModelRunProcessRequest>'
+							+'<_0:ModelRunProcess AD_Record_ID="'+rec_id+'">'
+								   +'<_0:serviceType>AttachImage</_0:serviceType>'
+								   +'<_0:ParamValues>'
+									  +'<_0:field column="TableName">'
+										 +'<_0:val>'+tab_name+'</_0:val>'
+									  +'</_0:field>'
+									  +'<_0:field column="imgName">'
+										 +'<_0:val>'+imgname+'</_0:val>'
+									  +'</_0:field>'
+								   +'</_0:ParamValues>'
+								+'</_0:ModelRunProcess>'
+							+ getWsDataLoginString()
+						 +'</_0:ModelRunProcessRequest>'
+					  +'</_0:runProcess>'
+				   +'</soapenv:Body>'
+				+'</soapenv:Envelope>',
+                    success: processSuccess,
+                    error: processError
+                });
+				function processSuccess(data, status, req) {
+					var xmlResponse =req.responseXML.documentElement;
+					var fullNodeList = xmlResponse.getElementsByTagName("Summary");
+					var tmpArray=fullNodeList[0].textContent.split(']$[');
+					if(tmpArray[1]==""){
+						db.transaction(function(tx){
+							tx.executeSql('UPDATE vis_gallery SET imgAttach="T" WHERE in_out_id="'+rec_id+'"');
+							attachCount=attachCount-1;
+							if(attachCount==0){
+								deleteMRgallary();
+							}
+						}, errorCB);
+					}else{
+						var successArrayList=tmpArray[0].split('$$');
+						var failedArrayList=tmpArray[1].split('$$');
+						if(successArrayList.length > 0){
+							for(var i=0; i < successArrayList.length ; i++){
+								onchangeSuccessState(successArrayList[i],rec_id,0);
+							}
+						}
+						if(failedArrayList.length > 0){
+							for(var i=0; i < failedArrayList.length ; i++){
+								var failerMsgArray=failedArrayList[i].split('::');
+								onchangeFailerState(failerMsgArray,rec_id,0);
+							}
+						}
+						onBackToStartInspection('home');
+						onStopNotification();
+						navigator.notification.alert('Error while Attaching : ' + failedArrayList.toString() , function(){}, 'Failure', 'OK');
+					}
+                }
+
+                function processError(data, status, req) {
+					onStopNotification();
+					navigator.notification.alert('Failure!!',function(){},getErrorMessage(data, status, req),'Ok');
+                }
+				
+}
+
 function getWsUrl(services){
 	return vis_url+"/VISService/services/"+services;
 }
