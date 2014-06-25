@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VIS-Inspection Phonegap</title>
 <script src="cordova.js"></script>
 <script src="scripts/aboutUs.js"></script>
@@ -13,15 +14,18 @@
 <script src="scripts/jquery.min.js"></script>
 <script src="scripts/jquery.Jcrop.js"></script>
 <script src="scripts/base64-binary.js"></script>
+<script src="scripts/jpeg_encoder_basic.js"></script>
+<script src="jmobile/jquery.mobile-1.4.2.js"></script>
+<script src="jmobile/jquery.mobile-1.4.2.min.js"></script>
 <script src="scripts/jquery.ui.core.js"></script>
 <script src="scripts/jquery.ui.widget.js"></script>
 <script src="scripts/jquery.ui.mouse.js"></script>
 <script src="scripts/jquery.ui.touch-punch.min.js"></script>
 <script src="scripts/jquery.ui.slider.js"></script>
-<script src="scripts/jpeg_encoder_basic.js"></script>
+<LINK href="jmobile/jquery.mobile-1.4.2.min.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="styles/jquery.ui.all.css">
-<LINK href="styles/indexStyle.css" rel="stylesheet" type="text/css">
 <LINK href="styles/jquery.Jcrop.css" rel="stylesheet" type="text/css">
+<LINK href="styles/indexStyle.css" rel="stylesheet" type="text/css">
 <style type="text/css"><!--
 		#wmCanvasContainer { position: relative; }
       #WatermarkCanvas { border: 1px solid #000; }
@@ -33,214 +37,279 @@
 <body onLoad="onLoad()">
 	<div id="disp"></div>
 
-	<div class="page" id="login">
-		<span>
-		<h2>VISion Login</h2>
-		</span>
-		Username : <input id="txt_user" type="text" value=""/><br><br> 
-		Password : <input id="txt_password" type="password" value=""/><br><br>
-		<input id="loginbtn" class="login_btns" ontouchstart="return true;" style="padding:3px 0px;background-color:#0B9E2E;" onClick="validateLogin()" type="button" value="Login">&nbsp;&nbsp;
-		<input id="settingpagebtn" class="login_btns" ontouchstart="return true;" style="padding:3px 0px;" onClick="onSettingPage()" type="button" value="Setting">&nbsp;&nbsp;
-		<input id="aboutBtn" class="login_btns" ontouchstart="return true;" style="padding:3px 0px;" onClick="onAboutUs()" type="button" value="AboutUs">&nbsp;&nbsp;
-		<input id="exitbtn" class="login_btns" ontouchstart="return true;" style="padding:3px 0px;background-color:#F29645 ;" onClick="onExit()" type="button" value="Exit">
-		
-		<div id="login_error"></div>
+	<div data-role="page" id="login" style="height:100%">
+		<div data-role="header" data-position="fixed">VISion Login</div>
+		<div role="main" class="ui-content">
+			<label for="txt_user">Username :</label> <input id="txt_user" name="txt_user" type="text" value=""/><br>
+			<label for="txt_password">Password :</label> <input id="txt_password" name="txt_password" type="password" value=""/><br>
+		</div>
+		<div data-role="footer" data-position="fixed" data-theme="b">
+			<div data-role="navbar" data-type="vertical" >
+				<ul>
+					<li><a href="#" id="loginbtn" onClick="validateLogin()" data-theme="a">Login</a></li>
+					<li><a href="#" id="settingpagebtn" onClick="onSettingPage()" data-theme="a">Setting</a></li>
+					<li><a href="#" id="aboutBtn" onClick="onAboutUs()" data-theme="a">AboutUs</a></li>
+					<li><a href="#" id="exitbtn" onClick="onExit()" data-theme="a">Exit</a></li>
+				</ul>
+			</div>
+			<div id="login_error"></div>
+		</div>
 	</div>
 	
-	<div class="page" id="home">
-		<span>
-		<div name="user_lbl" style="float:left;font-weight:bold;"></div><br>
+	<div data-role="page" id="home">
+		<div data-role="header" data-position="fixed">
+		<div name="user_lbl" style="float:left;font-weight:bold;line-height:40px;"></div>
 		<h1>VISion home</h1>
-		</span><input
-			class="menuButton" id="startNewInspectionBtn"
-			onclick="onStartNewInspection()" type="button" ontouchstart="return true;" style="background-color:#0B9E2E;"
-			value="Start Inspection"><br> <input class="menuButton" ontouchstart="return true;"
-			id="exitBtn" onClick="onLoginpage()" type="button" value="Exit" style="background-color:#F29645 ;"><br>
+		</div>
+		<div role="main" class="ui-content">
+			<input id="startNewInspectionBtn" onclick="onStartNewInspection()" type="button" ontouchstart="return true;" 
+			value="Start Inspection">
+			<br> 
+			<input ontouchstart="return true;" id="exitBtn" onClick="onLoginpage()" type="button" value="Exit">
+		</div>
 	</div>
 	
 	
 	
-	<div class="page" id="setting">
-		<span>
+	<div data-role="page" id="setting">
+		<div data-role="header" data-position="fixed">
 		<h2 style="margin:0px; padding:0px;">VISion Setting</h2>
-		</span>
-		<center>
-		<table border="0px">
-		<tr>
-		<td>Url : </td><td><input id="txt_url" type="text" style="width:70%"/></td></tr>
-		<tr>
-		<td>Language : </td><td><input id="txt_lang" type="text" style="width:70%" /></td></tr>
-		<tr>
-		<td>Client : </td><td><input id="txt_client" type="text" style="width:70%" /></td></tr>
-		<tr>
-		<td>Role : </td><td>
-			<select id="txt_role"  style="width:70%;">
-				<option value="1000043">Warehouse QA Team</option>
-				<option value="1000055">Warehouse QA Manager</option>
-				<option value="1000044">Warehouse Manager</option>
-				<option value="1000052">Warehouse IC Team</option>
-				<option value="1000054">Warehouse IC Manager</option>
-				<option value="1000000">Velocity Admin</option>
-			</select>
-		</td></tr>
-		<tr>
-		<td>Warehouse : </td><td>
-			<select id="txt_warehouse" style="width:70%;">
+		</div>
+		<div role="main" class="ui-content">
+			<table border="0px">
+			<tr>
+			<td>Url : </td><td><input id="txt_url" type="text"/></td></tr>
+			<tr>
+			<td>Language : </td><td><input id="txt_lang" type="text" /></td></tr>
+			<tr>
+			<td>Client : </td><td><input id="txt_client" type="text"  /></td></tr>
+			<tr>
+			<td>Role : </td><td>
+				<select id="txt_role" >
+					<option value="1000043">Warehouse QA Team</option>
+					<option value="1000055">Warehouse QA Manager</option>
+					<option value="1000044">Warehouse Manager</option>
+					<option value="1000052">Warehouse IC Team</option>
+					<option value="1000054">Warehouse IC Manager</option>
+					<option value="1000000">Velocity Admin</option>
+				</select>
+			</td></tr>
+			<tr>
+			<td>Warehouse : </td><td>
+				<select id="txt_warehouse">
+					
+				</select>
+			</td></tr>
+			<tr>
+			<td>Organizer : </td><td>
+				<select id="txt_organizer" onchange="onOrgChange()">
+					<option value="0">*</option>
+					<option value="11">HQ</option>
+					<option value="12">Store</option>
+					<option value="1000001">Singapore</option>
+					<option value="1000003">Austin</option>
+					<option value="1000007">Vienna</option>
+					<option value="1000019">Amsterdam</option>
+				</select>
+			</td></tr>
+			<tr>
+			<td>Image quality : </td><td><input id="txt_imgQua" type="text" />( 0 To 100)</td></tr>
+			</table>
+		</div>
+		<div data-role="footer" data-position="fixed">
+			<div data-role="navbar" >
+				<ul>
+					<li><a href="#" id="btn_update" onClick="validationSetting()" data-theme="a">Save</a></li>
+					<li><a href="#" id="btn_cancel" onClick="onLoginpage()" data-theme="a">Cancel</a></li>
+				</ul>
+			</div>
+			<div id="setting_error"></div>
+		</div>
+	</div>
+	
+	
+
+	<div data-role="page" id="startNewInsp">
+		<div data-role="header" data-position="fixed">
+			<div name="user_lbl" style="float:left;font-weight:bold;width:25%;line-height:40px;"></div>
+			<div style="float:left;width:60%; margin:0px; padding:0px;">
+				<label style="float:left;width:20%;line-height:40px;">Line No:</label>
+				<select id="linedrop" ></select>
+			</div>
+			<input id="btnReload" onClick="fillMrLines()" style="width:10%;margin:0px; padding:0px;" type="button" value="Reload" ontouchstart="return true;" />
+		</div>
+		<div role="main" class="ui-content" style="width:100%; margin:0px; padding:0px;">
+			<table id="disp-Insp" cellspacing="0" cellpadding="0" style="margin:0px; padding:0px;" >
+					
+			</table>
+		</div>
+		<div data-role="footer" data-position="fixed">
+			<div data-role="navbar" >
+				<ul>
+					<li><a href="#" onClick="discardInspections()" data-theme="a">Delete</a></li>
+					<li><a href="#" onClick="loadPage('home')" data-theme="a">Back</a></li>
+					<li><a href="#" onClick="onFinish()" data-theme="a">Finish</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div id="gallery" data-role="page">
+		<div data-role="header" style="padding:0px;">
+			<div name="user_lbl" style="float:left;font-weight:bold;width:20%;line-height:40px;"></div> 
+			<Span id="gallery_head" style="float:left;width:65%;line-height:40px;padding:0px;"></Span>
+			<input type="button" style="padding:0px;" onClick="onSyncFiles()" ontouchstart="return true;" class="ui-mini" value="Sync" />
+		</div>
+		<div role="main" class="ui-content" style="margin:0px; padding:0px;overflow-x: scroll; overflow-y: hidden;">
+				<table id="disp-tab1" cellspacing="0" cellpadding="0" style="margin:0px; padding:0px;">
 				
-			</select>
-		</td></tr>
-		<tr>
-		<td>Organizer : </td><td>
-			<select id="txt_organizer" onchange="onOrgChange()" style="width:70%">
-				<option value="0">*</option>
-				<option value="11">HQ</option>
-				<option value="12">Store</option>
-				<option value="1000001">Singapore</option>
-				<option value="1000003">Austin</option>
-				<option value="1000007">Vienna</option>
-				<option value="1000019">Amsterdam</option>
-			</select>
-		</td></tr>
-		<tr>
-		<td>Image quality : </td><td><input id="txt_imgQua" type="text" style="width:70%" />( 0 To 100)</td></tr>
-		</table>
-		<input id="btn_update" onClick="validationSetting()" type="button" style="background-color:#0B9E2E;" value="Save" ontouchstart="return true;">
-		<input id="btn_cancel" onClick="onLoginpage()" type="button" value="Cancel" style="background-color:#F29645 ;" ontouchstart="return true;">
-		<div id="setting_error"></div>
-		</center>
+				</table>
+		</div>
+		<div data-role="footer" class="nav-glyphish-example" data-theme="b" data-position="fixed">
+			<div data-role="navbar" class="nav-glyphish-example" data-grid="d">
+				<ul>
+					<li><a href="#" onClick="onBackToStartInspection('gallary')">Back</a></li>
+					<li><a href="#" onClick="onDeleteGallaryPage()">Delete</a></li>
+					<li><a href="#" onClick="loadgallaryChoise()">File</a></li>
+					<li><a href="#" onClick="onImagePicker()">Gallery</a></li>
+					<li><a href="#" onClick="captureI()">Camera</a></li>
+				</ul>
+			</div>
+		</div>
 	</div>
 	
+	<div id="cropView" data-role="page" >
+		<div data-role="header" data-position="fixed">
+			<div name="user_lbl" style="float:left;font-weight:bold;line-height:40px;"></div> 
+			<h3> Crop Image </h3>
+		</div>
+		<div role="main" class="ui-content" style="margin:0px; padding:0px;">
+			<table style="width:100%">
+				<tr>
+					<td style="width:60%;">
+						<div id="cropImage" >
+						</div>
+					</td>
+					<td style="width:10%;">
+						<center>
+						<input data-role="none" type="button" ontouchstart="onSliderChange(1)" ontouchend="stopSliderChange()" id="zoom-out"/>
+							<div id="slider-vertical"></div>
+						<input data-role="none" type="button" ontouchstart="onSliderChange(-1)" ontouchend="stopSliderChange()" id="zoom-in" />
+						</center>
+					</td>
+					<td style="width:25%;">
+						<div data-role="controlgroup" data-type="vertical">
+							<a href="#" class="ui-btn" onClick="onCropSaved()">Crop & Save</a>
+							<a href="#" class="ui-btn" onClick="onCropSkip()">Save</a>
+							<a href="#" class="ui-btn" onClick="callImageEdit()">Edit</a>
+							<a href="#" class="ui-btn" onClick="onCropImageEdit()">Crop & Edit</a>
+							<a href="#" class="ui-btn" onClick="backtogallary()">Discard</a>
+						</div>
+					</td>
+				</tr>
+			</table>			
+		</div>
+	</div>
 	
-
-	<div class="page" id="startNewInsp">
-		<div style="width:100%;margin:0px; padding:0px; float:left;">
-			<div name="user_lbl" style="float:left;font-weight:bold;"></div>
-			<span style="float:right; margin:0px; padding:0px;">Line No:
-			<select id="linedrop" style="padding:0px;"></select>
-			<input id="btnReload" class="login_btns" onClick="fillMrLines()" type="button" value="Reload" ontouchstart="return true;">
-			</span>
-		</div>
-		<div style="padding:0px 2px; margin:0px 0px 0px 0px;">
-			<hr />
-		</div>
-		<div style="height:75%; width:80%;text-align: center; padding:0px; float: left; overflow-x: auto; overflow-y: hidden;" id="outNewIns">
-			<table id="disp-Insp" style="margin:0px; padding:0px;" cellspacing="0" cellpadding="0" >
-				
+	<div id="SelectGallary" data-role="page">
+		<div data-role="header" data-position="fixed" style="padding:0px;">
+			<table>
+				<tr>
+					<td style="width:25%;">
+						<div name="user_lbl" style="font-weight:bold;line-height:50px;"></div>						
+					</td>
+					<td style="width:75%;">
+						<Span id="gallery_head" >Select files for delete : </Span>
+						<input type="button" onClick="backtogallary()" style="padding:0px;" ontouchstart="return true;" value="Cancel"/>
+						<input type="button" onClick="confirmGallaryDiscard()" ontouchstart="return true;" value="Delete"/>						
+					</td>
+				</tr>
 			</table>
-		</div>
-		<div style="width:12%; float:right; height:75%; padding : 0px 1%;  border-left:2px solid black;">
-			<div class="divMenuButton" onClick="discardInspections()" style="margin: 20% 4% 5% 2%;background-color:#F29645 ;" ontouchstart="return true;">Delete</div>
-			<div class="divMenuButton" onClick="loadPage('home')" style="margin: 30% 4% 5% 2%;background-color:#F29645 ;" ontouchstart="return true;">Back</div>
-			<div class="divMenuButton" onClick="onFinish()" style="margin: 150% 4% 5% 2%;background-color:#0B9E2E;" ontouchstart="return true;">Finish</div>
-		</div>
-	</div>
-
-	<div id="gallery" class="page">
-		<div style="width:100%;margin:0px; padding:0px;float:left;">
-			<div name="user_lbl" style="float:left;font-weight:bold;"></div> 
-			<Span class="login_btns" style="float:right;width:15%;" onClick="onSyncFiles()" ontouchstart="return true;">Sync</Span>
-			<center><Span id="gallery_head" style="float:right;"></Span></center>
-		</div>
-		<div style="padding:0px 2px; margin:1px 0px;">
-			<hr />
-		</div>
-		<div id="imglist" style="padding:0px; margin:0px;height:75%; overflow-x: auto; overflow-y: hidden; width:80%; float:left;">
-			<table id="disp-tab1" style="margin:0px; padding:0px;" cellspacing="0" cellpadding="0">
 			
-			</table>
-		</div>
-		
-		<div style="width:12%; padding:0px 2%; float:right; border-left:2px solid black; ">
-
-			<Span class="divMenuButton" ontouchstart="return true;" onClick="onBackToStartInspection('gallary')" style="margin: 15% 4% 25% 2%;background-color:#F29645 ;">Back</Span>
-			<Span class="divMenuButton" ontouchstart="return true;" onClick="onDeleteGallaryPage()" style="background-color:#F29645 ;">Delete</Span>
-			<Span style="float:left; margin : 50% 0px 15% 5%;">Acquire</span>
-			<Span class="divMenuButton" ontouchstart="return true;" onClick="loadgallaryChoise()" style="background-color:#058A78 ;">File</Span>
-			<Span class="divMenuButton" ontouchstart="return true;" onClick="onImagePicker()" style="background-color:#058A78 ;">Gallery</Span>
-			<Span class="divMenuButton" ontouchstart="return true;" onClick="captureI()" style="background-color:#058A78 ;">Camera</Span>
-		</div>
-	</div>
-	
-	<div id="cropView" class="page" >
-		<center>
-		<div style="width:100%;margin:0px; padding: 0px;">
-			<div name="user_lbl" style="float:left;font-weight:bold;"></div> 
-			<Span style="margin:0px; padding:0px;" > <h3> Crop Image </h3></Span> 
-		</div>
-		<div id="cropImage" style="width:65%; height:65%; float:left; margin:0px; padding: 0px;">
 			
 		</div>
-		<div style="width:10%;height:100%;float:left; padding:0%; margin:0px; position:relative; top:-10px;">
-			<input type="button" ontouchstart="onSliderChange(1)" ontouchend="stopSliderChange()" id="zoom-out" />
-			<div id="slider-vertical"></div>
-			<input type="button" ontouchstart="onSliderChange(-1)" ontouchend="stopSliderChange()" id="zoom-in" />
-		</div>
-		<div style="width:20%; height:100%;float:left; padding:0%; margin:0%;position:relative; top:-40px; left:20px;">
-			<input class="crop_btn" type="button" value="Crop & Save" style="background-color:#088A08 ;" onClick="onCropSaved()" />
-			<input class="crop_btn" type="button" value="Save" style="background-color:#088A08 ;" onClick="onCropSkip()"  />
-			<input class="crop_btn" type="button" value="Edit" style="background-color:#088A08 ;" onClick="callImageEdit()"/>
-			<input class="crop_btn" type="button" value="Crop & Edit" style="background-color:#088A08 ;" onClick="onCropImageEdit()"/>
-			<input class="crop_btn" type="button" value="Discard" onClick="backtogallary()" style="background-color:#F29645 ;"/>
-		</div>
-		</center>
-	</div>
-	
-	<div id="SelectGallary" class="page">
-      <div style="width:100%; margin:0px; padding:0px; float: left; ">
-			<div name="user_lbl" style="float:left;font-weight:bold;"></div> 
-			<Span class="gallary_menubtn" onClick="backtogallary()" style="float:right;" ontouchstart="return true;">Cancel</Span>
-			<Span class="gallary_menubtn" onClick="confirmGallaryDiscard()" style="float:right;background-color:#F29645 ;" ontouchstart="return true;">Delete</Span>
-			<Span id="gallery_head" style="float: right;">Select files for delete : </Span>
-      </div>
-		<div style="padding:1px 2px; margin:0px; ">
-			<hr />
-		</div>
-      <div id="fileList" style="height:82%; padding:0px; margin:0px; text-align:left; position:absolute; overflow-x: auto; overflow-y: hidden;">
-			<table id="disp-selGal" style="margin:0px; padding:0px;" cellspacing="0" cellpadding="0">
-			
+		<div role="main" class="ui-content" style="overflow-x: scroll; overflow-y: hidden;margin:0px; padding:0px;">
+			<table id="disp-selGal" cellspacing="0" cellpadding="0">		
 			</table>
-      </div>
-	</div>
-	
-	<div id="fileExpo" class="page">
-      <div id="header" style="left:40%; background:#0099CC; width:100%; margin-top:0px;">
-			<h3 style="margin:0px; padding:0px;">File Explorer</h3>
-            <a id="backBtn" href="#" onClick="backFile()"><img src="img/backward.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<a id="homeBtn" href="#" onClick="fileexplore()"><img src="img/home.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<a href="#" onClick="backtogallary()"  ><img src="img/undo.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>
-      </div>
-      <div id="dirContent" style="height:70%; overflow:scroll; text-align:left; position:absolute;">
-      </div>
-	</div>
-	
-	<div id="aboutUs" class="page" >
-	
-	</div>
-	
-	<div id="editView" class="page" >
-		<center>
-		<div>
-			<div name="user_lbl" style="float:left;font-weight:bold;"></div> <Span style="margin:0px; padding:0px;" > <h3> Edit Image </h3></Span> 
 		</div>
-		<div id="editImage" style="width:65%; height:65%; float:left; margin:0px; padding: 0px;">
-			<canvas id="editCanvas"></canvas>
+	</div>
+	
+	<div id="fileExpo" data-role="page">
+		<div data-role="header" data-position="fixed">
+			<table>
+				<tr>
+					<td style="width:10%">
+						<a class="ui-btn ui-mini" href="#" onClick="backtogallary()"><img src="img/undo.png" height="25" width="25"></a>
+					</td>
+					<td style="width:65%">
+						<h3 style="margin:0px; padding:0px;">File Explorer</h3>
+					</td>
+					<td style="width:25%">
+						<a class="ui-btn ui-mini" href="#" onClick="backFile()"><img src="img/backward.png" height="25" width="25"></a>
+						<a class="ui-btn ui-mini" href="#" onClick="fileexplore()"><img src="img/home.png" height="25" width="25"></a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div role="main" class="ui-content">
+			<div id="dirContent" >
+			</div>
+		</div>
+	</div>
+	
+	<div id="aboutUs" class="page" data-role="page">
+		<div role="main" class="ui-content" style="margin:0px; padding:0px;">
+			<center>
+			<div class="ui-corner-all custom-corners">
+			  <div class="ui-bar ui-bar-a">
+			    <h2 id="appName">Heading</h2>
+			  </div>
+			  <div class="ui-body ui-body-a">
+			    <h4 id="appVersion">Heading</h4>
+			    <h4 id="appRelease">Heading</h4>
+			  </div>
+			</div>
+			<input onclick="onBackLogin()" type="button" ontouchstart="return true;" value="Back">
+			</center>
 		</div>
 		
-		<div style="width:15%; height:100%;float:left; padding:0%; margin:-15px 0px 0px 0px;">
-			<img src="img/brightness.png" height="25" width="25"/>
-			<div id="slider-brightness" style=""></div>
-		</div>
-		<div style="width:15%; height:100%;float:left; padding:0%; margin:-15px 0px 0px 0px;">
-			<img src="img/contrast.png" height="25" width="25"/>
-			<div id="slider-contrass" style=""></div>
-		</div>
 		
-		<div style="width:75%; height:20%;float:right; padding:0%; margin:0%;">
-			<input class="crop_btn" type="button" value="Save" style="background-color:#088A08 ; width:20%; margin:0px 10px; height:20%;" onClick="saveEditImage()"/>
-			<input class="crop_btn" type="button" value="Cancel" onClick="onBackToCropView()" style="background-color:#F29645 ; width:20%; margin:0px 10px; height:20%;"/>
-			<input class="crop_btn" type="button" value="Undo" onClick="onUndoEdit()" style="background-color:#F29645 ;width:20%; margin:0px 10px; height:20%;"/>
+	</div>
+	
+	<div id="editView" class="page" data-role="page">
+		<div data-role="header" data-position="fixed">
+			<div name="user_lbl" style="float:left;font-weight:bold;line-height:50px;"></div> 
+			<h3> Edit Image </h3> 
 		</div>
-		</center>
+		<div role="main" class="ui-content" style="margin:0px; padding:0px;">
+			<table style="width:100%;">
+				<tr>
+					<td style="width:60%;">
+						<canvas id="editCanvas" style="position:relative;"></canvas>
+					</td>
+					<td style="width:10%;">
+						<center>
+							<img src="img/brightness.png" height="25" width="25"/>
+							<div id="slider-brightness" style=""></div>
+						</center>
+					</td>
+					<td style="width:10%;">
+						<center>
+							<img src="img/contrast.png" height="25" width="25"/>
+							<div id="slider-contrass" style=""></div>
+						</center>
+					</td>
+					<td>
+						<div data-role="controlgroup" data-type="vertical">
+							<a href="#" class="ui-btn" onClick="saveEditImage()">Save</a>
+							<a href="#" class="ui-btn" onClick="onBackToCropView()">Cancel</a>
+						</div>
+						</br>
+						<a href="#" class="ui-btn" onClick="onUndoEdit()">Undo</a>
+					</td>
+				</tr>
+			</table>
+		</div>
 	</div>
 	
 </body>

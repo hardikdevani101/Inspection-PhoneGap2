@@ -568,8 +568,8 @@ function fillGallaryPhotos() {
 			function fillToTDDiv(tmpFile,ItemNumber){
 				var imgelem = document.createElement("div");
 				imgelem.setAttribute("style", "margin:3px 5px; border:1px solid #000;float:left; word-wrap:break-word;");
-				imgelem.style.width = (window.innerHeight * .36) + "px";
-				imgelem.style.height = (window.innerHeight * .27) + "px";
+				imgelem.style.width = (window.innerHeight * .3066) + "px";
+				imgelem.style.height = (window.innerHeight * .23) + "px";
 				imgelem.innerHTML = getFileName(tmpFile);
 				if (Disp_row > 2 ) {
 							Disp_row = 0;Disp_col = Disp_col + 1;
@@ -603,8 +603,8 @@ function fillGallaryPhotos() {
 			}
             function fillToImage(evt,ItemNumber,rfile) {
                     var imgelem = document.createElement("img");
-                    imgelem.setAttribute("height", (window.innerHeight * .27) + "px");
-                    imgelem.setAttribute("width", (window.innerHeight * .36) + "px");
+                    imgelem.setAttribute("height", (window.innerHeight * .23) + "px");
+                    imgelem.setAttribute("width", (window.innerHeight * .3066) + "px");
                     imgelem.setAttribute("style", "margin:3px 5px; float:left;");
                     imgelem.setAttribute("src", evt.target.result);
                     if (Disp_row > 2 ) {
@@ -745,7 +745,6 @@ function displayUserName(){
 	document.getElementsByName("user_lbl")[3].innerHTML="User : "+userName;
 	document.getElementsByName("user_lbl")[4].innerHTML="User : "+userName;
 	document.getElementsByName("user_lbl")[5].innerHTML="User : "+userName;
-	document.getElementsByName("user_lbl")[6].innerHTML="User : "+userName;
 }
 
 function onPhotoDataSuccess(imageData) {
@@ -771,8 +770,10 @@ function loadPage(id1) {
     if (id1 == 'exit') {
         navigator.app.exitApp();
     } else {
-        document.getElementById("disp").innerHTML = document.getElementById(id1).innerHTML;
+        //document.getElementById("disp").innerHTML = document.getElementById(id1).innerHTML;
+		 window.location.assign("#"+id1);
 		currentPage=id1;
+		$.mobile.loading('hide');
     }
 }
 

@@ -223,18 +223,17 @@ function fillInspectionsLines(){
 
 function FillInspectionDiv(dlab,dval,totCnt,uploadCnt){
 	var tmpdiv = document.createElement('div');
-	var totStr= document.createElement('div');
-	totStr.setAttribute("style", "position:absolute;margin-top:5px;margin-left:50px;");
-	totStr.innerHTML=totCnt+" ( "+uploadCnt+" ) ";
+	var br = document.createElement("br");
 	tmpdiv.className = "InspButton";
 	tmpdiv.setAttribute("style", "margin:2px 10px;");
-	tmpdiv.innerHTML=dlab;
-	tmpdiv.style.height=(window.innerHeight*.10)+"px";
-	tmpdiv.style.width=(window.innerWidth*.20)+"px";
+	tmpdiv.innerHTML=totCnt+" ( "+uploadCnt+" ) " + '<br/>';
+	//tmpdiv.appendChild=br;
+	tmpdiv.innerHTML=tmpdiv.innerHTML + dlab;
+	tmpdiv.style.height=(window.innerHeight*.23)+"px";
+	tmpdiv.style.width=(window.innerHeight*.3333)+"px";
 	var clickstr="onInspSet('"+dval+"','"+ dlab.replace('\'', '\\\'')+"')";
 	tmpdiv.setAttribute('onclick',clickstr);
 	if(Disp_col>=Math.ceil(inspLinesArray.length/3)){Disp_col=0;Disp_row=Disp_row+1;}
-	document.getElementById("InsTd-"+Disp_row+"-"+Disp_col).appendChild(totStr);
 	document.getElementById("InsTd-"+Disp_row+"-"+Disp_col).appendChild(tmpdiv);
 	Disp_col=Disp_col+1;
 }

@@ -82,8 +82,8 @@ function onAfterSaveFile(fileFullPath){
 function fillSingleTD(fileFullPath){
 	if (DataTypes.indexOf(getExtention(getFileName(fileFullPath)).toUpperCase()) >= 0) {
 		var imgelem = document.createElement("img");
-		imgelem.setAttribute("height", (window.innerHeight * .27) + "px");
-		imgelem.setAttribute("width", (window.innerHeight * .36) + "px");
+		imgelem.setAttribute("height", (window.innerHeight * .23) + "px");
+		imgelem.setAttribute("width", (window.innerHeight * .3066) + "px");
 		imgelem.setAttribute("style", "margin:3px 5px; float:left;");
 		imgelem.setAttribute("src", gcanvas.toDataURL());
 		if (Disp_row > 2 ) {
@@ -108,8 +108,8 @@ function fillSingleTD(fileFullPath){
 	{
 		var imgelem = document.createElement("div");
 		imgelem.setAttribute("style", "margin:3px 5px; border:1px solid #000;float:left; word-wrap:break-word;");
-		imgelem.style.width = (window.innerHeight * .36) + "px";
-		imgelem.style.height = (window.innerHeight * .27) + "px";
+		imgelem.style.width = (window.innerHeight * .3066) + "px";
+		imgelem.style.height = (window.innerHeight * .23) + "px";
 		imgelem.innerHTML = getFileName(fileFullPath);
 		if (Disp_row > 2 ) {
 					Disp_row = 0;Disp_col = Disp_col + 1;
