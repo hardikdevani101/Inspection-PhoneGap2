@@ -22,6 +22,7 @@ function validationSetting(){
 	var role=document.getElementById("txt_role");
 	var whouse=document.getElementById("txt_warehouse");
 	var org=document.getElementById("txt_organizer");
+	var img_qulty=document.getElementById("txt_imgQua");
 	
 	if(url.value=="" || url.value==null){
 		loadPage("setting");
@@ -52,6 +53,11 @@ function validationSetting(){
 		loadPage("setting");
 		setValSetting();
 		document.getElementById("setting_error").innerHTML="Organizor Should Not Blank";
+		lang.focus();
+	}else if(img_qulty.value=="" || img_qulty.value==null){
+		loadPage("setting");
+		setValSetting();
+		document.getElementById("setting_error").innerHTML="Image quality Should Not Blank";
 		lang.focus();
 	}else{
 		onSettingUpdate();
