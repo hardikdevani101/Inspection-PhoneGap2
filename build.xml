@@ -1,0 +1,16 @@
+<project name="VISion" default="build" basedir=".">
+    <description>
+        This buildfile is used to build the VISion archive file.
+    </description>
+
+    <property name="deploy.dir" value="/home/juan/Desktop"/>
+
+    <target name="build" description="create phonegap build archive">
+        <echo message="=========== Build VISion"/>
+        <!-- Create the time stamp -->
+        <tstamp/>
+        <zip destfile="${deploy.dir}/vision_${version}.zip">
+            <zipfileset dir="www" />
+        </zip>
+    </target>
+</project>

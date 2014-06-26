@@ -1,2 +1,4 @@
 syntax: glob
 platforms/*
+.idea/*
+*.iml
