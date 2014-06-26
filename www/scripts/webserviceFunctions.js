@@ -50,14 +50,13 @@ function onLogin(){
 							}, errorCB);
 							loadPage("home");
 							pageState = 1;
-							document.getElementById("user_lbl").innerHTML="User : "+userName;
-							navigator.notification.activityStop();
+							displayUserName();
+							onStopNotification();
 						}
 						else{
-							//navigator.notification.alert(req.responseText + " " + status);
 							loadPage("login");
 							document.getElementById("login_error").innerHTML="Login Failed!!!!";
-							navigator.notification.activityStop();
+							onStopNotification();
 						}
 					}
 					
@@ -69,8 +68,8 @@ function onLogin(){
 					console.log("Error ="+data.responseText);
 					loadPage("login");
 					document.getElementById("txt_user").value=userName;
-					navigator.notification.alert('Failer!!',function(){},getErrorMessage(data, status, req),'Ok');
-					navigator.notification.activityStop();
+					navigator.notification.alert('Failure!!',function(){},getErrorMessage(data, status, req),'Ok');
+					onStopNotification();
                 }  
 }
 
@@ -106,11 +105,12 @@ function fillMrLines(){
                 });
 				function processSuccess(data, status, req) {
                     if (status == "success")
-					{		mrLinesArray = new Array();
+					{		M_InOutLine_ID="";
+							mrLinesArray = new Array();
 							var xmlResponse =req.responseXML.documentElement;
 							var fullNodeList = xmlResponse.getElementsByTagName("DataRow");
 							if (fullNodeList.length == 0){
-								navigator.notification.activityStop();
+								onStopNotification();
 								navigator.notification.alert('No MR Lines to perform Inspection for you.','','Alert');
 								loadPage("home");
 							} else
@@ -143,10 +143,10 @@ function fillMrLines(){
 					else
 						{
 							loadPage("home");
-							document.getElementById("user_lbl").innerHTML="User : "+userName;
+							displayUserName();
 						}
-					navigator.notification.activityStop();
-					navigator.notification.alert('Failer!!',function(){},getErrorMessage(data, status, req),'Ok');
+					onStopNotification();
+					navigator.notification.alert('Failure!!',function(){},getErrorMessage(data, status, req),'Ok');
                 }
 				
 }
@@ -185,27 +185,9 @@ function fillInspectionsLines(){
 				function processSuccess(data, status, req) {
                     if (status == "success")
 					{		
-							var div = document.getElementById("outNewIns");
-							document.getElementById("disp-Insp").innerHTML="";
-							div.setAttribute("style", "overflow-x: auto; overflow-y: hidden;");
-							div.style.width="auto";
-							div.style.height=(window.innerHeight*.65)+"px";
+							inspLinesArray = new Array();
 							var xmlResponse =req.responseXML.documentElement;
 							var fullNodeList = xmlResponse.getElementsByTagName("DataRow");
-							for(var j=0; j<2; j++)
-							   {
-									var tr = document.createElement('tr');
-									tr.setAttribute("style", "margin:0px; padding:0px;");
-									for(var i=0; i<Math.ceil(fullNodeList.length/2); i++)
-									{
-										var td = document.createElement('td');
-										td.setAttribute("id","InsTd-"+j+"-"+i);
-										td.setAttribute("style", "margin:1px; padding:1px;");
-										tr.appendChild(td);
-									}
-									document.getElementById("disp-Insp").appendChild(tr);
-							   }
-							Disp_col=0;Disp_row=0;
 							for (var i=0; i < fullNodeList.length; i++)
 							{	
 								var dlab,dval;
@@ -217,27 +199,11 @@ function fillInspectionsLines(){
 								  		dval = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
 							  		}
 								}
-							   	getUploadCounts(M_InOutLine_ID,dlab,dval,FillInspectionDiv);
-								function FillInspectionDiv(dlab,dval,totCnt,uploadCnt){
-								console.log("Total="+totCnt);
-								var tmpdiv = document.createElement('div');
-								var totDiv= document.createElement('div');
-								totDiv.setAttribute("style", "position:absolute;margin-top:5px;margin-left:50px;");
-								totDiv.innerHTML=totCnt+" ( "+uploadCnt+" ) ";
-								tmpdiv.className = "InspButton";
-								tmpdiv.setAttribute("style", "margin:2px 10px;");
-								tmpdiv.innerHTML=dlab;
-								tmpdiv.style.height=(window.innerHeight*.15)+"px";
-								tmpdiv.style.width=(window.innerWidth*.20)+"px";
-								var clickstr="onInspSet('"+dval+"','"+ dlab.replace('\'', '\\\'')+"')";
-								tmpdiv.setAttribute('onclick',clickstr);
-								if(Disp_col>=Math.ceil(fullNodeList.length/2)){Disp_col=0;Disp_row=Disp_row+1;}
-								document.getElementById("InsTd-"+Disp_row+"-"+Disp_col).appendChild(totDiv);
-								document.getElementById("InsTd-"+Disp_row+"-"+Disp_col).appendChild(tmpdiv);
-								Disp_col=Disp_col+1;
-								}
+								inspLinesArray[i]=new Array();
+								inspLinesArray[i][0]=dlab;
+								inspLinesArray[i][1]=dval;
 							}
-						navigator.notification.activityStop();
+							renderInspectionFromCache();
 					}
 					
                 }
@@ -248,17 +214,33 @@ function fillInspectionsLines(){
 					else
 						{
 							loadPage("home");
-							document.getElementById("user_lbl").innerHTML="User : "+userName;
+							displayUserName();
 						}
-					navigator.notification.activityStop();
-					navigator.notification.alert('Failer!!',function(){},getErrorMessage(data, status, req),'Ok');
+					onStopNotification();
+					navigator.notification.alert('Failure!!',function(){},getErrorMessage(data, status, req),'Ok');
                 }
 }
 
+function FillInspectionDiv(dlab,dval,totCnt,uploadCnt){
+	var tmpdiv = document.createElement('div');
+	var totStr= document.createElement('div');
+	totStr.setAttribute("style", "position:absolute;margin-top:5px;margin-left:50px;");
+	totStr.innerHTML=totCnt+" ( "+uploadCnt+" ) ";
+	tmpdiv.className = "InspButton";
+	tmpdiv.setAttribute("style", "margin:2px 10px;");
+	tmpdiv.innerHTML=dlab;
+	tmpdiv.style.height=(window.innerHeight*.10)+"px";
+	tmpdiv.style.width=(window.innerWidth*.20)+"px";
+	var clickstr="onInspSet('"+dval+"','"+ dlab.replace('\'', '\\\'')+"')";
+	tmpdiv.setAttribute('onclick',clickstr);
+	if(Disp_col>=Math.ceil(inspLinesArray.length/3)){Disp_col=0;Disp_row=Disp_row+1;}
+	document.getElementById("InsTd-"+Disp_row+"-"+Disp_col).appendChild(totStr);
+	document.getElementById("InsTd-"+Disp_row+"-"+Disp_col).appendChild(tmpdiv);
+	Disp_col=Disp_col+1;
+}
 
 function callAttachImageWs(imginspline,imgname){
 	
-	console.log("insp=="+imginspline+"imgnam=="+imgname);
 	$.ajax({type: "POST",
 			url: getWsUrl("ModelADService"),
 			dataType: "xml",
@@ -275,7 +257,7 @@ function callAttachImageWs(imginspline,imgname){
 										 +'<_0:val>'+imginspline+'</_0:val>'
 									  +'</_0:field>'
 									  +'<_0:field column="imgName">'
-										 +'<_0:val>'+getFileName(imgname)+'</_0:val>'
+										 +'<_0:val>'+imgname+'</_0:val>'
 									  +'</_0:field>'
 								   +'</_0:ParamValues>'
 								+'</_0:ModelRunProcess>'
@@ -290,33 +272,38 @@ function callAttachImageWs(imginspline,imgname){
 				function processSuccess(data, status, req) {
 					var xmlResponse =req.responseXML.documentElement;
 					var fullNodeList = xmlResponse.getElementsByTagName("Summary");
-					if(fullNodeList[0].textContent=='success')
-					{
+					var tmpArray=fullNodeList[0].textContent.split(']$[');
+					if(tmpArray[1]==""){
 						db.transaction(function(tx){
-							tx.executeSql('UPDATE vis_gallery SET imgAttach="T" WHERE file="'+imgname+'" and insp_line="'+imginspline+'"');
+							tx.executeSql('UPDATE vis_gallery SET imgAttach="T" WHERE insp_line="'+imginspline+'"');
 							attachCount=attachCount-1;
 							if(attachCount==0){
 								deleteMRgallary();
 							}
 						}, errorCB);
 					}else{
-						var tmpArray=fullNodeList[0].textContent.split('-');
-						if(tmpArray[0]==2){
-								db.transaction(function (tx){
-									tx.executeSql('UPDATE vis_gallery SET imgUpload="F" WHERE file="'+imgname+'" and insp_line="'+imginspline+'"');
-								}, errorCB);
-							navigator.notification.alert('Attachment file not found on Server, Try again', function(){}, 'Failure', 'OK');
-							navigator.notification.activityStop();
-						}else{
-							navigator.notification.activityStop();
-							navigator.notification.alert('Error while Attaching : ' + fullNodeList[0].textContent , function(){}, 'Failure', 'OK');
+						var successArrayList=tmpArray[0].split('$$');
+						var failedArrayList=tmpArray[1].split('$$');
+						if(successArrayList.length > 0){
+							for(var i=0; i < successArrayList.length ; i++){
+								onchangeSuccessState(successArrayList[i],imginspline);
+							}
 						}
+						if(failedArrayList.length > 0){
+							for(var i=0; i < failedArrayList.length ; i++){
+								var failerMsgArray=failedArrayList[i].split('::');
+								onchangeFailerState(failerMsgArray,imginspline);
+							}
+						}
+						onBackToStartInspection('home');
+						onStopNotification();
+						navigator.notification.alert('Error while Attaching : ' + failedArrayList.toString() , function(){}, 'Failure', 'OK');
 					}
                 }
 
                 function processError(data, status, req) {
-					navigator.notification.activityStop();
-					navigator.notification.alert('Failer!!',function(){},getErrorMessage(data, status, req),'Ok');
+					onStopNotification();
+					navigator.notification.alert('Failure!!',function(){},getErrorMessage(data, status, req),'Ok');
                 }
 				
 }
@@ -337,7 +324,7 @@ function getWsDataLoginString(){
 }
 function getErrorMessage(data, status, req){
 	if(data.status == 0){
-	return data.statusText +" : Error getting response, Connection refused";
+	return data.statusText +" : Error getting response, Connection refused Or Timeout ";
 	}else if(data.status == 500){
 	return data.statusText +" : "+ $(data.responseXML).find('faultstring').text();
 	}else{

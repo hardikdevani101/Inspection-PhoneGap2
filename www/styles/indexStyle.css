@@ -1,11 +1,44 @@
 @CHARSET "ISO-8859-1";
-
+input:active[type="button"] {
+color:#FFFFFF;
+}
+.divMenuButton:active{
+color:#FFFFFF;
+}
+.login_btns:active{
+color:#FFFFFF;
+}
+.gallary_menubtn:active {
+color:#FFFFFF;
+}
+.InspButton:active {
+color:#FFFFFF;
+}
+input#zoom-in{
+background:url(../img/minus.png);
+background-size:25px 25px;
+background-repeat:no-repeat;
+padding:0px;
+border:none;
+width:25px;
+height:25px;
+}
+input#zoom-out{
+background:url(../img/plus.png);
+background-size:25px 25px;
+background-repeat:no-repeat;
+padding:0px;
+border:none;
+width:25px;
+height:25px;
+}
 .menuButton {
 	margin-top: 5%;
 	border: #000000 2px solid;
 	border-radius:4px;
 	width: 75%;
-	height: 15%;
+	height: 20%;
+	padding: 4px 0px;
 }
 
 .page {
@@ -22,7 +55,7 @@
 	float:left;
 	width:18%;
 	padding:25px 5%;
-	background-color:#0099CC;
+	background-color:#0F96DA;
 	border: 2px solid #000000;
 	border-radius:4px;
 	margin: .7%;
@@ -36,7 +69,7 @@
 	word-wrap:break-word;
 	float:left;
 	padding:20px 5%;
-	background-color:#0099CC;
+	background-color:#0F96DA;
 	border: 2px solid #000000;
 	border-radius:4px;
 	margin: 2%;
@@ -48,16 +81,21 @@
 .divMenuButton
 {
 	float:left;
-	width:25%;
-	height:20px;
-	background-color:#0099CC;
+	width:100%;
+	background-color:#0F96DA;
 	border: 2px solid #000000;
 	border-radius:4px;
-	margin: 1% 2% 1% 4%;
+	margin: 5% 4% 5% 2%;
+	padding: 5px 2px;
 	font-family: sans-serif;
 	font-weight:bold;
 	cursor: pointer;
 }
+
+#txt_role option{
+	width:70%;
+}
+
 .gallary_menubtn{
 float: left; 
 border: 1px solid black; 
@@ -75,6 +113,7 @@ background-color:#3399CC;
 margin:20% 0%;
 float:left;
 width:100%;
+padding:5px 0px;
 height:100%;
 }
 .login_btns{
