@@ -4,7 +4,6 @@ var boundX, BoundY;
 var jcrop_api;
 var finalSelection;
 var crop_img;
-var origImg = new Image();
 var userName = "";
 var INSPECTOR_ID;
 var M_InOutLine_ID = 0;
@@ -31,6 +30,12 @@ var currentPage="";
 var warehouseListArray = new Array();
 var cropImageW,cropImageH;
 var scrollHeight;
+var canX=0,canY=0,canX1=0,canY1=0;
+var actArray;
+var aNo=-1;
+var editCtx;
+var bValue=50,cValue=50;
+var flag=0;
 
 function onLoad() {
     document.addEventListener("deviceready", onDeviceReady, false);
@@ -637,7 +642,7 @@ function onRenderTable(){
 }
 
 function discardInspections() {
-    navigator.notification.confirm('Are you sure ???', confirmDiscardInspections, 'Discard All Inspections...', 'Ok,Cancel');
+    navigator.notification.confirm('Are you sure ???', confirmDiscardInspections, 'Discard All Inspections...', ['Ok','Cancel']);
 }
 
 function confirmDiscardInspections(buttonIndex) {
@@ -740,6 +745,7 @@ function displayUserName(){
 	document.getElementsByName("user_lbl")[3].innerHTML="User : "+userName;
 	document.getElementsByName("user_lbl")[4].innerHTML="User : "+userName;
 	document.getElementsByName("user_lbl")[5].innerHTML="User : "+userName;
+	document.getElementsByName("user_lbl")[6].innerHTML="User : "+userName;
 }
 
 function onPhotoDataSuccess(imageData) {
@@ -782,7 +788,7 @@ function onBackButton() {
             "Are you sure you want to EXIT ?",
             checkButtonSelection,
             'EXIT APP:',
-            'Cancel,OK');
+            ['Cancel','OK']);
 	}else if(currentPage=='home'){
 		loadPage("login");
 		document.getElementById("txt_user").value = userName;
@@ -800,6 +806,8 @@ function onBackButton() {
 		onLoginpage();
 	}else if(currentPage=='aboutUs'){
 		onLoginpage();
+	}else if(currentPage=='editView'){
+		onBackToCropView();
 	}else{
          navigator.app.backHistory();
     }
@@ -906,10 +914,11 @@ function onImagePicker(){
 }
 
 function onCropCall(results){
+	actArray = "";
 	var tmpImg = new Image();
 	tmpImg.onload = function() {
-		var randerHeight = window.innerHeight * 0.75 ;
-		if(this.height < this.width && !((this.height/this.width) > .75)){
+		var randerHeight = window.innerHeight * 0.70 ;
+		if(this.height < this.width && !((this.height/this.width) > .70)){
 			cropImageW = (randerHeight * 4)/3;
 			cropImageH = (cropImageW/this.width) * this.height ;
 		}else{
@@ -958,7 +967,7 @@ function onCrop(results) {
 			finalSelection = selection;
 		}
     }
-	document.getElementById("slider-vertical").setAttribute("style","height:"+(cropImageH-50)+"px;margin:15px 0px 10px 0px;");
+	document.getElementById("slider-vertical").setAttribute("style","height:"+(cropImageH-50)+"px;margin:35% 0px 25% 0px;");
 	$('#slider-vertical').slider({
 		orientation: "vertical",
 		min: 5,
@@ -968,6 +977,7 @@ function onCrop(results) {
 				selectCropArea(ui.value);
 			},
 		slide:function( event, ui ) {
+				clearInterval(myVar);
 				selectCropArea(ui.value);
 			}
 	});
@@ -1011,7 +1021,13 @@ function stopSliderChange()
 	clearInterval(myVar);
 }
 
-function onCropSaved() {
+function onCropSaved()
+{
+	CropSaved(applyWatermark);
+}
+function CropSaved(callBack) {
+	
+	var origImg = new Image();
 	var xsize, ysize;
     navigator.notification.activityStart("Please Wait", "Croping.....");
     canvas = document.createElement('canvas');
@@ -1034,16 +1050,28 @@ function onCropSaved() {
 	ctx.drawImage(crop_img, x1, y1, w, h, 0, 0, w, h);
 	origImg.src = canvas.toDataURL();
 	origImg.onload=function(){
-		applyWatermark();
+		var randerHeight = window.innerHeight * 0.70 ;
+		if(this.height < this.width && !((this.height/this.width) > .70)){
+			cropImageW = (randerHeight * 4)/3;
+			cropImageH = (cropImageW/this.width) * this.height ;
+		}else{
+			cropImageH = randerHeight;
+			cropImageW = (cropImageH/this.height) * this.width ;
+		}
+		callBack(origImg);
 		xsize = ysize = tempImage = rx = ry = null ;
 	}
 }
 
 function onCropSkip() {
+	var origImg = new Image();
 	origImg.src = crop_img.src ;
+	origImg.onload=function(){
+		applyWatermark(origImg);
+	}
 }
 //For Water Mark
-function applyWatermark() {
+function applyWatermark(origImg) {
 	var gctx;
 	var watermark = new Image();
     watermark.src = "img/Velocity_Watermark.png";
@@ -1068,4 +1096,217 @@ function applyWatermark() {
 		watermark = encoder = img64 = null;
 	}
     navigator.notification.activityStart("Please Wait", "Water Marking.....");
+}
+
+function onCropImageEdit()
+{
+	CropSaved(onImageEdit);
+}
+
+function callImageEdit()
+{
+	onImageEdit(crop_img);
+}
+
+function onImageEdit(origImg)
+{
+	edit_image = new Image();
+	edit_image.src = origImg.src;
+	edit_image.onload=function(){
+		this.height = cropImageH;
+		this.width = cropImageW;
+		ImageEdit();
+		navigator.notification.activityStop();
+	}
+}
+var edit_image;
+
+function ImageEdit()
+{
+	canX=0,canY=0,canX1=0,canY1=0;
+	aNo=-1;
+	bValue=50,cValue=50;
+	loadPage('editView');
+	actArray = new Array();
+	gcanvas = document.getElementById('editCanvas');
+	editCtx = gcanvas.getContext("2d");
+	gcanvas.height = edit_image.height;
+	gcanvas.width = edit_image.width;
+	editCtx.drawImage(edit_image,0,0,edit_image.width,edit_image.height);
+	gcanvas.addEventListener("touchmove", touchMove, true);
+	gcanvas.addEventListener("touchstart", touchDown, false);
+	gcanvas.addEventListener("touchend", touchEnd, false);
+	var tmpEditData = "" ;
+	
+	document.getElementById("slider-brightness").setAttribute("style","height:"+(edit_image.height-50)+"px; margin:15px 0px 10px 0px;");
+	$('#slider-brightness').slider({
+		orientation: "vertical",
+		min: 0,
+		max: 100,
+		value:50,
+		slide:function( event, ui ) {
+				var editImageData = editCtx.getImageData(0,0,gcanvas.width,gcanvas.height);
+				onBrightnessChange(ui.value-bValue,editImageData);
+				bValue = ui.value;
+			},
+		change:function( event, ui ) {
+				var editImageData = editCtx.getImageData(0,0,gcanvas.width,gcanvas.height);
+				onBrightnessChange(ui.value-bValue,editImageData);
+				bValue = ui.value;
+				if(flag == 0)
+				{
+					if( aNo > -1 ? (actArray[aNo][0] != bValue || actArray[aNo][1] != cValue) : true)
+					{
+						actArray[++aNo] = new Array();
+						actArray[aNo][0]=bValue;
+						actArray[aNo][1]=cValue;
+						actArray[aNo][2]=canX+"*"+canY+"*"+(canX1-canX)+"*"+(canY1-canY);
+					}
+				}
+			},
+		start: function( event, ui ) {
+		}
+	});
+	
+	document.getElementById("slider-contrass").setAttribute("style","height:"+(edit_image.height-50)+"px;margin:15px 0px 10px 0px;");
+	$('#slider-contrass').slider({
+		orientation: "vertical",
+		min: 0,
+		max: 100,
+		value:50,
+		slide:function( event, ui ) {
+				var editImageData = editCtx.getImageData(0,0,gcanvas.width,gcanvas.height);
+				onContrassChange(ui.value-cValue,editImageData);
+				cValue = ui.value;
+			},
+		change:function( event, ui ) {
+				var editImageData = editCtx.getImageData(0,0,gcanvas.width,gcanvas.height);
+				onContrassChange(ui.value-cValue,editImageData);
+				cValue = ui.value;
+				if(flag == 0)
+				{
+					if( aNo > -1 ? (actArray[aNo][0] != bValue || actArray[aNo][1] != cValue) : true)
+					{
+						actArray[++aNo] = new Array();
+						actArray[aNo][0]=bValue;
+						actArray[aNo][1]=cValue;
+						actArray[aNo][2]=canX+"*"+canY+"*"+(canX1-canX)+"*"+(canY1-canY);
+					}
+				}
+			},
+		start: function( event, ui ) {
+			
+		}
+	});
+	
+	function touchDown(e) 
+	{
+		if (!e)
+			var e = event;
+		e.preventDefault();
+		
+		
+		canX = e.targetTouches[0].pageX - gcanvas.offsetLeft;
+		canY = e.targetTouches[0].pageY - gcanvas.offsetTop;
+		tmpEditData = editCtx.getImageData(0,0,gcanvas.width,gcanvas.height);
+	}
+	function touchMove(e) 
+	{
+		if (!e)
+			var e = event;
+		e.preventDefault();
+		canX1 = e.targetTouches[0].pageX - gcanvas.offsetLeft;
+		canY1 = e.targetTouches[0].pageY - gcanvas.offsetTop;
+		editCtx.clearRect(0,0,edit_image.width,edit_image.hight);
+		editCtx.putImageData(tmpEditData,0,0);
+		drowRect(canX,canY,canX1-canX,canY1-canY);
+	}
+	function touchEnd(e) 
+	{
+		actArray[++aNo] = new Array();
+		actArray[aNo][0]=bValue;
+		actArray[aNo][1]=cValue;
+		actArray[aNo][2]=canX+"*"+canY+"*"+(canX1-canX)+"*"+(canY1-canY);
+	}
+	
+}
+
+function drowRect(x,y,w,h)
+{
+	editCtx.beginPath();
+	editCtx.fillStyle="#ffffff";
+	editCtx.fillRect(x,y,w,h);
+	editCtx.closePath();
+	editCtx.stroke();
+}
+
+function onBackToCropView()
+{
+	onCropCall(crop_img.src);
+}
+	
+function saveEditImage()
+{
+	var origImg = new Image();
+	origImg.src = gcanvas.toDataURL();
+	origImg.onload=function(){
+		applyWatermark(origImg);
+	}
+}
+
+function onUndoEdit()
+{
+	if(actArray.length >= 1)
+	{
+		actArray.pop();
+		--aNo;
+		editCtx.clearRect(0,0,cropImageW,cropImageH);
+		editCtx.drawImage(edit_image,0,0,cropImageW,cropImageH);
+		var b=50,c=50;
+		for(var j=0;j<actArray.length;j++)
+		{
+			var valueArray = actArray[j];
+			b = valueArray[0];
+			c = valueArray[1]
+			var rectArray = valueArray[2].split('*');
+			drowRect(rectArray[0],rectArray[1],rectArray[2],rectArray[3]);
+		}
+		bValue = 50;
+		cValue = 50;
+		flag = 1;
+		$("#slider-brightness").slider("option", "value", b );
+		$("#slider-contrass").slider("option", "value", c );
+		flag = 0;
+	}
+	if(actArray.length == 0)
+	{
+		canX=0,canY=0,canX1=0,canY1=0;
+	}
+}
+
+function onContrassChange(contraValue,contraImageData)
+{	
+	var data = contraImageData.data;
+	var factor = (259 * (contraValue + 255)) / (255 * (259 - contraValue));
+	for(var i=0;i<data.length;i+=4)
+	{
+		data[i] = factor * (data[i] - 128) + 128;
+		data[i+1] = factor * (data[i+1] - 128) + 128;
+		data[i+2] = factor * (data[i+2] - 128) + 128;
+	}
+	editCtx.putImageData(contraImageData,0,0);
+	return contraImageData;
+}
+
+function onBrightnessChange(brightValue, brightImageData)
+{
+	var pixels = brightImageData.data;
+	for(var i = 0; i < pixels.length; i+=4)
+	{
+		pixels[i] += brightValue;
+		pixels[i+1] += brightValue;
+		pixels[i+2] += brightValue;
+	}
+	editCtx.putImageData(brightImageData,0,0);
+	return brightImageData;
 }
