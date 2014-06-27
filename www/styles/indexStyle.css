@@ -121,6 +121,7 @@ border:1px solid #000000;
 border-radius:3px;
 background-color:#3399CC;
 width:22%;
+margin:0px 2px;
 }
 
 .folder, .file{

@@ -694,11 +694,19 @@ function onSettingPage() {
 }
 
 function setSettingpage() {
-    document.getElementById("txt_url").value = vis_url;
+	var e = document.getElementById("txt_url");
+	for(var i=0 ; i < e.options.length ; i++){
+		if(e.options[i].value==vis_url)
+			e.options[i].selected = true;
+	}
     document.getElementById("txt_lang").value = vis_lang;
-    document.getElementById("txt_client").value = vis_client_id;
+    e = document.getElementById("txt_client");
+    for(var i=0 ; i < e.options.length ; i++){
+    	if(e.options[i].value==vis_client_id)
+    		e.options[i].selected = true;
+    }
 	document.getElementById("txt_imgQua").value = vis_img_qulty;
-	var e = document.getElementById("txt_role");
+	e = document.getElementById("txt_role");
 	for(var i=0 ; i < e.options.length ; i++){
 		if(e.options[i].value==vis_role)
 			e.options[i].selected = true;
@@ -715,10 +723,12 @@ function setSettingpage() {
 }
 
 function onSettingUpdate() {
-    vis_url = document.getElementById("txt_url").value;
+	var e = document.getElementById("txt_url");
+	vis_url = e.options[e.selectedIndex].value;
     vis_lang = document.getElementById("txt_lang").value;
-    vis_client_id = document.getElementById("txt_client").value;
-	var e = document.getElementById("txt_role");
+    e = document.getElementById("txt_client");
+    vis_client_id = e.options[e.selectedIndex].value;
+	e = document.getElementById("txt_role");
 	vis_role = e.options[e.selectedIndex].value;
 	
 	e = document.getElementById("txt_warehouse");
