@@ -1032,7 +1032,7 @@ function onCrop(results) {
 			finalSelection = selection;
 		}
     }
-	document.getElementById("slider-vertical").setAttribute("style","height:"+(cropImageH-50)+"px;margin:15px 0px 10px 0px;");
+	document.getElementById("slider-vertical").setAttribute("style","height:"+(cropImageH-50)+"px;margin:35% 0px 25% 0px;");
 	$('#slider-vertical').slider({
 		orientation: "vertical",
 		min: 5,
@@ -1042,6 +1042,7 @@ function onCrop(results) {
 				selectCropArea(ui.value);
 			},
 		slide:function( event, ui ) {
+				clearInterval(myVar);
 				selectCropArea(ui.value);
 			}
 	});
