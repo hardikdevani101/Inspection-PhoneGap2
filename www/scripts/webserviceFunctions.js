@@ -233,7 +233,7 @@ function fillInspectionsLines(){
                 }
 }
 
-function FillInspectionDiv(dlab,dval,totCnt,uploadCnt){
+function FillInspectionDiv(dlab,dval,totCnt,uploadCnt,isInsp){
 	var tmpdiv = document.createElement('div');
 	var totStr= document.createElement('div');
 	totStr.setAttribute("style", "position:absolute;margin-top:5px;margin-left:50px;");
@@ -244,7 +244,7 @@ function FillInspectionDiv(dlab,dval,totCnt,uploadCnt){
 	tmpdiv.style.height=(window.innerHeight*.10)+"px";
 	tmpdiv.style.width=(window.innerWidth*.20)+"px";
 	var clickstr;
-	if(dlab == 'Vendor Paperwork Attachment')
+	if(isInsp == 0)
 		clickstr="onDefualtInspSet('"+dval+"','"+ dlab.replace('\'', '\\\'')+"')";
 	else
 		clickstr="onInspSet('"+dval+"','"+ dlab.replace('\'', '\\\'')+"')";

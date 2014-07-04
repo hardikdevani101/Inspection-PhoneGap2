@@ -145,7 +145,7 @@ function getUploadCounts(mInNumber,dlab,InspNumber,callBack,isInsp){
 				sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="' + mInNumber + '" and insp_line="' + InspNumber + '" and imgUpload="T"';
             tx.executeSql(sqlQuery, [], function (tx, results){
 				var totImgUpload=results.rows.length;
-				callBack(dlab,InspNumber,totImg,totImgUpload);
+				callBack(dlab,InspNumber,totImg,totImgUpload,isInsp);
 			},function (err) {console.log("Error SQL: " + err.code);});
         }, function (err) {console.log("Error SQL: " + err.code);});
     }, errorCB);
