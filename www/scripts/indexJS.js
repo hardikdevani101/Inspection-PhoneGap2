@@ -1059,7 +1059,7 @@ function applyWatermark(origImg) {
 		var img64 = encoder.encode(gctx.getImageData(0,0,1024,768), parseInt(vis_img_qulty)).replace(/data:image\/jpeg;base64,/,'');
 		var imageURI=Base64Binary.decodeArrayBuffer(img64);
 		onStopNotification();
-		saveImage(imageURI);
+		saveImage(imageURI, M_InOutLine_ID);
 		watermark = encoder = img64 = null;
 	}
     navigator.notification.activityStart("Please Wait", "Applying Watermark...");

@@ -13,8 +13,8 @@ function setVISDirectory(fileSystem){
 	dirVISInspection=fileSystem;
 }
 
-function saveImage(imageURI){
-	navigator.notification.activityStart("Please Wait", "Saving Image.....");
+function saveImage(imageURI, id){
+	navigator.notification.activityStart("Please Wait", "Saving Image...");
 	var date = new Date;
 	var sec = date.getSeconds();
 	var mi = date.getMinutes();
@@ -22,7 +22,7 @@ function saveImage(imageURI){
 	var yy = date.getFullYear();
 	var mm = date.getMonth();
 	var dd = date.getDate();
-	var fileName="vis_inspection_"+mm+dd+yy+"_"+hh+mi+sec+".jpg";
+	var fileName="vision_"+id+"_"+mm+dd+yy+"_"+hh+mi+sec+".jpg";
 	dirVISInspection.getFile(fileName, {create: true, exclusive: false}, function (fileEntry){
 		CreateImgWriter(fileEntry,imageURI);
 	},function(error){ console.log("File Create FSError = "+error.code); });
