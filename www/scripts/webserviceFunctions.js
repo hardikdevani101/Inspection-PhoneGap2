@@ -1,5 +1,5 @@
 ﻿function onLogin(){
-	navigator.notification.activityStart("Please Wait", "Logging.....");
+	navigator.notification.activityStart("Please Wait", "Logging in...");
 	$.ajax({type: "POST",
 			url: getWsUrl("ModelADService"),
 			dataType: "xml",
@@ -111,7 +111,7 @@ function fillMrLines(){
 							var fullNodeList = xmlResponse.getElementsByTagName("DataRow");
 							if (fullNodeList.length == 0){
 								onStopNotification();
-								navigator.notification.alert('No MR Lines to perform Inspection for you.','','Alert');
+								navigator.notification.alert('No lines to inspect are assigned to you.','','Alert');
 								loadPage("home");
 							} else
 							{
@@ -413,6 +413,6 @@ function getErrorMessage(data, status, req){
 	}else if(data.status == 500){
 	return data.statusText +" : "+ $(data.responseXML).find('faultstring').text();
 	}else{
-	return data.statusText +" : Something goint wrong !!!";
+	return data.statusText +" : Something gone wrong !!!";
 	}
 }
