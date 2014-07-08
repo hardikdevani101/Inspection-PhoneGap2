@@ -54,7 +54,7 @@ function onFileExplorerClick(entry){
 	var fileName=getFileName(fileFullPath);
 	
 	if(DataTypes.indexOf(getExtention(getFileName(fileFullPath)).toUpperCase()) > -1){
-		navigator.notification.activityStart("Please Wait", "loading.....");
+		navigator.notification.activityStart("Please Wait", "loading...");
 		root.getFile(fileFullPath,null,onImgFileSystem,function(error){ console.log(" FSError = "+error.code); });
 	}else
 	{
@@ -113,7 +113,7 @@ function DiscardGallary(buttonIndex) {
 }
 
 function onDeleteGallaryPage() {
-	navigator.notification.activityStart("Please Wait", "loading.....");
+	navigator.notification.activityStart("Please Wait", "loading...");
     SelectedGallaryList = [];
     db.transaction(function (tx) {
 		var sqlQuery;

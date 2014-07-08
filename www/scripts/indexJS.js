@@ -164,7 +164,7 @@ function onExit() {
 }
 
 function onSyncFiles(){
-	navigator.notification.activityStart("Please Wait", "Uploading files.....");
+	navigator.notification.activityStart("Please Wait", "Uploading files...");
     db.transaction(function (tx) {
 		var sqlQuery;
 		if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
@@ -199,7 +199,7 @@ function callSyncVerify(){
 }
 
 function onFinish() {
-    navigator.notification.activityStart("Please Wait", "Uploading files.....");
+    navigator.notification.activityStart("Please Wait", "Uploading files...");
     db.transaction(function (tx) {
         tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and imgUpload="F"', [], function (tx, results) {
             imagelistarray = results;
@@ -242,7 +242,7 @@ function callUploadVerify() {
 }
 
 function AttachAllImage() {
-    navigator.notification.activityStart("Please Wait", "Attaching Files");
+    navigator.notification.activityStart("Please Wait", "Attaching Files...");
 	attachCount = inspLinesArray.length;
 	
 	getResultOfInsp(inspLinesArray[0][1],0);
@@ -326,7 +326,7 @@ function onRemoveVISDirFile(tmpfile,InspNumber,isInsp){
 }
 
 function confirmGallaryDiscard() {
-    navigator.notification.confirm('Are you sure ???', DiscardGallary, 'Delete selected files..', ['Ok','Cancel']);
+    navigator.notification.confirm('Are you sure ???', DiscardGallary, 'Delete selected files...', ['Ok','Cancel']);
 }
 
 function varifyAllDelete(){
@@ -582,7 +582,7 @@ function onRenderTable(){
 }
 
 function discardInspections() {
-    navigator.notification.confirm('Are you sure ???', confirmDiscardInspections, 'Discard All Inspections...', ['Ok','Cancel']);
+    navigator.notification.confirm('Are you sure ???', confirmDiscardInspections, 'Discard Inspection Data...', ['Ok','Cancel']);
 }
 
 function confirmDiscardInspections(buttonIndex) {
@@ -606,7 +606,7 @@ function confirmDiscardInspections(buttonIndex) {
 							tx.executeSql('DELETE FROM vis_gallery WHERE file="' + results.rows.item(i).file + '" and insp_line="' + results.rows.item(i).insp_line + '"');
 					}
 				}
-				navigator.notification.alert('Discard All Inspections success', function () {}, 'Success', 'OK');
+				navigator.notification.alert('Discard Inspection data success', function () {}, 'Success', 'OK');
 			},function(err){console.log("Error SQL: "+err.code);} );
 		}, errorCB); 
     }
@@ -685,7 +685,7 @@ function onSettingUpdate() {
 	vis_img_qulty = document.getElementById("txt_imgQua").value;
 	
     if (vis_url == "" && vis_lang == "" && vis_client_id == "" && vis_role == "" && vis_whouse_id == "" && vis_org_id == "" && vis_img_qulty == "") {
-        navigator.notification.alert('No Any Field Should Blank!', onSettingPage, 'Invalid Value', 'Ok');
+        navigator.notification.alert('No Field Should Be Blank!', onSettingPage, 'Invalid Value', 'Ok');
         loadSetting();
     } else {
         db.transaction(updateSettings, errorCB);
@@ -705,7 +705,7 @@ function displayUserName(){
 }
 
 function onPhotoDataSuccess(imageData) {
-    navigator.notification.activityStart("Please Wait", "loading.....");
+    navigator.notification.activityStart("Please Wait", "loading...");
     onCropCall("data:image/jpeg;base64," + imageData);
 }
 
@@ -771,7 +771,7 @@ function onBackButton() {
 
 function onStartNewInspection() {
     loadPage("startNewInsp");
-    navigator.notification.activityStart("Please Wait", "loading.....");
+    navigator.notification.activityStart("Please Wait", "loading...");
     backPage = 'home';
     fillMrLines();
 }
@@ -779,7 +779,7 @@ function onStartNewInspection() {
 function onBackToStartInspection(backPageName) {
     loadPage("startNewInsp");
     backPage = backPageName;
-    navigator.notification.activityStart("Please Wait", "loading.....");
+    navigator.notification.activityStart("Please Wait", "loading...");
     if (mrLinesArray.length == 0) {
         fillMrLines();
     } else {
@@ -834,7 +834,7 @@ function renderInspectionFromCache(){
 	
 	onStopNotification();
 	if(inspLinesArray.length >= 10 )
-		navigator.notification.alert('Swipe to see more buttons..', null, 'Message !!', 'Ok');
+		navigator.notification.alert('Swipe to see more buttons...', null, 'Message !!', 'Ok');
 }
 
 function onStopNotification(){
@@ -844,7 +844,7 @@ function onStopNotification(){
 }
 
 function onInspSet(nid, iname) {
-	navigator.notification.activityStart("Please Wait", "loading.....");
+	navigator.notification.activityStart("Please Wait", "loading...");
     loadPage('gallery');
     X_INSTRUCTIONLINE_ID = nid;
     X_instruction_name = iname;
@@ -854,7 +854,7 @@ function onInspSet(nid, iname) {
 
 }
 function onDefualtInspSet(nid, iname) {
-	navigator.notification.activityStart("Please Wait", "loading.....");
+	navigator.notification.activityStart("Please Wait", "loading...");
     loadPage('gallery');
     M_INOUT_ID = nid;
 	X_INSTRUCTIONLINE_ID = 0;
@@ -865,7 +865,7 @@ function onDefualtInspSet(nid, iname) {
 }
 
 function backtogallary() {
-	navigator.notification.activityStart("Please Wait", "loading.....");
+	navigator.notification.activityStart("Please Wait", "loading...");
     loadPage('gallery');
     renderGallary();
     document.getElementById("gallery_head").innerHTML = M_line_name + "(" + X_instruction_name + ")";
@@ -996,7 +996,7 @@ function CropSaved(callBack) {
 	
 	var origImg = new Image();
 	var xsize, ysize;
-    navigator.notification.activityStart("Please Wait", "Croping.....");
+    navigator.notification.activityStart("Please Wait", "Cropping...");
     canvas = document.createElement('canvas');
     var tempImage = new Image();
     tempImage.src = crop_img.src;
@@ -1062,7 +1062,7 @@ function applyWatermark(origImg) {
 		saveImage(imageURI);
 		watermark = encoder = img64 = null;
 	}
-    navigator.notification.activityStart("Please Wait", "Water Marking.....");
+    navigator.notification.activityStart("Please Wait", "Applying Watermark...");
 }
 
 function onCropImageEdit()
@@ -1135,20 +1135,20 @@ function ImageEdit()
 		}
 	});
 	
-	document.getElementById("slider-contrass").setAttribute("style","height:"+(edit_image.height-50)+"px;margin:15px 0px 10px 0px;");
-	$('#slider-contrass').slider({
+	document.getElementById("slider-contrast").setAttribute("style","height:"+(edit_image.height-50)+"px;margin:15px 0px 10px 0px;");
+	$('#slider-contrast').slider({
 		orientation: "vertical",
 		min: 0,
 		max: 100,
 		value:50,
 		slide:function( event, ui ) {
 				var editImageData = editCtx.getImageData(0,0,gcanvas.width,gcanvas.height);
-				onContrassChange(ui.value-cValue,editImageData);
+				onContrastChange(ui.value-cValue,editImageData);
 				cValue = ui.value;
 			},
 		change:function( event, ui ) {
 				var editImageData = editCtx.getImageData(0,0,gcanvas.width,gcanvas.height);
-				onContrassChange(ui.value-cValue,editImageData);
+				onContrastChange(ui.value-cValue,editImageData);
 				cValue = ui.value;
 				if(flag == 0)
 				{
@@ -1242,7 +1242,7 @@ function onUndoEdit()
 		cValue = 50;
 		flag = 1;
 		$("#slider-brightness").slider("option", "value", b );
-		$("#slider-contrass").slider("option", "value", c );
+		$("#slider-contrast").slider("option", "value", c );
 		flag = 0;
 	}
 	if(actArray.length == 0)
@@ -1251,7 +1251,7 @@ function onUndoEdit()
 	}
 }
 
-function onContrassChange(contraValue,contraImageData)
+function onContrastChange(contraValue,contraImageData)
 {	
 	var data = contraImageData.data;
 	var factor = (259 * (contraValue + 255)) / (255 * (259 - contraValue));

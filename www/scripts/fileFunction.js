@@ -54,7 +54,7 @@ function OnImgWriter(writer,fileFullPath,fileName,imageURI){
 }
 
 function onAfterSaveFile(fileFullPath){
-	navigator.notification.activityStart("Please Wait", "loading.....");
+	navigator.notification.activityStart("Please Wait", "loading...");
     loadPage('gallery');
 	if(gallaryTable != "" && gallaryTable != null)
 	{	
