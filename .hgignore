@@ -1,2 +1,7 @@
 syntax: glob
 platforms/*
+.idea/*
+soapui*
+VISion.iml
+InspectionService-soapui-project.xml
+intellij-soapui-workspace.xml
