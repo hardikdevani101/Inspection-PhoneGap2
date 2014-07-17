@@ -1,7 +1,7 @@
 //db process
 var db;
 var imagelistarray;
-var vis_url,vis_lang,vis_client_id,vis_role,vis_whouse_id,vis_org_id,vis_img_qulty;
+var vis_url,vis_FtpUrl,vis_lang,vis_client_id,vis_role,vis_whouse_id,vis_org_id,vis_img_qulty;
 function errorCB(err) {
     console.log("Error processing SQL: "+err.code);
 }
@@ -9,7 +9,7 @@ function loadSetting() {
     db.transaction(selectSettings, errorCB);
 }
 function updateSettings(tx) {
-	tx.executeSql('UPDATE vis_setting SET vis_url = "'+vis_url+'" ,vis_lang ="'+vis_lang +'",vis_client_id ="'+vis_client_id +'",vis_role ="'+vis_role +'",vis_whouse_id ="'+ vis_whouse_id+'",vis_ord_id ="'+vis_org_id +'",vis_img_qulty ="'+vis_img_qulty +'"');
+	tx.executeSql('UPDATE vis_setting SET vis_url = "'+vis_url+'" ,vis_FtpUrl = "'+vis_FtpUrl+'" ,vis_lang ="'+vis_lang +'",vis_client_id ="'+vis_client_id +'",vis_role ="'+vis_role +'",vis_whouse_id ="'+ vis_whouse_id+'",vis_ord_id ="'+vis_org_id +'",vis_img_qulty ="'+vis_img_qulty +'"');
 	loadSetting();
 }
 function selectSettings(tx) {
@@ -19,12 +19,13 @@ function settingSelectSuccess(tx, results) {
     var len = results.rows.length;
 	if(len<1)
 	{
-		tx.executeSql('INSERT INTO vis_setting (vis_url,vis_lang,vis_client_id,vis_role,vis_whouse_id,vis_ord_id,vis_img_qulty) VALUES ("http://192.168.0.121:8088","en_US","1000000", "1000000","0","0","75")');
+		tx.executeSql('INSERT INTO vis_setting (vis_url,vis_FtpUrl,vis_lang,vis_client_id,vis_role,vis_whouse_id,vis_ord_id,vis_img_qulty) VALUES ("http://192.168.0.121:8088","ftp://192.168.0.121:8088","en_US","1000000", "1000000","0","0","75")');
 		loadSetting();
 	}else
 	{
 		for (var i=0; i<len; i++){
 		   vis_url=results.rows.item(i).vis_url;
+		   vis_FtpUrl=results.rows.item(i).vis_FtpUrl;
 		   vis_role=results.rows.item(i).vis_role;
 		   vis_lang=results.rows.item(i).vis_lang;
 		   vis_client_id=results.rows.item(i).vis_client_id;
@@ -44,7 +45,7 @@ function settingSelectSuccess(tx, results) {
 }
 function settingDbSetup(tx) {
 	//tx.executeSql('DROP TABLE IF EXISTS vis_gallery'); 
-    tx.executeSql('CREATE TABLE IF NOT EXISTS vis_setting(vis_url,vis_lang,vis_client_id,vis_role,vis_whouse_id,vis_ord_id,username,vis_img_qulty)');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS vis_setting(vis_url,vis_FtpUrl,vis_lang,vis_client_id,vis_role,vis_whouse_id,vis_ord_id,username,vis_img_qulty)');
 	tx.executeSql('CREATE TABLE IF NOT EXISTS vis_gallery(mr_line,insp_line DEFAULT "0",in_out_id DEFAULT "0",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F")');
 }
 
@@ -58,20 +59,20 @@ function onFileExplorerClick(entry){
 		root.getFile(fileFullPath,null,onImgFileSystem,function(error){ console.log(" FSError = "+error.code); });
 	}else
 	{
-		db.transaction(function (tx){
-			var sqlQuery;
-			if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
-				sqlQuery ='INSERT INTO vis_gallery(mr_line,in_out_id,name,file) VALUES ("'+M_InOutLine_ID+'","'+M_INOUT_ID+'","'+fileName+'","'+fileFullPath+'")';
-			else
-				sqlQuery ='INSERT INTO vis_gallery(mr_line,insp_line,name,file) VALUES ("'+M_InOutLine_ID+'","'+X_INSTRUCTIONLINE_ID+'","'+fileName+'","'+fileFullPath+'")';
-			tx.executeSql(sqlQuery);
-		}, errorCB);
-		onAfterSaveFile(fileFullPath);
-		if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
-			onUploadFile(fileFullPath,M_INOUT_ID,callUploadVerify);
-		else
-			onUploadFile(fileFullPath,X_INSTRUCTIONLINE_ID,callUploadVerify);
+		onDirectFileUpload(fileFullPath,fileName);
 	}
+}
+
+function onDirectFileUpload(fileFullPath,fileName){
+	db.transaction(function (tx){
+		var sqlQuery;
+		if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
+			sqlQuery ='INSERT INTO vis_gallery(mr_line,in_out_id,name,file) VALUES ("'+M_InOutLine_ID+'","'+M_INOUT_ID+'","'+fileName+'","'+fileFullPath+'")';
+		else
+			sqlQuery ='INSERT INTO vis_gallery(mr_line,insp_line,name,file) VALUES ("'+M_InOutLine_ID+'","'+X_INSTRUCTIONLINE_ID+'","'+fileName+'","'+fileFullPath+'")';
+		tx.executeSql(sqlQuery);
+	}, errorCB);
+	onAfterSaveFile(fileFullPath);
 }
 
 function deleteMRgallary() {
@@ -183,4 +184,18 @@ function onchangeFailerState(failerMsgArray,imginspline,isInsp){
 			tx.executeSql(sqlQuery);
 		}, errorCB);
 	}
+}
+
+function onRemoveOtherFiles(tmpfile){
+	db.transaction(function (tx) {
+		var sqlQuery;
+		if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
+			sqlQuery = 'DELETE FROM vis_gallery WHERE file="' + tmpfile + '" and in_out_id="' + M_INOUT_ID + '"';
+		else
+			sqlQuery = 'DELETE FROM vis_gallery WHERE file="' + tmpfile + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"';
+        tx.executeSql(sqlQuery);
+    }, errorCB, function(){
+		deleteCount=deleteCount-1;
+		varifyAllDelete();
+    });
 }

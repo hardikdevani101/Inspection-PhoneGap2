@@ -17,6 +17,7 @@ function validateLogin(){
 }
 function validationSetting(){
 	var url=document.getElementById("txt_url");
+	var FtpUrl=document.getElementById("txt_FtpUrl");
 	var lang=document.getElementById("txt_lang");
 	var client=document.getElementById("txt_client");
 	var role=document.getElementById("txt_role");
@@ -29,6 +30,11 @@ function validationSetting(){
 		setValSetting();
 		document.getElementById("setting_error").innerHTML="URL Should Not Blank";
 		url.focus();
+	}else if(FtpUrl.value=="" || FtpUrl.value==null){
+		loadPage("setting");
+		setValSetting();
+		document.getElementById("setting_error").innerHTML="FTP URL Should Not Blank";
+		FtpUrl.focus();
 	}else if(lang.value=="" || lang.value==null){
 		loadPage("setting");
 		setValSetting();

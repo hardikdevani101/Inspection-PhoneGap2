@@ -10,6 +10,7 @@ var M_InOutLine_ID = 0;
 var M_line_name;
 var X_INSTRUCTIONLINE_ID;
 var M_INOUT_ID=0;
+var M_Line_Desc = "";
 var X_instruction_name;
 var vis_pass;
 var Disp_row;
@@ -50,6 +51,7 @@ function onDeviceReady() {
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, setRootDirectory, function (error) {
         console.log("request FSError = " + error);
     });
+    
 }
 
 function onOrgChange(){
@@ -341,18 +343,8 @@ function deleteSelectedGallary() {
 	deleteCount = SelectedGallaryList.length;
     for (var j = 0; j < imagelistarray.rows.length; j++) {
         if (DataTypes.indexOf(getExtention(getFileName(imagelistarray.rows.item(j).file)).toUpperCase()) < 0) {
-            var tmpfile = imagelistarray.rows.item(j).file;
-            if (SelectedGallaryList.indexOf(getFileName(tmpfile)) >= 0) {
-                db.transaction(function (tx) {
-					var sqlQuery;
-					if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
-						sqlQuery = 'DELETE FROM vis_gallery WHERE file="' + tmpfile + '" and in_out_id="' + M_INOUT_ID + '"';
-					else
-						sqlQuery = 'DELETE FROM vis_gallery WHERE file="' + tmpfile + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"';
-                    tx.executeSql(sqlQuery);
-					deleteCount=deleteCount-1;
-					varifyAllDelete();
-                }, errorCB);
+            if (SelectedGallaryList.indexOf(getFileName(imagelistarray.rows.item(j).file)) >= 0) {
+            	onRemoveOtherFiles(imagelistarray.rows.item(j).file);
             }
         } else {
             if (SelectedGallaryList.indexOf(imagelistarray.rows.item(j).name) >= 0) {
@@ -497,7 +489,7 @@ function onCreateTR_TD(tableName,callBack){
 
 function fillGallaryPhotos() {
     itemCount = 0;
-	pandingCounts= 0;
+	pandingCounts = 0;
 	if(imagelistarray.rows.length == 0){
 		onStopNotification();
 	}
@@ -606,6 +598,7 @@ function confirmDiscardInspections(buttonIndex) {
 							tx.executeSql('DELETE FROM vis_gallery WHERE file="' + results.rows.item(i).file + '" and insp_line="' + results.rows.item(i).insp_line + '"');
 					}
 				}
+				fillMrLines();
 				navigator.notification.alert('Discard Inspection data success', function () {}, 'Success', 'OK');
 			},function(err){console.log("Error SQL: "+err.code);} );
 		}, errorCB); 
@@ -645,6 +638,11 @@ function setSettingpage() {
 		if(e.options[i].value==vis_url)
 			e.options[i].selected = true;
 	}
+	e = document.getElementById("txt_FtpUrl");
+	for(var i=0 ; i < e.options.length ; i++){
+		if(e.options[i].value==vis_FtpUrl)
+			e.options[i].selected = true;
+	}
     document.getElementById("txt_lang").value = vis_lang;
     e = document.getElementById("txt_client");
     for(var i=0 ; i < e.options.length ; i++){
@@ -671,6 +669,10 @@ function setSettingpage() {
 function onSettingUpdate() {
 	var e = document.getElementById("txt_url");
 	vis_url = e.options[e.selectedIndex].value;
+	
+	e = document.getElementById("txt_FtpUrl");
+	vis_FtpUrl = e.options[e.selectedIndex].value;
+	
     vis_lang = document.getElementById("txt_lang").value;
     e = document.getElementById("txt_client");
     vis_client_id = e.options[e.selectedIndex].value;
@@ -684,7 +686,7 @@ function onSettingUpdate() {
 	vis_org_id = e.options[e.selectedIndex].value;
 	vis_img_qulty = document.getElementById("txt_imgQua").value;
 	
-    if (vis_url == "" && vis_lang == "" && vis_client_id == "" && vis_role == "" && vis_whouse_id == "" && vis_org_id == "" && vis_img_qulty == "") {
+    if (vis_url == "" && vis_FtpUrl == "" && vis_lang == "" && vis_client_id == "" && vis_role == "" && vis_whouse_id == "" && vis_org_id == "" && vis_img_qulty == "") {
         navigator.notification.alert('No Field Should Be Blank!', onSettingPage, 'Invalid Value', 'Ok');
         loadSetting();
     } else {
@@ -755,6 +757,8 @@ function onBackButton() {
 	}else if(currentPage=='SelectGallary'){
 		backtogallary();
 	}else if(currentPage=='fileExpo'){
+		backtogallary();
+	}else if(currentPage=='ftpExplorer'){
 		backtogallary();
 	}else if(currentPage=='cropView'){
 		backtogallary();
@@ -1059,7 +1063,7 @@ function applyWatermark(origImg) {
 		var img64 = encoder.encode(gctx.getImageData(0,0,1024,768), parseInt(vis_img_qulty)).replace(/data:image\/jpeg;base64,/,'');
 		var imageURI=Base64Binary.decodeArrayBuffer(img64);
 		onStopNotification();
-		saveImage(imageURI, M_InOutLine_ID);
+		saveImage(imageURI);
 		watermark = encoder = img64 = null;
 	}
     navigator.notification.activityStart("Please Wait", "Applying Watermark...");

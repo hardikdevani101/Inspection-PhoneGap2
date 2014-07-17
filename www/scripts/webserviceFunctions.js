@@ -117,7 +117,7 @@ function fillMrLines(){
 							{
 								for (var i=0; i < fullNodeList.length; i++)
 								{
-									var dlab,dval,inOut;
+									var dlab,dval,inOut,desc;
 									var option = document.createElement('option');
 									for (var j=0; j < fullNodeList[i].childNodes.length; j++)
 									{
@@ -127,12 +127,15 @@ function fillMrLines(){
 											dval = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
 										}else if( fullNodeList[i].childNodes[j].attributes[0].value == 'M_InOut_ID'){
 											inOut = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
+										}else if( fullNodeList[i].childNodes[j].attributes[0].value == 'Description'){
+											desc = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
 										}
 									}
 									mrLinesArray[i]=new Array();
 									mrLinesArray[i][0]=dlab;
 									mrLinesArray[i][1]=dval;
 									mrLinesArray[i][2]=inOut;
+									mrLinesArray[i][3]=desc;
 								}
 								onBackToStartInspection('home');
 							}
@@ -157,6 +160,12 @@ function fillInspectionsLines(){
 	
 	var e = document.getElementById("linedrop");
 	M_InOutLine_ID=e.options[e.selectedIndex].value;
+	for(var i = 0 ; i < mrLinesArray.length ; i++)
+		if(mrLinesArray[i][1] == M_InOutLine_ID)
+		{	
+			M_Line_Desc = mrLinesArray[i][3];
+			break;
+		}
 	M_line_name=e.options[e.selectedIndex].text;
 	$.ajax({type: "POST",
 			url: getWsUrl("ModelADService"),

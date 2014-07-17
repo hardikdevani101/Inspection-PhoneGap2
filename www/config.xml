@@ -13,6 +13,9 @@
 	<feature name="Camera">
 		<param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
 	</feature>
+	<feature name="FtpClient">
+		<param name="android-package" value="com.vis.plugin.ftp.FtpClient" />
+	</feature>
     <feature name="http://api.phonegap.com/1.0/device" />
     <preference name="permissions" value="none" />
     <preference name="target-device" value="universal" />
