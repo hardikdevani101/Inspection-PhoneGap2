@@ -1,4 +1,5 @@
-﻿function onLogin(){
+﻿var vision_ftp, vision_ftp_url ;
+function onLogin(){
 	navigator.notification.activityStart("Please Wait", "Logging in...");
 	$.ajax({type: "POST",
 			url: getWsUrl("ModelADService"),
@@ -72,7 +73,6 @@
 					onStopNotification();
                 }  
 }
-
 
 function fillMrLines(){
 	
@@ -156,6 +156,7 @@ function fillMrLines(){
                 }
 				
 }
+
 function fillInspectionsLines(){
 	
 	var e = document.getElementById("linedrop");
@@ -244,12 +245,14 @@ function fillInspectionsLines(){
 
 function FillInspectionDiv(dlab,dval,totCnt,uploadCnt,isInsp){
 	var tmpdiv = document.createElement('div');
-	var totStr= document.createElement('div');
-	totStr.setAttribute("style", "position:absolute;margin-top:5px;margin-left:50px;");
-	totStr.innerHTML=totCnt+" ( "+uploadCnt+" ) ";
 	tmpdiv.className = "InspButton";
-	tmpdiv.setAttribute("style", "margin:2px 10px; line-height:15px;");
-	tmpdiv.innerHTML=dlab;
+	tmpdiv.setAttribute("style", "margin:0px 10px;");
+	var totStr = document.createTextNode(totCnt+" ( "+uploadCnt+" ) ");
+	var lable = document.createTextNode(dlab);
+	var br = document.createElement('br');
+	tmpdiv.appendChild(totStr);
+	tmpdiv.appendChild(br);
+	tmpdiv.appendChild(lable);
 	tmpdiv.style.height=(window.innerHeight*.10)+"px";
 	tmpdiv.style.width=(window.innerWidth*.20)+"px";
 	var clickstr;
@@ -259,7 +262,6 @@ function FillInspectionDiv(dlab,dval,totCnt,uploadCnt,isInsp){
 		clickstr="onInspSet('"+dval+"','"+ dlab.replace('\'', '\\\'')+"')";
 	tmpdiv.setAttribute('onclick',clickstr);
 	if(Disp_col>=Math.ceil(inspLinesArray.length/3)){Disp_col=0;Disp_row=Disp_row+1;}
-	document.getElementById("InsTd-"+Disp_row+"-"+Disp_col).appendChild(totStr);
 	document.getElementById("InsTd-"+Disp_row+"-"+Disp_col).appendChild(tmpdiv);
 	Disp_col=Disp_col+1;
 }
@@ -395,6 +397,83 @@ function callAttachM_InoutWs(rec_id,tab_name,imgname){
                 }
 
                 function processError(data, status, req) {
+					onStopNotification();
+					navigator.notification.alert('Failure!!',function(){},getErrorMessage(data, status, req),'Ok');
+                }
+				
+}
+
+function getFTPList(){
+	
+	$.ajax({type: "POST",
+			url: getWsUrl("ModelADService"),
+			dataType: "xml",
+			contentType: 'text/xml; charset=\"utf-8\"',
+			data: '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
+				   +'<soapenv:Header/>'
+				   +'<soapenv:Body>'
+					  +'<_0:queryData>'
+					  	+'<_0:ModelCRUDRequest>'
+						 +'<_0:ModelCRUD>'
+							   +'<_0:serviceType>Vision_FTP</_0:serviceType>'
+							   +'<_0:TableName>Vision_FTP</_0:TableName>'
+							   +'<_0:RecordID>0</_0:RecordID>'
+							   +'<_0:DataRow>'
+								 +'<_0:field column="IsActive" >'
+									 +'<_0:val>Y</_0:val>'
+								  +'</_0:field>'
+							   +'</_0:DataRow>'
+						 +'</_0:ModelCRUD>'
+							+ getWsDataLoginString()
+						 +'</_0:ModelCRUDRequest>'
+					  +'</_0:queryData>'
+				   +'</soapenv:Body>'
+				+'</soapenv:Envelope>',
+                    success: processSuccess,
+                    error: processError
+                });
+				function processSuccess(data, status, req) {
+                    if (status == "success")
+					{		vision_ftp_url="";
+							vision_ftp = new Array();
+							var xmlResponse =req.responseXML.documentElement;
+							var fullNodeList = xmlResponse.getElementsByTagName("DataRow");
+							if (fullNodeList.length == 0){
+								onStopNotification();
+								navigator.notification.alert('No FTP list found.','','Alert');
+								loadPage("home");
+							} else
+							{
+								for (var i=0; i < fullNodeList.length; i++)
+								{
+									var fUrl,fName,fPass,fUser;
+									var option = document.createElement('option');
+									for (var j=0; j < fullNodeList[i].childNodes.length; j++)
+									{
+										if( fullNodeList[i].childNodes[j].attributes[0].value == 'FTP_Url'){
+											fUrl = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
+										}else if( fullNodeList[i].childNodes[j].attributes[0].value == 'Name'){
+											fName = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
+										}else if( fullNodeList[i].childNodes[j].attributes[0].value == 'Password'){
+											fPass = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
+										}else if( fullNodeList[i].childNodes[j].attributes[0].value == 'Username'){
+											fUser = fullNodeList[i].childNodes[j].childNodes[0].textContent ;
+										}
+									}
+									vision_ftp[i]=new Array();
+									vision_ftp[i][0]=fName;
+									vision_ftp[i][1]=fUrl;
+									vision_ftp[i][2]=fUser;
+									vision_ftp[i][3]=fPass;
+								}
+								onftpExplorer();
+							}
+					}
+					
+                }
+
+                function processError(data, status, req) {
+					backtogallary();
 					onStopNotification();
 					navigator.notification.alert('Failure!!',function(){},getErrorMessage(data, status, req),'Ok');
                 }

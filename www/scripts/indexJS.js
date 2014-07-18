@@ -638,11 +638,6 @@ function setSettingpage() {
 		if(e.options[i].value==vis_url)
 			e.options[i].selected = true;
 	}
-	e = document.getElementById("txt_FtpUrl");
-	for(var i=0 ; i < e.options.length ; i++){
-		if(e.options[i].value==vis_FtpUrl)
-			e.options[i].selected = true;
-	}
     document.getElementById("txt_lang").value = vis_lang;
     e = document.getElementById("txt_client");
     for(var i=0 ; i < e.options.length ; i++){
@@ -670,9 +665,6 @@ function onSettingUpdate() {
 	var e = document.getElementById("txt_url");
 	vis_url = e.options[e.selectedIndex].value;
 	
-	e = document.getElementById("txt_FtpUrl");
-	vis_FtpUrl = e.options[e.selectedIndex].value;
-	
     vis_lang = document.getElementById("txt_lang").value;
     e = document.getElementById("txt_client");
     vis_client_id = e.options[e.selectedIndex].value;
@@ -686,7 +678,7 @@ function onSettingUpdate() {
 	vis_org_id = e.options[e.selectedIndex].value;
 	vis_img_qulty = document.getElementById("txt_imgQua").value;
 	
-    if (vis_url == "" && vis_FtpUrl == "" && vis_lang == "" && vis_client_id == "" && vis_role == "" && vis_whouse_id == "" && vis_org_id == "" && vis_img_qulty == "") {
+    if (vis_url == "" && vis_lang == "" && vis_client_id == "" && vis_role == "" && vis_whouse_id == "" && vis_org_id == "" && vis_img_qulty == "") {
         navigator.notification.alert('No Field Should Be Blank!', onSettingPage, 'Invalid Value', 'Ok');
         loadSetting();
     } else {

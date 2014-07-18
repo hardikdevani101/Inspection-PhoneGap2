@@ -80,15 +80,6 @@
             </select>
         </td></tr>
         <tr>
-            <td>FTP Server : </td><td>
-            <select id="txt_FtpUrl"  style="width:70%;">
-                <option value="http://10.210.23.77:8088">Production</option>
-                <option value="http://10.210.23.78:8088">Development</option>
-                <option value="http://10.210.23.97:8088">Test</option>
-                <option value="ftp://vision:14147@192.168.1.116:2323">Logilite-Dev</option>
-            </select>
-        </td></tr>
-        <tr>
             <td>Language : </td><td>
             <select id="txt_lang"  style="width:70%">
                 <option value="en_US">English</option>
@@ -191,7 +182,7 @@
 			<Span class="divMenuButton" ontouchstart="return true;" onClick="loadgallaryChoise()" style="background-color:#058A78 ;">File</Span>
 			<Span class="divMenuButton" ontouchstart="return true;" onClick="onImagePicker()" style="background-color:#058A78 ;">Gallery</Span>
 			<Span class="divMenuButton" ontouchstart="return true;" onClick="captureI()" style="background-color:#058A78 ;">Camera</Span>
-			<Span class="divMenuButton" ontouchstart="return true;" onClick="ftpExplorer()" style="background-color:#058A78 ;">FTP</Span>
+			<Span class="divMenuButton" ontouchstart="return true;" onClick="onftpExplorer()" style="background-color:#058A78 ;">FTP</Span>
 		</div>
 	</div>
 	
@@ -252,7 +243,8 @@
 			<h3 style="margin:0px; padding:0px;">FTP Explorer</h3>
 			<a id="backBtn" href="#" onClick="ftpExplorer('-')"><img src="img/backward.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<a id="homeBtn" href="#" onClick="onFinishFtpSelection()"><img src="img/up.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<a href="#" onClick="backtogallary()"><img src="img/undo.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>
+			<a href="#" onClick="backtogallary()"><img src="img/undo.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			FTP Name : <select id="drop_ftp_name"></select>
       </div>
       <div id="ftpFileContent" style="height:70%; overflow:scroll; text-align:left; position:absolute;">
       </div>

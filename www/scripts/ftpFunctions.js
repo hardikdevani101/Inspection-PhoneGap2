@@ -1,3 +1,52 @@
+var vis_FtpUrl;
+function onftpExplorer()
+{
+	if(typeof vision_ftp !== 'undefined' && vision_ftp.length > 0 && vision_ftp != null)
+		{
+			if(typeof vision_ftp_url !== 'undefined' && vision_ftp_url != "" && vision_ftp_url != null)
+				{
+					ftpExplorer();
+				}
+			else
+				{
+					onFTPSelect();
+				}
+		}
+	else
+		{
+			getFTPList();
+		}
+}
+
+function onFTPSelect()
+{
+	var select = document.getElementById("drop_ftp_name");
+	select.innerHTML = "";
+    for (var i = 0; i < vision_ftp.length; i++) {
+        var option = document.createElement('option');
+        option.text = vision_ftp[i][0];
+        option.value = vision_ftp[i][1];
+        select.add(option);
+    }
+    select.setAttribute("onchange", "createVisionURL()");
+    createVisionURL();
+}
+
+function createVisionURL()
+{
+	var e = document.getElementById("drop_ftp_name");
+	var selFTPUrl=e.options[e.selectedIndex].value;
+	for(var i=0; i<vision_ftp.length; i++)
+		{
+			if(vision_ftp[i][1] == selFTPUrl)
+				{
+					vision_ftp_url = vision_ftp[i][2]+ ":" + vision_ftp[i][3]+"@" + vision_ftp[i][1];
+					onftpExplorer();
+					break;
+				}
+		}
+}
+
 function ftpExplorer(currentFtpDir)
 {
 	loadPage('ftpExplorer');
@@ -15,7 +64,8 @@ function ftpExplorer(currentFtpDir)
 		}
 	var tmpParList = parlistArray.toString().split(',');
 	var urlPath = tmpParList.join('/');
-	window.plugins.ftpclient.filelist(vis_FtpUrl+"/"+urlPath, function(AllList){
+	vis_FtpUrl = "ftp://"+vision_ftp_url+"/"+urlPath;
+	window.plugins.ftpclient.filelist(vis_FtpUrl, function(AllList){
 		var mainDiv = document.getElementById("ftpFileContent");
 		mainDiv.innerHTML = "";
 		var fileList = AllList[0]["fileNames"];
@@ -56,8 +106,6 @@ function ftpExplorer(currentFtpDir)
 			}
 	}, ftpfail);
 }
-
-
 
 function ftpfail(){
 	navigator.notification.alert('FTP Connection failed', function () {}, 'Failer', 'OK');
