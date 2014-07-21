@@ -159,14 +159,29 @@ function onUploadFile(filePath, InspNumber,callBack) {
         var options = new FileUploadOptions();
         options.fileKey = "file";
         options.fileName = FnEntries.name;
-        ft.upload(FnEntries.toURL(), encodeURI(vis_url + "/VISService/fileUpload"), function () {
+        ft.upload(FnEntries.toURL(), encodeURI(vis_url + "/VISService/fileUpload"), function (result) {
+        	var xmlResponse =result.response;
+        	var oldFileName = $(xmlResponse).find('oldName').text().trim();
+        	var newFileName = $(xmlResponse).find('newName').text().trim();
+        	
             fileName = getFileName(getSDPath(FnEntries.fullPath));
             db.transaction(function (tx) {
 				var sqlQuery;
-				if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
-					sqlQuery = 'UPDATE vis_gallery SET imgUpload="T" WHERE file="' + filePath + '" and in_out_id="' + InspNumber + '"';
-				else
-					sqlQuery = 'UPDATE vis_gallery SET imgUpload="T" WHERE file="' + filePath + '" and insp_line="' + InspNumber + '"';
+
+	            if(oldFileName != newFileName)
+	            	{
+		            	if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
+							sqlQuery = 'UPDATE vis_gallery SET imgUpload="T",name="'+newFileName+'" WHERE file="' + filePath + '" and in_out_id="' + InspNumber + '"';
+						else
+							sqlQuery = 'UPDATE vis_gallery SET imgUpload="T",name="'+newFileName+'" WHERE file="' + filePath + '" and insp_line="' + InspNumber + '"';
+	            	}
+	            else
+	            	{
+		            	if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
+							sqlQuery = 'UPDATE vis_gallery SET imgUpload="T" WHERE file="' + filePath + '" and in_out_id="' + InspNumber + '"';
+						else
+							sqlQuery = 'UPDATE vis_gallery SET imgUpload="T" WHERE file="' + filePath + '" and insp_line="' + InspNumber + '"';
+	            	}				
                 tx.executeSql(sqlQuery);
 				setUploadedImg(FnEntries.name);
             }, errorCB);

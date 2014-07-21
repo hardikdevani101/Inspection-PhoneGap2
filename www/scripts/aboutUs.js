@@ -1,5 +1,5 @@
-var releaseVersion='Version : 1.0.11';
-var releaseDate='Release Date : JULY 9 2014';
+var releaseVersion='Version : 1.0.12';
+var releaseDate='Release Date : JULY 21 2014';
 var applicationName='VISion Application';
 function onAboutUs(){
 	document.getElementById('visAppName').innerHTML=applicationName;
