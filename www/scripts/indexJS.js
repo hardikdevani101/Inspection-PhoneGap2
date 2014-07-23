@@ -9,6 +9,7 @@ var INSPECTOR_ID;
 var M_InOutLine_ID = 0;
 var M_line_name;
 var X_INSTRUCTIONLINE_ID;
+var M_INOUT_ID=0;
 var X_instruction_name;
 var vis_pass;
 var Disp_row;
@@ -84,186 +85,78 @@ function onOrgChange(){
 }
 
 function renderWarehouseDropdown(){
-	warehouseListArray[0]=new Array();
-	warehouseListArray[0][0]="1000000";
-	warehouseListArray[0][1]="1000001";
-	warehouseListArray[0][2]="Velocity Asia Warehouse";
-	warehouseListArray[1]=new Array();
-	warehouseListArray[1][0]="1000000";
-	warehouseListArray[1][1]="1000000";
-	warehouseListArray[1][2]="Standard";
-	warehouseListArray[2]=new Array();
-	warehouseListArray[2][0]="1000001";
-	warehouseListArray[2][1]="1000031";
-	warehouseListArray[2][2]="Singapore GT in Austin";
-	warehouseListArray[3]=new Array();
-	warehouseListArray[3][0]="1000001";
-	warehouseListArray[3][1]="1000032";
-	warehouseListArray[3][2]="Singapore GT in Singapore";
-	warehouseListArray[4]=new Array();
-	warehouseListArray[4][0]="1000001";
-	warehouseListArray[4][1]="1000005";
-	warehouseListArray[4][2]="Singapore Stock in Vienna";
+    warehouseListArray[0]=new Array();
+    warehouseListArray[0][0]="1000001";
+    warehouseListArray[0][1]="1000045";
+    warehouseListArray[0][2]="Singapore PreSold in Amsterdam";
+    warehouseListArray[1]=new Array();
+    warehouseListArray[1][0]="1000001";
+    warehouseListArray[1][1]="1000009";
+    warehouseListArray[1][2]="Singapore PreSold in Austin";
+    warehouseListArray[2]=new Array();
+    warehouseListArray[2][0]="1000001";
+    warehouseListArray[2][1]="1000007";
+    warehouseListArray[2][2]="Singapore PreSold in Singapore";
+    warehouseListArray[3]=new Array();
+    warehouseListArray[3][0]="1000001";
+    warehouseListArray[3][1]="1000046";
+    warehouseListArray[3][2]="Singapore Stock in Amsterdam";
+    warehouseListArray[4]=new Array();
+    warehouseListArray[4][0]="1000001";
+    warehouseListArray[4][1]="1000008";
+    warehouseListArray[4][2]="Singapore Stock in Austin";
 	warehouseListArray[5]=new Array();
 	warehouseListArray[5][0]="1000001";
 	warehouseListArray[5][1]="1000006";
 	warehouseListArray[5][2]="Singapore Stock in Singapore";
-	warehouseListArray[6]=new Array();
-	warehouseListArray[6][0]="1000001";
-	warehouseListArray[6][1]="1000007";
-	warehouseListArray[6][2]="Singapore PreSold in Singapore";
-	warehouseListArray[7]=new Array();
-	warehouseListArray[7][0]="1000001";
-	warehouseListArray[7][1]="1000008";
-	warehouseListArray[7][2]="Singapore Stock in Austin";
-	warehouseListArray[8]=new Array();
-	warehouseListArray[8][0]="1000001";
-	warehouseListArray[8][1]="1000009";
-	warehouseListArray[8][2]="Singapore PreSold in Austin";
-	warehouseListArray[9]=new Array();
-	warehouseListArray[9][0]="1000001";
-	warehouseListArray[9][1]="1000010";
-	warehouseListArray[9][2]="Singapore PreSold in Vienna";
+    warehouseListArray[6]=new Array();
+    warehouseListArray[6][0]="1000003";
+    warehouseListArray[6][1]="1000043";
+    warehouseListArray[6][2]="Austin PreSold in Amsterdam";
+    warehouseListArray[7]=new Array();
+    warehouseListArray[7][0]="1000003";
+    warehouseListArray[7][1]="1000011";
+    warehouseListArray[7][2]="Austin PreSold in Austin";
+    warehouseListArray[8]=new Array();
+    warehouseListArray[8][0]="1000003";
+    warehouseListArray[8][1]="1000013";
+    warehouseListArray[8][2]="Austin PreSold in Singapore";
+    warehouseListArray[9]=new Array();
+    warehouseListArray[9][0]="1000003";
+    warehouseListArray[9][1]="1000044";
+    warehouseListArray[9][2]="Austin Stock in Amsterdam";
 	warehouseListArray[10]=new Array();
-	warehouseListArray[10][0]="1000001";
-	warehouseListArray[10][1]="1000025";
-	warehouseListArray[10][2]="Singapore Stock";
-	warehouseListArray[11]=new Array();
-	warehouseListArray[11][0]="1000001";
-	warehouseListArray[11][1]="1000026";
-	warehouseListArray[11][2]="Singapore Presold";
+	warehouseListArray[10][0]="1000003";
+	warehouseListArray[10][1]="1000003";
+	warehouseListArray[10][2]="Austin Stock in Austin";
+    warehouseListArray[11]=new Array();
+    warehouseListArray[11][0]="1000003";
+    warehouseListArray[11][1]="1000002";
+    warehouseListArray[11][2]="Austin Stock in Singapore";
 	warehouseListArray[12]=new Array();
-	warehouseListArray[12][0]="1000001";
-	warehouseListArray[12][1]="1000045";
-	warehouseListArray[12][2]="Singapore PreSold in Amsterdam";
+	warehouseListArray[12][0]="1000019";
+	warehouseListArray[12][1]="1000037";
+	warehouseListArray[12][2]="Amsterdam PreSold in Amsterdam";
 	warehouseListArray[13]=new Array();
-	warehouseListArray[13][0]="1000001";
-	warehouseListArray[13][1]="1000046";
-	warehouseListArray[13][2]="Singapore Stock in Amsterdam";
+	warehouseListArray[13][0]="1000019";
+	warehouseListArray[13][1]="1000038";
+	warehouseListArray[13][2]="Amsterdam PreSold in Austin";
 	warehouseListArray[14]=new Array();
-	warehouseListArray[14][0]="1000003";
-	warehouseListArray[14][1]="1000029";
-	warehouseListArray[14][2]="Austin GT in Austin";
+	warehouseListArray[14][0]="1000019";
+	warehouseListArray[14][1]="1000039";
+	warehouseListArray[14][2]="Amsterdam PreSold in Singapore";
 	warehouseListArray[15]=new Array();
-	warehouseListArray[15][0]="1000003";
-	warehouseListArray[15][1]="1000030";
-	warehouseListArray[15][2]="Austin GT in Singapore";
+	warehouseListArray[15][0]="1000019";
+	warehouseListArray[15][1]="1000040";
+	warehouseListArray[15][2]="Amsterdam Stock in Amsterdam";
 	warehouseListArray[16]=new Array();
-	warehouseListArray[16][0]="1000003";
-	warehouseListArray[16][1]="1000002";
-	warehouseListArray[16][2]="Austin Stock in Singapore";
+	warehouseListArray[16][0]="1000019";
+	warehouseListArray[16][1]="1000041";
+	warehouseListArray[16][2]="Amsterdam Stock in Austin";
 	warehouseListArray[17]=new Array();
-	warehouseListArray[17][0]="1000003";
-	warehouseListArray[17][1]="1000003";
-	warehouseListArray[17][2]="Austin Stock in Austin";
-	warehouseListArray[18]=new Array();
-	warehouseListArray[18][0]="1000003";
-	warehouseListArray[18][1]="1000004";
-	warehouseListArray[18][2]="Austin Stock in Vienna";
-	warehouseListArray[19]=new Array();
-	warehouseListArray[19][0]="1000003";
-	warehouseListArray[19][1]="1000011";
-	warehouseListArray[19][2]="Austin PreSold in Austin";
-	warehouseListArray[20]=new Array();
-	warehouseListArray[20][0]="1000003";
-	warehouseListArray[20][1]="1000012";
-	warehouseListArray[20][2]="Austin QS in Austin";
-	warehouseListArray[21]=new Array();
-	warehouseListArray[21][0]="1000003";
-	warehouseListArray[21][1]="1000013";
-	warehouseListArray[21][2]="Austin PreSold in Singapore";
-	warehouseListArray[22]=new Array();
-	warehouseListArray[22][0]="1000003";
-	warehouseListArray[22][1]="1000014";
-	warehouseListArray[22][2]="Austin QS in Singapore";
-	warehouseListArray[23]=new Array();
-	warehouseListArray[23][0]="1000003";
-	warehouseListArray[23][1]="1000015";
-	warehouseListArray[23][2]="Austin PreSold in Vienna";
-	warehouseListArray[24]=new Array();
-	warehouseListArray[24][0]="1000003";
-	warehouseListArray[24][1]="1000016";
-	warehouseListArray[24][2]="Austin QS in Vienna";
-	warehouseListArray[25]=new Array();
-	warehouseListArray[25][0]="1000003";
-	warehouseListArray[25][1]="1000023";
-	warehouseListArray[25][2]="Austin Stock";
-	warehouseListArray[26]=new Array();
-	warehouseListArray[26][0]="1000003";
-	warehouseListArray[26][1]="1000024";
-	warehouseListArray[26][2]="Austin Presold";
-	warehouseListArray[27]=new Array();
-	warehouseListArray[27][0]="1000003";
-	warehouseListArray[27][1]="1000043";
-	warehouseListArray[27][2]="Austin PreSold in Amsterdam";
-	warehouseListArray[28]=new Array();
-	warehouseListArray[28][0]="1000003";
-	warehouseListArray[28][1]="1000044";
-	warehouseListArray[28][2]="Austin Stock in Amsterdam";
-	warehouseListArray[29]=new Array();
-	warehouseListArray[29][0]="1000007";
-	warehouseListArray[29][1]="1000017";
-	warehouseListArray[29][2]="Vienna Stock in Vienna";
-	warehouseListArray[30]=new Array();
-	warehouseListArray[30][0]="1000007";
-	warehouseListArray[30][1]="1000018";
-	warehouseListArray[30][2]="Vienna PreSold in Vienna";
-	warehouseListArray[31]=new Array();
-	warehouseListArray[31][0]="1000007";
-	warehouseListArray[31][1]="1000019";
-	warehouseListArray[31][2]="Vienna Stock in Singapore";
-	warehouseListArray[32]=new Array();
-	warehouseListArray[32][0]="1000007";
-	warehouseListArray[32][1]="1000020";
-	warehouseListArray[32][2]="Vienna PreSold in Singapore";
-	warehouseListArray[33]=new Array();
-	warehouseListArray[33][0]="1000007";
-	warehouseListArray[33][1]="1000021";
-	warehouseListArray[33][2]="Vienna Stock in Austin";
-	warehouseListArray[34]=new Array();
-	warehouseListArray[34][0]="1000007";
-	warehouseListArray[34][1]="1000022";
-	warehouseListArray[34][2]="Vienna Presold in Austin";
-	warehouseListArray[35]=new Array();
-	warehouseListArray[35][0]="1000007";
-	warehouseListArray[35][1]="1000027";
-	warehouseListArray[35][2]="Vienna Stock";
-	warehouseListArray[36]=new Array();
-	warehouseListArray[36][0]="1000007";
-	warehouseListArray[36][1]="1000028";
-	warehouseListArray[36][2]="Vienna Presold";
-	warehouseListArray[37]=new Array();
-	warehouseListArray[37][0]="1000019";
-	warehouseListArray[37][1]="1000037";
-	warehouseListArray[37][2]="Amsterdam PreSold in Amsterdam";
-	warehouseListArray[38]=new Array();
-	warehouseListArray[38][0]="1000019";
-	warehouseListArray[38][1]="1000038";
-	warehouseListArray[38][2]="Amsterdam PreSold in Austin";
-	warehouseListArray[39]=new Array();
-	warehouseListArray[39][0]="1000019";
-	warehouseListArray[39][1]="1000039";
-	warehouseListArray[39][2]="Amsterdam PreSold in Singapore";
-	warehouseListArray[40]=new Array();
-	warehouseListArray[40][0]="1000019";
-	warehouseListArray[40][1]="1000040";
-	warehouseListArray[40][2]="Amsterdam Stock in Amsterdam";
-	warehouseListArray[41]=new Array();
-	warehouseListArray[41][0]="1000019";
-	warehouseListArray[41][1]="1000041";
-	warehouseListArray[41][2]="Amsterdam Stock in Austin";
-	warehouseListArray[42]=new Array();
-	warehouseListArray[42][0]="1000019";
-	warehouseListArray[42][1]="1000042";
-	warehouseListArray[42][2]="Amsterdam Stock in Singapore";
-	warehouseListArray[43]=new Array();
-	warehouseListArray[43][0]="11";
-	warehouseListArray[43][1]="103";
-	warehouseListArray[43][2]="HQ Warehouse";
-	warehouseListArray[44]=new Array();
-	warehouseListArray[44][0]="12";
-	warehouseListArray[44][1]="104";
-	warehouseListArray[44][2]="Store Warehouse";
+	warehouseListArray[17][0]="1000019";
+	warehouseListArray[17][1]="1000042";
+	warehouseListArray[17][2]="Amsterdam Stock in Singapore";
 }
 
 function onExit() {
@@ -271,14 +164,22 @@ function onExit() {
 }
 
 function onSyncFiles(){
-	navigator.notification.activityStart("Please Wait", "Uploading files.....");
+	navigator.notification.activityStart("Please Wait", "Uploading files...");
     db.transaction(function (tx) {
-        tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"  and imgUpload="F"', [], function (tx, results) {
+		var sqlQuery;
+		if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
+			sqlQuery ='SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and in_out_id="' + M_INOUT_ID + '"  and imgUpload="F"';
+		else
+			sqlQuery ='SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"  and imgUpload="F"';
+        tx.executeSql(sqlQuery, [], function (tx, results) {
             imagelistarray = results;
             imgUploadCount = imagelistarray.rows.length;
 			callSyncVerify();
 			for (var j = 0; j < imagelistarray.rows.length; j++) {
-				onUploadFile(imagelistarray.rows.item(j).file, imagelistarray.rows.item(j).insp_line,callSyncVerify);
+				if(imagelistarray.rows.item(j).insp_line == 0)
+					onUploadFile(imagelistarray.rows.item(j).file, imagelistarray.rows.item(j).in_out_id,callSyncVerify);
+				else
+					onUploadFile(imagelistarray.rows.item(j).file, imagelistarray.rows.item(j).insp_line,callSyncVerify);
 			}
         }, function (err) {
             console.log("Error SQL: " + err.code);
@@ -298,7 +199,7 @@ function callSyncVerify(){
 }
 
 function onFinish() {
-    navigator.notification.activityStart("Please Wait", "Uploading files.....");
+    navigator.notification.activityStart("Please Wait", "Uploading files...");
     db.transaction(function (tx) {
         tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and imgUpload="F"', [], function (tx, results) {
             imagelistarray = results;
@@ -313,7 +214,10 @@ function callFilesUpload() {
     imgUploadCount = imagelistarray.rows.length;
     callUploadVerify();
     for (var j = 0; j < imagelistarray.rows.length; j++) {
-        onUploadFile(imagelistarray.rows.item(j).file, imagelistarray.rows.item(j).insp_line,callUploadVerify);
+		if(imagelistarray.rows.item(j).insp_line == 0)
+			onUploadFile(imagelistarray.rows.item(j).file, imagelistarray.rows.item(j).in_out_id,callUploadVerify);
+		else
+			onUploadFile(imagelistarray.rows.item(j).file, imagelistarray.rows.item(j).insp_line,callUploadVerify);
     }
 }
 
@@ -338,18 +242,25 @@ function callUploadVerify() {
 }
 
 function AttachAllImage() {
-    navigator.notification.activityStart("Please Wait", "Attaching Files");
+    navigator.notification.activityStart("Please Wait", "Attaching Files...");
 	attachCount = inspLinesArray.length;
-	for(var i=0; i < inspLinesArray.length ; i++){
-			getResultOfInsp(inspLinesArray[i][1]);
+	
+	getResultOfInsp(inspLinesArray[0][1],0);
+	for(var i=1; i < inspLinesArray.length ; i++){
+		getResultOfInsp(inspLinesArray[i][1],1);
 	}
 	
-	function getResultOfInsp(inspNumber){
+	function getResultOfInsp(inspNumber , isInsp){
 		db.transaction(function (tx) {
-			tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + inspNumber  + '" and imgUpload="T" and imgAttach="F"', [], 
+			var sqlQuery;
+			if(isInsp == 0)
+				sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and in_out_id="' + inspNumber  + '" and imgUpload="T" and imgAttach="F"';
+			else
+				sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + inspNumber  + '" and imgUpload="T" and imgAttach="F"';
+			tx.executeSql(sqlQuery, [], 
 			function (tx, result){
 				if(result.rows.length > 0)
-					AllAttachSelect(result);
+					AllAttachSelect(result,isInsp);
 				else
 					attachCount=attachCount-1;
 			}, function (err) {
@@ -359,24 +270,35 @@ function AttachAllImage() {
 	}
 }
 
-function AllAttachSelect(result) {
+function AllAttachSelect(result, isInsp) {
 		var filesListStr="";
             for (var i = 0; i < result.rows.length; i++) {
 				filesListStr=filesListStr + result.rows.item(i).name + ",";
             }
 			filesListStr=filesListStr.substring(0, filesListStr.length - 1);
-			callAttachImageWs(result.rows.item(0).insp_line, filesListStr);
+			if(isInsp == 0)
+				callAttachM_InoutWs(result.rows.item(0).in_out_id,'M_InOut', filesListStr);
+			else
+				callAttachImageWs(result.rows.item(0).insp_line, filesListStr);
     }
 
 function deleteImageSelectSuccess(tx, results) {
 		for (var i = 0; i < results.rows.length; i++) {
 			if(DataTypes.indexOf(getExtention(results.rows.item(i).name).toUpperCase()) >= 0)
 			{
-				onRemoveVISDirFile(results.rows.item(i).file,results.rows.item(i).insp_line);
+				if(results.rows.item(i).insp_line == 0)
+					onRemoveVISDirFile(results.rows.item(i).file,results.rows.item(i).in_out_id,0);
+				else
+					onRemoveVISDirFile(results.rows.item(i).file,results.rows.item(i).insp_line,1);
 			}
 			else
 			{
-				tx.executeSql('DELETE FROM vis_gallery WHERE file="' + results.rows.item(i).file + '" and insp_line="' + results.rows.item(i).insp_line + '"');
+				var sqlQuery;
+				if(results.rows.item(i).insp_line == 0)
+					sqlQuery = 'DELETE FROM vis_gallery WHERE file="' + results.rows.item(i).file + '" and in_out_id="' + results.rows.item(i).in_out_id + '"';
+				else
+					sqlQuery = 'DELETE FROM vis_gallery WHERE file="' + results.rows.item(i).file + '" and insp_line="' + results.rows.item(i).insp_line + '"';
+				tx.executeSql(sqlQuery);
 				deleteCount=deleteCount-1;
 			}
         }
@@ -386,11 +308,16 @@ function deleteImageSelectSuccess(tx, results) {
         navigator.notification.alert('All Files attached', function () {}, 'Success', 'OK');
 }
 
-function onRemoveVISDirFile(tmpfile,InspNumber){
+function onRemoveVISDirFile(tmpfile,InspNumber,isInsp){
 	root.getFile(tmpfile, null, function (file) {
 		file.remove(function (entry) {
 			db.transaction(function (tx) {
-				tx.executeSql('DELETE FROM vis_gallery WHERE file="' + tmpfile + '" and insp_line="' + InspNumber + '"');
+				var sqlQuery;
+				if(isInsp == 0)
+					sqlQuery = 'DELETE FROM vis_gallery WHERE file="' + tmpfile + '" and in_out_id="' + InspNumber + '"';
+				else
+					sqlQuery = 'DELETE FROM vis_gallery WHERE file="' + tmpfile + '" and insp_line="' + InspNumber + '"';
+				tx.executeSql(sqlQuery);
 				deleteCount=deleteCount-1;
 				varifyAllDelete();
 			}, errorCB);
@@ -399,7 +326,7 @@ function onRemoveVISDirFile(tmpfile,InspNumber){
 }
 
 function confirmGallaryDiscard() {
-    navigator.notification.confirm('Are you sure ???', DiscardGallary, 'Delete selected files..', ['Ok','Cancel']);
+    navigator.notification.confirm('Are you sure ???', DiscardGallary, 'Delete selected files...', ['Ok','Cancel']);
 }
 
 function varifyAllDelete(){
@@ -417,14 +344,22 @@ function deleteSelectedGallary() {
             var tmpfile = imagelistarray.rows.item(j).file;
             if (SelectedGallaryList.indexOf(getFileName(tmpfile)) >= 0) {
                 db.transaction(function (tx) {
-                    tx.executeSql('DELETE FROM vis_gallery WHERE file="' + tmpfile + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"');
+					var sqlQuery;
+					if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
+						sqlQuery = 'DELETE FROM vis_gallery WHERE file="' + tmpfile + '" and in_out_id="' + M_INOUT_ID + '"';
+					else
+						sqlQuery = 'DELETE FROM vis_gallery WHERE file="' + tmpfile + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"';
+                    tx.executeSql(sqlQuery);
 					deleteCount=deleteCount-1;
 					varifyAllDelete();
                 }, errorCB);
             }
         } else {
             if (SelectedGallaryList.indexOf(imagelistarray.rows.item(j).name) >= 0) {
-				onRemoveVISDirFile(imagelistarray.rows.item(j).file,X_INSTRUCTIONLINE_ID);
+				if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
+					onRemoveVISDirFile(imagelistarray.rows.item(j).file,M_INOUT_ID,0);
+				else
+					onRemoveVISDirFile(imagelistarray.rows.item(j).file,X_INSTRUCTIONLINE_ID,1);
             }
         }
     }
@@ -520,7 +455,12 @@ function renderGallary() {
 	if(gallaryTable=="")
 	{
 		db.transaction(function (tx) {
-			tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"', [], function (tx, results) {
+			var sqlQuery;
+			if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
+				sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and in_out_id="' + M_INOUT_ID + '"';
+			else
+				sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"';
+			tx.executeSql(sqlQuery, [], function (tx, results) {
 				imagelistarray = results;
 				Disp_col = 0;
 				Disp_row = 0;
@@ -642,7 +582,7 @@ function onRenderTable(){
 }
 
 function discardInspections() {
-    navigator.notification.confirm('Are you sure ???', confirmDiscardInspections, 'Discard All Inspections...', ['Ok','Cancel']);
+    navigator.notification.confirm('Are you sure ???', confirmDiscardInspections, 'Discard Inspection Data...', ['Ok','Cancel']);
 }
 
 function confirmDiscardInspections(buttonIndex) {
@@ -653,14 +593,20 @@ function confirmDiscardInspections(buttonIndex) {
 				for (var i = 0; i < results.rows.length; i++) {
 					if(DataTypes.indexOf(getExtention(results.rows.item(i).name).toUpperCase()) >= 0)
 					{
-						onRemoveVISDirFile(results.rows.item(i).file,results.rows.item(i).insp_line);
+						if(results.rows.item(i).insp_line == 0)
+							onRemoveVISDirFile(results.rows.item(i).file,results.rows.item(i).in_out_id,0);
+						else
+							onRemoveVISDirFile(results.rows.item(i).file,results.rows.item(i).insp_line,1);
 					}
 					else
 					{
-						tx.executeSql('DELETE FROM vis_gallery WHERE file="' + results.rows.item(i).file + '" and insp_line="' + results.rows.item(i).insp_line + '"');
+						if(results.rows.item(i).insp_line == 0)
+							tx.executeSql('DELETE FROM vis_gallery WHERE file="' + results.rows.item(i).file + '" and in_out_id="' + results.rows.item(i).in_out_id + '"');
+						else
+							tx.executeSql('DELETE FROM vis_gallery WHERE file="' + results.rows.item(i).file + '" and insp_line="' + results.rows.item(i).insp_line + '"');
 					}
 				}
-				navigator.notification.alert('Discard All Inspections success', function () {}, 'Success', 'OK');
+				navigator.notification.alert('Discard Inspection data success', function () {}, 'Success', 'OK');
 			},function(err){console.log("Error SQL: "+err.code);} );
 		}, errorCB); 
     }
@@ -739,7 +685,7 @@ function onSettingUpdate() {
 	vis_img_qulty = document.getElementById("txt_imgQua").value;
 	
     if (vis_url == "" && vis_lang == "" && vis_client_id == "" && vis_role == "" && vis_whouse_id == "" && vis_org_id == "" && vis_img_qulty == "") {
-        navigator.notification.alert('No Any Field Should Blank!', onSettingPage, 'Invalid Value', 'Ok');
+        navigator.notification.alert('No Field Should Be Blank!', onSettingPage, 'Invalid Value', 'Ok');
         loadSetting();
     } else {
         db.transaction(updateSettings, errorCB);
@@ -759,7 +705,7 @@ function displayUserName(){
 }
 
 function onPhotoDataSuccess(imageData) {
-    navigator.notification.activityStart("Please Wait", "loading.....");
+    navigator.notification.activityStart("Please Wait", "loading...");
     onCropCall("data:image/jpeg;base64," + imageData);
 }
 
@@ -825,7 +771,7 @@ function onBackButton() {
 
 function onStartNewInspection() {
     loadPage("startNewInsp");
-    navigator.notification.activityStart("Please Wait", "loading.....");
+    navigator.notification.activityStart("Please Wait", "loading...");
     backPage = 'home';
     fillMrLines();
 }
@@ -833,7 +779,7 @@ function onStartNewInspection() {
 function onBackToStartInspection(backPageName) {
     loadPage("startNewInsp");
     backPage = backPageName;
-    navigator.notification.activityStart("Please Wait", "loading.....");
+    navigator.notification.activityStart("Please Wait", "loading...");
     if (mrLinesArray.length == 0) {
         fillMrLines();
     } else {
@@ -878,16 +824,17 @@ function renderInspectionFromCache(){
 		document.getElementById("disp-Insp").appendChild(tr);
 	}
 	Disp_col=0;Disp_row=0;
-	for(var i=0 ; i < inspLinesArray.length ; i++){
+	getUploadCounts(M_InOutLine_ID,inspLinesArray[0][0],inspLinesArray[0][1],FillInspectionDiv,0);
+	for(var i=1 ; i < inspLinesArray.length ; i++){
 		var dval = inspLinesArray[i][1];
 		var dlab = inspLinesArray[i][0];
-		getUploadCounts(M_InOutLine_ID,dlab,dval,FillInspectionDiv);
+		getUploadCounts(M_InOutLine_ID,dlab,dval,FillInspectionDiv,1);
 		dval = dlab = null ;
 	}
 	
 	onStopNotification();
 	if(inspLinesArray.length >= 10 )
-		navigator.notification.alert('Swipe to see more buttons..', null, 'Message !!', 'Ok');
+		navigator.notification.alert('Swipe to see more buttons...', null, 'Message !!', 'Ok');
 }
 
 function onStopNotification(){
@@ -897,18 +844,28 @@ function onStopNotification(){
 }
 
 function onInspSet(nid, iname) {
-	navigator.notification.activityStart("Please Wait", "loading.....");
+	navigator.notification.activityStart("Please Wait", "loading...");
     loadPage('gallery');
-	gallaryTable="";
-    renderGallary();
     X_INSTRUCTIONLINE_ID = nid;
     X_instruction_name = iname;
+	gallaryTable="";
+    renderGallary();
     document.getElementById("gallery_head").innerHTML = M_line_name + "(" + X_instruction_name + ")";
 
 }
+function onDefualtInspSet(nid, iname) {
+	navigator.notification.activityStart("Please Wait", "loading...");
+    loadPage('gallery');
+    M_INOUT_ID = nid;
+	X_INSTRUCTIONLINE_ID = 0;
+    X_instruction_name = iname;
+	gallaryTable="";
+    renderGallary();
+    document.getElementById("gallery_head").innerHTML = M_line_name + "(" + X_instruction_name + ")";
+}
 
 function backtogallary() {
-	navigator.notification.activityStart("Please Wait", "loading.....");
+	navigator.notification.activityStart("Please Wait", "loading...");
     loadPage('gallery');
     renderGallary();
     document.getElementById("gallery_head").innerHTML = M_line_name + "(" + X_instruction_name + ")";
@@ -1039,7 +996,7 @@ function CropSaved(callBack) {
 	
 	var origImg = new Image();
 	var xsize, ysize;
-    navigator.notification.activityStart("Please Wait", "Croping.....");
+    navigator.notification.activityStart("Please Wait", "Cropping...");
     canvas = document.createElement('canvas');
     var tempImage = new Image();
     tempImage.src = crop_img.src;
@@ -1102,10 +1059,10 @@ function applyWatermark(origImg) {
 		var img64 = encoder.encode(gctx.getImageData(0,0,1024,768), parseInt(vis_img_qulty)).replace(/data:image\/jpeg;base64,/,'');
 		var imageURI=Base64Binary.decodeArrayBuffer(img64);
 		onStopNotification();
-		saveImage(imageURI);
+		saveImage(imageURI, M_InOutLine_ID);
 		watermark = encoder = img64 = null;
 	}
-    navigator.notification.activityStart("Please Wait", "Water Marking.....");
+    navigator.notification.activityStart("Please Wait", "Applying Watermark...");
 }
 
 function onCropImageEdit()
@@ -1178,20 +1135,20 @@ function ImageEdit()
 		}
 	});
 	
-	document.getElementById("slider-contrass").setAttribute("style","height:"+(edit_image.height-50)+"px;margin:15px 0px 10px 0px;");
-	$('#slider-contrass').slider({
+	document.getElementById("slider-contrast").setAttribute("style","height:"+(edit_image.height-50)+"px;margin:15px 0px 10px 0px;");
+	$('#slider-contrast').slider({
 		orientation: "vertical",
 		min: 0,
 		max: 100,
 		value:50,
 		slide:function( event, ui ) {
 				var editImageData = editCtx.getImageData(0,0,gcanvas.width,gcanvas.height);
-				onContrassChange(ui.value-cValue,editImageData);
+				onContrastChange(ui.value-cValue,editImageData);
 				cValue = ui.value;
 			},
 		change:function( event, ui ) {
 				var editImageData = editCtx.getImageData(0,0,gcanvas.width,gcanvas.height);
-				onContrassChange(ui.value-cValue,editImageData);
+				onContrastChange(ui.value-cValue,editImageData);
 				cValue = ui.value;
 				if(flag == 0)
 				{
@@ -1285,7 +1242,7 @@ function onUndoEdit()
 		cValue = 50;
 		flag = 1;
 		$("#slider-brightness").slider("option", "value", b );
-		$("#slider-contrass").slider("option", "value", c );
+		$("#slider-contrast").slider("option", "value", c );
 		flag = 0;
 	}
 	if(actArray.length == 0)
@@ -1294,7 +1251,7 @@ function onUndoEdit()
 	}
 }
 
-function onContrassChange(contraValue,contraImageData)
+function onContrastChange(contraValue,contraImageData)
 {	
 	var data = contraImageData.data;
 	var factor = (259 * (contraValue + 255)) / (255 * (259 - contraValue));

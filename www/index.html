@@ -77,8 +77,12 @@
                 <option value="http://192.168.1.102:8096">Logilite-Dev</option>
             </select>
         </td></tr>
-		<tr>
-		<td>Language : </td><td><input id="txt_lang" type="text" style="width:70%" /></td></tr>
+        <tr>
+            <td>Language : </td><td>
+            <select id="txt_lang"  style="width:70%">
+                <option value="en_US">English</option>
+            </select>
+        </td></tr>
 		<tr>
             <td>Client : </td><td>
             <select id="txt_client"  style="width:70%">
@@ -100,9 +104,9 @@
 		<td>Organization : </td><td>
 			<select id="txt_organizer" onchange="onOrgChange()" style="width:70%">
 				<option value="0">*</option>
-				<option value="1000001">Singapore</option>
+                <option value="1000019">Amsterdam</option>
 				<option value="1000003">Austin</option>
-				<option value="1000019">Amsterdam</option>
+                <option value="1000001">Singapore</option>
 			</select>
 		</td></tr>
 		 <tr>
@@ -111,8 +115,16 @@
 
             </select>
         </td></tr>
-		<tr>
-		<td>Image quality : </td><td><input id="txt_imgQua" type="text" style="width:70%" />( 0-100)</td></tr>
+        <tr>
+            <td>Image quality : </td><td>
+            <select id="txt_imgQua"  style="width:70%;">
+                <option value="50">50% (low)</option>
+                <option value="75">75% (default)</option>
+                <option value="80">80% (high)</option>
+                <option value="90">90% (higher)</option>
+                <option value="100">100% (highest)</option>
+            </select>
+        </td></tr>
 		</table>
 		<input id="btn_update" onClick="validationSetting()" type="button" style="background-color:#0B9E2E;" value="Save" ontouchstart="return true;">
 		<input id="btn_cancel" onClick="onLoginpage()" type="button" value="Cancel" style="background-color:#F29645 ;" ontouchstart="return true;">
@@ -224,7 +236,10 @@
 	</div>
 	
 	<div id="aboutUs" class="page" >
-	
+		<h2 id="visAppName"></h2>
+		<h4 id="visAppVersion"></h4>
+		<h4 id="visAppRelease"></h4>
+		<input type="button" class="login_btns" onclick="onBackLogin()" value="Back">
 	</div>
 	
 	<div id="editView" class="page" >
@@ -242,7 +257,7 @@
 		</div>
 		<div style="width:15%; height:100%;float:left; padding:0%; margin:-15px 0px 0px 0px;">
 			<img src="img/contrast.png" height="25" width="25"/>
-			<div id="slider-contrass" style=""></div>
+			<div id="slider-contrast" style=""></div>
 		</div>
 		
 		<div style="width:75%; height:20%;float:right; padding:0%; margin:0%;">

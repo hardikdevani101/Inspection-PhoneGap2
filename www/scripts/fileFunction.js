@@ -13,8 +13,8 @@ function setVISDirectory(fileSystem){
 	dirVISInspection=fileSystem;
 }
 
-function saveImage(imageURI){
-	navigator.notification.activityStart("Please Wait", "Saving Image.....");
+function saveImage(imageURI, id){
+	navigator.notification.activityStart("Please Wait", "Saving Image...");
 	var date = new Date;
 	var sec = date.getSeconds();
 	var mi = date.getMinutes();
@@ -22,7 +22,7 @@ function saveImage(imageURI){
 	var yy = date.getFullYear();
 	var mm = date.getMonth();
 	var dd = date.getDate();
-	var fileName="vis_inspection_"+mm+dd+yy+"_"+hh+mi+sec+".jpg";
+	var fileName="vision_"+id+"_"+mm+dd+yy+"_"+hh+mi+sec+".jpg";
 	dirVISInspection.getFile(fileName, {create: true, exclusive: false}, function (fileEntry){
 		CreateImgWriter(fileEntry,imageURI);
 	},function(error){ console.log("File Create FSError = "+error.code); });
@@ -37,22 +37,35 @@ function CreateImgWriter(fileEntry,imageURI) {
 function OnImgWriter(writer,fileFullPath,fileName,imageURI){ 
 	 writer.onwrite = function(evt) {
 		 	db.transaction(function (tx){
-				tx.executeSql('INSERT INTO vis_gallery(mr_line,insp_line,name,file) VALUES ("'+M_InOutLine_ID+'","'+X_INSTRUCTIONLINE_ID+'","'+fileName+'","'+fileFullPath+'")');
+				var sqlQuery;
+				if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
+					sqlQuery = 'INSERT INTO vis_gallery(mr_line,in_out_id,name,file) VALUES ("'+M_InOutLine_ID+'","'+M_INOUT_ID+'","'+fileName+'","'+fileFullPath+'")';
+				else
+					sqlQuery = 'INSERT INTO vis_gallery(mr_line,insp_line,name,file) VALUES ("'+M_InOutLine_ID+'","'+X_INSTRUCTIONLINE_ID+'","'+fileName+'","'+fileFullPath+'")';
+				tx.executeSql(sqlQuery);
 			}, errorCB);
 			onAfterSaveFile(fileFullPath);
-			onUploadFile(fileFullPath,X_INSTRUCTIONLINE_ID,callUploadVerify);
+			if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
+				onUploadFile(fileFullPath,M_INOUT_ID,callUploadVerify);
+			else
+				onUploadFile(fileFullPath,X_INSTRUCTIONLINE_ID,callUploadVerify);
         };
 	 writer.write(imageURI);
 }
 
 function onAfterSaveFile(fileFullPath){
-	navigator.notification.activityStart("Please Wait", "loading.....");
+	navigator.notification.activityStart("Please Wait", "loading...");
     loadPage('gallery');
 	if(gallaryTable != "" && gallaryTable != null)
 	{	
 		document.getElementById("disp-tab1").innerHTML=gallaryTable;
 		db.transaction(function (tx) {
-		tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"', [], function (tx, results) {
+		var sqlQuery;
+		if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
+			sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and in_out_id="' + M_INOUT_ID + '"';
+		else
+			sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"';
+		tx.executeSql(sqlQuery, [], function (tx, results) {
 				imagelistarray = results;
 				if(totColumns >= results.rows.length){
 					fillSingleTD(fileFullPath);
@@ -149,7 +162,12 @@ function onUploadFile(filePath, InspNumber,callBack) {
         ft.upload(FnEntries.toURL(), encodeURI(vis_url + "/VISService/fileUpload"), function () {
             fileName = getFileName(getSDPath(FnEntries.fullPath));
             db.transaction(function (tx) {
-                tx.executeSql('UPDATE vis_gallery SET imgUpload="T" WHERE file="' + filePath + '" and insp_line="' + InspNumber + '"');
+				var sqlQuery;
+				if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
+					sqlQuery = 'UPDATE vis_gallery SET imgUpload="T" WHERE file="' + filePath + '" and in_out_id="' + InspNumber + '"';
+				else
+					sqlQuery = 'UPDATE vis_gallery SET imgUpload="T" WHERE file="' + filePath + '" and insp_line="' + InspNumber + '"';
+                tx.executeSql(sqlQuery);
 				setUploadedImg(FnEntries.name);
             }, errorCB);
             imgUploadCount = imgUploadCount - 1;
