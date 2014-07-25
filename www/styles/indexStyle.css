@@ -1,4 +1,7 @@
 @CHARSET "ISO-8859-1";
+*{
+	preventFocusZoom:false;
+}
 input:active[type="button"] {
 color:#FFFFFF;
 }
@@ -68,7 +71,7 @@ height:25px;
 {
 	word-wrap:break-word;
 	float:left;
-	padding:20px 5%;
+	padding:5px 5% 35px 5%;
 	background-color:#0F96DA;
 	border: 2px solid #000000;
 	border-radius:4px;
@@ -121,7 +124,7 @@ border:1px solid #000000;
 border-radius:3px;
 background-color:#3399CC;
 width:22%;
-margin:0px 2px;
+margin:0px 1%;
 }
 
 .folder, .file{

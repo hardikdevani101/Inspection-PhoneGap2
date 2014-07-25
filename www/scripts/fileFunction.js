@@ -2,6 +2,7 @@ var root;
 var dirVISInspection;
 var currentDir;
 var parlistArray;
+var dirVISInspectionFTP;
 var DataTypes=["JPEG","JPG","BMP","PNG"];
 
 function setRootDirectory(fileSystem){
@@ -11,9 +12,14 @@ function setRootDirectory(fileSystem){
 
 function setVISDirectory(fileSystem){
 	dirVISInspection=fileSystem;
+	dirVISInspection.getDirectory("VIS_FTP", {create : true},setVISFTPDirectory, dirFail);
 }
 
-function saveImage(imageURI, id){
+function setVISFTPDirectory(fileSystem){
+	dirVISInspectionFTP = fileSystem;
+}
+
+function saveImage(imageURI){
 	navigator.notification.activityStart("Please Wait", "Saving Image...");
 	var date = new Date;
 	var sec = date.getSeconds();
@@ -22,7 +28,7 @@ function saveImage(imageURI, id){
 	var yy = date.getFullYear();
 	var mm = date.getMonth();
 	var dd = date.getDate();
-	var fileName="vision_"+id+"_"+mm+dd+yy+"_"+hh+mi+sec+".jpg";
+	var fileName=M_Line_Desc+"_"+mm+dd+yy+"_"+hh+mi+sec+".jpg";
 	dirVISInspection.getFile(fileName, {create: true, exclusive: false}, function (fileEntry){
 		CreateImgWriter(fileEntry,imageURI);
 	},function(error){ console.log("File Create FSError = "+error.code); });
@@ -45,10 +51,6 @@ function OnImgWriter(writer,fileFullPath,fileName,imageURI){
 				tx.executeSql(sqlQuery);
 			}, errorCB);
 			onAfterSaveFile(fileFullPath);
-			if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
-				onUploadFile(fileFullPath,M_INOUT_ID,callUploadVerify);
-			else
-				onUploadFile(fileFullPath,X_INSTRUCTIONLINE_ID,callUploadVerify);
         };
 	 writer.write(imageURI);
 }
@@ -90,32 +92,45 @@ function onAfterSaveFile(fileFullPath){
 	else{
 		backtogallary();
 	}
+
+	if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
+		onUploadFile(fileFullPath,M_INOUT_ID,null);
+	else
+		onUploadFile(fileFullPath,X_INSTRUCTIONLINE_ID,null);
 }
 
 function fillSingleTD(fileFullPath){
 	if (DataTypes.indexOf(getExtention(getFileName(fileFullPath)).toUpperCase()) >= 0) {
-		var imgelem = document.createElement("img");
-		imgelem.setAttribute("height", (window.innerHeight * .27) + "px");
-		imgelem.setAttribute("width", (window.innerHeight * .36) + "px");
-		imgelem.setAttribute("style", "margin:3px 5px; float:left;");
-		imgelem.setAttribute("src", gcanvas.toDataURL());
-		if (Disp_row > 2 ) {
-			Disp_row = 0;Disp_col = Disp_col + 1;
-		}
-		
-		var chkImg = document.createElement("img");
-		chkImg.setAttribute("style", "position:absolute;height:35px;width:35px;display:none;");
-		chkImg.setAttribute("src", "img/up.png");
-		chkImg.setAttribute("id","tdUpload-" + Disp_row + "-" + Disp_col);
-		document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(chkImg);
-		
-		pandingUploads[pandingCounts] = new Array();
-		pandingUploads[pandingCounts][0] = "tdUpload-" + Disp_row + "-" + Disp_col;
-		pandingUploads[pandingCounts++][1] = getFileName(fileFullPath);
-		document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(imgelem);
-		itemCount = itemCount + 1;
-		Disp_row = Disp_row + 1;
-		gallaryTable=document.getElementById("disp-tab1").innerHTML;
+		root.getFile(fileFullPath, null, function (FnEntries) {
+			FnEntries.file(function (rfile){
+				var reader = new FileReader();
+					reader.onloadend = function (evt) {
+						var imgelem = document.createElement("img");
+						imgelem.setAttribute("height", (window.innerHeight * .27) + "px");
+						imgelem.setAttribute("width", (window.innerHeight * .36) + "px");
+						imgelem.setAttribute("style", "margin:3px 5px; float:left;");
+						imgelem.setAttribute("src", evt.target.result);
+						if (Disp_row > 2 ) {
+							Disp_row = 0;Disp_col = Disp_col + 1;
+						}
+						
+						var chkImg = document.createElement("img");
+						chkImg.setAttribute("style", "position:absolute;height:35px;width:35px;display:none;");
+						chkImg.setAttribute("src", "img/up.png");
+						chkImg.setAttribute("id","tdUpload-" + Disp_row + "-" + Disp_col);
+						document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(chkImg);
+						
+						pandingUploads[pandingCounts] = new Array();
+						pandingUploads[pandingCounts][0] = "tdUpload-" + Disp_row + "-" + Disp_col;
+						pandingUploads[pandingCounts++][1] = getFileName(fileFullPath);
+						document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(imgelem);
+						itemCount = itemCount + 1;
+						Disp_row = Disp_row + 1;
+						gallaryTable=document.getElementById("disp-tab1").innerHTML;
+				};
+				reader.readAsDataURL(rfile);
+			}, function () {});
+		}, function (error) {console.log(" FSError = " + error.code); onStopNotification(); });
 	}
 	else
 	{
@@ -183,16 +198,16 @@ function onUploadFile(filePath, InspNumber,callBack) {
 							sqlQuery = 'UPDATE vis_gallery SET imgUpload="T" WHERE file="' + filePath + '" and insp_line="' + InspNumber + '"';
 	            	}				
                 tx.executeSql(sqlQuery);
+            }, errorCB,function(){
 				setUploadedImg(FnEntries.name);
-            }, errorCB);
-            imgUploadCount = imgUploadCount - 1;
-            callBack();
+	            imgUploadCount = imgUploadCount - 1;
+	            if(callBack) callBack();
+            });
         }, uploadFail, options);
     }
 }
 
 function setUploadedImg(fileName){
-	backtogallary();
 	for(var i=0; i < pandingUploads.length ; i++){
 		if(pandingUploads[i][1]==fileName){
 			var tdDiv=document.getElementById(pandingUploads[i][0]);

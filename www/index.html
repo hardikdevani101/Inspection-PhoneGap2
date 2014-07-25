@@ -4,12 +4,14 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF8">
 <title>VIS-Inspection Phonegap</title>
 <script src="cordova.js"></script>
+<script type="text/javascript" charset="utf-8" src="scripts/ftpclient.js"></script>
 <script src="scripts/aboutUs.js"></script>
 <script src="scripts/fileFunction.js"></script>
 <script src="scripts/dbFunction.js"></script>
 <script src="scripts/webserviceFunctions.js"></script>
 <script src="scripts/indexJS.js"></script>
 <script src="scripts/validationFunctions.js"></script>
+<script src="scripts/ftpFunctions.js"></script>
 <script src="scripts/jquery.min.js"></script>
 <script src="scripts/jquery.Jcrop.js"></script>
 <script src="scripts/base64-binary.js"></script>
@@ -37,8 +39,8 @@
 		<span>
 		<h2>VISion Login</h2>
 		</span>
-		Username : <input id="txt_user" type="text" value=""/><br><br> 
-		Password : <input id="txt_password" type="password" value=""/><br><br>
+		Username : <input id="txt_user" type="text" value="" style="width:70%"/><br><br> 
+		Password : <input id="txt_password" type="password" value="" style="width:70%"/><br><br>
 		<input id="loginbtn" class="login_btns" ontouchstart="return true;" style="padding:3px 0px;background-color:#0B9E2E;" onClick="validateLogin()" type="button" value="Login">
 		<input id="settingpagebtn" class="login_btns" ontouchstart="return true;" style="padding:3px 0px;" onClick="onSettingPage()" type="button" value="Setting">
 		<input id="aboutBtn" class="login_btns" ontouchstart="return true;" style="padding:3px 0px;" onClick="onAboutUs()" type="button" value="AboutUs">
@@ -74,7 +76,7 @@
                 <option value="http://10.210.23.77:8088">Production</option>
                 <option value="http://10.210.23.78:8088">Development</option>
                 <option value="http://10.210.23.97:8088">Test</option>
-                <option value="http://192.168.1.102:8096">Logilite-Dev</option>
+                <option value="http://192.168.1.116:8096">Logilite-Dev</option>
             </select>
         </td></tr>
         <tr>
@@ -174,12 +176,13 @@
 		
 		<div style="width:12%; padding:0px 2%; float:right; border-left:2px solid black; ">
 
-			<Span class="divMenuButton" ontouchstart="return true;" onClick="onBackToStartInspection('gallary')" style="margin: 15% 4% 25% 2%;background-color:#F29645 ;">Back</Span>
+			<Span class="divMenuButton" ontouchstart="return true;" onClick="onBackToStartInspection('gallary')" style="margin: 10% 4% 20% 2%;background-color:#F29645 ;">Back</Span>
 			<Span class="divMenuButton" ontouchstart="return true;" onClick="onDeleteGallaryPage()" style="background-color:#F29645 ;">Delete</Span>
-			<Span style="float:left; margin : 50% 0px 15% 5%;">Acquire</span>
+			<Span style="float:left; margin : 15% 0px 5% 5%;">Acquire</span>
 			<Span class="divMenuButton" ontouchstart="return true;" onClick="loadgallaryChoise()" style="background-color:#058A78 ;">File</Span>
 			<Span class="divMenuButton" ontouchstart="return true;" onClick="onImagePicker()" style="background-color:#058A78 ;">Gallery</Span>
 			<Span class="divMenuButton" ontouchstart="return true;" onClick="captureI()" style="background-color:#058A78 ;">Camera</Span>
+			<Span class="divMenuButton" ontouchstart="return true;" onClick="onftpExplorer()" style="background-color:#058A78 ;">FTP</Span>
 		</div>
 	</div>
 	
@@ -232,6 +235,18 @@
 			<a href="#" onClick="backtogallary()"  ><img src="img/undo.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>
       </div>
       <div id="dirContent" style="height:70%; overflow:scroll; text-align:left; position:absolute;">
+      </div>
+	</div>
+	
+	<div id="ftpExplorer" class="page">
+	 <div id="header" style="left:40%; background:#0099CC; width:100%; margin-top:0px;">
+			<h3 style="margin:0px; padding:0px;">FTP Explorer</h3>
+			<a id="backBtn" href="#" onClick="ftpExplorer('-')"><img src="img/backward.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a id="homeBtn" href="#" onClick="onFinishFtpSelection()"><img src="img/up.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="#" onClick="backtogallary()"><img src="img/undo.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			FTP Name : <select id="drop_ftp_name"></select>
+      </div>
+      <div id="ftpFileContent" style="height:70%; overflow:scroll; text-align:left; position:absolute;">
       </div>
 	</div>
 	

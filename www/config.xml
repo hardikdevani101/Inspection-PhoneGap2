@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.vis.inspector" version="1.0.10" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+<widget id="com.vis.inspector" version="1.0.12" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
     <name>VISion</name>
     <description>
         Velocity quality inspection tool.
@@ -13,10 +13,14 @@
 	<feature name="Camera">
 		<param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
 	</feature>
+	<feature name="FtpClient">
+		<param name="android-package" value="com.vis.plugin.ftp.FtpClient" />
+	</feature>
     <feature name="http://api.phonegap.com/1.0/device" />
     <preference name="permissions" value="none" />
     <preference name="target-device" value="universal" />
     <preference name="fullscreen" value="true" />
+    <preference name="orientation" value="landscape" />
     <preference name="webviewbounce" value="true" />
     <preference name="prerendered-icon" value="true" />
     <preference name="stay-in-webview" value="false" />
