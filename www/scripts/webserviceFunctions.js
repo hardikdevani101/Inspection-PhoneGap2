@@ -246,7 +246,7 @@ function fillInspectionsLines(){
 function FillInspectionDiv(dlab,dval,totCnt,uploadCnt,isInsp){
 	var tmpdiv = document.createElement('div');
 	tmpdiv.className = "InspButton";
-	tmpdiv.setAttribute("style", "margin:0px 10px;");
+	tmpdiv.setAttribute("style", "margin:0px 15px;");
 	var totStr = document.createTextNode(totCnt+" ( "+uploadCnt+" ) ");
 	var lable = document.createTextNode(dlab);
 	var br = document.createElement('br');
