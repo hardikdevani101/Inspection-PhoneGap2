@@ -137,22 +137,22 @@
 	
 
 	<div class="page" id="startNewInsp">
-		<div style="width:100%;margin:0px; padding:0px; float:left;">
+		<div style="width:100%;margin:0px; padding:0px; float:left; " id="titleBarStartInsp">
 			<div name="user_lbl" style="float:left;font-weight:bold;"></div>
 			<span style="float:right; margin:0px; padding:0px;">Line No:
-			<select id="linedrop" style="padding:0px;"></select>
+			<select id="linedrop" style="padding:0px;width:50%;"></select>
 			<input id="btnReload" class="login_btns" onClick="fillMrLines()" type="button" value="Reload" ontouchstart="return true;">
 			</span>
 		</div>
 		<div style="padding:0px 2px; margin:0px 0px 0px 0px;">
 			<hr />
 		</div>
-		<div style="height:75%; width:85%;text-align: center; padding:0px; float: left; overflow-x: auto; overflow-y: hidden;" id="outNewIns">
+		<div style="height:85%; width:87%;text-align: center; padding:0px; float: left; overflow-x: auto; overflow-y: hidden; " id="outNewIns" >
 			<table id="disp-Insp" style="margin:0px; padding:0px;" cellspacing="0" cellpadding="0" >
 				
 			</table>
 		</div>
-		<div style="width:12%; float:right; height:75%; padding : 0px 1%;  border-left:2px solid black;">
+		<div style=" float:right; height:85%; padding : 0px 1%; border-left:2px solid black;" id="sideBarStartInsp">
 			<div class="divMenuButton" onClick="discardInspections()" style="margin: 20% 4% 5% 2%;background-color:#F29645 ;" ontouchstart="return true;">Delete</div>
 			<div class="divMenuButton" onClick="loadPage('home')" style="margin: 30% 4% 5% 2%;background-color:#F29645 ;" ontouchstart="return true;">Back</div>
 			<div class="divMenuButton" onClick="onFinish()" style="margin: 150% 4% 5% 2%;background-color:#0B9E2E;" ontouchstart="return true;">Finish</div>
@@ -168,15 +168,15 @@
 		<div style="padding:0px 2px; margin:1px 0px;">
 			<hr />
 		</div>
-		<div id="imglist" style="padding:0px; margin:0px;height:75%; overflow-x: auto; overflow-y: hidden; width:80%; float:left;">
+		<div id="imglist" style="padding:0px; margin:0px;height:75%; overflow-x: auto; overflow-y: hidden; width:85%; float:left;">
 			<table id="disp-tab1" style="margin:0px; padding:0px;" cellspacing="0" cellpadding="0">
 			
 			</table>
 		</div>
 		
-		<div style="width:12%; padding:0px 2%; float:right; border-left:2px solid black; ">
+		<div style="width:12%; padding:0px 1%; float:right;  border-left:2px solid black; " id="sideBarGallery">
 
-			<Span class="divMenuButton" ontouchstart="return true;" onClick="onBackToStartInspection('gallary')" style="margin: 10% 4% 20% 2%;background-color:#F29645 ;">Back</Span>
+			<Span class="divMenuButton" ontouchstart="return true;" onClick="onBackToStartInspection('gallary')" style="margin: 10% 4% 20% 1%;background-color:#F29645 ;">Back</Span>
 			<Span class="divMenuButton" ontouchstart="return true;" onClick="onDeleteGallaryPage()" style="background-color:#F29645 ;">Delete</Span>
 			<Span style="float:left; margin : 15% 0px 5% 5%;">Acquire</span>
 			<Span class="divMenuButton" ontouchstart="return true;" onClick="loadgallaryChoise()" style="background-color:#058A78 ;">File</Span>

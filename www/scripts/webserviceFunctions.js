@@ -244,17 +244,25 @@ function fillInspectionsLines(){
 }
 
 function FillInspectionDiv(dlab,dval,totCnt,uploadCnt,isInsp){
+	var titleBar = document.getElementById("titleBarStartInsp");
+	var tHeight = window.innerHeight*.10;
+	titleBar.style.height = tHeight+"px";
+	var sideBar = document.getElementById("sideBarStartInsp");
+	var sWidth = window.innerWidth*.10;
+	sideBar.style.width = sWidth+"px";
+	sideBar.style.height = window.innerHeight*.82+"px";
+	
 	var tmpdiv = document.createElement('div');
 	tmpdiv.className = "InspButton";
-	tmpdiv.setAttribute("style", "margin:0px 15px;");
+	tmpdiv.setAttribute("style", "margin:3px 3px;");
 	var totStr = document.createTextNode(totCnt+" ( "+uploadCnt+" ) ");
 	var lable = document.createTextNode(dlab);
 	var br = document.createElement('br');
 	tmpdiv.appendChild(totStr);
 	tmpdiv.appendChild(br);
 	tmpdiv.appendChild(lable);
-	tmpdiv.style.height=(window.innerHeight*.10)+"px";
-	tmpdiv.style.width=(window.innerWidth*.20)+"px";
+	tmpdiv.style.height = (window.innerHeight-tHeight-72)/3+"px";
+	tmpdiv.style.width=(window.innerWidth-sWidth-110)/3+"px";
 	var clickstr;
 	if(isInsp == 0)
 		clickstr="onDefualtInspSet('"+dval+"','"+ dlab.replace('\'', '\\\'')+"')";
@@ -441,7 +449,7 @@ function getFTPList(){
 							if (fullNodeList.length == 0){
 								onStopNotification();
 								navigator.notification.alert('No FTP list found.','','Alert');
-								loadPage("home");
+								backtogallary();
 							} else
 							{
 								for (var i=0; i < fullNodeList.length; i++)

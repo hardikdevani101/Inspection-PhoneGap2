@@ -130,7 +130,7 @@ public class FtpClient extends CordovaPlugin {
 		f.connect(url.getHost(), extractPort(url));
 
 		StringTokenizer tok = new StringTokenizer(url.getUserInfo(), ":");
-		f.login(tok.nextToken(), tok.nextToken());
+		f.login(tok.hasMoreTokens() ? tok.nextToken() : "", tok.hasMoreTokens() ? tok.nextToken() : "");
 
 		f.enterLocalPassiveMode();
 		f.setFileType(FTP.BINARY_FILE_TYPE);

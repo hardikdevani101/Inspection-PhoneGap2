@@ -444,6 +444,9 @@ function onDeleteFileSelect(selectTdId, galName) {
 
 function renderGallary() {
     
+	var sideBar = document.getElementById("sideBarGallery");
+	sideBar.style.height = window.innerHeight*.85+"px";
+	
 	if(gallaryTable=="")
 	{
 		db.transaction(function (tx) {
