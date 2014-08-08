@@ -4,12 +4,14 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF8">
 <title>VIS-Inspection Phonegap</title>
 <script src="cordova.js"></script>
+<script type="text/javascript" charset="utf-8" src="scripts/ftpclient.js"></script>
 <script src="scripts/aboutUs.js"></script>
 <script src="scripts/fileFunction.js"></script>
 <script src="scripts/dbFunction.js"></script>
 <script src="scripts/webserviceFunctions.js"></script>
 <script src="scripts/indexJS.js"></script>
 <script src="scripts/validationFunctions.js"></script>
+<script src="scripts/ftpFunctions.js"></script>
 <script src="scripts/jquery.min.js"></script>
 <script src="scripts/jquery.Jcrop.js"></script>
 <script src="scripts/base64-binary.js"></script>
@@ -37,8 +39,8 @@
 		<span>
 		<h2>VISion Login</h2>
 		</span>
-		Username : <input id="txt_user" type="text" value=""/><br><br> 
-		Password : <input id="txt_password" type="password" value=""/><br><br>
+		Username : <input id="txt_user" type="text" value="" style="width:70%"/><br><br> 
+		Password : <input id="txt_password" type="password" value="" style="width:70%"/><br><br>
 		<input id="loginbtn" class="login_btns" ontouchstart="return true;" style="padding:3px 0px;background-color:#0B9E2E;" onClick="validateLogin()" type="button" value="Login">
 		<input id="settingpagebtn" class="login_btns" ontouchstart="return true;" style="padding:3px 0px;" onClick="onSettingPage()" type="button" value="Setting">
 		<input id="aboutBtn" class="login_btns" ontouchstart="return true;" style="padding:3px 0px;" onClick="onAboutUs()" type="button" value="AboutUs">
@@ -70,28 +72,28 @@
 		<table border="0px">
 		 <tr>
             <td>Server : </td><td>
-            <select id="txt_url"  style="width:70%;">
+            <select id="txt_url"  style="width:100%;">
                 <option value="http://10.210.23.77:8088">Production</option>
                 <option value="http://10.210.23.78:8088">Development</option>
                 <option value="http://10.210.23.97:8088">Test</option>
-                <option value="http://192.168.1.102:8096">Logilite-Dev</option>
+                <option value="http://192.168.1.104:8096">Logilite-Dev</option>
             </select>
         </td></tr>
         <tr>
             <td>Language : </td><td>
-            <select id="txt_lang"  style="width:70%">
+            <select id="txt_lang"  style="width:100%">
                 <option value="en_US">English</option>
             </select>
         </td></tr>
 		<tr>
             <td>Client : </td><td>
-            <select id="txt_client"  style="width:70%">
+            <select id="txt_client"  style="width:100%">
                 <option value="1000000">Velocity</option>
             </select>
         </td></tr>
 		<tr>
 		<td>Role : </td><td>
-			<select id="txt_role"  style="width:70%;">
+			<select id="txt_role"  style="width:100%;">
 				<option value="1000043">Warehouse QA Team</option>
 				<option value="1000055">Warehouse QA Manager</option>
 				<option value="1000044">Warehouse Manager</option>
@@ -102,22 +104,23 @@
 		</td></tr>
 		<tr>
 		<td>Organization : </td><td>
-			<select id="txt_organizer" onchange="onOrgChange()" style="width:70%">
+			<select id="txt_organizer" onchange="onOrgChange()" style="width:100%">
 				<option value="0">*</option>
                 <option value="1000019">Amsterdam</option>
 				<option value="1000003">Austin</option>
+                <option value="1000020">Japan</option>
                 <option value="1000001">Singapore</option>
 			</select>
 		</td></tr>
 		 <tr>
             <td>Warehouse : </td><td>
-            <select id="txt_warehouse" style="width:70%;">
+            <select id="txt_warehouse" style="width:100%;">
 
             </select>
         </td></tr>
         <tr>
             <td>Image quality : </td><td>
-            <select id="txt_imgQua"  style="width:70%;">
+            <select id="txt_imgQua"  style="width:100%;">
                 <option value="50">50% (low)</option>
                 <option value="75">75% (default)</option>
                 <option value="80">80% (high)</option>
@@ -126,8 +129,8 @@
             </select>
         </td></tr>
 		</table>
-		<input id="btn_update" onClick="validationSetting()" type="button" style="background-color:#0B9E2E;" value="Save" ontouchstart="return true;">
-		<input id="btn_cancel" onClick="onLoginpage()" type="button" value="Cancel" style="background-color:#F29645 ;" ontouchstart="return true;">
+		<input id="btn_update" class="login_btns" onClick="validationSetting()" type="button" style="background-color:#0B9E2E;" value="Save" ontouchstart="return true;">
+		<input id="btn_cancel" class="login_btns" onClick="onLoginpage()" type="button" value="Cancel" style="background-color:#F29645 ;" ontouchstart="return true;">
 		<div id="setting_error"></div>
 		</center>
 	</div>
@@ -135,24 +138,24 @@
 	
 
 	<div class="page" id="startNewInsp">
-		<div style="width:100%;margin:0px; padding:0px; float:left;">
+		<div style="width:100%;margin:0px; padding:0px; float:left; " id="titleBarStartInsp">
 			<div name="user_lbl" style="float:left;font-weight:bold;"></div>
 			<span style="float:right; margin:0px; padding:0px;">Line No:
-			<select id="linedrop" style="padding:0px;"></select>
-			<input id="btnReload" class="login_btns" onClick="fillMrLines()" type="button" value="Reload" ontouchstart="return true;">
+			<select id="linedrop" style="padding:0px;width:50%;"></select>
+            <span id="btnReload" class="sync_btns" onClick="fillMrLines()" ontouchstart="return true;">&nbsp;</span>
 			</span>
 		</div>
 		<div style="padding:0px 2px; margin:0px 0px 0px 0px;">
 			<hr />
 		</div>
-		<div style="height:75%; width:80%;text-align: center; padding:0px; float: left; overflow-x: auto; overflow-y: hidden;" id="outNewIns">
+		<div style="height:85%; width:87%;text-align: center; padding:0px; float: left; overflow-x: auto; overflow-y: hidden; " id="outNewIns" >
 			<table id="disp-Insp" style="margin:0px; padding:0px;" cellspacing="0" cellpadding="0" >
 				
 			</table>
 		</div>
-		<div style="width:12%; float:right; height:75%; padding : 0px 1%;  border-left:2px solid black;">
-			<div class="divMenuButton" onClick="discardInspections()" style="margin: 20% 4% 5% 2%;background-color:#F29645 ;" ontouchstart="return true;">Delete</div>
-			<div class="divMenuButton" onClick="loadPage('home')" style="margin: 30% 4% 5% 2%;background-color:#F29645 ;" ontouchstart="return true;">Back</div>
+		<div style=" float:right; height:85%; padding : 0px 1%; border-left:1px solid black;" id="sideBarStartInsp">
+            <div class="divMenuButton" onClick="loadPage('home')" style="margin: 10% 4% 5% 2%;background-color:#F29645 ;" ontouchstart="return true;">Back</div>
+            <div class="divMenuButton" onClick="discardInspections()" style="margin: 20% 4% 5% 2%;background-color:#F29645 ;" ontouchstart="return true;">Delete</div>
 			<div class="divMenuButton" onClick="onFinish()" style="margin: 150% 4% 5% 2%;background-color:#0B9E2E;" ontouchstart="return true;">Finish</div>
 		</div>
 	</div>
@@ -160,24 +163,25 @@
 	<div id="gallery" class="page">
 		<div style="width:100%;margin:0px; padding:0px;float:left;">
 			<div name="user_lbl" style="float:left;font-weight:bold;"></div> 
-			<Span class="login_btns" style="float:right;width:15%;" onClick="onSyncFiles()" ontouchstart="return true;">Sync</Span>
+			<span class="sync_btns" onClick="onSyncFiles()" ontouchstart="return true;">&nbsp;</span>
 			<center><Span id="gallery_head" style="float:right;"></Span></center>
 		</div>
 		<div style="padding:0px 2px; margin:1px 0px;">
 			<hr />
 		</div>
-		<div id="imglist" style="padding:0px; margin:0px;height:75%; overflow-x: auto; overflow-y: hidden; width:80%; float:left;">
+		<div id="imglist" style="padding:0px; margin:0px;height:75%; overflow-x: auto; overflow-y: hidden; width:85%; float:left;">
 			<table id="disp-tab1" style="margin:0px; padding:0px;" cellspacing="0" cellpadding="0">
 			
 			</table>
 		</div>
 		
-		<div style="width:12%; padding:0px 2%; float:right; border-left:2px solid black; ">
+		<div style="width:12%; padding:0px 1%; float:right;  border-left:1px solid black; " id="sideBarGallery">
 
-			<Span class="divMenuButton" ontouchstart="return true;" onClick="onBackToStartInspection('gallary')" style="margin: 15% 4% 25% 2%;background-color:#F29645 ;">Back</Span>
-			<Span class="divMenuButton" ontouchstart="return true;" onClick="onDeleteGallaryPage()" style="background-color:#F29645 ;">Delete</Span>
-			<Span style="float:left; margin : 50% 0px 15% 5%;">Acquire</span>
-			<Span class="divMenuButton" ontouchstart="return true;" onClick="loadgallaryChoise()" style="background-color:#058A78 ;">File</Span>
+			<Span class="divMenuButton" ontouchstart="return true;" onClick="onBackToStartInspection('gallery')" style="margin: 10% 4% 20% 1%;background-color:#F29645 ;">Back</Span>
+			<Span class="divMenuButton" ontouchstart="return true;" onClick="onDeleteGalleryPage()" style="background-color:#F29645 ;">Delete</Span>
+			<Span style="float:left; margin : 15% 0px 5% 5%;">Acquire</span>
+			<Span class="divMenuButton" ontouchstart="return true;" onClick="loadGalleryChoice()" style="background-color:#058A78 ;">File</Span>
+			<Span class="divMenuButton" ontouchstart="return true;" onClick="onftpExplorer()" style="background-color:#058A78 ;">FTP</Span>
 			<Span class="divMenuButton" ontouchstart="return true;" onClick="onImagePicker()" style="background-color:#058A78 ;">Gallery</Span>
 			<Span class="divMenuButton" ontouchstart="return true;" onClick="captureI()" style="background-color:#058A78 ;">Camera</Span>
 		</div>
@@ -202,17 +206,17 @@
 			<input class="crop_btn" type="button" value="Save" style="background-color:#088A08 ;" onClick="onCropSkip()"  />
 			<input class="crop_btn" type="button" value="Edit" style="background-color:#088A08 ;" onClick="callImageEdit()"/>
 			<input class="crop_btn" type="button" value="Crop & Edit" style="background-color:#088A08 ;" onClick="onCropImageEdit()"/>
-			<input class="crop_btn" type="button" value="Discard" onClick="backtogallary()" style="background-color:#F29645 ;"/>
+			<input class="crop_btn" type="button" value="Discard" onClick="backToGallery()" style="background-color:#F29645 ;"/>
 		</div>
 		</center>
 	</div>
 	
-	<div id="SelectGallary" class="page">
-      <div style="width:100%; margin:0px; padding:0px; float: left; ">
+	<div id="SelectGallery" class="page">
+      <div style="width:100%; margin:0px; padding: 5px 0 5px 0; float: left; ">
 			<div name="user_lbl" style="float:left;font-weight:bold;"></div> 
-			<Span class="gallary_menubtn" onClick="backtogallary()" style="float:right;" ontouchstart="return true;">Cancel</Span>
-			<Span class="gallary_menubtn" onClick="confirmGallaryDiscard()" style="float:right;background-color:#F29645 ;" ontouchstart="return true;">Delete</Span>
-			<Span id="gallery_head" style="float: right;">Select files for delete : </Span>
+			<Span class="gallery_menubtn" onClick="backToGallery()" style="float:right;" ontouchstart="return true;">Cancel</Span>
+			<Span class="gallery_menubtn" onClick="confirmGalleryDiscard()" style="float:right;background-color:#F29645 ;" ontouchstart="return true;">Delete</Span>
+			<Span id="gallery_head" style="float: right;">Select files to delete : </Span>
       </div>
 		<div style="padding:1px 2px; margin:0px; ">
 			<hr />
@@ -229,9 +233,21 @@
 			<h3 style="margin:0px; padding:0px;">File Explorer</h3>
             <a id="backBtn" href="#" onClick="backFile()"><img src="img/backward.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<a id="homeBtn" href="#" onClick="fileexplore()"><img src="img/home.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<a href="#" onClick="backtogallary()"  ><img src="img/undo.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>
+			<a href="#" onClick="backToGallery()"  ><img src="img/undo.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>
       </div>
       <div id="dirContent" style="height:70%; overflow:scroll; text-align:left; position:absolute;">
+      </div>
+	</div>
+	
+	<div id="ftpExplorer" class="page">
+	 <div id="header" style="left:40%; background:#0099CC; width:100%; margin-top:0px;">
+			<h3 style="margin:0px; padding:0px;">FTP Explorer</h3>
+			<a id="backBtn" href="#" onClick="ftpExplorer('-')"><img src="img/backward.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a id="homeBtn" href="#" onClick="onFinishFtpSelection()"><img src="img/up.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="#" onClick="backToGallery()"><img src="img/undo.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			FTP Name : <select id="drop_ftp_name"></select>
+      </div>
+      <div id="ftpFileContent" style="height:70%; overflow:scroll; text-align:left; position:absolute;">
       </div>
 	</div>
 	
