@@ -120,7 +120,7 @@ function onFinishFtpSelection()
 	});
 	if(selectChkList.length == 0)
     {
-        backtogallary();
+        backToGallery();
     }
 	else if(selectChkList.length == 1)
     {

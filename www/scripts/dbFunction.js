@@ -74,7 +74,7 @@ function onDirectFileUpload(fileFullPath,fileName){
 	onAfterSaveFile(fileFullPath);
 }
 
-function deleteMRgallary() {
+function deleteMRgallery() {
     db.transaction(deleteimagelist, errorCB);
 
     function deleteimagelist(tx) {
@@ -94,7 +94,7 @@ function deleteMRgallary() {
     }
 }
 
-function DiscardGallary(buttonIndex) {
+function DiscardGallery(buttonIndex) {
     if (buttonIndex == 1) {
         db.transaction(function (tx) {
 			var sqlQuery;
@@ -104,7 +104,7 @@ function DiscardGallary(buttonIndex) {
 				sqlQuery ='SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"';
             tx.executeSql(sqlQuery, [], function (tx, results) {
                 imagelistarray = results;
-                deleteSelectedGallary();
+                deleteSelectedGallery();
             }, function (err) {
                 console.log("Error SQL: " + err.code);
             });
@@ -112,9 +112,9 @@ function DiscardGallary(buttonIndex) {
     }
 }
 
-function onDeleteGallaryPage() {
+function onDeleteGalleryPage() {
 	navigator.notification.activityStart("Please Wait", "loading...");
-    SelectedGallaryList = [];
+    SelectedGalleryList = [];
     db.transaction(function (tx) {
 		var sqlQuery;
 		if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
@@ -123,7 +123,7 @@ function onDeleteGallaryPage() {
 			sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"';
         tx.executeSql(sqlQuery, [], function (tx, results) {
             imagelistarray = results;
-            fillGallaryForDelete();
+            fillGalleryForDelete();
         }, function (err) {
             console.log("Error SQL: " + err.code);
         });

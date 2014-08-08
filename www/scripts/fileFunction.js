@@ -58,9 +58,9 @@ function OnImgWriter(writer,fileFullPath,fileName,imageURI){
 function onAfterSaveFile(fileFullPath){
 	navigator.notification.activityStart("Please Wait", "loading...");
     loadPage('gallery');
-	if(gallaryTable != "" && gallaryTable != null)
+	if(galleryTable != "" && galleryTable != null)
 	{	
-		document.getElementById("disp-tab1").innerHTML=gallaryTable;
+		document.getElementById("disp-tab1").innerHTML=galleryTable;
 		db.transaction(function (tx) {
 		var sqlQuery;
 		if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
@@ -90,7 +90,7 @@ function onAfterSaveFile(fileFullPath){
 		},  function (err) { console.log("Error SQL: " + err.code);	});
     }
 	else{
-		backtogallary();
+		backToGallery();
 	}
 
 	if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
@@ -126,7 +126,7 @@ function fillSingleTD(fileFullPath){
 						document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(imgelem);
 						itemCount = itemCount + 1;
 						Disp_row = Disp_row + 1;
-						gallaryTable=document.getElementById("disp-tab1").innerHTML;
+						galleryTable=document.getElementById("disp-tab1").innerHTML;
 				};
 				reader.readAsDataURL(rfile);
 			}, function () {});
@@ -155,9 +155,9 @@ function fillSingleTD(fileFullPath){
 		document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(imgelem);
 		itemCount = itemCount + 1;
 		Disp_row = Disp_row + 1;
-		gallaryTable=document.getElementById("disp-tab1").innerHTML;
+		galleryTable=document.getElementById("disp-tab1").innerHTML;
 	}
-	backtogallary();
+	backToGallery();
 }
 
 function dirFail(error) {
@@ -214,7 +214,7 @@ function setUploadedImg(fileName){
 			tdDiv.setAttribute("style", "position:absolute;height:35px;width:35px;display:block;");
 		}
 	}
-	gallaryTable=document.getElementById("disp-tab1").innerHTML;
+	galleryTable=document.getElementById("disp-tab1").innerHTML;
 }
 
 function uploadFail(error) {
@@ -284,9 +284,9 @@ function onReadFileDataUrl(FnEntries,ItemNumber,callBack){
 }
 
 function onImgFileSystem(FnEntries){
-	FnEntries.file(gotGallaryImg,function(){});
-	function gotGallaryImg(rfile){readGallaryDataUrl(rfile);}
-	function readGallaryDataUrl(rfile) {
+	FnEntries.file(gotGalleryImg,function(){});
+	function gotGalleryImg(rfile){readGalleryDataUrl(rfile);}
+	function readGalleryDataUrl(rfile) {
 		var reader = new FileReader();
 		reader.onloadend = function(evt) {
 			onCropCall(evt.target.result);

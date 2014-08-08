@@ -15,13 +15,13 @@ var X_instruction_name;
 var vis_pass;
 var Disp_row;
 var Disp_col;
-var SelectedGallaryList;
+var SelectedGalleryList;
 var attachCount;
 var itemCount;
 var imgUploadCount = 0;
 var mrLinesArray = new Array();
 var backPage;
-var gallaryTable="";
+var galleryTable="";
 var totColumns=0;
 var pageState = 0;
 var deleteCount=0;
@@ -159,6 +159,14 @@ function renderWarehouseDropdown(){
 	warehouseListArray[17][0]="1000019";
 	warehouseListArray[17][1]="1000042";
 	warehouseListArray[17][2]="Amsterdam Stock in Singapore";
+    warehouseListArray[18]=new Array();
+    warehouseListArray[18][0]="1000020";
+    warehouseListArray[18][1]="1000054";
+    warehouseListArray[18][2]="Japan PreSold in Japan";
+    warehouseListArray[19]=new Array();
+    warehouseListArray[19][0]="1000020";
+    warehouseListArray[19][1]="1000055";
+    warehouseListArray[19][2]="Japan Stock in Japan";
 }
 
 function onExit() {
@@ -193,8 +201,8 @@ function callSyncVerify(){
 	 if (imgUploadCount == 0) {
 		onStopNotification();
 		navigator.notification.alert('Synchronized all files', function () {
-			gallaryTable="";
-			backtogallary();		
+			galleryTable="";
+			backToGallery();
 		}, 'Success', 'OK');
 		
 	 }
@@ -327,27 +335,27 @@ function onRemoveVISDirFile(tmpfile,InspNumber,isInsp){
     }, function (error) { console.log(" FSError = " + error.code); });
 }
 
-function confirmGallaryDiscard() {
-    navigator.notification.confirm('Are you sure ???', DiscardGallary, 'Delete selected files...', ['Ok','Cancel']);
+function confirmGalleryDiscard() {
+    navigator.notification.confirm('Are you sure ???', DiscardGallery, 'Delete selected files...', ['Ok','Cancel']);
 }
 
 function varifyAllDelete(){
 	if(deleteCount==0){
-		gallaryTable="";
-		backtogallary();
+		galleryTable="";
+		backToGallery();
 		document.getElementById("disp-selGal").innerHTML = "";
 	}
 }
 
-function deleteSelectedGallary() {
-	deleteCount = SelectedGallaryList.length;
+function deleteSelectedGallery() {
+	deleteCount = SelectedGalleryList.length;
     for (var j = 0; j < imagelistarray.rows.length; j++) {
         if (DataTypes.indexOf(getExtention(getFileName(imagelistarray.rows.item(j).file)).toUpperCase()) < 0) {
-            if (SelectedGallaryList.indexOf(getFileName(imagelistarray.rows.item(j).file)) >= 0) {
+            if (SelectedGalleryList.indexOf(getFileName(imagelistarray.rows.item(j).file)) >= 0) {
             	onRemoveOtherFiles(imagelistarray.rows.item(j).file);
             }
         } else {
-            if (SelectedGallaryList.indexOf(imagelistarray.rows.item(j).name) >= 0) {
+            if (SelectedGalleryList.indexOf(imagelistarray.rows.item(j).name) >= 0) {
 				if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
 					onRemoveVISDirFile(imagelistarray.rows.item(j).file,M_INOUT_ID,0);
 				else
@@ -357,8 +365,8 @@ function deleteSelectedGallary() {
     }
 }
 
-function fillGallaryForDelete() {
-	loadPage('SelectGallary');
+function fillGalleryForDelete() {
+	loadPage('SelectGallery');
     for (var j = 0; j < 3; j++) {
         var tr = document.createElement('tr');
         tr.setAttribute("style", "margin:0px; padding:0px;");
@@ -428,12 +436,12 @@ function fillGallaryForDelete() {
 
 function onDeleteFileSelect(selectTdId, galName) {
 
-    if (SelectedGallaryList.indexOf(galName) < 0) {
-        SelectedGallaryList.push(galName);
+    if (SelectedGalleryList.indexOf(galName) < 0) {
+        SelectedGalleryList.push(galName);
         document.getElementById("chk" + selectTdId).setAttribute("style", "display: block;position:absolute;");
     } else {
         document.getElementById("chk" + selectTdId).setAttribute("style", "display: none;");
-        SelectedGallaryList = remFile(SelectedGallaryList, galName);
+        SelectedGalleryList = remFile(SelectedGalleryList, galName);
     }
     function remFile(ary, elem) {
         var i = ary.indexOf(elem);
@@ -442,12 +450,12 @@ function onDeleteFileSelect(selectTdId, galName) {
     }
 }
 
-function renderGallary() {
+function renderGallery() {
     
 	var sideBar = document.getElementById("sideBarGallery");
 	sideBar.style.height = window.innerHeight*.85+"px";
 	
-	if(gallaryTable=="")
+	if(galleryTable=="")
 	{
 		db.transaction(function (tx) {
 			var sqlQuery;
@@ -459,14 +467,14 @@ function renderGallary() {
 				imagelistarray = results;
 				Disp_col = 0;
 				Disp_row = 0;
-				onCreateTR_TD('disp-tab1',fillGallaryPhotos);
+				onCreateTR_TD('disp-tab1',fillGalleryPhotos);
 			}, function (err) {
 				console.log("Error SQL: " + err.code);
 			});
 		}, errorCB);
 	}else{
 		document.getElementById("disp-tab1").innerHTML="";
-		document.getElementById("disp-tab1").innerHTML=gallaryTable;
+		document.getElementById("disp-tab1").innerHTML=galleryTable;
 		onStopNotification();
 	}
 }
@@ -490,7 +498,7 @@ function onCreateTR_TD(tableName,callBack){
 	callBack();
 }
 
-function fillGallaryPhotos() {
+function fillGalleryPhotos() {
     itemCount = 0;
 	pandingCounts = 0;
 	if(imagelistarray.rows.length == 0){
@@ -571,7 +579,7 @@ function fillGallaryPhotos() {
 function onRenderTable(){
 	if(itemCount==imagelistarray.rows.length)
 	{
-		gallaryTable = document.getElementById("disp-tab1").innerHTML;
+		galleryTable = document.getElementById("disp-tab1").innerHTML;
 		onStopNotification();
 	}
 }
@@ -624,7 +632,7 @@ function loadAccureChoise() {
     loadPage("AccureChoise");
 }
 
-function loadgallaryChoise() {
+function loadGalleryChoice() {
     loadPage("fileExpo");
     fileexplore();
 }
@@ -717,7 +725,7 @@ function captureI() {
 function onFail(message) {
     //alert('Failed because: ' + message);
 	navigator.notification.alert('Failure!!',function(){},message,'Ok');
-    backtogallary();
+    backToGallery();
 }
 
 function loadPage(id1) {
@@ -748,15 +756,15 @@ function onBackButton() {
 	}else if(currentPage=='startNewInsp'){
 		loadPage("home");
 	}else if(currentPage=='gallery'){
-		onBackToStartInspection('gallary');
-	}else if(currentPage=='SelectGallary'){
-		backtogallary();
+		onBackToStartInspection('gallery');
+	}else if(currentPage=='SelectGallery'){
+		backToGallery();
 	}else if(currentPage=='fileExpo'){
-		backtogallary();
+		backToGallery();
 	}else if(currentPage=='ftpExplorer'){
-		backtogallary();
+		backToGallery();
 	}else if(currentPage=='cropView'){
-		backtogallary();
+		backToGallery();
 	}else if(currentPage=='setting'){
 		onLoginpage();
 	}else if(currentPage=='aboutUs'){
@@ -847,8 +855,8 @@ function onInspSet(nid, iname) {
     loadPage('gallery');
     X_INSTRUCTIONLINE_ID = nid;
     X_instruction_name = iname;
-	gallaryTable="";
-    renderGallary();
+	galleryTable="";
+    renderGallery();
     document.getElementById("gallery_head").innerHTML = M_line_name + "(" + X_instruction_name + ")";
 
 }
@@ -858,15 +866,15 @@ function onDefualtInspSet(nid, iname) {
     M_INOUT_ID = nid;
 	X_INSTRUCTIONLINE_ID = 0;
     X_instruction_name = iname;
-	gallaryTable="";
-    renderGallary();
+	galleryTable="";
+    renderGallery();
     document.getElementById("gallery_head").innerHTML = M_line_name + "(" + X_instruction_name + ")";
 }
 
-function backtogallary() {
+function backToGallery() {
 	navigator.notification.activityStart("Please Wait", "loading...");
     loadPage('gallery');
-    renderGallary();
+    renderGallery();
     document.getElementById("gallery_head").innerHTML = M_line_name + "(" + X_instruction_name + ")";
 }
 

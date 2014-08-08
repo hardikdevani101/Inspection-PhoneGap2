@@ -1,6 +1,8 @@
 syntax: glob
 platforms/*
 plugins/*
+res/*
+icon.png
 .idea/*
 *.iml
 soapui*

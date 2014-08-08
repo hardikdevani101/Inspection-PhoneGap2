@@ -144,8 +144,8 @@ function fillMrLines(){
                 }
 
                 function processError(data, status, req) {
-					if(backPage=='gallary')
-						backtogallary();
+					if(backPage=='gallery')
+						backToGallery();
 					else
 						{
 							loadPage("home");
@@ -231,8 +231,8 @@ function fillInspectionsLines(){
                 }
 
                 function processError(data, status, req) {
-					if(backPage=='gallary')
-						backtogallary();
+					if(backPage=='gallery')
+						backToGallery();
 					else
 						{
 							loadPage("home");
@@ -313,7 +313,7 @@ function callAttachImageWs(imginspline,imgname){
 							tx.executeSql('UPDATE vis_gallery SET imgAttach="T" WHERE insp_line="'+imginspline+'"');
 							attachCount=attachCount-1;
 							if(attachCount==0){
-								deleteMRgallary();
+								deleteMRgallery();
 							}
 						}, errorCB);
 					}else{
@@ -381,7 +381,7 @@ function callAttachM_InoutWs(rec_id,tab_name,imgname){
 							tx.executeSql('UPDATE vis_gallery SET imgAttach="T" WHERE in_out_id="'+rec_id+'"');
 							attachCount=attachCount-1;
 							if(attachCount==0){
-								deleteMRgallary();
+								deleteMRgallery();
 							}
 						}, errorCB);
 					}else{
@@ -449,7 +449,7 @@ function getFTPList(){
 							if (fullNodeList.length == 0){
 								onStopNotification();
 								navigator.notification.alert('No FTP list found.','','Alert');
-								backtogallary();
+								backToGallery();
 							} else
 							{
 								for (var i=0; i < fullNodeList.length; i++)
@@ -481,7 +481,7 @@ function getFTPList(){
                 }
 
                 function processError(data, status, req) {
-					backtogallary();
+					backToGallery();
 					onStopNotification();
 					navigator.notification.alert('Failure!!',function(){},getErrorMessage(data, status, req),'Ok');
                 }
