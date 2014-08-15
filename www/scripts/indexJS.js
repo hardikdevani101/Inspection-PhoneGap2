@@ -327,7 +327,7 @@ function onRemoveVISDirFile(tmpfile, InspNumber, isInsp) {
                     sqlQuery = 'DELETE FROM vis_gallery WHERE file="' + tmpfile + '" and insp_line="' + InspNumber + '"';
                 tx.executeSql(sqlQuery);
                 deleteCount = deleteCount - 1;
-                varifyAllDelete();
+                verifyAllDelete();
             }, errorCB);
         }, function (error) {
             console.log("Error on Delete = " + error.code);
@@ -341,7 +341,7 @@ function confirmGalleryDiscard() {
     navigator.notification.confirm('Are you sure ???', DiscardGallery, 'Delete selected files...', ['Ok', 'Cancel']);
 }
 
-function varifyAllDelete() {
+function verifyAllDelete() {
     if (deleteCount == 0) {
         galleryTable = "";
         backToGallery();
