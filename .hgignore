@@ -1,7 +1,10 @@
 syntax: glob
 platforms/*
+plugins/*
+res/*
+icon.png
 .idea/*
+*.iml
 soapui*
-VISion.iml
 InspectionService-soapui-project.xml
 intellij-soapui-workspace.xml
