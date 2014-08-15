@@ -213,10 +213,10 @@
 	
 	<div id="SelectGallery" class="page">
       <div style="width:100%; margin:0px; padding: 5px 0 5px 0; float: left; ">
-			<div name="user_lbl" style="float:left;font-weight:bold;"></div> 
+			<div name="user_lbl" style="float:left;font-weight:bold;"></div>
 			<Span class="gallery_menubtn" onClick="backToGallery()" style="float:right;" ontouchstart="return true;">Cancel</Span>
 			<Span class="gallery_menubtn" onClick="confirmGalleryDiscard()" style="float:right;background-color:#F29645 ;" ontouchstart="return true;">Delete</Span>
-			<Span id="gallery_head" style="float: right;">Select files to delete : </Span>
+			<Span id="gallery_head" style="float: right; padding-top: 6px;">Select files to delete : </Span>
       </div>
 		<div style="padding:1px 2px; margin:0px; ">
 			<hr />
@@ -235,7 +235,7 @@
 			<a id="homeBtn" href="#" onClick="fileexplore()"><img src="img/home.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<a href="#" onClick="backToGallery()"  ><img src="img/undo.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>
       </div>
-      <div id="dirContent" style="height:70%; overflow:scroll; text-align:left; position:absolute;">
+      <div id="dirContent" style="height:70%; overflow:auto; text-align:left; position:absolute;">
       </div>
 	</div>
 	
@@ -247,7 +247,7 @@
 			<a href="#" onClick="backToGallery()"><img src="img/undo.png" height="30" width="30" style="margin-top:5px; padding:0px;"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			FTP Name : <select id="drop_ftp_name"></select>
       </div>
-      <div id="ftpFileContent" style="height:70%; overflow:scroll; text-align:left; position:absolute;">
+      <div id="ftpFileContent" style="height:70%; overflow:auto; text-align:left; position:absolute;">
       </div>
 	</div>
 	

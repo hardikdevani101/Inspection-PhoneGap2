@@ -74,6 +74,7 @@ function ftpExplorer(currentFtpDir)
 		for(var j = 0 ; j < dirList.length ; j++)
         {
             var label= document.createElement("div");
+            label.class = "ftpDir"
             label.style.lineHeight="30px";
             var img = document.createElement('img');
             img.src = "img/folder.jpg";
@@ -90,6 +91,7 @@ function ftpExplorer(currentFtpDir)
 		for(var i = 0 ; i < fileList.length ; i++)
         {
             var label= document.createElement("div");
+            label.class = "ftpFile"
             label.style.lineHeight="30px";
             var description = document.createTextNode(fileList[i]);
             var checkbox = document.createElement("input");

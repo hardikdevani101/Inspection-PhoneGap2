@@ -118,7 +118,8 @@ select {
     margin-left: 10px;
     float: left;
     width: 80px;
-    padding: 1px;
+    padding: 3px;
+    font-size: larger;
 }
 
 .crop_btn {
