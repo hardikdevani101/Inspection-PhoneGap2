@@ -1,16 +1,10 @@
 var vis_FtpUrl;
 function onftpExplorer()
 {
+	loadPage("ftpExplorer");
 	if(typeof vision_ftp !== 'undefined' && vision_ftp.length > 0 && vision_ftp != null)
     {
-        if(typeof vision_ftp_url !== 'undefined' && vision_ftp_url != "" && vision_ftp_url != null)
-        {
-            ftpExplorer();
-        }
-        else
-        {
-            onFTPSelect();
-        }
+        onFTPSelect();
     }
 	else
     {
@@ -19,13 +13,15 @@ function onftpExplorer()
 }
 
 function onFTPSelect()
-{
+{	
 	var select = document.getElementById("drop_ftp_name");
 	select.innerHTML = "";
     for (var i = 0; i < vision_ftp.length; i++) {
         var option = document.createElement('option');
         option.text = vision_ftp[i][0];
-        option.value = vision_ftp[i][1];
+        option.value = vision_ftp[i][2]+ ":" + vision_ftp[i][3]+"@" + vision_ftp[i][1];
+        if(vision_ftp_url == vision_ftp[i][2]+ ":" + vision_ftp[i][3]+"@" + vision_ftp[i][1])
+        	option.selected = true;
         select.add(option);
     }
     select.setAttribute("onchange", "createVisionURL()");
@@ -38,10 +34,11 @@ function createVisionURL()
 	var selFTPUrl=e.options[e.selectedIndex].value;
 	for(var i=0; i<vision_ftp.length; i++)
     {
-        if(vision_ftp[i][1] == selFTPUrl)
+        if((vision_ftp[i][2]+ ":" + vision_ftp[i][3]+"@" + vision_ftp[i][1]) == selFTPUrl)
         {
+        	
             vision_ftp_url = vision_ftp[i][2]+ ":" + vision_ftp[i][3]+"@" + vision_ftp[i][1];
-            onftpExplorer();
+            ftpExplorer();
             break;
         }
     }
@@ -49,7 +46,6 @@ function createVisionURL()
 
 function ftpExplorer(currentFtpDir)
 {
-	loadPage('ftpExplorer');
 	if(typeof currentFtpDir === 'undefined')
     {
         parlistArray=[];

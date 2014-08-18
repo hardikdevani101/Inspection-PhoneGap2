@@ -430,6 +430,9 @@ function getFTPList(){
 								 +'<_0:field column="IsActive" >'
 									 +'<_0:val>Y</_0:val>'
 								  +'</_0:field>'
+								  +'<_0:field column="AD_Org_ID" >'
+									 +'<_0:val>'+vis_org_id+'</_0:val>'
+								  +'</_0:field>'
 							   +'</_0:DataRow>'
 						 +'</_0:ModelCRUD>'
 							+ getWsDataLoginString()
@@ -474,7 +477,7 @@ function getFTPList(){
 									vision_ftp[i][2]=fUser;
 									vision_ftp[i][3]=fPass;
 								}
-								onftpExplorer();
+								onFTPSelect();
 							}
 					}
 					
