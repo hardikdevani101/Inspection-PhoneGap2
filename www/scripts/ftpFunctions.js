@@ -145,20 +145,48 @@ function downloadFTPFile(selectChkList){
 		 root.getFile(dirVISInspectionFTP.fullPath.substring(1) +"/"+FtpFileName, null, function(entry){
 			var fileFullPath=getSDPath(entry.fullPath).substring(2);
 			var fileName=getFileName(fileFullPath);
-			 db.transaction(function (tx){
-					var sqlQuery;
-					if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
-						sqlQuery ='INSERT INTO vis_gallery(mr_line,in_out_id,name,file) VALUES ("'+M_InOutLine_ID+'","'+M_INOUT_ID+'","'+fileName+'","'+fileFullPath+'")';
-					else
-						sqlQuery ='INSERT INTO vis_gallery(mr_line,insp_line,name,file) VALUES ("'+M_InOutLine_ID+'","'+X_INSTRUCTIONLINE_ID+'","'+fileName+'","'+fileFullPath+'")';
-					tx.executeSql(sqlQuery);
-				}, errorCB,function(){
-					onAfterSaveFile(fileFullPath);
-					if(selectChkList.length > 0)
-						{
-							downloadFTPFile(selectChkList);
-						}
-				});
+			if (DataTypes.indexOf(getExtention(getFileName(fileFullPath)).toUpperCase()) >= 0) {
+				entry.file(function (rfile){
+					var reader = new FileReader();
+						reader.onloadend = function (evt) {
+							var image_temp = new Image();
+							image_temp.src = evt.target.result;
+							image_temp.onload = function(){
+								var tmpCanvas = document.createElement('canvas');
+								tmpCanvas.height = image_temp.height;
+								tmpCanvas.width = image_temp.width;
+								var tmpCtx = tmpCanvas.getContext("2d");
+								tmpCtx.drawImage(image_temp,0,0,image_temp.width,image_temp.height);
+								var encoder = new JPEGEncoder();
+								var img64 = encoder.encode(tmpCtx.getImageData(0,0,image_temp.width,image_temp.height),100);
+								var imageURI=Base64Binary.decodeArrayBuffer(img64.replace(/data:image\/jpeg;base64,/,''));
+								saveImage(imageURI);
+								if(selectChkList.length > 0)
+								{
+									downloadFTPFile(selectChkList);
+								}
+							}
+						};
+						reader.readAsDataURL(rfile);
+				}, function () {});
+			}
+			else
+				{
+				 db.transaction(function (tx){
+						var sqlQuery;
+						if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
+							sqlQuery ='INSERT INTO vis_gallery(mr_line,in_out_id,name,file) VALUES ("'+M_InOutLine_ID+'","'+M_INOUT_ID+'","'+fileName+'","'+fileFullPath+'")';
+						else
+							sqlQuery ='INSERT INTO vis_gallery(mr_line,insp_line,name,file) VALUES ("'+M_InOutLine_ID+'","'+X_INSTRUCTIONLINE_ID+'","'+fileName+'","'+fileFullPath+'")';
+						tx.executeSql(sqlQuery);
+					}, errorCB,function(){
+						onAfterSaveFile(fileFullPath);
+						if(selectChkList.length > 0)
+							{
+								downloadFTPFile(selectChkList);
+							}
+					});
+				}
 		 }, function (error) {
 		        console.log(" FSError = " + error.code);
 		    });
