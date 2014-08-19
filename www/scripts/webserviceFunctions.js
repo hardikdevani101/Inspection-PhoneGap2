@@ -466,7 +466,7 @@ function getFTPList() {
                     vision_ftp[i][2] = fUser;
                     vision_ftp[i][3] = fPass;
                 }
-                onftpExplorer();
+                onFtpExplorer();
             }
         }
 

@@ -1,5 +1,5 @@
 var vis_FtpUrl;
-function onftpExplorer() {
+function onFtpExplorer() {
     if (typeof vision_ftp !== 'undefined' && vision_ftp.length > 0 && vision_ftp != null) {
         if (typeof vision_ftp_url !== 'undefined' && vision_ftp_url != "" && vision_ftp_url != null) {
             ftpExplorer();
@@ -32,7 +32,7 @@ function createVisionURL() {
     for (var i = 0; i < vision_ftp.length; i++) {
         if (vision_ftp[i][1] == selFTPUrl) {
             vision_ftp_url = vision_ftp[i][2] + ":" + vision_ftp[i][3] + "@" + vision_ftp[i][1];
-            onftpExplorer();
+            onFtpExplorer();
             break;
         }
     }
