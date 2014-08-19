@@ -1,16 +1,32 @@
-<project name="VISion" default="build" basedir=".">
+<project name="VISion" default="deploy" basedir=".">
     <description>
         This buildfile is used to build the VISion archive file.
     </description>
 
-    <property name="deploy.dir" value="/home/juan/Desktop"/>
+    <property name="scp.key" value="/home/juan/Keys/AWS/velocity-metajive-1.pem"/>
+    <property name="local.build.dir" value="./platforms/android/ant-build"/>
+    <property name="local.deploy.dir" value="/home/juan/Desktop"/>
+    <property name="remote.scp.usr" value="ec2-user"/>
+    <property name="remote.svr" value="www.velocityelec.com"/>
+    <property name="remote.deploy.dir" value="/var/www/html/vision"/>
 
-    <target name="build" description="create phonegap build archive">
+    <target name="build.phonegap" description="create phonegap build archive">
         <echo message="=========== Build VISion"/>
         <!-- Create the time stamp -->
         <tstamp/>
-        <zip destfile="${deploy.dir}/vision_${version}.zip">
+        <zip destfile="${local.deploy.dir}/vision_${version}.zip">
             <zipfileset dir="www" />
         </zip>
+    </target>
+
+    <target name="deploy" description="create phonegap build archive">
+        <echo message="=========== Build VISion"/>
+        <!-- Create the time stamp -->
+        <tstamp/>
+        <scp file="${local.build.dir}/VISion-debug.apk"
+             todir="${remote.scp.usr}@${remote.svr}:${remote.deploy.dir}/VISion-debug_${version}.apk"
+             keyfile="${scp.key}"
+             trust="true"
+        />
     </target>
 </project>

@@ -1,5 +1,5 @@
 var vis_FtpUrl;
-function onftpExplorer()
+function onFtpExplorer()
 {
 	loadPage("ftpExplorer");
 	if(typeof vision_ftp !== 'undefined' && vision_ftp.length > 0 && vision_ftp != null)
