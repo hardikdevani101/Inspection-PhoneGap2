@@ -92,8 +92,7 @@ function ftpExplorer(currentFtpDir) {
 }
 
 function ftpfail() {
-    navigator.notification.alert('FTP Connection failed', function () {
-    }, 'Failure', 'OK');
+    navigator.notification.alert('FTP Connection failed', function () {}, 'Failure', 'OK');
 }
 
 function onFinishFtpSelection() {
