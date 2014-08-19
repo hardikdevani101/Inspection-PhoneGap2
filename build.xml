@@ -19,8 +19,8 @@
         </zip>
     </target>
 
-    <target name="deploy" description="create phonegap build archive">
-        <echo message="=========== Build VISion"/>
+    <target name="deploy" description="deploy phonegap app">
+        <echo message="=========== Deploy VISion"/>
         <!-- Create the time stamp -->
         <tstamp/>
         <scp file="${local.build.dir}/VISion-debug.apk"
