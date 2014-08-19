@@ -61,7 +61,7 @@ function ftpExplorer(currentFtpDir)
 	var tmpParList = parlistArray.toString().split(',');
 	var urlPath = tmpParList.join('/');
 	vis_FtpUrl = "ftp://"+vision_ftp_url+"/"+urlPath;
-	window.plugins.ftpclient.filelist(vis_FtpUrl, function(AllList){
+	vision.ftpclient.filelist(vis_FtpUrl, function(AllList){
 		var mainDiv = document.getElementById("ftpFileContent");
 		mainDiv.innerHTML = "";
 		var fileList = AllList[0]["fileNames"];
@@ -131,7 +131,7 @@ function onFinishFtpSelection()
 }
 
 function onSingleFTPFileSelect(FtpFileName){
-	window.plugins.ftpclient.get(dirVISInspectionFTP.fullPath +"/"+FtpFileName, vis_FtpUrl + FtpFileName, function(){
+	vision.ftpclient.get(dirVISInspectionFTP.fullPath +"/"+FtpFileName, vis_FtpUrl + FtpFileName, function(){
 		onFileExplorerClick(dirVISInspectionFTP.fullPath +"/"+FtpFileName);
 	}, function(){
 		console.log("File not downloaded from ftp");
@@ -141,7 +141,7 @@ function onSingleFTPFileSelect(FtpFileName){
 function downloadFTPFile(selectChkList){
 	navigator.notification.activityStart("Please Wait", "Uploading files...");
 	var FtpFileName = selectChkList.shift();
-	window.plugins.ftpclient.get(dirVISInspectionFTP.fullPath +"/"+FtpFileName, vis_FtpUrl + FtpFileName, function(){
+	vision.ftpclient.get(dirVISInspectionFTP.fullPath +"/"+FtpFileName, vis_FtpUrl + FtpFileName, function(){
 		 root.getFile(dirVISInspectionFTP.fullPath.substring(1) +"/"+FtpFileName, null, function(entry){
 			var fileFullPath=getSDPath(entry.fullPath).substring(2);
 			var fileName=getFileName(fileFullPath);
