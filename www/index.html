@@ -25,10 +25,12 @@
     <script src="scripts/jquery.ui.mouse.js"></script>
     <script src="scripts/jquery.ui.touch-punch.min.js"></script>
     <script src="scripts/jquery.ui.slider.js"></script>
-    <link href="jmobile/jquery.mobile-1.4.2.min.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="styles/jquery.ui.all.css">
-    <link href="styles/jquery.Jcrop.css" rel="stylesheet" type="text/css">
-    <link href="styles/indexStyle.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="css/themes/vision.min.css" />
+    <link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css" />
+    <link rel="stylesheet" href="jmobile/jquery.mobile.structure-1.4.2.min.css" type="text/css"/>
+    <link rel="stylesheet" href="styles/jquery.ui.all.css"/>
+    <link href="styles/jquery.Jcrop.css" rel="stylesheet" type="text/css"/>
+    <link href="styles/indexStyle.css" rel="stylesheet" type="text/css"/>
     <style type="text/css">
     <!--
     #wmCanvasContainer {
@@ -51,132 +53,141 @@
 <body onLoad="onLoad()">
 <div id="disp"></div>
 
-<div data-role="page" id="login" style="height:100%">
-    <div data-role="header" data-position="fixed"><h1>VISion Login</h1></div>
-    <div role="main" class="ui-content">
-        <label for="txt_user">Username :</label> <input id="txt_user" name="txt_user" type="text" value=""/><br>
-        <label for="txt_password">Password :</label> <input id="txt_password" name="txt_password" type="password"
-                                                            value=""/><br>
-    </div>
-    <div data-role="footer" data-position="fixed" data-theme="b">
-        <div data-role="navbar" data-type="vertical">
-            <ul>
-                <li><a href="#" id="loginBtn" onClick="validateLogin()" data-theme="a">Login</a></li>
-                <li><a href="#" id="settingPageBtn" onClick="onSettingPage()" data-theme="a">Setting</a></li>
-                <li><a href="#" id="aboutBtn" onClick="onAboutUs()" data-theme="a">About</a></li>
-                <li><a href="#" id="appExitBtn" onClick="onExit()" data-theme="a">Exit</a></li>
-            </ul>
+<div id="login" data-role="page" data-theme="b" data-content-theme="b">
+    <div data-role="header" data-position="fixed">
+        <button class="ui-btn-left ui-btn ui-btn-b ui-btn-inline ui-corner-all ui-btn-icon-left ui-icon-delete ui-btn-icon-notext" id="appExitBtn" onClick="onExit()">Exit</button>
+        <h1>VISion Login</h1>
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+            <button data-icon="info" data-iconpos="notext" id="aboutBtn" onClick="onAboutUs()" data-transition="pop">About</button>
+            <button data-icon="gear" data-iconpos="notext" id="settingPageBtn" onClick="onSettingPage()">Settings</button>
         </div>
+    </div>
+
+    <div data-role="main" class="ui-content">
+        <label for="txt_user" class="ui-hidden-accessible">Username :</label>
+        <input id="txt_user" name="txt_user" type="text" data-clear-btn="true" value="" placeholder="username"/><br>
+        <label for="txt_password" class="ui-hidden-accessible">Password :</label>
+        <input id="txt_password" name="txt_password" type="password" data-clear-btn="true" value="" placeholder="password"/><br>
         <div id="login_error"></div>
+    </div>
+
+    <div data-role="footer" data-position="fixed">
+        <div class="ui-grid-b ui-bar">
+            <div class="ui-block-a">&nbsp;</div>
+            <div class="ui-block-b"><button class="ui-btn ui-btn-b ui-shadow ui-corner-all ui-icon-check" id="loginBtn" onClick="validateLogin()">Login</button></div>
+            <div class="ui-block-c">&nbsp;</div>
+        </div>
     </div>
 </div>
 
-<div data-role="page" id="home">
+<div id="home" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" data-position="fixed">
         <div name="user_lbl" style="float:left;font-weight:bold;line-height:40px;"></div>
         <h1>VISion home</h1>
     </div>
-    <div role="main" class="ui-content">
-        <a href="#" id="startNewInspectionBtn" onClick="onStartNewInspection()" data-theme="a">Start Inspection</a>
-        <br>
-        <a href="#" id="logoutBtn" onClick="onLoginPage()" data-theme="a">Logout</a>
-    </div>
-</div>
 
-<div data-role="page" id="setting">
-    <div data-role="header" data-position="fixed">
-        <h1>VISion Setting</h1>
-    </div>
-
-    <div role="main" class="ui-content">
-        <table border="0px">
-            <tr>
-                <td>Server :</td>
-                <td>
-                    <select id="txt_url" style="width:100%;">
-                        <option value="http://10.210.23.77:8088">Production</option>
-                        <option value="http://10.210.23.78:8088">Development</option>
-                        <option value="http://10.210.23.97:8088">Test</option>
-                        <option value="http://192.168.1.104:8096">Logilite-Dev</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Language :</td>
-                <td>
-                    <select id="txt_lang" style="width:100%">
-                        <option value="en_US">English</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Client :</td>
-                <td>
-                    <select id="txt_client" style="width:100%">
-                        <option value="1000000">Velocity</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Role :</td>
-                <td>
-                    <select id="txt_role" style="width:70%;">
-                        <option value="1000043">Warehouse QA Team</option>
-                        <option value="1000055">Warehouse QA Manager</option>
-                        <option value="1000044">Warehouse Manager</option>
-                        <option value="1000052">Warehouse IC Team</option>
-                        <option value="1000054">Warehouse IC Manager</option>
-                        <option value="1000000">Velocity Admin</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Organization :</td>
-                <td>
-                    <select id="txt_organizer" onchange="onOrgChange()" style="width:100%">
-                        <option value="0">*</option>
-                        <option value="1000019">Amsterdam</option>
-                        <option value="1000003">Austin</option>
-                        <option value="1000020">Japan</option>
-                        <option value="1000001">Singapore</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Warehouse :</td>
-                <td>
-                    <select id="txt_warehouse" style="width:100%;">
-
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Image quality :</td>
-                <td>
-                    <select id="txt_imgQua" style="width:100%;">
-                        <option value="50">50% (low)</option>
-                        <option value="75">75% (default)</option>
-                        <option value="80">80% (high)</option>
-                        <option value="90">90% (higher)</option>
-                        <option value="100">100% (highest)</option>
-                    </select>
-                </td>
-            </tr>
-        </table>
-
-    </div>
-    <div data-role="footer" data-position="fixed" data-theme="b">
-        <div data-role="navbar" data-type="vertical">
-            <ul>
-                <li><a href="#" id="btn_update" onClick="validationSetting()" data-theme="a">Save</a></li>
-                <li><a href="#" id="btn_cancel" onClick="onLoginPage()" data-theme="a">Cancel</a></li>
-            </ul>
+    <div data-role="main" class="ui-content">
+        <div class="ui-grid-solo">
+            <div class="ui-block-a"><button type="button" data-theme="b" id="startNewInspectionBtn" onClick="onStartNewInspection()">Start Inspection</button></div>
         </div>
-        <div id="setting_error"></div>
+    </div>
+
+    <div data-role="footer" data-position="fixed">
+        <div class="ui-grid-solo ui-bar">
+            <div class="ui-block-a"><button type="button" data-theme="b" id="logoutBtn" onClick="onLoginPage()">Logout</button></div>
+        </div>
     </div>
 </div>
 
-<div data-role="page" id="startNewInsp">
+<div id="setting" data-role="page" data-theme="b" data-content-theme="b">
+    <div data-role="header" data-position="fixed">
+        <button class="ui-btn-left ui-btn ui-btn-b ui-btn-inline ui-corner-all ui-btn-icon-left ui-icon-back ui-btn-icon-notext" id="btn_cancel" onClick="onLoginPage()">Cancel</button>
+        <h1>VISion Settings</h1>
+    </div>
+
+    <div role="main" class="ui-content">
+        <div class="ui-field-contain">
+            <label for="txt_url">Server :</label>
+            <select id="txt_url">
+                <option value="http://10.210.23.77:8088">Production</option>
+                <option value="http://10.210.23.78:8088">Development</option>
+                <option value="http://10.210.23.97:8088">Test</option>
+                <option value="http://192.168.1.104:8096">Logilite-Dev</option>
+            </select>
+        </div>
+
+        <div class="ui-field-contain">
+            <label for="txt_lang">Language :</label>
+            <select id="txt_lang">
+                <option value="en_US">English</option>
+            </select>
+        </div>
+
+        <div class="ui-field-contain">
+            <label for="txt_client">Client :</label>
+            <select id="txt_client">
+                <option value="1000000">Velocity</option>
+            </select>
+        </div>
+
+        <div class="ui-field-contain">
+            <label for="txt_role">Role :</label>
+            <select id="txt_role">
+                <option value="1000043">Warehouse QA Team</option>
+                <option value="1000055">Warehouse QA Manager</option>
+                <option value="1000044">Warehouse Manager</option>
+                <option value="1000052">Warehouse IC Team</option>
+                <option value="1000054">Warehouse IC Manager</option>
+                <option value="1000000">Velocity Admin</option>
+            </select>
+        </div>
+
+        <div class="ui-field-contain">
+            <label for="txt_organizer">Organization :</label>
+            <select id="txt_organizer" onchange="onOrgChange()">
+                <option value="0">*</option>
+                <option value="1000019">Amsterdam</option>
+                <option value="1000003">Austin</option>
+                <option value="1000020">Japan</option>
+                <option value="1000001">Singapore</option>
+            </select>
+        </div>
+
+        <div class="ui-field-contain">
+            <label for="txt_warehouse">Warehouse :</label>
+            <select id="txt_warehouse">
+
+            </select>
+        </div>
+
+        <div class="ui-field-contain">
+            <label for="txt_imgQua">Image quality :</label>
+            <select id="txt_imgQua">
+                <option value="50">50% (low)</option>
+                <option value="75">75% (default)</option>
+                <option value="80">80% (high)</option>
+                <option value="90">90% (higher)</option>
+                <option value="100">100% (highest)</option>
+            </select>
+        </div>
+
+        <div id="setting_error">
+            <div class="ui-corner-all ui-shadow ui-body ui-body-b" style="text-align: center">
+                <div id="setting_error_msg" class="ui-state-error-text"></div>
+            </div>
+        </div>
+    </div>
+
+    <div data-role="footer" data-position="fixed">
+        <div class="ui-grid-b ui-bar">
+            <div class="ui-block-a">&nbsp;</div>
+            <div class="ui-block-b"><button class="ui-btn ui-btn-b ui-shadow ui-corner-all ui-icon-check" id="btn_update" onClick="validationSetting()">Save</button></div>
+            <div class="ui-block-c">&nbsp;</div>
+        </div>
+    </div>
+</div>
+
+<div id="startNewInsp" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" data-position="fixed">
         <div name="user_lbl" style="float:left;font-weight:bold;width:25%;line-height:40px;"></div>
         <div style="float:left;width:60%; margin:0; padding:0;">
@@ -185,11 +196,13 @@
         </div>
         <a href="#" id="btnReload"  onClick="fillMrLines()" data-theme="a">Reload</a>
     </div>
+
     <div role="main" class="ui-content" style="width:100%; margin:0; padding:0;">
         <table id="disp-Insp" cellspacing="0" cellpadding="0" style="margin:0; padding:0;">
 
         </table>
     </div>
+
     <div data-role="footer" data-position="fixed">
         <div data-role="navbar">
             <ul>
@@ -201,18 +214,20 @@
     </div>
 </div>
 
-<div id="gallery" data-role="page">
+<div id="gallery" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" style="padding:0;">
         <div name="user_lbl" style="float:left;font-weight:bold;width:20%;line-height:40px;"></div>
         <Span id="gallery_head" style="float:left;width:65%;line-height:40px;padding:0;"></Span>
         <input type="button" style="padding:0;" onClick="onSyncFiles()" ontouchstart="return true;" class="ui-mini"
                value="Sync"/>
     </div>
+
     <div role="main" class="ui-content" style="margin:0; padding:0;overflow-x: scroll; overflow-y: hidden;">
         <table id="disp-tab1" cellspacing="0" cellpadding="0" style="margin:0; padding:0;">
 
         </table>
     </div>
+
     <div data-role="footer" class="nav-glyphish-example" data-theme="b" data-position="fixed">
         <div data-role="navbar" class="nav-glyphish-example" data-grid="d">
             <ul>
@@ -227,11 +242,12 @@
     </div>
 </div>
 
-<div id="cropView" data-role="page">
+<div id="cropView" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" data-position="fixed">
         <div name="user_lbl" style="float:left;font-weight:bold;line-height:40px;"></div>
         <h3> Crop Image </h3>
     </div>
+
     <div role="main" class="ui-content" style="margin:0; padding:0;">
         <table style="width:100%">
             <tr>
@@ -261,7 +277,7 @@
     </div>
 </div>
 
-<div id="SelectGallery" data-role="page">
+<div id="SelectGallery" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" data-position="fixed" style="padding:0;">
         <table>
             <tr>
@@ -276,13 +292,14 @@
             </tr>
         </table>
     </div>
+
     <div role="main" class="ui-content" style="overflow-x: scroll; overflow-y: hidden;margin:0; padding:0;">
         <table id="disp-selGal" cellspacing="0" cellpadding="0">
         </table>
     </div>
 </div>
 
-<div id="fileExpo" data-role="page">
+<div id="fileExpo" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" data-position="fixed">
         <table>
             <tr>
@@ -308,7 +325,7 @@
     </div>
 </div>
 
-<div id="ftpExplorer" data-role="page">
+<div id="ftpExplorer" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" data-position="fixed">
         <table>
             <tr>
@@ -339,31 +356,26 @@
     </div>
 </div>
 
-<div id="aboutUs" class="page" data-role="page">
-    <div role="main" class="ui-content" style="margin:0; padding:0;">
-        <center>
-            <div class="ui-corner-all custom-corners">
-                <div class="ui-bar ui-bar-a">
-                    <h2 id="visAppName">Heading</h2>
-                </div>
-                <div class="ui-body ui-body-a">
-                    <h4 id="visAppVersion">Heading</h4>
-                    <h4 id="visAppRelease">Heading</h4>
-                </div>
-            </div>
-        </center>
+<div id="aboutUs" data-role="page" data-theme="b" data-content-theme="b">
+    <div data-role="header" data-position="fixed">
+        <button class="ui-btn-left ui-btn ui-btn-b ui-btn-inline ui-corner-all ui-btn-icon-left ui-icon-back ui-btn-icon-notext" id="btn_cancel" onClick="onBackLogin()">Back</button>
+        <h1 id="visAppName">Heading</h1>
     </div>
-    <div data-role="footer" class="nav-glyphish-example" data-theme="b" data-position="fixed">
-        <a href="#" class="ui-btn" onClick="onBackLogin()">Back</a>
+
+    <div data-role="main" class="ui-content">
+        <div class="ui-corner-all ui-shadow ui-body ui-body-b" style="text-align: center">
+            <h4 id="visAppVersion">Heading</h4>
+            <h4 id="visAppRelease">Heading</h4>
+        </div>
     </div>
 </div>
 
-<div id="editView" class="page" data-role="page">
+<div id="editView" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" data-position="fixed">
         <div name="user_lbl" style="float:left;font-weight:bold;line-height:50px;"></div>
         <h3> Edit Image </h3>
     </div>
-    <div role="main" class="ui-content" style="margin:0; padding:0;">
+    <div data-role="main" class="ui-content" style="margin:0; padding:0;">
         <table style="width:100%;">
             <tr>
                 <td style="width:60%;">

@@ -26,37 +26,44 @@ function validationSetting() {
     if (url.value == "" || url.value == null) {
         loadPage("setting");
         setValSetting();
-        document.getElementById("setting_error").innerHTML = "URL Should Not Blank";
+        document.getElementById("setting_error_msg").innerHTML = "Server Should Not Blank";
+        document.getElementById("setting_error").style.display = "inline";
         url.focus();
     } else if (lang.value == "" || lang.value == null) {
         loadPage("setting");
         setValSetting();
-        document.getElementById("setting_error").innerHTML = "Language Should Not Blank";
+        document.getElementById("setting_error_msg").innerHTML = "Language Should Not Blank";
+        document.getElementById("setting_error").style.display = "inline";
         lang.focus();
     } else if (client.value == "" || client.value == null) {
         loadPage("setting");
         setValSetting();
-        document.getElementById("setting_error").innerHTML = "Client Should Not Blank";
+        document.getElementById("setting_error_msg").innerHTML = "Client Should Not Blank";
+        document.getElementById("setting_error").style.display = "inline";
         client.focus();
     } else if (role.value == "" || role.value == null) {
         loadPage("setting");
         setValSetting();
-        document.getElementById("setting_error").innerHTML = "Role Should Not Blank";
+        document.getElementById("setting_error_msg").innerHTML = "Role Should Not Blank";
+        document.getElementById("setting_error").style.display = "inline";
         role.focus();
     } else if (whouse.value == "" || whouse.value == null) {
         loadPage("setting");
         setValSetting();
-        document.getElementById("setting_error").innerHTML = "Warehouse Should Not Blank";
+        document.getElementById("setting_error_msg").innerHTML = "Warehouse Should Not Blank";
+        document.getElementById("setting_error").style.display = "inline";
         whouse.focus();
     } else if (org.value == "" || org.value == null) {
         loadPage("setting");
         setValSetting();
-        document.getElementById("setting_error").innerHTML = "Organizor Should Not Blank";
+        document.getElementById("setting_error_msg").innerHTML = "Organization Should Not Blank";
+        document.getElementById("setting_error").style.display = "inline";
         lang.focus();
     } else if (img_qulty.value == "" || img_qulty.value == null) {
         loadPage("setting");
         setValSetting();
-        document.getElementById("setting_error").innerHTML = "Image quality Should Not Blank";
+        document.getElementById("setting_error_msg").innerHTML = "Image quality Should Not Blank";
+        document.getElementById("setting_error").style.display = "inline";
         lang.focus();
     } else {
         onSettingUpdate();

@@ -651,7 +651,8 @@ function loadGalleryChoice() {
 
 function onSettingPage() {
     loadPage("setting");
-    document.getElementById("setting_error").innerHTML = "";
+    document.getElementById("setting_error_msg").innerHTML = "";
+    document.getElementById("setting_error").style.display = "none";
     setSettingpage();
 }
 
