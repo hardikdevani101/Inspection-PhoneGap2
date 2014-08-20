@@ -3,7 +3,8 @@ var dirVISInspection;
 var currentDir;
 var parlistArray;
 var dirVISInspectionFTP;
-var DataTypes=["JPEG","JPG","BMP","PNG"];
+var isGalleryLoad = true;
+var DataTypes=["JPEG","JPG","BMP","PNG","GIF"];
 
 function setRootDirectory(fileSystem){
 	root=fileSystem.root;
@@ -20,13 +21,12 @@ function setVISFTPDirectory(fileSystem){
 }
 
 function saveImage(imageURI){
-	navigator.notification.activityStart("Please Wait", "Saving Image...");
 	var date = new Date;
 	var sec = date.getSeconds();
 	var mi = date.getMinutes();
 	var hh = date.getHours();
 	var yy = date.getFullYear();
-	var mm = date.getMonth();
+	var mm = date.getMonth()+1;
 	var dd = date.getDate();
 	var fileName=M_Line_Desc+"_"+mm+dd+yy+"_"+hh+mi+sec+".jpg";
 	dirVISInspection.getFile(fileName, {create: true, exclusive: false}, function (fileEntry){
@@ -56,24 +56,19 @@ function OnImgWriter(writer,fileFullPath,fileName,imageURI){
 }
 
 function onAfterSaveFile(fileFullPath){
-	navigator.notification.activityStart("Please Wait", "loading...");
-    loadPage('gallery');
 	if(galleryTable != "" && galleryTable != null)
 	{	
 		document.getElementById("disp-tab1").innerHTML=galleryTable;
 		db.transaction(function (tx) {
-		var sqlQuery;
-		if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
-			sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and in_out_id="' + M_INOUT_ID + '"';
-		else
-			sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"';
-		tx.executeSql(sqlQuery, [], function (tx, results) {
+			var sqlQuery;
+			if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
+				sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and in_out_id="' + M_INOUT_ID + '"';
+			else
+				sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"';
+			tx.executeSql(sqlQuery, [], function (tx, results) {
 				imagelistarray = results;
-				if(totColumns >= results.rows.length){
-					fillSingleTD(fileFullPath);
-					
-				}else
-				{
+				
+				if(totColumns < results.rows.length){
 					var colNum = Math.ceil( imagelistarray.rows.length / 3 );
 					colNum=colNum-1;
 					for (var j = 0; j < 3; j++) {
@@ -84,22 +79,22 @@ function onAfterSaveFile(fileFullPath){
 						tr.appendChild(td);
 						totColumns=totColumns+1;
 					}
-					fillSingleTD(fileFullPath);
-				}						
+				}
+				galleryTable=document.getElementById("disp-tab1").innerHTML;
+				fillSingleTD(fileFullPath);	
 			}, function (err) { console.log("Error SQL: " + err.code);	});
 		},  function (err) { console.log("Error SQL: " + err.code);	});
     }
 	else{
-		backToGallery();
+		if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
+			onUploadFile(fileFullPath,M_INOUT_ID,backToGallery);
+		else
+			onUploadFile(fileFullPath,X_INSTRUCTIONLINE_ID,backToGallery);
 	}
-
-	if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
-		onUploadFile(fileFullPath,M_INOUT_ID,null);
-	else
-		onUploadFile(fileFullPath,X_INSTRUCTIONLINE_ID,null);
 }
 
 function fillSingleTD(fileFullPath){
+	document.getElementById("disp-tab1").innerHTML=galleryTable;
 	if (DataTypes.indexOf(getExtention(getFileName(fileFullPath)).toUpperCase()) >= 0) {
 		root.getFile(fileFullPath, null, function (FnEntries) {
 			FnEntries.file(function (rfile){
@@ -118,15 +113,19 @@ function fillSingleTD(fileFullPath){
 						chkImg.setAttribute("style", "position:absolute;height:35px;width:35px;display:none;");
 						chkImg.setAttribute("src", "img/up.png");
 						chkImg.setAttribute("id","tdUpload-" + Disp_row + "-" + Disp_col);
-						document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(chkImg);
+						if(document.getElementById("td-" + Disp_row + "-" + Disp_col)){
+							document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(chkImg);
+							pandingUploads[pandingCounts] = new Array();
+							pandingUploads[pandingCounts][0] = "tdUpload-" + Disp_row + "-" + Disp_col;
+							pandingUploads[pandingCounts++][1] = getFileName(fileFullPath);
+							document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(imgelem);
+							itemCount = itemCount + 1;
+							Disp_row = Disp_row + 1;
+							galleryTable=document.getElementById("disp-tab1").innerHTML;
+						}else{
+							console.log("Col not found.>>>>"+"td-" + Disp_row + "-" + Disp_col);
+						}
 						
-						pandingUploads[pandingCounts] = new Array();
-						pandingUploads[pandingCounts][0] = "tdUpload-" + Disp_row + "-" + Disp_col;
-						pandingUploads[pandingCounts++][1] = getFileName(fileFullPath);
-						document.getElementById("td-" + Disp_row + "-" + Disp_col).appendChild(imgelem);
-						itemCount = itemCount + 1;
-						Disp_row = Disp_row + 1;
-						galleryTable=document.getElementById("disp-tab1").innerHTML;
 				};
 				reader.readAsDataURL(rfile);
 			}, function () {});
@@ -157,7 +156,10 @@ function fillSingleTD(fileFullPath){
 		Disp_row = Disp_row + 1;
 		galleryTable=document.getElementById("disp-tab1").innerHTML;
 	}
-	backToGallery();
+	if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
+		onUploadFile(fileFullPath,M_INOUT_ID,backToGallery);
+	else
+		onUploadFile(fileFullPath,X_INSTRUCTIONLINE_ID,backToGallery);
 }
 
 function dirFail(error) {
@@ -201,7 +203,7 @@ function onUploadFile(filePath, InspNumber,callBack) {
             }, errorCB,function(){
 				setUploadedImg(FnEntries.name);
 	            imgUploadCount = imgUploadCount - 1;
-	            if(callBack) callBack();
+	            if(callBack && imgUploadCount == 0) callBack();
             });
         }, uploadFail, options);
     }
@@ -211,7 +213,8 @@ function setUploadedImg(fileName){
 	for(var i=0; i < pandingUploads.length ; i++){
 		if(pandingUploads[i][1]==fileName){
 			var tdDiv=document.getElementById(pandingUploads[i][0]);
-			tdDiv.setAttribute("style", "position:absolute;height:35px;width:35px;display:block;");
+			if(tdDiv != null)
+				tdDiv.setAttribute("style", "position:absolute;height:35px;width:35px;display:block;");
 		}
 	}
 	galleryTable=document.getElementById("disp-tab1").innerHTML;

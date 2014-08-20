@@ -52,7 +52,6 @@ function settingDbSetup(tx) {
 function onFileExplorerClick(entry){
 	var fileFullPath=getSDPath(entry).substring(1);
 	var fileName=getFileName(fileFullPath);
-	
 	if(DataTypes.indexOf(getExtention(getFileName(fileFullPath)).toUpperCase()) > -1){
 		navigator.notification.activityStart("Please Wait", "loading...");
 		root.getFile(fileFullPath,null,onImgFileSystem,function(error){ console.log(" FSError = "+error.code); });
@@ -71,6 +70,7 @@ function onDirectFileUpload(fileFullPath,fileName){
 			sqlQuery ='INSERT INTO vis_gallery(mr_line,insp_line,name,file) VALUES ("'+M_InOutLine_ID+'","'+X_INSTRUCTIONLINE_ID+'","'+fileName+'","'+fileFullPath+'")';
 		tx.executeSql(sqlQuery);
 	}, errorCB);
+	imgUploadCount = 1;
 	onAfterSaveFile(fileFullPath);
 }
 

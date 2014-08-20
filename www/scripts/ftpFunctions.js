@@ -126,6 +126,9 @@ function onFinishFtpSelection()
     }
 	else if(selectChkList.length > 1)
     {
+		navigator.notification.activityStart("Please Wait", "Uploading files...");
+		isGalleryLoad = false;
+		imgUploadCount = selectChkList.length;
         downloadFTPFile(selectChkList);
     }
 }
@@ -138,8 +141,14 @@ function onSingleFTPFileSelect(FtpFileName){
 	});
 }
 
+function onReloadGallery(){
+	loadPage('gallery');
+	galleryTable="";
+    renderGallery();
+    document.getElementById("gallery_head").innerHTML = M_line_name + "(" + X_instruction_name + ")";
+}
+
 function downloadFTPFile(selectChkList){
-	navigator.notification.activityStart("Please Wait", "Uploading files...");
 	var FtpFileName = selectChkList.shift();
 	vision.ftpclient.get(dirVISInspectionFTP.fullPath +"/"+FtpFileName, vis_FtpUrl + FtpFileName, function(){
 		 root.getFile(dirVISInspectionFTP.fullPath.substring(1) +"/"+FtpFileName, null, function(entry){
@@ -165,6 +174,10 @@ function downloadFTPFile(selectChkList){
 								{
 									downloadFTPFile(selectChkList);
 								}
+								else
+								{
+									isGalleryLoad = true;
+								}
 							}
 						};
 						reader.readAsDataURL(rfile);
@@ -184,6 +197,10 @@ function downloadFTPFile(selectChkList){
 						if(selectChkList.length > 0)
 							{
 								downloadFTPFile(selectChkList);
+							}
+						else
+							{
+								isGalleryLoad = true;
 							}
 					});
 				}

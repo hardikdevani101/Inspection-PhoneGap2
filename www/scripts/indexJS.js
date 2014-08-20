@@ -209,7 +209,6 @@ function callSyncVerify(){
 }
 
 function onFinish() {
-    navigator.notification.activityStart("Please Wait", "Uploading files...");
     db.transaction(function (tx) {
         tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="' + M_InOutLine_ID + '" and imgUpload="F"', [], function (tx, results) {
             imagelistarray = results;
@@ -252,6 +251,7 @@ function callUploadVerify() {
 }
 
 function AttachAllImage() {
+
     navigator.notification.activityStart("Please Wait", "Attaching Files...");
 	attachCount = inspLinesArray.length;
 	
@@ -314,8 +314,8 @@ function deleteImageSelectSuccess(tx, results) {
         }
 		mrLinesArray = new Array();
         onBackToStartInspection('home');
-        onStopNotification();
         navigator.notification.alert('All Files attached', function () {}, 'Success', 'OK');
+        onStopNotification();
 }
 
 function onRemoveVISDirFile(tmpfile,InspNumber,isInsp){
@@ -502,6 +502,7 @@ function fillGalleryPhotos() {
     itemCount = 0;
 	pandingCounts = 0;
 	if(imagelistarray.rows.length == 0){
+		onRenderTable()
 		onStopNotification();
 	}
     for (var j = 0; j < imagelistarray.rows.length; j++) {
@@ -873,7 +874,7 @@ function onDefualtInspSet(nid, iname) {
 
 function backToGallery() {
 	navigator.notification.activityStart("Please Wait", "loading...");
-    loadPage('gallery');
+	loadPage('gallery');
     renderGallery();
     document.getElementById("gallery_head").innerHTML = M_line_name + "(" + X_instruction_name + ")";
 }
@@ -1050,6 +1051,7 @@ function applyWatermark(origImg) {
 	var watermark = new Image();
     watermark.src = "img/Velocity_Watermark.png";
 	watermark.onload=function(){
+	    navigator.notification.activityStart("Please Wait", "Applying Watermark...");
 		gcanvas = document.createElement('canvas');
 		if (!gcanvas) {
 			alert('Error: I cannot create a new canvas element!');
@@ -1066,10 +1068,11 @@ function applyWatermark(origImg) {
 		var img64 = encoder.encode(gctx.getImageData(0,0,1024,768), parseInt(vis_img_qulty)).replace(/data:image\/jpeg;base64,/,'');
 		var imageURI=Base64Binary.decodeArrayBuffer(img64);
 		onStopNotification();
+		navigator.notification.activityStart("Please Wait", "Saving Image...");
+		imgUploadCount = 1;
 		saveImage(imageURI);
 		watermark = encoder = img64 = null;
 	}
-    navigator.notification.activityStart("Please Wait", "Applying Watermark...");
 }
 
 function onCropImageEdit()
