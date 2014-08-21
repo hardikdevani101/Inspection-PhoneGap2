@@ -68,14 +68,22 @@
         <input id="txt_user" name="txt_user" type="text" data-clear-btn="true" value="" placeholder="username"/><br>
         <label for="txt_password" class="ui-hidden-accessible">Password :</label>
         <input id="txt_password" name="txt_password" type="password" data-clear-btn="true" value="" placeholder="password"/><br>
-        <div id="login_error"></div>
+
+        <div id="login_error" class="ui-corner-all">
+            <div class="ui-bar ui-bar-b ui-corner-top">
+                <h1>Error</h1>
+            </div>
+            <div class="ui-body ui-body-b ui-corner-bottom ui-shadow" style="text-align: center">
+                <div id="login_error_msg" class="ui-state-error-text"></div>
+            </div>
+        </div>
     </div>
 
     <div data-role="footer" data-position="fixed">
-        <div class="ui-grid-b ui-bar">
-            <div class="ui-block-a">&nbsp;</div>
-            <div class="ui-block-b"><button class="ui-btn ui-btn-b ui-shadow ui-corner-all ui-icon-check" id="loginBtn" onClick="validateLogin()">Login</button></div>
-            <div class="ui-block-c">&nbsp;</div>
+        <div class="ui-bar ui-bar-b">
+            <div class="ui-grid-solo">
+                <div class="ui-block-a"><button class="ui-btn ui-btn-b ui-mini ui-shadow ui-corner-all ui-icon-check" id="loginBtn" onClick="validateLogin()">Login</button></div>
+            </div>
         </div>
     </div>
 </div>
@@ -171,8 +179,11 @@
             </select>
         </div>
 
-        <div id="setting_error">
-            <div class="ui-corner-all ui-shadow ui-body ui-body-b" style="text-align: center">
+        <div id="setting_error" class="ui-corner-all">
+            <div class="ui-bar ui-bar-b ui-corner-top">
+                <h1>Error</h1>
+            </div>
+            <div class="ui-body ui-body-b ui-corner-bottom ui-shadow" style="text-align: center">
                 <div id="setting_error_msg" class="ui-state-error-text"></div>
             </div>
         </div>
@@ -195,6 +206,9 @@
             <select id="linedrop"></select>
         </div>
         <a href="#" id="btnReload"  onClick="fillMrLines()" data-theme="a">Reload</a>
+
+        <button class="ui-btn-left ui-btn ui-btn-b ui-btn-inline ui-corner-all ui-btn-icon-left ui-icon-back ui-btn-icon-notext" id="btn_cancel" onClick="onLoginPage()">Cancel</button>
+        <h1>VISion Settings</h1>
     </div>
 
     <div role="main" class="ui-content" style="width:100%; margin:0; padding:0;">
@@ -359,13 +373,19 @@
 <div id="aboutUs" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" data-position="fixed">
         <button class="ui-btn-left ui-btn ui-btn-b ui-btn-inline ui-corner-all ui-btn-icon-left ui-icon-back ui-btn-icon-notext" id="btn_cancel" onClick="onBackLogin()">Back</button>
-        <h1 id="visAppName">Heading</h1>
+        <h1>About</h1>
     </div>
 
-    <div data-role="main" class="ui-content">
-        <div class="ui-corner-all ui-shadow ui-body ui-body-b" style="text-align: center">
-            <h4 id="visAppVersion">Heading</h4>
-            <h4 id="visAppRelease">Heading</h4>
+    <div role="main" class="ui-content">
+        <div id="setting_error" class="ui-corner-all">
+            <div class="ui-bar ui-bar-b ui-corner-top" style="text-align: center">
+                <h1 id="visAppName">Heading</h1>
+            </div>
+            <div class="ui-body ui-body-b ui-corner-bottom ui-shadow" style="text-align: center">
+                <h4 id="visAppVersion">Heading</h4>
+                <h4 id="visAppRelease">Heading</h4>
+                <h4 id="visAppRelease">Publisher: Velocity Electronics, L.P.</h4>
+            </div>
         </div>
     </div>
 </div>

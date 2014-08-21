@@ -2,11 +2,12 @@ function validateLogin() {
     var u_name = document.getElementById("txt_user").value;
     var u_pass = document.getElementById("txt_password").value;
     if (u_name == "" || u_name == null) {
-        document.getElementById("login_error").innerHTML = "Username Should Not Blank";
+        document.getElementById("login_error_msg").innerHTML = "Username Should Not Blank";
+        document.getElementById("login_error").style.display = "inline";
         document.getElementById("txt_user").focus();
     } else if (u_pass == "" || u_pass == null) {
-
-        document.getElementById("login_error").innerHTML = "Password Should Not Blank";
+        document.getElementById("login_error_msg").innerHTML = "Password Should Not Blank";
+        document.getElementById("login_error").style.display = "inline";
         document.getElementById("txt_password").focus();
     } else {
         userName = u_name;

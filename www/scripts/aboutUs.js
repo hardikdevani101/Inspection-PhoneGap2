@@ -1,6 +1,6 @@
 var releaseVersion='Version : 1.0.14';
 var releaseDate='Release Date : AUG 21 2014';
-var applicationName='VISion Application';
+var applicationName='VISion - VIS Mobile Inspection';
 
 function onAboutUs() {
 	document.getElementById('visAppName').innerHTML=applicationName;

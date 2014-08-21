@@ -54,7 +54,8 @@ function onLogin() {
             }
             else {
                 loadPage("login");
-                document.getElementById("login_error").innerHTML = "Login Failed!!!";
+                document.getElementById("login_error").style.display = "inline";
+                document.getElementById("login_error_msg").innerHTML = "Login Failed!!!";
                 onStopNotification();
             }
         }

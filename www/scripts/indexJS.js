@@ -42,6 +42,7 @@ var flag = 0;
 function onLoad() {
     document.addEventListener("deviceready", onDeviceReady, false);
     document.addEventListener("backbutton", onBackButton, false);
+    document.getElementById("login_error").style.display = "none";
 }
 
 function onDeviceReady() {
@@ -51,7 +52,6 @@ function onDeviceReady() {
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, setRootDirectory, function (error) {
         console.log("request FSError = " + error);
     });
-
 }
 
 function onOrgChange() {
@@ -636,7 +636,8 @@ function onLoginPage() {
     loadPage("login");
     document.getElementById("txt_user").value = userName;
     pageState = 0;
-    document.getElementById("login_error").innerHTML = "";
+    document.getElementById("login_error_msg").innerHTML = "";
+    document.getElementById("login_error").style.display = "none";
 }
 
 function loadAccureChoise() {
