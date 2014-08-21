@@ -10,7 +10,7 @@
     <property name="remote.svr" value="www.velocityelec.com"/>
     <property name="remote.deploy.dir" value="/var/www/html/vision"/>
 
-    <target name="build.phonegap" description="create phonegap build archive">
+    <target name="build-phonegap" description="create phonegap build archive">
         <echo message="=========== Build VISion"/>
         <!-- Create the time stamp -->
         <tstamp/>
@@ -19,7 +19,15 @@
         </zip>
     </target>
 
-    <target name="deploy" description="deploy phonegap app">
+    <target name="build-android" description="build phonegap app for android">
+        <exec executable="phonegap">
+            <arg value="local"/>
+            <arg value="build"/>
+            <arg value="android"/>
+        </exec>
+    </target>
+
+    <target name="deploy" description="deploy phonegap app" depends="build-android">
         <echo message="=========== Deploy VISion"/>
         <!-- Create the time stamp -->
         <tstamp/>
