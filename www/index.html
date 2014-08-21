@@ -55,7 +55,9 @@
 
 <div id="login" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" data-position="fixed">
-        <button class="ui-btn-left ui-btn ui-btn-b ui-btn-inline ui-corner-all ui-btn-icon-left ui-icon-delete ui-btn-icon-notext" id="appExitBtn" onClick="onExit()">Exit</button>
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+            <button data-icon="delete" data-iconpos="notext" id="appExitBtn" onClick="onExit()">Exit</button>
+        </div>
         <h1>VISion Login</h1>
         <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
             <button data-icon="info" data-iconpos="notext" id="aboutBtn" onClick="onAboutUs()" data-transition="pop">About</button>
@@ -80,18 +82,15 @@
     </div>
 
     <div data-role="footer" data-position="fixed">
-        <div class="ui-bar ui-bar-b">
-            <div class="ui-grid-solo">
-                <div class="ui-block-a"><button class="ui-btn ui-btn-b ui-mini ui-shadow ui-corner-all ui-icon-check" id="loginBtn" onClick="validateLogin()">Login</button></div>
-            </div>
+        <div class="ui-grid-solo ui-bar">
+            <div class="ui-block-a"><button type="button" data-theme="b" id="loginBtn" onClick="loadPage('startNewInsp')">Login</button></div> <!-- GOLIVE: validateLogin() -->
         </div>
     </div>
 </div>
 
 <div id="home" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" data-position="fixed">
-        <div name="user_lbl" style="float:left;font-weight:bold;line-height:40px;"></div>
-        <h1>VISion home</h1>
+        <h1><div name="user_lbl"></div></h1>
     </div>
 
     <div data-role="main" class="ui-content">
@@ -109,11 +108,13 @@
 
 <div id="setting" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" data-position="fixed">
-        <button class="ui-btn-left ui-btn ui-btn-b ui-btn-inline ui-corner-all ui-btn-icon-left ui-icon-back ui-btn-icon-notext" id="btn_cancel" onClick="onLoginPage()">Cancel</button>
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+            <button data-icon="back" data-iconpos="notext" id="btn_cancel" onClick="onLoginPage()">Cancel</button>
+        </div>
         <h1>VISion Settings</h1>
     </div>
 
-    <div role="main" class="ui-content">
+    <div data-role="main" class="ui-content">
         <div class="ui-field-contain">
             <label for="txt_url">Server :</label>
             <select id="txt_url">
@@ -190,42 +191,56 @@
     </div>
 
     <div data-role="footer" data-position="fixed">
-        <div class="ui-grid-b ui-bar">
-            <div class="ui-block-a">&nbsp;</div>
-            <div class="ui-block-b"><button class="ui-btn ui-btn-b ui-shadow ui-corner-all ui-icon-check" id="btn_update" onClick="validationSetting()">Save</button></div>
-            <div class="ui-block-c">&nbsp;</div>
+        <div class="ui-grid-solo ui-bar">
+            <div class="ui-block-a"><button type="button" data-theme="b" id="btn_update" onClick="validationSetting()">Save</button></div>
         </div>
     </div>
 </div>
 
 <div id="startNewInsp" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" data-position="fixed">
-        <div name="user_lbl" style="float:left;font-weight:bold;width:25%;line-height:40px;"></div>
-        <div style="float:left;width:60%; margin:0; padding:0;">
-            <label style="float:left;width:20%;line-height:40px;">Line No:</label>
-            <select id="linedrop"></select>
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+            <button data-icon="back" data-iconpos="notext" id="btn_cancel" onClick="loadPage('home')">Back</button>
         </div>
-        <a href="#" id="btnReload"  onClick="fillMrLines()" data-theme="a">Reload</a>
 
-        <button class="ui-btn-left ui-btn ui-btn-b ui-btn-inline ui-corner-all ui-btn-icon-left ui-icon-back ui-btn-icon-notext" id="btn_cancel" onClick="onLoginPage()">Cancel</button>
-        <h1>VISion Settings</h1>
+        <h1><div name="user_lbl">juan.reynoso</div></h1> <!--GOLIVE: remove temp username-->
+
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+            <select id="linedrop">
+                <!--GOLIVE: remove temp options-->
+                <option value="small">One</option>
+                <option value="medium">Two</option>
+                <option value="large">Three</option>
+                <!--end temp options-->
+            </select>
+            <button data-icon="refresh" data-iconpos="notext" id="btnReload" onClick="fillMrLines()">Reload</button>
+        </div>
     </div>
 
-    <div role="main" class="ui-content" style="width:100%; margin:0; padding:0;">
-        <table id="disp-Insp" cellspacing="0" cellpadding="0" style="margin:0; padding:0;">
+    <div data-role="main" class="ui-content">
+        <!--<table id="disp-Insp" cellspacing="0" cellpadding="0" style="margin:0; padding:0;">-->
 
-        </table>
+        <!--</table>-->
+        <!--GOLIVE: remove placeholder div-->
+        <div class="ui-corner-all">
+            <div class="ui-bar ui-bar-b ui-corner-top">
+                <h1>Placeholder</h1>
+            </div>
+            <div class="ui-body ui-body-b ui-corner-bottom ui-shadow" style="text-align: center">
+                ...grid placeholder...
+            </div>
+        </div>
+        <!-- end placeholder div -->
     </div>
 
-    <div data-role="footer" data-position="fixed">
+    <div data-role="panel" data-position-fixed="true" data-display="push" data-theme="b" id="nav-panel">
         <div data-role="navbar">
-            <ul>
-                <li><a href="#" onClick="discardInspections()" data-theme="a">Delete</a></li>
-                <li><a href="#" onClick="loadPage('home')" data-theme="a">Back</a></li>
-                <li><a href="#" onClick="onFinish()" data-theme="a">Finish</a></li>
+            <ul data-role="listview">
+                <li><a href="#" onClick="discardInspections()">Delete</a></li>
+                <li><a href="#" onClick="onFinish()">Finish</a></li>
             </ul>
         </div>
-    </div>
+    </div><!-- /panel -->
 </div>
 
 <div id="gallery" data-role="page" data-theme="b" data-content-theme="b">
@@ -372,7 +387,9 @@
 
 <div id="aboutUs" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" data-position="fixed">
-        <button class="ui-btn-left ui-btn ui-btn-b ui-btn-inline ui-corner-all ui-btn-icon-left ui-icon-back ui-btn-icon-notext" id="btn_cancel" onClick="onBackLogin()">Back</button>
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+            <button data-icon="back" data-iconpos="notext" id="btn_cancel" onClick="onBackLogin()">Back</button>
+        </div>
         <h1>About</h1>
     </div>
 
