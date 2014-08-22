@@ -51,3 +51,19 @@ input#zoom-out {
     font-size: 14px;
     text-align: left;
 }
+
+@media all and (max-width: 50em) {
+    .my-breakpoint .ui-block-a,
+    .my-breakpoint .ui-block-b,
+    .my-breakpoint .ui-block-c,
+    .my-breakpoint .ui-block-d,
+    .my-breakpoint .ui-block-e {
+        width: 100%;
+        float:none;
+    }
+}
+
+@media all and (min-width: 50em) {
+    .my-breakpoint.ui-grid-b .ui-block-a { width: 79.95%; }
+    .my-breakpoint.ui-grid-b .ui-block-b { width: 19.925%; }
+}

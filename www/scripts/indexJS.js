@@ -816,11 +816,11 @@ function onBackToStartInspection(backPageName) {
             select.add(option);
         }
         select.setAttribute("onchange", "fillInspectionsLines()");
-        onfillInspectionsLines();
+        onFillInspectionsLines();
     }
 }
 
-function onfillInspectionsLines() {
+function onFillInspectionsLines() {
     var e = document.getElementById("linedrop");
     var selMrLine = e.options[e.selectedIndex].value;
     if (M_InOutLine_ID == selMrLine) {

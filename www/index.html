@@ -83,7 +83,7 @@
 
     <div data-role="footer" data-position="fixed">
         <div class="ui-grid-solo ui-bar">
-            <div class="ui-block-a"><button type="button" data-theme="b" id="loginBtn" onClick="loadPage('startNewInsp')">Login</button></div> <!-- GOLIVE: validateLogin() -->
+            <div class="ui-block-a"><button type="button" data-theme="b" id="loginBtn" onClick="validateLogin()">Login</button></div>
         </div>
     </div>
 </div>
@@ -203,74 +203,68 @@
             <button data-icon="back" data-iconpos="notext" id="btn_cancel" onClick="loadPage('home')">Back</button>
         </div>
 
-        <h1><div name="user_lbl">juan.reynoso</div></h1> <!--GOLIVE: remove temp username-->
+        <h1><div name="user_lbl"></div></h1>
 
         <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
             <select id="linedrop">
-                <!--GOLIVE: remove temp options-->
-                <option value="small">One</option>
-                <option value="medium">Two</option>
-                <option value="large">Three</option>
-                <!--end temp options-->
+
             </select>
             <button data-icon="refresh" data-iconpos="notext" id="btnReload" onClick="fillMrLines()">Reload</button>
         </div>
     </div>
 
-    <div data-role="main" class="ui-content">
-        <!--<table id="disp-Insp" cellspacing="0" cellpadding="0" style="margin:0; padding:0;">-->
+    <div data-role="main" class="ui-content" style="padding:0;">
+        <div id="insp-activity-panel" class="ui-grid-b my-breakpoint">
+            <div id="photo-set-panel" class="ui-block-a">
+                <table id="disp-Insp" cellspacing="0" cellpadding="0" style="margin:0; padding:0;">
 
-        <!--</table>-->
-        <!--GOLIVE: remove placeholder div-->
-        <div class="ui-corner-all">
-            <div class="ui-bar ui-bar-b ui-corner-top">
-                <h1>Placeholder</h1>
+                </table>
             </div>
-            <div class="ui-body ui-body-b ui-corner-bottom ui-shadow" style="text-align: center">
-                ...grid placeholder...
+            <div id="action-panel" class="ui-block-b">
+                <ul data-role="listview" data-inset="true">
+                    <li data-icon="delete"><a href="#" onClick="discardInspections()">Delete</a></li>
+                    <li data-icon="check"><a href="#" onClick="onFinish()">Finish</a></li>
+                </ul>
             </div>
-        </div>
-        <!-- end placeholder div -->
-    </div>
-
-    <div data-role="panel" data-position-fixed="true" data-display="push" data-theme="b" id="nav-panel">
-        <div data-role="navbar">
-            <ul data-role="listview">
-                <li><a href="#" onClick="discardInspections()">Delete</a></li>
-                <li><a href="#" onClick="onFinish()">Finish</a></li>
-            </ul>
-        </div>
-    </div><!-- /panel -->
-</div>
-
-<div id="gallery" data-role="page" data-theme="b" data-content-theme="b">
-    <div data-role="header" style="padding:0;">
-        <div name="user_lbl" style="float:left;font-weight:bold;width:20%;line-height:40px;"></div>
-        <Span id="gallery_head" style="float:left;width:65%;line-height:40px;padding:0;"></Span>
-        <input type="button" style="padding:0;" onClick="onSyncFiles()" ontouchstart="return true;" class="ui-mini"
-               value="Sync"/>
-    </div>
-
-    <div role="main" class="ui-content" style="margin:0; padding:0;overflow-x: scroll; overflow-y: hidden;">
-        <table id="disp-tab1" cellspacing="0" cellpadding="0" style="margin:0; padding:0;">
-
-        </table>
-    </div>
-
-    <div data-role="footer" class="nav-glyphish-example" data-theme="b" data-position="fixed">
-        <div data-role="navbar" class="nav-glyphish-example" data-grid="d">
-            <ul>
-                <li><a href="#" onClick="onBackToStartInspection('gallery')">Back</a></li>
-                <li><a href="#" onClick="onDeleteGalleryPage()">Delete</a></li>
-                <li><a href="#" onClick="loadGalleryChoice()">File</a></li>
-                <li><a href="#" onClick="onFtpExplorer()">FTP</a></li>
-                <li><a href="#" onClick="onImagePicker()">Gallery</a></li>
-                <li><a href="#" onClick="captureI()">Camera</a></li>
-            </ul>
         </div>
     </div>
 </div>
 
+<div id="gallery" data-role="page" data-theme="b" data-content-theme="b">
+    <div data-role="header" data-position="fixed">
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+            <button data-icon="back" data-iconpos="notext" id="btn_cancel" onClick="onBackToStartInspection('gallery')">Back</button>
+        </div>
+
+        <h1><div name="user_lbl"></div></h1>
+        <h1><span id="gallery_head"></span></h1>
+
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+            <button data-icon="refresh" data-iconpos="notext" onClick="onSyncFiles()">Sync</button>
+        </div>
+    </div>
+
+    <div data-role="main" class="ui-content" style="margin:0; padding:0;overflow-x: scroll; overflow-y: hidden;">
+        <div id="insp-activity-panel" class="ui-grid-b my-breakpoint">
+            <div id="photo-set-panel" class="ui-block-a">
+                <table id="disp-tab1" cellspacing="0" cellpadding="0" style="margin:0; padding:0;">
+
+                </table>
+            </div>
+            <div id="action-panel" class="ui-block-b">
+                <ul data-role="listview" data-inset="true">
+                    <li data-icon="delete"><a href="#" onClick="onDeleteGalleryPage()">Delete</a></li>
+                    <li data-icon="bullets"><a href="#" onClick="loadGalleryChoice()">File</a></li>
+                    <li data-icon="cloud"><a href="#" onClick="onFtpExplorer()">FTP</a></li>
+                    <li data-icon="grid"><a href="#" onClick="onImagePicker()">Gallery</a></li>
+                    <li data-icon="camera"><a href="#" onClick="captureI()">Camera</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--TODO: update view-->
 <div id="cropView" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" data-position="fixed">
         <div name="user_lbl" style="float:left;font-weight:bold;line-height:40px;"></div>
@@ -306,6 +300,7 @@
     </div>
 </div>
 
+<!--TODO: update view-->
 <div id="SelectGallery" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" data-position="fixed" style="padding:0;">
         <table>
@@ -330,23 +325,14 @@
 
 <div id="fileExpo" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" data-position="fixed">
-        <table>
-            <tr>
-                <td style="width:10%">
-                    <a class="ui-btn ui-mini" href="#" onClick="backToGallery()"><img src="img/undo.png" height="25"
-                                                                                      width="25" alt="undo"></a>
-                </td>
-                <td style="width:65%">
-                    <h3 style="margin:0; padding:0;">File Explorer</h3>
-                </td>
-                <td style="width:25%">
-                    <a class="ui-btn ui-mini" href="#" onClick="backFile()"><img src="img/backward.png" height="25"
-                                                                                 width="25" alt="prev"></a>
-                    <a class="ui-btn ui-mini" href="#" onClick="fileExplore()"><img src="img/home.png" height="25"
-                                                                                    width="25" alt="home"></a>
-                </td>
-            </tr>
-        </table>
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+            <button data-icon="back" data-iconpos="notext" onClick="backToGallery()">Back</button>
+        </div>
+        <h1>File Explorer</h1>
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+            <button data-icon="carat-l" data-iconpos="notext" onClick="backFile()">Previous</button>
+            <button data-icon="check" data-iconpos="notext" onClick="fileExplore()">Select</button>
+        </div>
     </div>
     <div role="main" class="ui-content">
         <div id="dirContent">
@@ -356,28 +342,17 @@
 
 <div id="ftpExplorer" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" data-position="fixed">
-        <table>
-            <tr>
-                <td style="width:10%">
-                    <a class="ui-btn ui-mini" href="#" onClick="backToGallery()"><img src="img/undo.png" height="25"
-                                                                                      width="25" alt="undo"></a>
-                </td>
-                <td style="width:30%">
-                    <h3 style="margin:0; padding:0;">FTP Explorer</h3>
-                </td>
-                <td style="width:25%">
-                    <a class="ui-btn ui-mini" href="#" onClick="ftpExplorer('-')"><img src="img/backward.png"
-                                                                                       height="25" width="25"
-                                                                                       alt="prev"></a>
-                    <a class="ui-btn ui-mini" href="#" onClick="onFinishFtpSelection()"><img src="img/up.png"
-                                                                                             height="25" width="25"
-                                                                                             alt="upload"></a>
-                </td>
-                <td style="width:35%">
-                    FTP Name : <select id="drop_ftp_name"></select>
-                </td>
-            </tr>
-        </table>
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+            <button data-icon="back" data-iconpos="notext" onClick="backToGallery()">Back</button>
+        </div>
+        <h1>FTP Explorer</h1>
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+            <select id="drop_ftp_name">
+
+            </select>
+            <button data-icon="carat-l" data-iconpos="notext" onClick="ftpExplorer('-')">Previous</button>
+            <button data-icon="check" data-iconpos="notext" onClick="onFinishFtpSelection()">Select</button>
+        </div>
     </div>
     <div role="main" class="ui-content">
         <div id="ftpFileContent">
@@ -402,11 +377,13 @@
                 <h4 id="visAppVersion">Heading</h4>
                 <h4 id="visAppRelease">Heading</h4>
                 <h4 id="visAppRelease">Publisher: Velocity Electronics, L.P.</h4>
+                <h4>Check for <a href="http://www.velocityelec.com/vision/">update</a></h4>
             </div>
         </div>
     </div>
 </div>
 
+<!--TODO: update view-->
 <div id="editView" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" data-position="fixed">
         <div name="user_lbl" style="float:left;font-weight:bold;line-height:50px;"></div>
@@ -429,7 +406,7 @@
                     <center>
                         <img src="img/contrast.png" height="25" width="25" alt="contrast"/>
 
-                        <div id="slider-contrass" style=""></div>
+                        <div id="slider-contrast" style=""></div>
                     </center>
                 </td>
                 <td>

@@ -303,7 +303,7 @@ function getSDPath(Fname){
 	return tmpArray.pop();
 }
 
-function getExtention(Fname){
+function getExtension(Fname){
 	var tmpArray=Fname.split('.');
 	return tmpArray.pop();
 }

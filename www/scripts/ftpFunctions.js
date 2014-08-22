@@ -154,7 +154,7 @@ function downloadFTPFile(selectChkList){
 		 root.getFile(dirVISInspectionFTP.fullPath.substring(1) +"/"+FtpFileName, null, function(entry){
 			var fileFullPath=getSDPath(entry.fullPath).substring(2);
 			var fileName=getFileName(fileFullPath);
-			if (DataTypes.indexOf(getExtention(getFileName(fileFullPath)).toUpperCase()) >= 0) {
+			if (DataTypes.indexOf(getExtension(getFileName(fileFullPath)).toUpperCase()) >= 0) {
 				entry.file(function (rfile){
 					var reader = new FileReader();
 						reader.onloadend = function (evt) {
