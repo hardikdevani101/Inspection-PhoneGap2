@@ -235,15 +235,9 @@ function fillInspectionsLines() {
 }
 
 function FillInspectionDiv(dlab, dval, totCnt, uploadCnt, isInsp) {
-    var titleBar = document.getElementById("titleBarStartInsp");
-    var tHeight = window.innerHeight * .10;
-    titleBar.style.height = tHeight + "px";
-    var sideBar = document.getElementById("sideBarStartInsp");
-    var sWidth = window.innerWidth * .10;
-    sideBar.style.width = sWidth + "px";
-    sideBar.style.height = window.innerHeight * .82 + "px";
-
-    var tmpdiv = document.createElement('div');
+	var tHeight = window.innerHeight * .10;
+	var sWidth = window.innerWidth * .10;
+	var tmpdiv = document.createElement('div');
     tmpdiv.className = "InspButton";
     tmpdiv.setAttribute("style", "margin:3px 3px;");
     var totStr = document.createTextNode(totCnt + " ( " + uploadCnt + " ) ");

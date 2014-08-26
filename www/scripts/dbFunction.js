@@ -195,6 +195,6 @@ function onRemoveOtherFiles(tmpfile){
         tx.executeSql(sqlQuery);
     }, errorCB, function(){
 		deleteCount=deleteCount-1;
-		varifyAllDelete();
+		verifyAllDelete();
     });
 }

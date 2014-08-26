@@ -456,10 +456,6 @@ function onDeleteFileSelect(selectTdId, galName) {
 }
 
 function renderGallery() {
-
-    var sideBar = document.getElementById("sideBarGallery");
-    sideBar.style.height = window.innerHeight * .85 + "px";
-
     if (galleryTable == "") {
         db.transaction(function (tx) {
             var sqlQuery;
@@ -516,8 +512,8 @@ function fillGalleryPhotos() {
             function fillToTDDiv(tmpFile, ItemNumber) {
                 var imgelem = document.createElement("div");
                 imgelem.setAttribute("style", "margin:3px 5px; border:1px solid #000;float:left; word-wrap:break-word;");
-                imgelem.style.width = (window.innerHeight * .3066) + "px";
-                imgelem.style.height = (window.innerHeight * .23) + "px";
+                imgelem.style.width = (window.innerHeight * .36) + "px";
+                imgelem.style.height = (window.innerHeight * .27) + "px";
                 imgelem.innerHTML = getFileName(tmpFile);
                 if (Disp_row > 2) {
                     Disp_row = 0;
@@ -556,8 +552,8 @@ function fillGalleryPhotos() {
 
             function fillToImage(evt, ItemNumber, rfile) {
                 var imgelem = document.createElement("img");
-                imgelem.setAttribute("height", (window.innerHeight * .23) + "px");
-                imgelem.setAttribute("width", (window.innerHeight * .3066) + "px");
+                imgelem.setAttribute("height", (window.innerHeight * .27) + "px");
+                imgelem.setAttribute("width", (window.innerHeight * .36) + "px");
                 imgelem.setAttribute("style", "margin:3px 5px; float:left;");
                 imgelem.setAttribute("src", evt.target.result);
                 if (Disp_row > 2) {
@@ -735,7 +731,6 @@ function captureI() {
 }
 
 function onFail(message) {
-    //alert('Failed because: ' + message);
     navigator.notification.alert('Failure!!', function () {
     }, message, 'Ok');
     backToGallery();
@@ -745,7 +740,6 @@ function loadPage(id1) {
     if (id1 == 'exit') {
         navigator.app.exitApp();
     } else {
-        //document.getElementById("disp").innerHTML = document.getElementById(id1).innerHTML;
         window.location.assign("#" + id1);
         currentPage = id1;
         $.mobile.loading('hide');
@@ -753,7 +747,6 @@ function loadPage(id1) {
 }
 
 function onBackButton() {
-    //document.removeEventListener("backbutton", onBackButton, false);
     if (currentPage == 'login') {
         function checkButtonSelection(iValue) {
             if (iValue == 2) {
@@ -808,7 +801,8 @@ function onBackToStartInspection(backPageName) {
     } else {
         var select = document.getElementById("linedrop");
         for (var i = 0; i < mrLinesArray.length; i++) {
-            var option = document.createElement('option');
+        	
+        	var option = document.createElement('option');
             option.text = mrLinesArray[i][0];
             option.value = mrLinesArray[i][1];
             if (option.value == M_InOutLine_ID)
@@ -823,6 +817,7 @@ function onBackToStartInspection(backPageName) {
 function onFillInspectionsLines() {
     var e = document.getElementById("linedrop");
     var selMrLine = e.options[e.selectedIndex].value;
+    e.options[e.selectedIndex].selected = true;;
     if (M_InOutLine_ID == selMrLine) {
         renderInspectionFromCache();
     } else {

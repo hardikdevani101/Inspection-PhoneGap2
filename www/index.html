@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>VISion - Velocity Mobile Inspection</title>
     <script src="cordova.js"></script>
-    <script src="scripts/ftpclient.js" type="text/javascript" charset="utf-8"></script>
     <script src="scripts/aboutUs.js"></script>
     <script src="scripts/fileFunction.js"></script>
     <script src="scripts/dbFunction.js"></script>
@@ -121,7 +120,7 @@
                 <option value="http://10.210.23.77:8088">Production</option>
                 <option value="http://10.210.23.78:8088">Development</option>
                 <option value="http://10.210.23.97:8088">Test</option>
-                <option value="http://192.168.1.104:8096">Logilite-Dev</option>
+                <option value="http://192.168.1.102:8096">Logilite-Dev</option>
             </select>
         </div>
 
@@ -207,7 +206,6 @@
 
         <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
             <select id="linedrop">
-
             </select>
             <button data-icon="refresh" data-iconpos="notext" id="btnReload" onClick="fillMrLines()">Reload</button>
         </div>
@@ -264,57 +262,59 @@
     </div>
 </div>
 
-<!--TODO: update view-->
 <div id="cropView" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" data-position="fixed">
-        <div name="user_lbl" style="float:left;font-weight:bold;line-height:40px;"></div>
-        <h3> Crop Image </h3>
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+            <button data-icon="back" data-iconpos="notext" id="btn_cancel" onClick="backToGallery()">Back</button>
+        </div>
+        <h1><div name="user_lbl"></div></h1>
+        <h3>Crop Image</h3>
     </div>
 
     <div role="main" class="ui-content" style="margin:0; padding:0;">
-        <table style="width:100%">
-            <tr>
-                <td style="width:60%;">
-                    <div id="cropImage">
-                    </div>
-                </td>
-                <td style="width:10%;">
-                    <input data-role="none" type="button" ontouchstart="onSliderChange(1)"
-                           ontouchend="stopSliderChange()" id="zoom-out"/>
-
-                    <div id="slider-vertical"></div>
-                    <input data-role="none" type="button" ontouchstart="onSliderChange(-1)"
-                           ontouchend="stopSliderChange()" id="zoom-in"/>
-                </td>
-                <td style="width:25%;">
-                    <div data-role="controlgroup" data-type="vertical">
-                        <a href="#" class="ui-btn" onClick="onCropSaved()">Crop & Save</a>
-                        <a href="#" class="ui-btn" onClick="onCropSkip()">Save</a>
-                        <a href="#" class="ui-btn" onClick="callImageEdit()">Edit</a>
-                        <a href="#" class="ui-btn" onClick="onCropImageEdit()">Crop & Edit</a>
-                        <a href="#" class="ui-btn" onClick="backToGallery()">Discard</a>
-                    </div>
-                </td>
-            </tr>
-        </table>
+    	<div id="insp-activity-panel" class="ui-grid-b my-breakpoint">
+            <div id="photo-set-panel" class="ui-block-a">
+		        <table style="width:100%">
+		            <tr>
+		                <td style="width:60%;">
+		                    <div id="cropImage">
+		                    </div>
+		                </td>
+		                <td style="width:10%;">
+		                    <input data-role="none" type="button" ontouchstart="onSliderChange(1)"
+		                           ontouchend="stopSliderChange()" id="zoom-out"/>
+		
+		                    <div id="slider-vertical"></div>
+		                    <input data-role="none" type="button" ontouchstart="onSliderChange(-1)"
+		                           ontouchend="stopSliderChange()" id="zoom-in"/>
+		                </td>
+		            </tr>
+	 	       </table>
+ 	    	</div>
+	        <div data-role="action-panel" data-type="vertical">
+	            <ul data-role="listview" data-inset="true">
+			        <li data-icon=""><a href="#" onClick="onCropSaved()">Crop & Save</a></li>
+			        <li data-icon=""><a href="#" onClick="onCropSkip()">Save</a></li>
+			        <li data-icon=""><a href="#" onClick="callImageEdit()">Edit</a></li>
+			        <li data-icon=""><a href="#" onClick="onCropImageEdit()">Crop & Edit</a></li>
+			    </ul>
+	        </div>
+        </div>
     </div>
 </div>
 
-<!--TODO: update view-->
 <div id="SelectGallery" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" data-position="fixed" style="padding:0;">
-        <table>
-            <tr>
-                <td style="width:25%;">
-                    <div name="user_lbl" style="font-weight:bold;line-height:50px;"></div>
-                </td>
-                <td style="width:75%;">
-                    <Span id="gallery_head">Select files for delete : </Span>
-                    <a href="#" class="ui-btn" onClick="backToGallery()">Cancel</a>
-                    <a href="#" class="ui-btn" onClick="confirmGalleryDiscard()">Delete</a>
-                </td>
-            </tr>
-        </table>
+    	<div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+            <button data-icon="back" data-iconpos="notext" id="btn_cancel" onClick="backToGallery()">Back</button>
+        </div>
+
+        <h1><div name="user_lbl"></div></h1>
+        <h1><span id="gallery_head">Select files for delete :</span></h1>
+
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+            <button data-icon="delete" data-iconpos="notext" onClick="confirmGalleryDiscard()">Delete</button>
+        </div>
     </div>
 
     <div role="main" class="ui-content" style="overflow-x: scroll; overflow-y: hidden;margin:0; padding:0;">
@@ -382,42 +382,46 @@
     </div>
 </div>
 
-<!--TODO: update view-->
 <div id="editView" data-role="page" data-theme="b" data-content-theme="b">
     <div data-role="header" data-position="fixed">
-        <div name="user_lbl" style="float:left;font-weight:bold;line-height:50px;"></div>
-        <h3> Edit Image </h3>
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+            <button data-icon="back" data-iconpos="notext" id="btn_cancel" onClick="onBackToCropView()">Back</button>
+        </div>
+        <h1><div name="user_lbl"></div></h1>
+        <h3>Edit Image</h3>
     </div>
     <div data-role="main" class="ui-content" style="margin:0; padding:0;">
-        <table style="width:100%;">
-            <tr>
-                <td style="width:60%;">
-                    <canvas id="editCanvas" style="position:relative;"></canvas>
-                </td>
-                <td style="width:10%;">
-                    <center>
-                        <img src="img/brightness.png" height="25" width="25" alt="brightness"/>
-
-                        <div id="slider-brightness" style=""></div>
-                    </center>
-                </td>
-                <td style="width:10%;">
-                    <center>
-                        <img src="img/contrast.png" height="25" width="25" alt="contrast"/>
-
-                        <div id="slider-contrast" style=""></div>
-                    </center>
-                </td>
-                <td>
-                    <div data-role="controlgroup" data-type="vertical">
-                        <a href="#" class="ui-btn" onClick="saveEditImage()">Save</a>
-                        <a href="#" class="ui-btn" onClick="onBackToCropView()">Cancel</a>
-                    </div>
-                    <br/>
-                    <a href="#" class="ui-btn" onClick="onUndoEdit()">Undo</a>
-                </td>
-            </tr>
-        </table>
+    	<div id="insp-activity-panel" class="ui-grid-b my-breakpoint">
+            <div id="photo-set-panel" class="ui-block-a">
+		        <table style="width:100%;">
+		            <tr>
+		                <td style="width:60%;">
+		                    <canvas id="editCanvas" style="position:relative;"></canvas>
+		                </td>
+		                <td style="width:10%;">
+		                    <center>
+		                        <img src="img/brightness.png" height="25" width="25" alt="brightness"/>
+		
+		                        <div id="slider-brightness" style=""></div>
+		                    </center>
+		                </td>
+		                <td style="width:10%;">
+		                    <center>
+		                        <img src="img/contrast.png" height="25" width="25" alt="contrast"/>
+		
+		                        <div id="slider-contrast" style=""></div>
+		                    </center>
+		                </td>
+		            </tr>
+		        </table>
+		     </div>
+		     <div data-role="action-panel" data-type="vertical">
+	            <ul data-role="listview" data-inset="true">
+			        <li data-icon=""><a href="#" onClick="saveEditImage()">Save</a></li>
+			        <li data-icon=""><a href="#" onClick="onUndoEdit()">Undo</a></li>
+			    </ul>
+	        </div>
+		 </div>
     </div>
 </div>
 </body>

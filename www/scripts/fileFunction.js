@@ -95,7 +95,7 @@ function onAfterSaveFile(fileFullPath){
 
 function fillSingleTD(fileFullPath){
 	document.getElementById("disp-tab1").innerHTML=galleryTable;
-	if (DataTypes.indexOf(getExtention(getFileName(fileFullPath)).toUpperCase()) >= 0) {
+	if (DataTypes.indexOf(getExtension(getFileName(fileFullPath)).toUpperCase()) >= 0) {
 		root.getFile(fileFullPath, null, function (FnEntries) {
 			FnEntries.file(function (rfile){
 				var reader = new FileReader();
@@ -226,7 +226,7 @@ function uploadFail(error) {
     onStopNotification();
 }
 
-function fileexplore(){
+function fileExplore(){
 	parlistArray=[];
 	parlistArray.push(root);
 	listDir(root);
