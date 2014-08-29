@@ -60,6 +60,10 @@ function ftpExplorer(currentFtpDir)
     }
 	var tmpParList = parlistArray.toString().split(',');
 	var urlPath = tmpParList.join('/');
+	if(urlPath.length > 1)
+		{
+			urlPath +="/";
+		}
 	vis_FtpUrl = "ftp://"+vision_ftp_url+"/"+urlPath;
 	vision.ftpclient.filelist(vis_FtpUrl, function(AllList){
 		var mainDiv = document.getElementById("ftpFileContent");
