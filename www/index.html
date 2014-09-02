@@ -52,7 +52,7 @@
 <body onLoad="onLoad()">
 <div id="disp"></div>
 
-<div id="login" data-role="page" data-theme="b" data-content-theme="b">
+<div id="login" data-role="page" data-theme="b">
     <div data-role="header" data-position="fixed">
         <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
             <button data-icon="delete" data-iconpos="notext" id="appExitBtn" onClick="onExit()">Exit</button>
@@ -64,7 +64,7 @@
         </div>
     </div>
 
-    <div data-role="main" class="ui-content">
+    <div role="main" class="ui-content">
         <label for="txt_user" class="ui-hidden-accessible">Username :</label>
         <input id="txt_user" name="txt_user" type="text" data-clear-btn="true" value="" placeholder="username"/><br>
         <label for="txt_password" class="ui-hidden-accessible">Password :</label>
@@ -87,12 +87,12 @@
     </div>
 </div>
 
-<div id="home" data-role="page" data-theme="b" data-content-theme="b">
+<div id="home" data-role="page" data-theme="b">
     <div data-role="header" data-position="fixed">
         <h1><div name="user_lbl"></div></h1>
     </div>
 
-    <div data-role="main" class="ui-content">
+    <div role="main" class="ui-content">
         <div class="ui-grid-solo">
             <div class="ui-block-a"><button type="button" data-theme="b" id="startNewInspectionBtn" onClick="onStartNewInspection()">Start Inspection</button></div>
         </div>
@@ -105,7 +105,7 @@
     </div>
 </div>
 
-<div id="setting" data-role="page" data-theme="b" data-content-theme="b">
+<div id="setting" data-role="page" data-theme="b">
     <div data-role="header" data-position="fixed">
         <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
             <button data-icon="back" data-iconpos="notext" id="btn_cancel" onClick="onLoginPage()">Cancel</button>
@@ -113,7 +113,7 @@
         <h1>VISion Settings</h1>
     </div>
 
-    <div data-role="main" class="ui-content">
+    <div role="main" class="ui-content">
         <div class="ui-field-contain">
             <label for="txt_url">Server :</label>
             <select id="txt_url">
@@ -196,7 +196,7 @@
     </div>
 </div>
 
-<div id="startNewInsp" data-role="page" data-theme="b" data-content-theme="b">
+<div id="startNewInsp" data-role="page" data-theme="b">
     <div data-role="header" data-position="fixed">
         <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
             <button data-icon="back" data-iconpos="notext" id="btn_cancel" onClick="loadPage('home')">Back</button>
@@ -211,7 +211,7 @@
         </div>
     </div>
 
-    <div data-role="main" class="ui-content" style="padding:0;">
+    <div role="main" class="ui-content" style="padding:0;">
         <div id="insp-activity-panel" class="ui-grid-b my-breakpoint">
             <div id="photo-set-panel" class="ui-block-a">
                 <table id="disp-Insp" cellspacing="0" cellpadding="0" style="margin:0; padding:0;">
@@ -228,7 +228,7 @@
     </div>
 </div>
 
-<div id="gallery" data-role="page" data-theme="b" data-content-theme="b">
+<div id="gallery" data-role="page" data-theme="b">
     <div data-role="header" data-position="fixed">
         <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
             <button data-icon="back" data-iconpos="notext" id="btn_cancel" onClick="onBackToStartInspection('gallery')">Back</button>
@@ -242,7 +242,7 @@
         </div>
     </div>
 
-    <div data-role="main" class="ui-content" style="margin:0; padding:0;overflow-x: scroll; overflow-y: hidden;">
+    <div role="main" class="ui-content" style="margin:0; padding:0;overflow-x: scroll; overflow-y: hidden;">
         <div id="insp-activity-panel" class="ui-grid-b my-breakpoint">
             <div id="photo-set-panel" class="ui-block-a">
                 <table id="disp-tab1" cellspacing="0" cellpadding="0" style="margin:0; padding:0;">
@@ -262,7 +262,7 @@
     </div>
 </div>
 
-<div id="cropView" data-role="page" data-theme="b" data-content-theme="b">
+<div id="cropView" data-role="page" data-theme="b">
     <div data-role="header" data-position="fixed">
         <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
             <button data-icon="back" data-iconpos="notext" id="btn_cancel" onClick="backToGallery()">Back</button>
@@ -303,7 +303,7 @@
     </div>
 </div>
 
-<div id="SelectGallery" data-role="page" data-theme="b" data-content-theme="b">
+<div id="SelectGallery" data-role="page" data-theme="b">
     <div data-role="header" data-position="fixed" style="padding:0;">
     	<div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
             <button data-icon="back" data-iconpos="notext" id="btn_cancel" onClick="backToGallery()">Back</button>
@@ -323,7 +323,7 @@
     </div>
 </div>
 
-<div id="fileExpo" data-role="page" data-theme="b" data-content-theme="b">
+<div id="fileExpo" data-role="page" data-theme="b">
     <div data-role="header" data-position="fixed">
         <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
             <button data-icon="back" data-iconpos="notext" onClick="backToGallery()">Back</button>
@@ -340,7 +340,7 @@
     </div>
 </div>
 
-<div id="ftpExplorer" data-role="page" data-theme="b" data-content-theme="b">
+<div id="ftpExplorer" data-role="page" data-theme="b">
     <div data-role="header" data-position="fixed">
         <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
             <button data-icon="back" data-iconpos="notext" onClick="backToGallery()">Back</button>
@@ -360,7 +360,7 @@
     </div>
 </div>
 
-<div id="aboutUs" data-role="page" data-theme="b" data-content-theme="b">
+<div id="aboutUs" data-role="page" data-theme="b">
     <div data-role="header" data-position="fixed">
         <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
             <button data-icon="back" data-iconpos="notext" id="btn_cancel" onClick="onBackLogin()">Back</button>
@@ -371,18 +371,18 @@
     <div role="main" class="ui-content">
         <div id="setting_error" class="ui-corner-all">
             <div class="ui-bar ui-bar-b ui-corner-top" style="text-align: center">
-                <h1 id="visAppName">Heading</h1>
+                <h1 id="visAppName">VISion</h1>
             </div>
             <div class="ui-body ui-body-b ui-corner-bottom ui-shadow" style="text-align: center">
-                <h4 id="visAppVersion">Heading</h4>
-                <h4 id="visAppRelease">Heading</h4>
-                <h4 id="visAppRelease">Publisher: Velocity Electronics, L.P.</h4>
+                <h4 id="visAppVersion">Version</h4>
+                <h4 id="visAppRelease">Date</h4>
+                <h4 id="visAppPublisher">Publisher</h4>
             </div>
         </div>
     </div>
 </div>
 
-<div id="editView" data-role="page" data-theme="b" data-content-theme="b">
+<div id="editView" data-role="page" data-theme="b">
     <div data-role="header" data-position="fixed">
         <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
             <button data-icon="back" data-iconpos="notext" id="btn_cancel" onClick="onBackToCropView()">Back</button>
@@ -390,7 +390,7 @@
         <h1><div name="user_lbl"></div></h1>
         <h3>Edit Image</h3>
     </div>
-    <div data-role="main" class="ui-content" style="margin:0; padding:0;">
+    <div role="main" class="ui-content" style="margin:0; padding:0;">
     	<div id="insp-activity-panel" class="ui-grid-b my-breakpoint">
             <div id="photo-set-panel" class="ui-block-a">
 		        <table style="width:100%;">

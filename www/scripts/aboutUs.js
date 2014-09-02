@@ -1,15 +1,17 @@
-var releaseVersion='Version : 1.0.14';
-var releaseDate='Release Date : AUG 21 2014';
+var releaseVersion='Version : 1.1.1';
+var releaseDate='Release Date : SEP 02 2014';
 var applicationName='VISion - VIS Mobile Inspection';
+var applicationPublisher='Velocity Electronics, L.P.';
 
 function onAboutUs() {
-	document.getElementById('visAppName').innerHTML=applicationName;
-	document.getElementById('visAppVersion').innerHTML=releaseVersion;
-	document.getElementById('visAppRelease').innerHTML=releaseDate;
+	$('#visAppName').html(applicationName);
+	$('#visAppVersion').html(releaseVersion);
+	$('#visAppRelease').html(releaseDate);
+    $('#visAppPublisher').html(applicationPublisher);
 	loadPage("aboutUs");
 }
 
 function onBackLogin() {
     loadPage("login");
-    document.getElementById("txt_user").value = userName;
+    $("#txt_user").val(userName);
 }
