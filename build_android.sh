@@ -1,0 +1,1 @@
+phonegap local build android
