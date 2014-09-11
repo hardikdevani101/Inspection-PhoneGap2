@@ -1,4 +1,6 @@
 var vis_FtpUrl;
+var isEditableImage = false;
+var pandingEditImage = new Array();
 function onFtpExplorer()
 {
 	loadPage("ftpExplorer");
@@ -130,10 +132,22 @@ function onFinishFtpSelection()
     }
 	else if(selectChkList.length > 1)
     {
-		navigator.notification.activityStart("Please Wait", "Uploading files...");
-		isGalleryLoad = false;
-		imgUploadCount = selectChkList.length;
-        downloadFTPFile(selectChkList);
+		navigator.notification.confirm('crop/edit/watermark images ???', 
+			function(buttonIndex){
+				if(buttonIndex == 1)
+				{
+					isEditableImage = true;
+				}
+				else
+				{
+					isEditableImage = false;
+					navigator.notification.activityStart("Please Wait", "Uploading files...");
+				}
+
+				isGalleryLoad = false;
+				imgUploadCount = selectChkList.length;
+		        downloadFTPFile(selectChkList);
+			}, 'Confirmation', ['Yes','No']);
     }
 }
 
@@ -159,33 +173,48 @@ function downloadFTPFile(selectChkList){
 			var fileFullPath=getSDPath(entry.fullPath).substring(2);
 			var fileName=getFileName(fileFullPath);
 			if (DataTypes.indexOf(getExtention(getFileName(fileFullPath)).toUpperCase()) >= 0) {
-				entry.file(function (rfile){
-					var reader = new FileReader();
-						reader.onloadend = function (evt) {
-							var image_temp = new Image();
-							image_temp.src = evt.target.result;
-							image_temp.onload = function(){
-								var tmpCanvas = document.createElement('canvas');
-								tmpCanvas.height = image_temp.height;
-								tmpCanvas.width = image_temp.width;
-								var tmpCtx = tmpCanvas.getContext("2d");
-								tmpCtx.drawImage(image_temp,0,0,image_temp.width,image_temp.height);
-								var encoder = new JPEGEncoder();
-								var img64 = encoder.encode(tmpCtx.getImageData(0,0,image_temp.width,image_temp.height),100);
-								var imageURI=Base64Binary.decodeArrayBuffer(img64.replace(/data:image\/jpeg;base64,/,''));
-								saveImage(imageURI);
-								if(selectChkList.length > 0)
-								{
-									downloadFTPFile(selectChkList);
+				if(isEditableImage)
+				{
+					pandingEditImage.push(entry);
+					if(selectChkList.length > 0)
+					{
+						downloadFTPFile(selectChkList);
+					}
+					else
+					{
+						checkIsPendingEditing();
+					}
+				}
+				else
+				{
+					entry.file(function (rfile){
+						var reader = new FileReader();
+							reader.onloadend = function (evt) {
+								var image_temp = new Image();
+								image_temp.src = evt.target.result;
+								image_temp.onload = function(){
+									var tmpCanvas = document.createElement('canvas');
+									tmpCanvas.height = image_temp.height;
+									tmpCanvas.width = image_temp.width;
+									var tmpCtx = tmpCanvas.getContext("2d");
+									tmpCtx.drawImage(image_temp,0,0,image_temp.width,image_temp.height);
+									var encoder = new JPEGEncoder();
+									var img64 = encoder.encode(tmpCtx.getImageData(0,0,image_temp.width,image_temp.height),100);
+									var imageURI=Base64Binary.decodeArrayBuffer(img64.replace(/data:image\/jpeg;base64,/,''));
+									saveImage(imageURI);
+									if(selectChkList.length > 0)
+									{
+										downloadFTPFile(selectChkList);
+									}
+									else
+									{
+										isGalleryLoad = true;
+									}
 								}
-								else
-								{
-									isGalleryLoad = true;
-								}
-							}
-						};
-						reader.readAsDataURL(rfile);
-				}, function () {});
+							};
+							reader.readAsDataURL(rfile);
+					}, function () {});
+				}
 			}
 			else
 				{
@@ -197,15 +226,30 @@ function downloadFTPFile(selectChkList){
 							sqlQuery ='INSERT INTO vis_gallery(mr_line,insp_line,name,file) VALUES ("'+M_InOutLine_ID+'","'+X_INSTRUCTIONLINE_ID+'","'+fileName+'","'+fileFullPath+'")';
 						tx.executeSql(sqlQuery);
 					}, errorCB,function(){
-						onAfterSaveFile(fileFullPath);
-						if(selectChkList.length > 0)
-							{
-								downloadFTPFile(selectChkList);
-							}
+						if(isEditableImage)
+						{
+							onAfterSaveFile(fileFullPath,null);
+							if(selectChkList.length > 0)
+								{
+									downloadFTPFile(selectChkList);
+								}
+							else
+								{
+									checkIsPendingEditing();
+								}
+						}
 						else
-							{
-								isGalleryLoad = true;
-							}
+						{
+							onAfterSaveFile(fileFullPath,backToGallery);
+							if(selectChkList.length > 0)
+								{
+									downloadFTPFile(selectChkList);
+								}
+							else
+								{
+									isGalleryLoad = true;
+								}
+						}
 					});
 				}
 		 }, function (error) {
@@ -214,4 +258,19 @@ function downloadFTPFile(selectChkList){
 	}, function(){
 		console.log("File not downloaded from ftp");
 	});
+}
+
+function checkIsPendingEditing()
+{
+	navigator.notification.activityStart("Please Wait", "Loading Image...");
+	if(pandingEditImage.length > 0)
+	{
+		var entry = pandingEditImage.pop();
+		onImgFileSystem(entry);
+	}
+	else
+	{
+		isEditableImage = false ;
+		backToGallery();
+	}
 }

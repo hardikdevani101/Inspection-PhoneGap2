@@ -28,7 +28,7 @@ function saveImage(imageURI){
 	var yy = date.getFullYear();
 	var mm = date.getMonth()+1;
 	var dd = date.getDate();
-	var fileName=M_Line_Desc+"_"+mm+dd+yy+"_"+hh+mi+sec+".jpg";
+	var fileName=$('.photoPrefix:last').text()+"_"+mm+dd+yy+"_"+hh+mi+sec+".jpg";
 	dirVISInspection.getFile(fileName, {create: true, exclusive: false}, function (fileEntry){
 		CreateImgWriter(fileEntry,imageURI);
 	},function(error){ console.log("File Create FSError = "+error.code); });
@@ -50,12 +50,13 @@ function OnImgWriter(writer,fileFullPath,fileName,imageURI){
 					sqlQuery = 'INSERT INTO vis_gallery(mr_line,insp_line,name,file) VALUES ("'+M_InOutLine_ID+'","'+X_INSTRUCTIONLINE_ID+'","'+fileName+'","'+fileFullPath+'")';
 				tx.executeSql(sqlQuery);
 			}, errorCB);
-			onAfterSaveFile(fileFullPath);
+			onAfterSaveFile(fileFullPath,backToGallery);
+			checkIsPendingEditing();
         };
 	 writer.write(imageURI);
 }
 
-function onAfterSaveFile(fileFullPath){
+function onAfterSaveFile(fileFullPath,callBack){
 	if(galleryTable != "" && galleryTable != null)
 	{	
 		document.getElementById("disp-tab1").innerHTML=galleryTable;
@@ -81,19 +82,19 @@ function onAfterSaveFile(fileFullPath){
 					}
 				}
 				galleryTable=document.getElementById("disp-tab1").innerHTML;
-				fillSingleTD(fileFullPath);	
+				fillSingleTD(fileFullPath,callBack);	
 			}, function (err) { console.log("Error SQL: " + err.code);	});
 		},  function (err) { console.log("Error SQL: " + err.code);	});
     }
 	else{
 		if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
-			onUploadFile(fileFullPath,M_INOUT_ID,backToGallery);
+			onUploadFile(fileFullPath,M_INOUT_ID,callBack);
 		else
-			onUploadFile(fileFullPath,X_INSTRUCTIONLINE_ID,backToGallery);
+			onUploadFile(fileFullPath,X_INSTRUCTIONLINE_ID,callBack);
 	}
 }
 
-function fillSingleTD(fileFullPath){
+function fillSingleTD(fileFullPath,callBack){
 	document.getElementById("disp-tab1").innerHTML=galleryTable;
 	if (DataTypes.indexOf(getExtention(getFileName(fileFullPath)).toUpperCase()) >= 0) {
 		root.getFile(fileFullPath, null, function (FnEntries) {
@@ -157,9 +158,9 @@ function fillSingleTD(fileFullPath){
 		galleryTable=document.getElementById("disp-tab1").innerHTML;
 	}
 	if(X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
-		onUploadFile(fileFullPath,M_INOUT_ID,backToGallery);
+		onUploadFile(fileFullPath,M_INOUT_ID,callBack);
 	else
-		onUploadFile(fileFullPath,X_INSTRUCTIONLINE_ID,backToGallery);
+		onUploadFile(fileFullPath,X_INSTRUCTIONLINE_ID,callBack);
 }
 
 function dirFail(error) {

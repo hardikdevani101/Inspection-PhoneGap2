@@ -75,7 +75,7 @@
                 <option value="http://10.210.23.77:8088">Production</option>
                 <option value="http://10.210.23.78:8088">Development</option>
                 <option value="http://10.210.23.97:8088">Test</option>
-                <option value="http://192.168.1.102:8096">Logilite-Dev</option>
+                <option value="http://192.168.1.106:8096">Logilite-Dev</option>
             </select>
         </td></tr>
         <tr>
@@ -163,7 +163,11 @@
 		<div style="width:100%;margin:0px; padding:0px;float:left;">
 			<div name="user_lbl" style="float:left;font-weight:bold;"></div> 
 			<span class="sync_btns" onClick="onSyncFiles()" ontouchstart="return true;">&nbsp;</span>
-			<center><Span id="gallery_head" style="float:right;"></Span></center>
+			<center>
+				<Span id="gallery_head" style="float:right;"></Span></br>
+				<Span class="photoPrefix" onclick="changePhotosetPrefix(true)" style="float:right;"></Span>
+				<span  style="float:right;">Prefix :</span>
+			</center>
 		</div>
 		<div style="padding:0px 2px; margin:1px 0px;">
 			<hr />
@@ -190,12 +194,16 @@
 		<center>
 		<div style="width:100%;margin:0px; padding: 0px;">
 			<div name="user_lbl" style="float:left;font-weight:bold;"></div> 
-			<Span style="margin:0px; padding:0px;" > <h3> Crop Image </h3></Span> 
+			<Span style="margin:0px; padding:0px;" > <h3> 
+				<Span class="photoPrefix" onclick="changePhotosetPrefix(false)" style="float:right;margin:0px; padding:0px;"></Span>
+				<span  style="float:right;margin:0px; padding:0px;">Prefix :</span>
+			Crop Image </h3></Span>
 		</div>
 		<div id="cropImage" style="width:65%; height:65%; float:left; margin:0px; padding: 0px;">
 			
 		</div>
 		<div style="width:10%;height:100%;float:left; padding:0%; margin:0px; position:relative; top:-10px;">
+			<lable id="cropPer" style="width :25px;"></lable></br>
 			<input type="button" ontouchstart="onSliderChange(1)" ontouchend="stopSliderChange()" id="zoom-out" />
 			<div id="slider-vertical"></div>
 			<input type="button" ontouchstart="onSliderChange(-1)" ontouchend="stopSliderChange()" id="zoom-in" />
@@ -260,7 +268,11 @@
 	<div id="editView" class="page" >
 		<center>
 		<div>
-			<div name="user_lbl" style="float:left;font-weight:bold;"></div> <Span style="margin:0px; padding:0px;" > <h3> Edit Image </h3></Span> 
+			<div name="user_lbl" style="float:left;font-weight:bold;"></div>
+			<Span style="margin:0px; padding:0px;" > <h3>
+				<Span class="photoPrefix" onclick="changePhotosetPrefix(false)" style="float:right;margin:0px; padding:0px;"></Span>
+				<span  style="float:right;margin:0px; padding:0px;">Prefix :</span>
+			 Edit Image </h3></Span>
 		</div>
 		<div id="editImage" style="width:65%; height:65%; float:left; margin:0px; padding: 0px;">
 			<canvas id="editCanvas"></canvas>

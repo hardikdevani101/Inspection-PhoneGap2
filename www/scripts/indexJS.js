@@ -454,7 +454,8 @@ function renderGallery() {
     
 	var sideBar = document.getElementById("sideBarGallery");
 	sideBar.style.height = window.innerHeight*.85+"px";
-	
+    $('.photoPrefix').text(M_Line_Desc);
+    
 	if(galleryTable=="")
 	{
 		db.transaction(function (tx) {
@@ -942,6 +943,7 @@ function onCrop(results) {
 			finalSelection = selection;
 		}
     }
+    $("#cropPer").text(100+" % ");
 	document.getElementById("slider-vertical").setAttribute("style","height:"+(cropImageH-50)+"px;margin:35% 0px 25% 0px;");
 	$('#slider-vertical').slider({
 		orientation: "vertical",
@@ -949,17 +951,18 @@ function onCrop(results) {
 		max: ysize,
 		value:ysize,
 		change:function( event, ui ) {
-				selectCropArea(ui.value);
+				selectCropArea(ui.value,ui.value*100/ysize);
 			},
 		slide:function( event, ui ) {
 				clearInterval(myVar);
-				selectCropArea(ui.value);
+				selectCropArea(ui.value,ui.value*100/ysize);
 			}
 	});
 }
 
-function selectCropArea(scrollValue)
+function selectCropArea(scrollValue,per)
 {
+	$("#cropPer").text(Math.round(per)+" % ");
 	var totSelW = (scrollValue*4)/3 + finalSelection.x;
 	var totSelH = scrollValue + finalSelection.y;
 	var xPos, yPos;
@@ -1069,7 +1072,8 @@ function applyWatermark(origImg) {
 		var imageURI=Base64Binary.decodeArrayBuffer(img64);
 		onStopNotification();
 		navigator.notification.activityStart("Please Wait", "Saving Image...");
-		imgUploadCount = 1;
+		if(!isEditableImage)
+			imgUploadCount = 1;
 		saveImage(imageURI);
 		watermark = encoder = img64 = null;
 	}
@@ -1286,4 +1290,14 @@ function onBrightnessChange(brightValue, brightImageData)
 	}
 	editCtx.putImageData(brightImageData,0,0);
 	return brightImageData;
+}
+
+function changePhotosetPrefix(isChange)
+{
+	var prefix = prompt("Enter Prefix", M_Line_Desc);
+	if (prefix != null && prefix != "") {
+		if(isChange)
+			M_Line_Desc = prefix;
+		$('.photoPrefix').text(prefix);
+	}
 }

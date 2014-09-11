@@ -71,7 +71,7 @@ function onDirectFileUpload(fileFullPath,fileName){
 		tx.executeSql(sqlQuery);
 	}, errorCB);
 	imgUploadCount = 1;
-	onAfterSaveFile(fileFullPath);
+	onAfterSaveFile(fileFullPath,backToGallery);
 }
 
 function deleteMRgallery() {
