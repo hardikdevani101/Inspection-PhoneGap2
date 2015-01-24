@@ -647,16 +647,10 @@ function onSettingPage() {
 
 function setSettingpage() {
 	var e = document.getElementById("txt_url");
-	for(var i=0 ; i < e.options.length ; i++){
-		if(e.options[i].value==vis_url)
-			e.options[i].selected = true;
-	}
+	e.value=vis_url;
     document.getElementById("txt_lang").value = vis_lang;
     e = document.getElementById("txt_client");
-    for(var i=0 ; i < e.options.length ; i++){
-    	if(e.options[i].value==vis_client_id)
-    		e.options[i].selected = true;
-    }
+    e.value=vis_client_id;
 	document.getElementById("txt_imgQua").value = vis_img_qulty;
 	e = document.getElementById("txt_role");
 	for(var i=0 ; i < e.options.length ; i++){
@@ -676,11 +670,11 @@ function setSettingpage() {
 
 function onSettingUpdate() {
 	var e = document.getElementById("txt_url");
-	vis_url = e.options[e.selectedIndex].value;
+	vis_url = e.value;
 	
     vis_lang = document.getElementById("txt_lang").value;
     e = document.getElementById("txt_client");
-    vis_client_id = e.options[e.selectedIndex].value;
+    vis_client_id = e.value;
 	e = document.getElementById("txt_role");
 	vis_role = e.options[e.selectedIndex].value;
 	
