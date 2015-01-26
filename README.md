@@ -6,6 +6,7 @@ VISion mobile application.
 
 * Quick summary: VIS Inspection mobile app.
 * 1.0
+* Built using Phonegap
 
 ### How do I get set up? ###
 
