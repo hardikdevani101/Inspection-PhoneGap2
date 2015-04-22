@@ -19,6 +19,7 @@
 var app = {
     // Application Constructor
     initialize: function() {
+    	console.log("App inittttttt call");
         this.bindEvents();
         this.application=new App();
     },

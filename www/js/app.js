@@ -1,8 +1,7 @@
 var App = function() {
 	this.canvas;
 	this.gcanvas;
-	this.boundX, 
-	this.BoundY;
+	this.boundX, this.BoundY;
 	this.jcrop_api;
 	this.finalSelection;
 	this.crop_img;
@@ -32,7 +31,7 @@ var App = function() {
 	this.pandingCounts = 0;
 	this.currentPage = "";
 	this.warehouseListArray = new Array();
-	this.cropImageW; 
+	this.cropImageW;
 	this.cropImageH;
 	this.scrollHeight;
 	this.canX = 0;
@@ -47,49 +46,56 @@ var App = function() {
 };
 
 App.prototype.init = function() {
-	//this.onDeviceReady();
+//	document.addEventListener('deviceready', this.onDeviceReady(), false);
+//	document.addEventListener("backbutton", this.onBackButton(), false);
 };
 
 App.prototype.onDeviceReady = function() {
-	this.dbstore = new DB();
+
+	var _self = this;
+	this.dbstore = new DB(this);
 	this.dbstore.init();
 	this.appCache = new AppCache();
-	
-	navigator.webkitPersistentStorage.requestQuota(1024*1024, 
-	        function(grantedBytes) {
-	            window.requestFileSystem(window.PERSISTENT, grantedBytes, onInitFs, errorHandler);
-	        }, 
-	        function(errorCode) {
-	            alert("Storage not granted.");
-	        }
-	);
-	// window.RequestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem; 
-	// window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, fileFunction.setRootDirectory, app.error);
-	var _self=this;
 
-	$(document).on( "pagecreate", "#pg_login", function( event ) {
-		_self.loginview = new LoginPage(this,event);
+	this.fileUtil = new FileUtils(this);
+
+	// navigator.webkitPersistentStorage.requestQuota(1024 * 1024, function(
+	// grantedBytes) {
+	// window.requestFileSystem(window.PERSISTENT, grantedBytes, onInitFs,
+	// errorHandler);
+	// }, function(errorCode) {
+	// alert("Storage not granted.");
+	// });
+//	window.RequestFileSystem = window.requestFileSystem
+//			|| window.webkitRequestFileSystem;
+//	window.RequestFileSystem(1, 0, _self.fileUtil.onInitFs,
+//			_self.fileUtil.dirFail);
+
+	_self.settingsview = new SettingsPage(this, event);
+	_self.settingsview.init();
+	_self.appcache.addPage('pg_settgins', _self.settingsview);
+
+	$(document).on("pagecreate", "#pg_login", function(event) {
+		console.log("Login Called");
+		_self.loginview = new LoginPage(this, event);
 		_self.loginview.init();
-		_self.appcache.addPage('pg_login',_self.loginview);
-	});
-
-	$(document).on( "pagecreate", "#pg_inspection", function( event ) {
-		_self.inspLinePage = new InspLinePage(this,event);
-		_self.inspLinePage.init();
-		_self.appcache.addPage('pg_inspection',_self.inspLinePage);
-
-	});
-	
-	$( document ).on( "pagecreate", "#pg_settgins", function( event ) {
-		_self.settingsview = new SettingsPage(this,event);
+		_self.appcache.addPage('pg_login', _self.loginview);
+		_self.settingsview = new SettingsPage(this, event);
 		_self.settingsview.init();
-		_self.appcache.addPage('pg_settgins',_self.settingsview);
+		_self.appcache.addPage('pg_settgins', _self.settingsview);
 	});
-	
-	$( document ).on( "pagecreate", "#pg_aboutus", function( event ) {
-		_self.aboutusview = new AboutUsPage(this,event);
+
+	$(document).on("pagecreate", "#pg_inspection", function(event) {
+		_self.inspLinePage = new InspLinePage(this, event);
+		_self.inspLinePage.init();
+		_self.appcache.addPage('pg_inspection', _self.inspLinePage);
+
+	});
+
+	$(document).on("pagecreate", "#pg_aboutus", function(event) {
+		_self.aboutusview = new AboutUsPage(this, event);
 		_self.aboutusview.init();
-		_self.appcache.addPage('pg_aboutus',_self.aboutusview);
+		_self.appcache.addPage('pg_aboutus', _self.aboutusview);
 	});
 
 };

@@ -11,9 +11,10 @@
 
 <!--JQuery Mobile CSS -->
 <link rel="stylesheet"
-	href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css">
+	href="js/lib/jmobile/jquery.mobile-1.4.2.min.css">
 <link rel="stylesheet"
-	href="js/lib/jmobile/jquery.mobile.structure-1.4.2.min.css" type="text/css" />
+	href="js/lib/jmobile/jquery.mobile.structure-1.4.2.min.css"
+	type="text/css" />
 <link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css" />
 
 <!--VISION CSS -->
@@ -32,7 +33,7 @@
 
 <!--JQuery Mobile  JS-->
 <script
-	src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+	src="js/lib/jmobile/jquery.mobile-1.4.2.min.js"></script>
 
 <!-- Utitlity JS -->
 <script src="js/lib/jpeg_encoder_basic.js"></script>
@@ -40,9 +41,10 @@
 
 
 <!--Cordova JS-->
-<!-- <script src="cordova.js"></script>
- -->
+<script src="cordova.js"></script>
+
 <!--VISION JS-->
+<!--  <script src="js/index.js"></script> -->
 <script src="js/app.js"></script>
 <script src="js/cache/app-cache.js"></script>
 <script src="js/db/db.js"></script>
@@ -63,7 +65,6 @@
 <script src="scripts/validationFunctions.js"></script>
 <script src="scripts/ftpFunctions.js"></script>
 
-<script src="js/index.js"></script>
 
 <style type="text/css">
 <!--
@@ -101,7 +102,7 @@
 	left: 26px;
 }
 
-.ui-mobile [data-role=header], .ui-mobile [data-role=footer] {
+.ui-mobile [data-role=header],.ui-mobile [data-role=footer] {
 	background-color: rgba(0, 89, 187, 0.71);
 	color: beige;
 	text-shadow: 1px 1px 12px #000;
@@ -112,7 +113,7 @@ img {
 	width: 100%;
 }
 
-form label, legend {
+form label,legend {
 	color: #123456;
 }
 
@@ -125,6 +126,7 @@ span {
 }
 </style>
 <script>
+	
 	var deviceReadyDeferred = $.Deferred();
 	var jqmReadyDeferred = $.Deferred();
 
@@ -137,15 +139,11 @@ span {
 
 		// Set a namespace for jQuery Mobile data attributes
 		//$.mobile.ns = "jqm-";
-	
-	});
-	$(document).ready(function() {
-		var app =new App();
-		app.init();
-		document.addEventListener("deviceready", app.onDeviceReady, false);
-		document.addEventListener("backbutton", app.onBackButton, false);
+		var app = new App();
+		app.onDeviceReady();
 
 	});
+	
 </script>
 </head>
 
@@ -155,7 +153,7 @@ span {
 		<!-------------- Login page header ----------->
 		<div data-role="header" role="banner">
 			<h1 role="heading">VIS Login</h1>
-			<a href="#_settings" data-icon="gear" data-iconpos="notext"
+			<a href="#_form_settings" data-icon="gear" data-iconpos="notext"
 				data-corners="true" data-shadow="true" data-iconshadow="true"
 				data-wrapperels="span" title="Preference"></a>
 		</div>
@@ -171,7 +169,7 @@ span {
 		</div>
 
 		<div data-role="panel" data-display="overlay" data-position="left"
-			data-theme="b" id="_settings">
+			data-theme="b" id="_form_settings">
 			<ul data-role="listview" data-theme="a">
 				<li data-icon="delete" data-corners="false" data-shadow="false"
 					data-iconshadow="true" data-wrapperels="div" data-iconpos="right"
@@ -181,9 +179,9 @@ span {
 					data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
 					data-theme="a"><label for="select-server">Server:</label> <select
 					name="select-server" id="txt_url" data-native-menu="false">
-						<option value="http://203.88.138.222:8384">Production</option>
-						<option value="http://203.88.138.222:8384">Development</option>
-						<option value="http://203.88.138.222:8384">Test</option>
+						<option value="http://10.210.23.77:8088">Production</option>
+						<option value="http://10.210.23.78:8088">Development</option>
+						<option value="http://10.210.23.97:8088">Test</option>
 						<option value="http://203.88.138.222:8384">Logilite-Dev</option>
 				</select></li>
 
@@ -229,7 +227,6 @@ span {
 					data-theme="a"><label for="select-warehouse">Warehouse:</label>
 					<select name="select-warehouse" id="txt_warehouse"
 					data-native-menu="false">
-						<option value="0">*</option>
 				</select></li>
 
 				<li data-corners="false" data-shadow="false" data-iconshadow="true"
@@ -245,14 +242,14 @@ span {
 				</select></li>
 				<li data-corners="false" data-shadow="false" data-iconshadow="true"
 					data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-					data-theme="a"><input id="btn_update" type="button"
+					data-theme="a"><input id="btn_update" type="submit"
 					data-inline="true" value="Save" data-theme="b"
 					ontouchstart="return true;"></li>
 			</ul>
 		</div>
 	</div>
 
-<!-------------------------------------------------------------
+	<!-------------------------------------------------------------
 End of Login Page
 -------------------------------------------------------------->
 
@@ -263,8 +260,7 @@ End of Login Page
 			<h1 role="heading">Home</h1>
 			<a href="#_main" data-icon="back" data-iconpos="notext"
 				data-corners="true" data-shadow="true" data-iconshadow="true"
-				data-wrapperels="span" title="Back" data-rel="back">Back</a>
-				<a
+				data-wrapperels="span" title="Back" data-rel="back">Back</a> <a
 				href="#_nav-panel" data-icon="bars" data-iconpos="notext"
 				data-corners="true" data-shadow="true" data-iconshadow="true"
 				data-wrapperels="span" title="Menu"></a>
@@ -428,7 +424,7 @@ End of Home page
 		</div>
 	</div>
 
-<!-------------------------------------------------------------
+	<!-------------------------------------------------------------
 End of Inspection page
 -------------------------------------------------------------->
 

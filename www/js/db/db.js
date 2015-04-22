@@ -3,6 +3,7 @@ var DB = function(app) {
 	 * this.dbstore = openDatabase('visiondb', '1.0', 'Vision Local DB', 2 *
 	 * 1024 * 1024);
 	 */
+	this.app = app;
 	this.dbstore = window.openDatabase("vis_inspection", "1.0",
 			"vis_inspection", 2 * 1024 * 1024);
 }
@@ -30,8 +31,4 @@ DB.prototype.errorCB = function(err) {
 DB.prototype.success = function(tx, results) {
 	console.log("Success processing SQL - TX: " + tx);
 	console.log("Success processing SQL: " + results);
-}
-
-DB.prototype.error = function(tx, results) {
-	console.log("Error processing SQL: " + err.code);
 }

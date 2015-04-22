@@ -80,7 +80,7 @@ VisionApi.prototype.login = function(params, success, error) {
 								.getElementsByTagName("DataRow");
 						if (fullNodeList.length > 0) {
 							for (var i = 0; i < fullNodeList.length; i++) {
-								var dlab, dval, inOut, desc;
+								var dlab, dval;
 								var option = document.createElement('option');
 								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {

@@ -11,7 +11,7 @@ LoginPage.prototype.onLogin=function() {
 		app.appcache.userinfo['username']=$("#username");
 		app.appcache.userinfo['password']=$("#password");
 		app.appcache.userinfo['userid']=result.userinfo.ad_user_id;
-		app.appcache.userinfo['fname']=result.userinfo.name;
+		
 	}
 	
 	var error=function(){		
