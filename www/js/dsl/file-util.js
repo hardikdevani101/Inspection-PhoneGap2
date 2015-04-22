@@ -1,37 +1,35 @@
-var root;
-var dirVISInspection;
-var currentDir;
-var parlistArray;
-var dirVISInspectionFTP;
-var isGalleryLoad = true;
-var DataTypes = [ "JPEG", "JPG", "BMP", "PNG", "GIF" ];
-
-var FileFunction = function() {
+var FileUtils = function(app) {
+	this.app=app;
+	this.root='';
+	this.dirVISInspection='';
+	this.currentDir='';
+	this.parlistArray=[];
+	this.dirVISInspectionFTP='';
+	this.isGalleryLoad = true;
+	this.DataTypes = [ "JPEG", "JPG", "BMP", "PNG", "GIF" ];
 }
 
-var fileFunction = new FileFunction()
-{
-}
+var fileUtils = new FileUtils();
 
-FileFunction.prototype.setRootDirectory = function(fileSystem) {
+FileUtils.prototype.setRootDirectory = function(fileSystem) {
 	root = fileSystem.root;
 	root.getDirectory("VIS_Inspection", {
 		create : true
-	}, fileFunction.setVISDirectory, dirFail);
+	}, FileUtils.setVISDirectory, dirFail);
 }
 
-FileFunction.prototype.setVISDirectory = function(fileSystem) {
+FileUtils.prototype.setVISDirectory = function(fileSystem) {
 	dirVISInspection = fileSystem;
 	dirVISInspection.getDirectory("VIS_FTP", {
 		create : true
-	}, fileFunction.setVISFTPDirectory, dirFail);
+	}, FileUtils.setVISFTPDirectory, dirFail);
 }
 
-FileFunction.prototype.setVISFTPDirectory = function(fileSystem) {
+FileUtils.prototype.setVISFTPDirectory = function(fileSystem) {
 	dirVISInspectionFTP = fileSystem;
 }
 
-FileFunction.prototype.saveImage = function(imageURI) {
+FileUtils.prototype.saveImage = function(imageURI) {
 	var date = new Date;
 	var sec = date.getSeconds();
 	var mi = date.getMinutes();
@@ -45,19 +43,19 @@ FileFunction.prototype.saveImage = function(imageURI) {
 		create : true,
 		exclusive : false
 	}, function(fileEntry) {
-		fileFunction.createImgWriter(fileEntry, imageURI);
-	}, fileFunction.dirFail);
+		FileUtils.createImgWriter(fileEntry, imageURI);
+	}, FileUtils.dirFail);
 }
 
-FileFunction.prototype.createImgWriter = function(fileEntry, imageURI) {
+FileUtils.prototype.createImgWriter = function(fileEntry, imageURI) {
 	var fileFullPath = getSDPath(fileEntry.fullPath).substring(1);
 	fileEntry.createWriter(function(writer) {
-		fileFunction
+		FileUtils
 				.OnImgWriter(writer, fileFullPath, fileEntry.name, imageURI);
-	}, fileFunction.dirFail);
+	}, FileUtils.dirFail);
 }
 
-FileFunction.prototype.OnImgWriter = function(writer, fileFullPath, fileName,
+FileUtils.prototype.OnImgWriter = function(writer, fileFullPath, fileName,
 		imageURI) {
 	writer.onwrite = function(evt) {
 		dbf.onAddImageEntry();
@@ -66,47 +64,45 @@ FileFunction.prototype.OnImgWriter = function(writer, fileFullPath, fileName,
 	writer.write(imageURI);
 }
 
-FileFunction.prototype.onAfterSaveFile = function(fileFullPath, callBack) {
+FileUtils.prototype.afterSaveFile = function(fileinfo, callBack) {
 	if (galleryTable != "" && galleryTable != null) {
-		document.getElementById("disp-tab1").innerHTML = galleryTable;
-		db.transaction(function(tx) {
-			var sqlQuery;
-			if (X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
-				sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
-						+ M_InOutLine_ID + '" and in_out_id="' + M_INOUT_ID
-						+ '"';
-			else
-				sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
-						+ M_InOutLine_ID + '" and insp_line="'
-						+ X_INSTRUCTIONLINE_ID + '"';
-			tx.executeSql(sqlQuery, [], function(tx, results) {
-				imagelistarray = results;
-				if (totColumns < results.rows.length) {
-					var colNum = Math.ceil(imagelistarray.rows.length / 3);
-					colNum = colNum - 1;
-					for ( var j = 0; j < 3; j++) {
-						var tr = document.getElementById("tr-" + j);
-						var td = document.createElement('td');
-						td.setAttribute("id", "td-" + j + "-" + colNum);
-						td.setAttribute("style", "margin:0px; padding:0px;");
-						tr.appendChild(td);
-						totColumns = totColumns + 1;
-					}
+		$("$disp-tab1").innerHTML = galleryTable;
+		var error = FileUtils.dirFail
+		var success=function(tx, results) {
+			imagelistarray = results;
+			if (totColumns < results.rows.length) {
+				var colNum = Math.ceil(imagelistarray.rows.length / 3);
+				colNum = colNum - 1;
+				for ( var j = 0; j < 3; j++) {
+					var tr = document.getElementById("tr-" + j);
+					var td = document.createElement('td');
+					td.setAttribute("id", "td-" + j + "-" + colNum);
+					td.setAttribute("style", "margin:0px; padding:0px;");
+					tr.appendChild(td);
+					totColumns = totColumns + 1;
 				}
-				galleryTable = document.getElementById("disp-tab1").innerHTML;
-				fileFunction.fillSingleTD(fileFullPath, callBack);
-			}, fileFunction.dirFail);
-		}, fileFunction.dirFail);
+			}
+			galleryTable = $("#disp-tab1").innerHTML;
+			FileUtils.fillSingleTD(fileFullPath, callBack);
+		};
+		
+		var visgallery = new Tbl_VISGallery(this.app);
+		if (fileinfo.X_INSTRUCTIONLINE_ID == 0 || fileinfo.X_INSTRUCTIONLINE_ID == null){
+			visgallery.getFilesByMRInfo(fileinfo,success,error);
+			
+		}else{
+			visgallery.getFilesByInspInfo(fileinfo,success,error)
+		}
 	} else {
-		if (X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
-			fileFunction.onUploadFile(fileFullPath, M_INOUT_ID, callBack);
+		if (fileinfo.X_INSTRUCTIONLINE_ID == 0 || fileinfo.X_INSTRUCTIONLINE_ID == null)
+			FileUtils.onUploadFile(fileinfo.fileFullPath, M_INOUT_ID, callBack);
 		else
-			fileFunction.onUploadFile(fileFullPath, X_INSTRUCTIONLINE_ID,
+			FileUtils.onUploadFile(fileinfo.fileFullPath, X_INSTRUCTIONLINE_ID,
 					callBack);
 	}
 }
 
-FileFunction.prototype.fillSingleTD = function(fileFullPath, callBack) {
+FileUtils.prototype.fillSingleTD = function(fileFullPath, callBack) {
 	document.getElementById("disp-tab1").innerHTML = galleryTable;
 	if (DataTypes
 			.indexOf(getExtention(getFileName(fileFullPath)).toUpperCase()) >= 0) {
@@ -236,17 +232,17 @@ FileFunction.prototype.fillSingleTD = function(fileFullPath, callBack) {
 		galleryTable = document.getElementById("disp-tab1").innerHTML;
 	}
 	if (X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null)
-		fileFunction.onUploadFile(fileFullPath, M_INOUT_ID, callBack);
+		FileUtils.onUploadFile(fileFullPath, M_INOUT_ID, callBack);
 	else
-		fileFunction.onUploadFile(fileFullPath, X_INSTRUCTIONLINE_ID, callBack);
+		FileUtils.onUploadFile(fileFullPath, X_INSTRUCTIONLINE_ID, callBack);
 }
 
-FileFunction.prototype.dirFail = function(error) {
+FileUtils.prototype.dirFail = function(error) {
 	console.log(" FSError = " + error);
 }
 
-FileFunction.prototype.onUploadFile = function(filePath, InspNumber, callBack) {
-	root.getFile(filePath, null, SingleFileSuccess, fileFunction.dirFail);
+FileUtils.prototype.onUploadFile = function(filePath, InspNumber, callBack) {
+	root.getFile(filePath, null, SingleFileSuccess, FileUtils.dirFail);
 
 	function SingleFileSuccess(FnEntries) {
 		var ft = new FileTransfer();
@@ -307,7 +303,7 @@ FileFunction.prototype.onUploadFile = function(filePath, InspNumber, callBack) {
 											},
 											errorCB,
 											function() {
-												fileFunction
+												FileUtils
 														.setUploadedImg(FnEntries.name);
 												imgUploadCount = imgUploadCount - 1;
 												if (callBack
@@ -318,7 +314,7 @@ FileFunction.prototype.onUploadFile = function(filePath, InspNumber, callBack) {
 	}
 }
 
-FileFunction.prototype.setUploadedImg = function(fileName) {
+FileUtils.prototype.setUploadedImg = function(fileName) {
 	for ( var i = 0; i < pandingUploads.length; i++) {
 		if (pandingUploads[i][1] == fileName) {
 			var tdDiv = document.getElementById(pandingUploads[i][0]);
@@ -331,23 +327,23 @@ FileFunction.prototype.setUploadedImg = function(fileName) {
 	galleryTable = document.getElementById("disp-tab1").innerHTML;
 }
 
-FileFunction.prototype.uploadFail = function(error) {
+FileUtils.prototype.uploadFail = function(error) {
 	console.log("Error = " + error.code);
 	navigator.notification.alert('All files not uploaded', function() {
 	}, 'Failure', 'OK');
 	onStopNotification();
 }
 
-FileFunction.prototype.fileexplore = function() {
+FileUtils.prototype.fileexplore = function() {
 	parlistArray = [];
 	parlistArray.push(root);
-	fileFunction.listDir(root);
+	FileUtils.listDir(root);
 }
-FileFunction.prototype.backFile = function() {
+FileUtils.prototype.backFile = function() {
 	var tmppar = parlistArray.pop();
-	fileFunction.listDir(tmppar);
+	FileUtils.listDir(tmppar);
 }
-FileFunction.prototype.listDir = function(DirEntry) {
+FileUtils.prototype.listDir = function(DirEntry) {
 	if (!DirEntry.isDirectory)
 		console.log('listDir incorrect type');
 	currentDir = DirEntry;
@@ -383,7 +379,7 @@ FileFunction.prototype.listDir = function(DirEntry) {
 	});
 }
 
-FileFunction.prototype.listsub = function(DirName) {
+FileUtils.prototype.listsub = function(DirName) {
 	parlistArray.push(currentDir);
 	currentDir.getDirectory(DirName, null, function(dir) {
 		listDir(dir);
@@ -393,7 +389,7 @@ FileFunction.prototype.listsub = function(DirName) {
 	currentDir = null;
 }
 
-FileFunction.prototype.onReadFileDataUrl = function(FnEntries, ItemNumber,
+FileUtils.prototype.onReadFileDataUrl = function(FnEntries, ItemNumber,
 		callBack) {
 	FnEntries.file(function(rfile) {
 		var reader = new FileReader();
@@ -405,7 +401,7 @@ FileFunction.prototype.onReadFileDataUrl = function(FnEntries, ItemNumber,
 	});
 }
 
-FileFunction.prototype.onImgFileSystem = function(FnEntries) {
+FileUtils.prototype.onImgFileSystem = function(FnEntries) {
 	FnEntries.file(gotGalleryImg, function() {
 	});
 	function gotGalleryImg(rfile) {
@@ -417,12 +413,12 @@ FileFunction.prototype.onImgFileSystem = function(FnEntries) {
 	}
 }
 
-FileFunction.prototype.getSDPath = function(Fname) {
+FileUtils.prototype.getSDPath = function(Fname) {
 	var tmpArray = Fname.split('mnt/sdcard');
 	return tmpArray.pop();
 }
 
-FileFunction.prototype.getExtention = function(Fname) {
+FileUtils.prototype.getExtention = function(Fname) {
 	var tmpArray = Fname.split('.');
 	return tmpArray.pop();
 }

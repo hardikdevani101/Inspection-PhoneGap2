@@ -1,7 +1,8 @@
 var App = function() {
 	this.canvas;
 	this.gcanvas;
-	this.boundX, BoundY;
+	this.boundX, 
+	this.BoundY;
 	this.jcrop_api;
 	this.finalSelection;
 	this.crop_img;
@@ -31,32 +32,66 @@ var App = function() {
 	this.pandingCounts = 0;
 	this.currentPage = "";
 	this.warehouseListArray = new Array();
-	this.cropImageW, cropImageH;
+	this.cropImageW; 
+	this.cropImageH;
 	this.scrollHeight;
-	this.canX = 0, canY = 0, canX1 = 0, canY1 = 0;
+	this.canX = 0;
+	this.canY = 0;
+	this.canX1 = 0;
+	this.canY1 = 0;
 	this.actArray;
 	this.aNo = -1;
 	this.editCtx;
-	this.bValue = 50, cValue = 50;
-};
-
-var app = new App()
-{
+	this.bValue = 50;
+	this.cValue = 50;
 };
 
 App.prototype.init = function() {
-};
-
-App.prototype.onLoad = function() {
-	document.addEventListener("deviceready", app.onDeviceReady, false);
-	document.addEventListener("backbutton", app.onBackButton, false);
+	//this.onDeviceReady();
 };
 
 App.prototype.onDeviceReady = function() {
-	db = window.openDatabase("vis_inspection", "1.0", "vis_inspection", 100000);
-	db.transaction(dbf.settingDbSetup, dbf.errorCB, dbf.loadSetting);
-	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0,
-			fileFunction.setRootDirectory, app.error);
+	this.dbstore = new DB();
+	this.dbstore.init();
+	this.appCache = new AppCache();
+	
+	navigator.webkitPersistentStorage.requestQuota(1024*1024, 
+	        function(grantedBytes) {
+	            window.requestFileSystem(window.PERSISTENT, grantedBytes, onInitFs, errorHandler);
+	        }, 
+	        function(errorCode) {
+	            alert("Storage not granted.");
+	        }
+	);
+	// window.RequestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem; 
+	// window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, fileFunction.setRootDirectory, app.error);
+	var _self=this;
+
+	$(document).on( "pagecreate", "#pg_login", function( event ) {
+		_self.loginview = new LoginPage(this,event);
+		_self.loginview.init();
+		_self.appcache.addPage('pg_login',_self.loginview);
+	});
+
+	$(document).on( "pagecreate", "#pg_inspection", function( event ) {
+		_self.inspLinePage = new InspLinePage(this,event);
+		_self.inspLinePage.init();
+		_self.appcache.addPage('pg_inspection',_self.inspLinePage);
+
+	});
+	
+	$( document ).on( "pagecreate", "#pg_settgins", function( event ) {
+		_self.settingsview = new SettingsPage(this,event);
+		_self.settingsview.init();
+		_self.appcache.addPage('pg_settgins',_self.settingsview);
+	});
+	
+	$( document ).on( "pagecreate", "#pg_aboutus", function( event ) {
+		_self.aboutusview = new AboutUsPage(this,event);
+		_self.aboutusview.init();
+		_self.appcache.addPage('pg_aboutus',_self.aboutusview);
+	});
+
 };
 
 App.prototype.loadPage = function(id1) {
@@ -116,14 +151,6 @@ App.prototype.onBackButton = function() {
 	} else {
 		navigator.app.backHistory();
 	}
-};
-
-App.prototype.openPage = function() {
-
-};
-
-App.prototype.performaAction = function() {
-
 };
 
 App.prototype.validateLogin = function() {

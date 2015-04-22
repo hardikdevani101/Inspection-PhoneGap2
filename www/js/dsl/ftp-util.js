@@ -1,27 +1,22 @@
-var vis_FtpUrl;
-var isEditableImage = false;
-var pandingEditImage = new Array();
-
-var FTPFunction = function() {
-
+var FTPUtils = function() {
+	this.vis_FtpUrl='';
+	this.isEditableImage = false;
+	this.pandingEditImage = [];
 }
 
-var ftpFunction = new FTPFunction()
-{
+var ftpUtils = new FTPUtils();
 
-}
-
-FTPFunction.prototype.onFtpExplorer = function() {
+FTPUtils.prototype.onFtpExplorer = function() {
 	loadPage("ftpExplorer");
 	if (typeof vision_ftp !== 'undefined' && vision_ftp.length > 0
 			&& vision_ftp != null) {
-		ftpFunction.onFTPSelect();
+		FTPUtils.onFTPSelect();
 	} else {
 		getFTPList();
 	}
 }
 
-FTPFunction.prototype.onFTPSelect = function() {
+FTPUtils.prototype.onFTPSelect = function() {
 	var select = document.getElementById("drop_ftp_name");
 	select.innerHTML = "";
 	for ( var i = 0; i < vision_ftp.length; i++) {
@@ -35,10 +30,10 @@ FTPFunction.prototype.onFTPSelect = function() {
 		select.add(option);
 	}
 	select.setAttribute("onchange", "createVisionURL()");
-	ftpFunction.createVisionURL();
+	FTPUtils.createVisionURL();
 }
 
-FTPFunction.prototype.createVisionURL = function() {
+FTPUtils.prototype.createVisionURL = function() {
 	var e = document.getElementById("drop_ftp_name");
 	var selFTPUrl = e.options[e.selectedIndex].value;
 	for ( var i = 0; i < vision_ftp.length; i++) {
@@ -46,13 +41,13 @@ FTPFunction.prototype.createVisionURL = function() {
 
 			vision_ftp_url = vision_ftp[i][2] + ":" + vision_ftp[i][3] + "@"
 					+ vision_ftp[i][1];
-			ftpFunction.ftpExplorer();
+			FTPUtils.ftpExplorer();
 			break;
 		}
 	}
 }
 
-FTPFunction.prototype.ftpExplorer = function(currentFtpDir) {
+FTPUtils.prototype.ftpExplorer = function(currentFtpDir) {
 	if (typeof currentFtpDir === 'undefined') {
 		parlistArray = [];
 	} else if (currentFtpDir == '-') {
@@ -106,15 +101,15 @@ FTPFunction.prototype.ftpExplorer = function(currentFtpDir) {
 			label.appendChild(description);
 			mainDiv.appendChild(label);
 		}
-	}, ftpFunction.ftpfail);
+	}, FTPUtils.ftpfail);
 }
 
-FTPFunction.prototype.ftpfail = function() {
+FTPUtils.prototype.ftpfail = function() {
 	navigator.notification.alert('FTP Connection failed', function() {
 	}, 'Failure', 'OK');
 }
 
-FTPFunction.prototype.onFinishFtpSelection = function() {
+FTPUtils.prototype.onFinishFtpSelection = function() {
 	var selectChkList = [];
 	document.getElementsByName('slctFtpFile[]');
 	$(".ftpchk:checked").each(function() {
@@ -123,7 +118,7 @@ FTPFunction.prototype.onFinishFtpSelection = function() {
 	if (selectChkList.length == 0) {
 		backToGallery();
 	} else if (selectChkList.length == 1) {
-		ftpFunction.onSingleFTPFileSelect(selectChkList[0]);
+		FTPUtils.onSingleFTPFileSelect(selectChkList[0]);
 	} else if (selectChkList.length > 1) {
 		navigator.notification.confirm('crop/edit/watermark images ???',
 				function(buttonIndex) {
@@ -137,12 +132,12 @@ FTPFunction.prototype.onFinishFtpSelection = function() {
 
 					isGalleryLoad = false;
 					imgUploadCount = selectChkList.length;
-					ftpFunction.downloadFTPFile(selectChkList);
+					FTPUtils.downloadFTPFile(selectChkList);
 				}, 'Confirmation', [ 'Yes', 'No' ]);
 	}
 }
 
-FTPFunction.prototype.onSingleFTPFileSelect = function(FtpFileName) {
+FTPUtils.prototype.onSingleFTPFileSelect = function(FtpFileName) {
 	vision.ftpclient.get(dirVISInspectionFTP.fullPath + "/" + FtpFileName,
 			vis_FtpUrl + FtpFileName, function() {
 				onFileExplorerClick(dirVISInspectionFTP.fullPath + "/"
@@ -152,7 +147,7 @@ FTPFunction.prototype.onSingleFTPFileSelect = function(FtpFileName) {
 			});
 }
 
-FTPFunction.prototype.onReloadGallery = function() {
+FTPUtils.prototype.onReloadGallery = function() {
 	loadPage('gallery');
 	galleryTable = "";
 	renderGallery();
@@ -160,7 +155,7 @@ FTPFunction.prototype.onReloadGallery = function() {
 			+ X_instruction_name + ")";
 }
 
-FTPFunction.prototype.downloadFTPFile = function(selectChkList) {
+FTPUtils.prototype.downloadFTPFile = function(selectChkList) {
 	var FtpFileName = selectChkList.shift();
 	vision.ftpclient
 			.get(
@@ -185,7 +180,7 @@ FTPFunction.prototype.downloadFTPFile = function(selectChkList) {
 													pandingEditImage
 															.push(entry);
 													if (selectChkList.length > 0) {
-														ftpFunction
+														FTPUtils
 																.downloadFTPFile(selectChkList);
 													} else {
 														checkIsPendingEditing();
@@ -231,7 +226,7 @@ FTPFunction.prototype.downloadFTPFile = function(selectChkList) {
 																										''));
 																				saveImage(imageURI);
 																				if (selectChkList.length > 0) {
-																					ftpFunction
+																					FTPUtils
 																							.downloadFTPFile(selectChkList);
 																				} else {
 																					isGalleryLoad = true;
@@ -280,7 +275,7 @@ FTPFunction.prototype.downloadFTPFile = function(selectChkList) {
 																				fileFullPath,
 																				null);
 																		if (selectChkList.length > 0) {
-																			ftpFunction
+																			FTPUtils
 																					.downloadFTPFile(selectChkList);
 																		} else {
 																			checkIsPendingEditing();
@@ -290,7 +285,7 @@ FTPFunction.prototype.downloadFTPFile = function(selectChkList) {
 																				fileFullPath,
 																				backToGallery);
 																		if (selectChkList.length > 0) {
-																			ftpFunction
+																			FTPUtils
 																					.downloadFTPFile(selectChkList);
 																		} else {
 																			isGalleryLoad = true;
@@ -307,7 +302,7 @@ FTPFunction.prototype.downloadFTPFile = function(selectChkList) {
 					});
 }
 
-FTPFunction.prototype.checkIsPendingEditing = function() {
+FTPUtils.prototype.checkIsPendingEditing = function() {
 	navigator.notification.activityStart("Please Wait", "Loading Image...");
 	if (pandingEditImage.length > 0) {
 		var entry = pandingEditImage.pop();
