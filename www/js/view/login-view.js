@@ -1,6 +1,6 @@
-var LoginPage = function (app,event) {
+var LoginPage = function (app) {
 	this.app = app;
-	this.event = event;
+//	this.event = event;
 };
 
 LoginPage.prototype.onLogin=function() {	
@@ -8,9 +8,9 @@ LoginPage.prototype.onLogin=function() {
 	visionapi.login({username:$("#username"),password:$("#password")},success,error);
 	
 	var success= function(result){
-		app.appcache.userinfo['username']=$("#username");
-		app.appcache.userinfo['password']=$("#password");
-		app.appcache.userinfo['userid']=result.userinfo.ad_user_id;
+		app.appCache.userinfo['username']=$("#username");
+		app.appCache.userinfo['password']=$("#password");
+		app.appCache.userinfo['userid']=result.userinfo.ad_user_id;
 		
 	}
 	

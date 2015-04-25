@@ -5,13 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VIS-Inspection</title>
 
+
+
 <!--JQuery Corev CSS-->
 <link rel="stylesheet" href="css/jquery.ui.all.css" />
 <link href="css/jquery.Jcrop.css" rel="stylesheet" type="text/css">
 
 <!--JQuery Mobile CSS -->
-<link rel="stylesheet"
-	href="js/lib/jmobile/jquery.mobile-1.4.2.min.css">
+<link rel="stylesheet" href="js/lib/jmobile/jquery.mobile-1.4.2.min.css">
 <link rel="stylesheet"
 	href="js/lib/jmobile/jquery.mobile.structure-1.4.2.min.css"
 	type="text/css" />
@@ -32,19 +33,20 @@
 <script src="js/lib/jquery.Jcrop.js"></script>
 
 <!--JQuery Mobile  JS-->
+<script src="js/lib/jmobile/jquery.mobile-1.4.2.min.js"></script>
+
+<!-- Form Validation JS  -->
 <script
-	src="js/lib/jmobile/jquery.mobile-1.4.2.min.js"></script>
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.13.1/jquery.validate.min.js"></script>
 
 <!-- Utitlity JS -->
 <script src="js/lib/jpeg_encoder_basic.js"></script>
 <script src="js/lib/base64-binary.js"></script>
 
-
 <!--Cordova JS-->
 <script src="cordova.js"></script>
 
 <!--VISION JS-->
-<!--  <script src="js/index.js"></script> -->
 <script src="js/app.js"></script>
 <script src="js/cache/app-cache.js"></script>
 <script src="js/db/db.js"></script>
@@ -57,13 +59,14 @@
 <script src="js/view/settings-view.js"></script>
 <script src="js/view/login-view.js"></script>
 
-<script src="scripts/aboutUs.js"></script>
+
+<!-- <script src="scripts/aboutUs.js"></script>
 <script src="scripts/fileFunction.js"></script>
 <script src="scripts/dbFunction.js"></script>
 <script src="scripts/webserviceFunctions.js"></script>
 <script src="scripts/indexJS.js"></script>
 <script src="scripts/validationFunctions.js"></script>
-<script src="scripts/ftpFunctions.js"></script>
+<script src="scripts/ftpFunctions.js"></script> -->
 
 
 <style type="text/css">
@@ -126,24 +129,9 @@ span {
 }
 </style>
 <script>
-	
-	var deviceReadyDeferred = $.Deferred();
-	var jqmReadyDeferred = $.Deferred();
-
-	// Update configuration to our liking
-	$(document).on("mobileinit", function() {
-
-		// We want popups to cover the page behind them with a dark background
-		$.mobile.popup.prototype.options.overlayTheme = "b";
-		jqmReadyDeferred.resolve();
-
-		// Set a namespace for jQuery Mobile data attributes
-		//$.mobile.ns = "jqm-";
-		var app = new App();
-		app.onDeviceReady();
-
-	});
-	
+	//$(document).load(function () {var app = new App();});
+	/* document.addEventListener('deviceready', app.onDeviceReady(), false);  */
+	var app = new App();
 </script>
 </head>
 
@@ -153,7 +141,7 @@ span {
 		<!-------------- Login page header ----------->
 		<div data-role="header" role="banner">
 			<h1 role="heading">VIS Login</h1>
-			<a href="#_form_settings" data-icon="gear" data-iconpos="notext"
+			<a href="#pg_settings" data-icon="gear" data-iconpos="notext"
 				data-corners="true" data-shadow="true" data-iconshadow="true"
 				data-wrapperels="span" title="Preference"></a>
 		</div>
@@ -162,90 +150,96 @@ span {
 			<form method="post" action="#pg_home" data-ajax="false">
 				<input id="txt_user" type="text" value=""
 					placeholder="Enter Username!" /> <input id="txt_password"
-					type="password" value="" placeholder="Enter Password!" /> <input
-					id="loginbtn" type="submit" data-inline="true" value="Login"
-					data-theme="b">
+					type="password" value="" placeholder="Enter Password!" /> <a
+					href="#pg_home" data-role="button" data-theme="b"
+					data-inline="true">Login</a>
+
+				<!-- <input
+					id="loginbtn" type="button" data-inline="true" value="Login"
+					data-theme="b"> -->
 			</form>
 		</div>
 
 		<div data-role="panel" data-display="overlay" data-position="left"
-			data-theme="b" id="_form_settings">
-			<ul data-role="listview" data-theme="a">
-				<li data-icon="delete" data-corners="false" data-shadow="false"
-					data-iconshadow="true" data-wrapperels="div" data-iconpos="right"
-					data-theme="a"><a href="#" data-rel="close">Settings</a></li>
+			data-theme="b" id="pg_settings">
+			<form id="_form_settings">
+				<ul data-role="listview" data-theme="a">
+					<li data-icon="delete" data-corners="false" data-shadow="false"
+						data-iconshadow="true" data-wrapperels="div" data-iconpos="right"
+						data-theme="a"><a href="#" data-rel="close">Settings</a></li>
 
-				<li data-corners="false" data-shadow="false" data-iconshadow="true"
-					data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-					data-theme="a"><label for="select-server">Server:</label> <select
-					name="select-server" id="txt_url" data-native-menu="false">
-						<option value="http://10.210.23.77:8088">Production</option>
-						<option value="http://10.210.23.78:8088">Development</option>
-						<option value="http://10.210.23.97:8088">Test</option>
-						<option value="http://203.88.138.222:8384">Logilite-Dev</option>
-				</select></li>
+					<li data-corners="false" data-shadow="false" data-iconshadow="true"
+						data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
+						data-theme="a"><label for="select-server">Server:</label> <select
+						name="select-server" id="txt_url" data-native-menu="false">
+							<option value="http://10.210.23.77:8088">Production</option>
+							<option value="http://10.210.23.78:8088">Development</option>
+							<option value="http://10.210.23.97:8088">Test</option>
+							<option value="http://203.88.138.222:8384">Logilite-Dev</option>
+					</select></li>
 
-				<li data-corners="false" data-shadow="false" data-iconshadow="true"
-					data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-					data-theme="a"><label for="select-server">Language:</label> <select
-					name="select-server" id="txt_lang" data-native-menu="false">
-						<option value="en_US">English</option>
-				</select></li>
+					<li data-corners="false" data-shadow="false" data-iconshadow="true"
+						data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
+						data-theme="a"><label for="select-server">Language:</label> <select
+						name="select-server" id="txt_lang" data-native-menu="false">
+							<option value="en_US">English</option>
+					</select></li>
 
-				<li data-corners="false" data-shadow="false" data-iconshadow="true"
-					data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-					data-theme="a"><label for="select-client">Client:</label> <select
-					name="select-client" id="txt_client" data-native-menu="false">
-						<option value="1000000">Velocity</option>
-				</select></li>
+					<li data-corners="false" data-shadow="false" data-iconshadow="true"
+						data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
+						data-theme="a"><label for="select-client">Client:</label> <select
+						name="select-client" id="txt_client" data-native-menu="false">
+							<option value="1000000">Velocity</option>
+					</select></li>
 
-				<li data-corners="false" data-shadow="false" data-iconshadow="true"
-					data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-					data-theme="a"><label for="select-role">Role:</label> <select
-					name="select-role" id="txt_role" data-native-menu="false">
-						<option value="1000043">Warehouse QA Team</option>
-						<option value="1000055">Warehouse QA Manager</option>
-						<option value="1000044">Warehouse Manager</option>
-						<option value="1000052">Warehouse IC Team</option>
-						<option value="1000054">Warehouse IC Manager</option>
-						<option value="1000000">Velocity Admin</option>
-				</select></li>
+					<li data-corners="false" data-shadow="false" data-iconshadow="true"
+						data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
+						data-theme="a"><label for="select-role">Role:</label> <select
+						name="select-role" id="txt_role" data-native-menu="false">
+							<option value="1000043">Warehouse QA Team</option>
+							<option value="1000055">Warehouse QA Manager</option>
+							<option value="1000044">Warehouse Manager</option>
+							<option value="1000052">Warehouse IC Team</option>
+							<option value="1000054">Warehouse IC Manager</option>
+							<option value="1000000">Velocity Admin</option>
+					</select></li>
 
-				<li data-corners="false" data-shadow="false" data-iconshadow="true"
-					data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-					data-theme="a"><label for="select-org">Organization:</label> <select
-					name="select-org" id="txt_organization" data-native-menu="false">
-						<option value="0">*</option>
-						<option value="1000019">Amsterdam</option>
-						<option value="1000003">Austin</option>
-						<option value="1000020">Japan</option>
-						<option value="1000001">Singapore</option>
-				</select></li>
+					<li data-corners="false" data-shadow="false" data-iconshadow="true"
+						data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
+						data-theme="a"><label for="select-org">Organization:</label>
+						<select name="select-org" id="txt_organization"
+						data-native-menu="false">
+							<option value="0">*</option>
+							<option value="1000019">Amsterdam</option>
+							<option value="1000003">Austin</option>
+							<option value="1000020">Japan</option>
+							<option value="1000001">Singapore</option>
+					</select></li>
 
-				<li data-corners="false" data-shadow="false" data-iconshadow="true"
-					data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-					data-theme="a"><label for="select-warehouse">Warehouse:</label>
-					<select name="select-warehouse" id="txt_warehouse"
-					data-native-menu="false">
-				</select></li>
+					<li data-corners="false" data-shadow="false" data-iconshadow="true"
+						data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
+						data-theme="a"><label for="select-warehouse">Warehouse:</label>
+						<select name="select-warehouse" id="txt_warehouse"
+						data-native-menu="false">
+					</select></li>
 
-				<li data-corners="false" data-shadow="false" data-iconshadow="true"
-					data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-					data-theme="a"><label for="select-imgqua">Image
-						quality:</label> <select name="select-imgqua" id="txt_imgQua"
-					data-native-menu="false">
-						<option value="50">50% (low)</option>
-						<option value="75">75% (default)</option>
-						<option value="80">80% (high)</option>
-						<option value="90">90% (higher)</option>
-						<option value="100">100% (highest)</option>
-				</select></li>
-				<li data-corners="false" data-shadow="false" data-iconshadow="true"
-					data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-					data-theme="a"><input id="btn_update" type="submit"
-					data-inline="true" value="Save" data-theme="b"
-					ontouchstart="return true;"></li>
-			</ul>
+					<li data-corners="false" data-shadow="false" data-iconshadow="true"
+						data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
+						data-theme="a"><label for="select-imgqua">Image
+							quality:</label> <select name="select-imgqua" id="txt_imgQua"
+						data-native-menu="false">
+							<option value="50">50% (low)</option>
+							<option value="75">75% (default)</option>
+							<option value="80">80% (high)</option>
+							<option value="90">90% (higher)</option>
+							<option value="100">100% (highest)</option>
+					</select></li>
+					<li data-corners="false" data-shadow="false" data-iconshadow="true"
+						data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
+						data-theme="a"><a id="btn_setting_save" href="#pg_home" data-role="button"
+						data-theme="b" data-inline="true">Save</a></li>
+				</ul>
+			</form>
 		</div>
 	</div>
 

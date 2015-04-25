@@ -43,59 +43,44 @@ var App = function() {
 	this.editCtx;
 	this.bValue = 50;
 	this.cValue = 50;
-};
-
-App.prototype.init = function() {
-//	document.addEventListener('deviceready', this.onDeviceReady(), false);
-//	document.addEventListener("backbutton", this.onBackButton(), false);
+	this.onDeviceReady();
 };
 
 App.prototype.onDeviceReady = function() {
 
 	var _self = this;
-	this.dbstore = new DB(this);
-	this.dbstore.init();
-	this.appCache = new AppCache();
+	console.log("device Ready calleeeeeeeeed");
+	_self.dbstore = new DB(_self);
+	_self.dbstore.init();
+	_self.appCache = new AppCache();
+	_self.appCache.init();
 
-	this.fileUtil = new FileUtils(this);
+	_self.fileUtil = new FileUtils(_self);
 
-	// navigator.webkitPersistentStorage.requestQuota(1024 * 1024, function(
-	// grantedBytes) {
-	// window.requestFileSystem(window.PERSISTENT, grantedBytes, onInitFs,
-	// errorHandler);
-	// }, function(errorCode) {
-	// alert("Storage not granted.");
-	// });
 //	window.RequestFileSystem = window.requestFileSystem
 //			|| window.webkitRequestFileSystem;
 //	window.RequestFileSystem(1, 0, _self.fileUtil.onInitFs,
 //			_self.fileUtil.dirFail);
 
-	_self.settingsview = new SettingsPage(this, event);
-	_self.settingsview.init();
-	_self.appcache.addPage('pg_settgins', _self.settingsview);
-
 	$(document).on("pagecreate", "#pg_login", function(event) {
 		console.log("Login Called");
-		_self.loginview = new LoginPage(this, event);
+		_self.loginview = new LoginPage(_self);
 		_self.loginview.init();
-		_self.appcache.addPage('pg_login', _self.loginview);
-		_self.settingsview = new SettingsPage(this, event);
+		_self.appCache.addPage('pg_login', _self.loginview);
+		_self.settingsview = new SettingsPage(_self);
 		_self.settingsview.init();
-		_self.appcache.addPage('pg_settgins', _self.settingsview);
 	});
 
 	$(document).on("pagecreate", "#pg_inspection", function(event) {
 		_self.inspLinePage = new InspLinePage(this, event);
 		_self.inspLinePage.init();
-		_self.appcache.addPage('pg_inspection', _self.inspLinePage);
-
+		_self.appCache.addPage('pg_inspection', _self.inspLinePage);
 	});
 
 	$(document).on("pagecreate", "#pg_aboutus", function(event) {
 		_self.aboutusview = new AboutUsPage(this, event);
 		_self.aboutusview.init();
-		_self.appcache.addPage('pg_aboutus', _self.aboutusview);
+		_self.appCache.addPage('pg_aboutus', _self.aboutusview);
 	});
 
 };

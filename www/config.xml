@@ -7,12 +7,9 @@
     <author email="deepak@logilite.com" href="http://logilite.com">
         Logilite Team
     </author>
-	
-	<feature name="http://api.phonegap.com/1.0/camera"/>
+    <feature name="http://api.phonegap.com/1.0/camera"/>
 	<feature name="http://api.phonegap.com/1.0/file"/> 
-	<feature name="Camera">
-		<param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
-	</feature>
+    
     <feature name="http://api.phonegap.com/1.0/device" />
     <preference name="permissions" value="none" />
     <preference name="target-device" value="universal" />
@@ -57,11 +54,12 @@
     <gap:splash gap:platform="ios" height="1024" src="res/screen/ios/screen-ipad-portrait.png" width="768" />
     <gap:splash gap:platform="ios" height="768" src="res/screen/ios/screen-ipad-landscape.png" width="1024" />
     <gap:splash gap:platform="winphone" src="res/screen/windows-phone/screen-portrait.jpg" />
-	<gap:plugin name="org.apache.cordova.camera" />
+    
+	<gap:plugin name="camera-all-image.camera" />
 	<gap:plugin name="org.apache.cordova.file"/>
 	<gap:plugin name="org.apache.cordova.file-transfer"/>
 	<gap:plugin name="org.apache.cordova.dialogs" />
-    <gap:plugin name="com.logilite.vision.camera" />
     <gap:plugin name="com.vis.plugin.ftp.FtpClient" />
+	
     <access origin="*" />	
 </widget>

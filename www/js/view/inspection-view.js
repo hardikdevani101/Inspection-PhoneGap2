@@ -14,7 +14,7 @@ InspLinesPage.prototype.init = function(){
 InspLinesPage.prototype.loadMRLines=function(){
 	var _self=this;
 	var vision-api = new VisionApi(this.app);
-	vision-api.getMRLines({userid:app.appcache.logininfo.userid},success,error);	
+	vision-api.getMRLines({userid:app.appCache.logininfo.userid},success,error);	
 	var success= function (result){
 		var intems='<li data-icon="delete" data-corners="false" data-shadow="false"  data-wrapperels="div" data-iconpos="right" data-theme="a"><a href="#" data-rel="close">None</a></li>';
 		$.each(result.mrlines, function() {

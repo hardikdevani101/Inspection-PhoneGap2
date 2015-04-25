@@ -1,16 +1,16 @@
 ﻿var VisionApi = function(app) {
 	this.app = app;
-	this.baseUrl = app.appcache.settingInfo.service_url;
+	this.baseUrl = app.appCache.settingInfo.service_url;
 	this.wsTypeModelADService = "ModelADService";
 	this.completeUrl = baseUrl + "/VISService/services/" + wsTypeModelADService;
 
-	var vis_username = app.appcache.settingInfo.username;// "reyna.ramos";
-	var vis_pass = app.appcache.settingInfo.password;// "password";
-	var vis_lang = app.appcache.settingInfo.lang;// "en_US";
-	var vis_client_id = app.appcache.settingInfo.client_id;// "1000000";
-	var vis_role = app.appcache.settingInfo.role;// "1000052";
-	var vis_org_id = app.appcache.settingInfo.org_id;// "1000003";
-	var vis_whouse_id = app.appcache.settingInfo.warehouse_id;// "1000043";
+	var vis_username = app.appCache.settingInfo.username;// "reyna.ramos";
+	var vis_pass = app.appCache.settingInfo.password;// "password";
+	var vis_lang = app.appCache.settingInfo.lang;// "en_US";
+	var vis_client_id = app.appCache.settingInfo.client_id;// "1000000";
+	var vis_role = app.appCache.settingInfo.role;// "1000052";
+	var vis_org_id = app.appCache.settingInfo.org_id;// "1000003";
+	var vis_whouse_id = app.appCache.settingInfo.warehouse_id;// "1000043";
 	this.ADLoginRequest = '<_0:ADLoginRequest>' + '<_0:user>' + vis_username
 			+ '</_0:user>' + '<_0:pass>' + vis_pass + '</_0:pass>'
 			+ '<_0:lang>' + vis_lang + '</_0:lang>' + '<_0:ClientID>'
@@ -21,13 +21,13 @@
 };
 
 VisionApi.prototype.resetADLoginRequest = function(params, success, error) {
-	var vis_username = app.appcache.settingInfo.username;// "reyna.ramos";
-	var vis_pass = app.appcache.settingInfo.password;// "password";
-	var vis_lang = app.appcache.settingInfo.lang;// "en_US";
-	var vis_client_id = app.appcache.settingInfo.client_id;// "1000000";
-	var vis_role = app.appcache.settingInfo.role;// "1000052";
-	var vis_org_id = app.appcache.settingInfo.org_id;// "1000003";
-	var vis_whouse_id = app.appcache.settingInfo.warehouse_id;// "1000043";
+	var vis_username = app.appCache.settingInfo.username;// "reyna.ramos";
+	var vis_pass = app.appCache.settingInfo.password;// "password";
+	var vis_lang = app.appCache.settingInfo.lang;// "en_US";
+	var vis_client_id = app.appCache.settingInfo.client_id;// "1000000";
+	var vis_role = app.appCache.settingInfo.role;// "1000052";
+	var vis_org_id = app.appCache.settingInfo.org_id;// "1000003";
+	var vis_whouse_id = app.appCache.settingInfo.warehouse_id;// "1000043";
 
 	this.ADLoginRequest = '<_0:ADLoginRequest>' + '<_0:user>' + vis_username
 			+ '</_0:user>' + '<_0:pass>' + vis_pass + '</_0:pass>'
@@ -39,8 +39,8 @@ VisionApi.prototype.resetADLoginRequest = function(params, success, error) {
 }
 
 VisionApi.prototype.login = function(params, success, error) {
-	app.appcache.settingInfo['username'] = params.username;
-	app.appcache.settingInfo['password'] = params.password;
+	app.appCache.settingInfo['username'] = params.username;
+	app.appCache.settingInfo['password'] = params.password;
 	this.resetADLoginRequest();
 	$
 			.ajax(

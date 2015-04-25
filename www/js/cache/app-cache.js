@@ -1,4 +1,5 @@
 var AppCache = function() {
+	console.log("New AppCache");
 	this.session={m_inoutline_id:''} 
 	this.warehouseList = [];
 	this.settingInfo = {};
@@ -108,7 +109,7 @@ AppCache.prototype.init = function() {
 		'password' : '',
 		'service_url' : '',
 		'org_id' : '',
-		'role' : role,
+		'role' : '',
 		'client_id' : '',
 		'warehouse_id' : '',
 		'img_quality' : '',
