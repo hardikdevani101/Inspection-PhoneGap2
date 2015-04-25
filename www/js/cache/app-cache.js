@@ -1,18 +1,31 @@
-var AppCache = function() {
+var AppCache = function(app) {
 	console.log("New AppCache");
-	this.session={m_inoutline_id:''} 
+	this.app = app;
+	this.session = {
+		m_inoutline_id : ''
+	}
 	this.warehouseList = [];
 	this.settingInfo = {};
 	this.appInfo = {};
 	this.pages = [];
-	this.loginInfo = {usernmae:'',userid:'',password:'',fname:''};
+	this.loginInfo = {
+		usernmae : '',
+		userid : '',
+		password : '',
+		fname : ''
+	};
 }
 
-AppCache.prototype.addPage=function(pageid,page){
-	var _self=this 
-	var result = $.grep(_self.pages, function(e){ return e.pageid == pageid; });		
-	if(result.length==0){
-		_self.pages.push({pageid:pageid,page:page});
+AppCache.prototype.addPage = function(pageid, page) {
+	var _self = this
+	var result = $.grep(_self.pages, function(e) {
+		return e.pageid == pageid;
+	});
+	if (result.length == 0) {
+		_self.pages.push({
+			pageid : pageid,
+			page : page
+		});
 	}
 }
 
@@ -116,10 +129,15 @@ AppCache.prototype.init = function() {
 		'lang' : ''
 	};
 	this.loginInfo = {
-			'name' : '',
-			'ad_user_id' : ''};
+		'name' : '',
+		'ad_user_id' : ''
+	};
 }
 
 AppCache.prototype.updateSettingInfo = function(settingInfo) {
 	this.settingInfo = settingInfo;
+	if (typeof this.app.settingsview === 'undefined') {
+		this.app.settingsview = new SettingsPage(this.app);
+	}
+	this.app.settingsview.init();
 }

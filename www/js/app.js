@@ -50,10 +50,10 @@ App.prototype.onDeviceReady = function() {
 
 	var _self = this;
 	console.log("device Ready calleeeeeeeeed");
-	_self.dbstore = new DB(_self);
-	_self.dbstore.init();
-	_self.appCache = new AppCache();
+	_self.appCache = new AppCache(_self);
 	_self.appCache.init();
+	_self.appDB = new DB(_self);
+	_self.appDB.init();
 
 	_self.fileUtil = new FileUtils(_self);
 
@@ -67,8 +67,6 @@ App.prototype.onDeviceReady = function() {
 		_self.loginview = new LoginPage(_self);
 		_self.loginview.init();
 		_self.appCache.addPage('pg_login', _self.loginview);
-		_self.settingsview = new SettingsPage(_self);
-		_self.settingsview.init();
 	});
 
 	$(document).on("pagecreate", "#pg_inspection", function(event) {

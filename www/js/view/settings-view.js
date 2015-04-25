@@ -7,15 +7,27 @@ SettingsPage.prototype.init = function() {
 	// Initialize components.
 	console.log("Seting innnnnnnnnnnnnnnnnnnnnnnnnnnnit");
 	var _self = this;
-	$("#txt_organization").on("change",_self.onOrgChange);
-	$("#txt_organization").val(_self.app.appCache.settingInfo.org_id);
-	$("#txt_url").val(_self.app.appCache.settingInfo.service_url);
-	$("#txt_role").val(_self.app.appCache.settingInfo.role);
-	$("#txt_client").val(_self.app.appCache.settingInfo.client_id);
-	$("#txt_warehouse").val(_self.app.appCache.settingInfo.warehouse_id);
-	$("#txt_imgQua").val(_self.app.appCache.settingInfo.img_quality);
-	$("#txt_lang").val(_self.app.appCache.settingInfo.lang);
-	$("#btn_setting_save").on("click",_self.onUpdate());
+	$("#txt_organization").on("change", _self.onOrgChange);
+	$("#txt_organization").val(_self.app.appCache.settingInfo.org_id).attr('selected', true).siblings('option').removeAttr('selected');
+	$("#txt_organization").selectmenu("refresh", true);
+	console.log(_self.app.appCache.settingInfo.org_id);
+	$("#txt_url").val(_self.app.appCache.settingInfo.service_url).attr('selected', true).siblings('option').removeAttr('selected');
+	$("#txt_url").selectmenu("refresh", true);
+	$("#txt_role").val(_self.app.appCache.settingInfo.role).attr('selected', true).siblings('option').removeAttr('selected');
+	$("#txt_role").selectmenu("refresh", true);
+	$("#txt_client").val(_self.app.appCache.settingInfo.client_id).attr('selected', true).siblings('option').removeAttr('selected');
+	$("#txt_client").selectmenu("refresh", true);
+	$("#txt_warehouse").val(_self.app.appCache.settingInfo.warehouse_id).attr('selected', true).siblings('option').removeAttr('selected');
+	$("#txt_warehouse").selectmenu("refresh", true);
+	$("#txt_imgQua").val(_self.app.appCache.settingInfo.img_quality).attr('selected', true).siblings('option').removeAttr('selected');
+	$("#txt_imgQua").selectmenu("refresh", true);
+	$("#txt_lang").val(_self.app.appCache.settingInfo.lang).attr('selected', true).siblings('option').removeAttr('selected');
+	$("#txt_lang").selectmenu("refresh", true);
+	$("#btn_setting_save").bind("click", function() {
+		if ($('#_form_settings').valid()) {
+			_self.onUpdate();
+		}
+	});
 	_self.app.appCache.session.M_InOutLine_ID = '';
 	_self.onOrgChange();
 
@@ -84,18 +96,16 @@ SettingsPage.prototype.onUpdate = function() {
 	var settingInfo = {};
 	settingInfo['lang'] = $("#txt_lang option:selected").val();
 	settingInfo['service_url'] = $("#txt_url option:selected").val();
-	settingInfo['client_id'] = $("#txt_client_id option:selected").val();
+	settingInfo['client_id'] = $("#txt_client option:selected").val();
 	settingInfo['org_id'] = $("#txt_organization option:selected").val();
 	settingInfo['warehouse_id'] = $("#txt_warehouse option:selected").val();
 	settingInfo['img_quality'] = $("#txt_imgQua option:selected").val();
 	settingInfo['role'] = $("#txt_role option:selected").val();
 
-	var vissettings = new Tbl_VISSetting(_self.app)
-	vissettings.update(settingInfo, success, error);
-
-	var success = function() {
+	var vissettings = new Tbl_VISSetting(_self.app);
+	vissettings.update(settingInfo, function() {
 		_self.app.appCache.updateSettingInfo(settingInfo);
-	};
+	}, error);
 	var error = function() {
 	};
 }
@@ -119,6 +129,5 @@ SettingsPage.prototype.onOrgChange = function() {
 					new Option(result[i].name, result[i].warehouseid));
 		}
 	}
-	 $('#txt_warehouse').selectmenu('refresh', true);
-	console.log($("#txt_warehouse").html());
+	$('#txt_warehouse').selectmenu('refresh', true);
 }

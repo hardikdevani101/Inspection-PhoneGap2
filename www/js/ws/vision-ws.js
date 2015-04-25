@@ -2,7 +2,8 @@
 	this.app = app;
 	this.baseUrl = app.appCache.settingInfo.service_url;
 	this.wsTypeModelADService = "ModelADService";
-	this.completeUrl = baseUrl + "/VISService/services/" + wsTypeModelADService;
+	this.completeUrl = this.baseUrl + "/VISService/services/"
+			+ this.wsTypeModelADService;
 
 	var vis_username = app.appCache.settingInfo.username;// "reyna.ramos";
 	var vis_pass = app.appCache.settingInfo.password;// "password";
@@ -39,39 +40,45 @@ VisionApi.prototype.resetADLoginRequest = function(params, success, error) {
 }
 
 VisionApi.prototype.login = function(params, success, error) {
+	var _self = this;
 	app.appCache.settingInfo['username'] = params.username;
 	app.appCache.settingInfo['password'] = params.password;
 	this.resetADLoginRequest();
+	var reqBody = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
+			+ '<soapenv:Header/>'
+			+ '<soapenv:Body>'
+			+ '<_0:readData>'
+			+ '<_0:ModelCRUDRequest>'
+			+ '<_0:ModelCRUD>'
+			+ '<_0:serviceType>Login</_0:serviceType>'
+			+ '<_0:TableName>AD_User</_0:TableName>'
+			+ '<_0:recordIDVariable>@##AD_User_ID</_0:recordIDVariable>'
+			+ '<_0:DataRow>'
+			+ '</_0:DataRow>'
+			+ '</_0:ModelCRUD>'
+			+ this.ADLoginRequest
+			+ '</_0:ModelCRUDRequest>'
+			+ '</_0:readData>'
+			+ '</soapenv:Body>' + '</soapenv:Envelope>';
 	$
-			.ajax(
-					{
-						beforeSend : function() {
-							$.mobile.showPageLoadingMsg('b', 'Loading..', true);
-						},
-						complete : function() {
-							$.mobile.hidePageLoadingMsg();
-						},
-						url : completeUrl,
-						type : 'POST',
-						data : '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
-								+ '<soapenv:Header/>'
-								+ '<soapenv:Body>'
-								+ '<_0:readData>'
-								+ '<_0:ModelCRUDRequest>'
-								+ '<_0:ModelCRUD>'
-								+ '<_0:serviceType>Login</_0:serviceType>'
-								+ '<_0:TableName>AD_User</_0:TableName>'
-								+ '<_0:recordIDVariable>@##AD_User_ID</_0:recordIDVariable>'
-								+ '<_0:DataRow>'
-								+ '</_0:DataRow>'
-								+ '</_0:ModelCRUD>'
-								+ this.ADLoginRequest
-								+ '</_0:ModelCRUDRequest>'
-								+ '</_0:readData>'
-								+ '</soapenv:Body>' + '</soapenv:Envelope>',
-						contentType : 'text/xml; charset=\"utf-8\"',
-						dataType : 'xml'
-					})
+			.ajax({
+				beforeSend : function() {
+					$.mobile.loading('show', {
+						text : "Loading",
+						textVisible : true,
+						theme : 'b',
+						html : ""
+					});
+				},
+				complete : function() {
+					$.mobile.loading("hide");
+				},
+				url : _self.completeUrl,
+				type : 'POST',
+				data : reqBody,
+				contentType : 'text/xml; charset=\"utf-8\"',
+				dataType : 'xml'
+			})
 			.then(
 					function(response) {
 						jsonResponse = [];
@@ -79,10 +86,10 @@ VisionApi.prototype.login = function(params, success, error) {
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
 						if (fullNodeList.length > 0) {
-							for (var i = 0; i < fullNodeList.length; i++) {
+							for ( var i = 0; i < fullNodeList.length; i++) {
 								var dlab, dval;
 								var option = document.createElement('option');
-								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
+								for ( var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {
 										dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'AD_User_ID') {
@@ -95,9 +102,11 @@ VisionApi.prototype.login = function(params, success, error) {
 								jsonResponse.push(resultline);
 							}
 						}
-						success({'logininfo' : jsonResponse});
+						success({
+							'logininfo' : jsonResponse
+						});
 					}).fail(function(err) {
-						error(err.responseText);
+				error(err.responseText);
 			});
 }
 
@@ -144,10 +153,10 @@ VisionApi.prototype.getMRLines = function(params, success, error) {
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
 						if (fullNodeList.length > 0) {
-							for (var i = 0; i < fullNodeList.length; i++) {
+							for ( var i = 0; i < fullNodeList.length; i++) {
 								var dlab, dval, inOut, desc;
 								var option = document.createElement('option');
-								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
+								for ( var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'LABEL') {
 										dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'M_InOutLine_ID') {
@@ -221,10 +230,10 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
 						if (fullNodeList.length > 0) {
-							for (var i = 0; i < fullNodeList.length; i++) {
+							for ( var i = 0; i < fullNodeList.length; i++) {
 								var dlab, dval, inOut, desc;
 								var option = document.createElement('option');
-								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
+								for ( var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {
 										dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent;
@@ -398,10 +407,10 @@ VisionApi.prototype.getFTPServerList = function(params) {
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
 						if (fullNodeList.length > 0) {
-							for (var i = 0; i < fullNodeList.length; i++) {
+							for ( var i = 0; i < fullNodeList.length; i++) {
 								var dlab, dval, inOut, desc;
 								var option = document.createElement('option');
-								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
+								for ( var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'FTP_Url') {
 										fUrl = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {

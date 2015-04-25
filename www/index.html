@@ -147,16 +147,12 @@ span {
 		</div>
 		<!-------------- Login page main content ----------->
 		<div data-role="main" class="ui-content">
-			<form method="post" action="#pg_home" data-ajax="false">
+			<form id="_form_login" data-ajax="false">
 				<input id="txt_user" type="text" value=""
-					placeholder="Enter Username!" /> <input id="txt_password"
-					type="password" value="" placeholder="Enter Password!" /> <a
-					href="#pg_home" data-role="button" data-theme="b"
-					data-inline="true">Login</a>
-
-				<!-- <input
-					id="loginbtn" type="button" data-inline="true" value="Login"
-					data-theme="b"> -->
+					placeholder="Enter Username!" required="required" /> <input
+					id="txt_password" type="password" value=""
+					placeholder="Enter Password!" required="required" /> <a
+					id="btn_login" data-role="button" data-theme="b" data-inline="true">Login</a>
 			</form>
 		</div>
 
@@ -236,7 +232,7 @@ span {
 					</select></li>
 					<li data-corners="false" data-shadow="false" data-iconshadow="true"
 						data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-						data-theme="a"><a id="btn_setting_save" href="#pg_home" data-role="button"
+						data-theme="a"><a id="btn_setting_save" data-role="button"
 						data-theme="b" data-inline="true">Save</a></li>
 				</ul>
 			</form>
