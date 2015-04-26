@@ -3,24 +3,58 @@ var LoginPage = function(app) {
 };
 
 LoginPage.prototype.onLogin = function() {
-	var visionapi = new VisionApi(this.app);
-	visionapi.login({
-		username : $("#txt_user").val(),
-		password : $("#txt_password").val()
-	}, function(result) {
-		app.appCache.userinfo['username'] = $("#txt_user");
-		app.appCache.userinfo['password'] = $("#txt_password");
-		app.appCache.userinfo['userid'] = result.userinfo.ad_user_id;
-	}, function() {
-		console.log("Login failed");
-	});
+	try {
+		this.visionApi=new VisionApi(this.app);
+		this.visionApi.login({
+			username : $("#txt_user").val(),
+			password : $("#txt_password").val()
+		}, function(result) {
+			app.appCache.userinfo['username'] = $("#txt_user");
+			app.appCache.userinfo['password'] = $("#txt_password");
+			app.appCache.userinfo['userid'] = result.userinfo.ad_user_id;
+			$(':mobile-pagecontainer').pagecontainer('change', '#pg_home', {
+				reload : false
+			})
+		}, function() {
+			console.log("Login failed");
+		});
+
+	} catch (error) {
+		console.log("Login failed" + error);
+	}
 };
 
 LoginPage.prototype.init = function() {
 	var _self = this;
-	$("#btn_login").bind("click", function() {
-		if ($('#_form_login').valid()) {
+	var visionapi = new VisionApi(this.app);
+	$('#_form_login').validate({
+		rules : {
+			txt_user : {
+				required : true
+			},
+			txt_password : {
+				required : true
+			}
+		},
+		messages : {
+			txt_user : {
+				required : "Required Field!."
+			},
+			txt_password : {
+				required : "Required Field!."
+			}
+		},
+		errorPlacement : function(error, element) {
+			//error.appendTo(element.parent().prev());
+			element.attr("placeholder","Required Field!");
+			element.attr("style","border:1px solid red;");
+		},
+		invalidHandler : function() {
+			alert("invalid form"); // for demo
+		},
+		submitHandler : function(form) {
 			_self.onLogin();
+			return false;
 		}
 	});
 }

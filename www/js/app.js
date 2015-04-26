@@ -47,26 +47,35 @@ var App = function() {
 };
 
 App.prototype.onDeviceReady = function() {
-
 	var _self = this;
-	console.log("device Ready calleeeeeeeeed");
+	//Initialize Application Cache on page load.
 	_self.appCache = new AppCache(_self);
 	_self.appCache.init();
+	
+	// Initiate database-storage on page load.
 	_self.appDB = new DB(_self);
-	_self.appDB.init();
+	_self.appDB.init(function() {
+		var vissettings = new Tbl_VISSetting(_self.app);
+		vissettings.find({}, function(setting) {
+			_self.app.appCache.updateSettingInfo(setting);
+		}, _self.appDB.errorCB);
 
-	_self.fileUtil = new FileUtils(_self);
+	}, function(msg) {
+		console.log("App Init Error - "+msg)
+	});
 
-//	window.RequestFileSystem = window.requestFileSystem
-//			|| window.webkitRequestFileSystem;
-//	window.RequestFileSystem(1, 0, _self.fileUtil.onInitFs,
-//			_self.fileUtil.dirFail);
-
+	// Initiate file-storage on page load.
+	_self.appFS = new FS(_self);
+	_self.appFS.init();
+	//_self.fileUtil = new FileUtils(_self);
+	
 	$(document).on("pagecreate", "#pg_login", function(event) {
 		console.log("Login Called");
 		_self.loginview = new LoginPage(_self);
 		_self.loginview.init();
 		_self.appCache.addPage('pg_login', _self.loginview);
+		_self.settingnview = new SettingsPage(_self);
+		_self.settingnview.init();
 	});
 
 	$(document).on("pagecreate", "#pg_inspection", function(event) {
@@ -82,82 +91,6 @@ App.prototype.onDeviceReady = function() {
 	});
 
 };
-
-App.prototype.loadPage = function(id1) {
-	document.getElementById("txt_user").value = setting.userName;
-	if (id1 == 'exit') {
-		navigator.app.exitApp();
-	} else {
-		document.getElementById("disp").innerHTML = document
-				.getElementById(id1).innerHTML;
-		this.currentPage = id1;
-	}
-};
-
-App.prototype.onLoginpage = function() {
-	app.loadPage("login");
-	document.getElementById("txt_user").value = userName;
-	pageState = 0;
-	document.getElementById("login_error").innerHTML = "";
-}
-
-App.prototype.onSettingPage = function() {
-	app.loadPage("setting");
-	document.getElementById("setting_error").innerHTML = "";
-	settingPage.setSettingpage();
-}
-
-App.prototype.onBackButton = function() {
-	if (this.currentPage == 'login') {
-		function checkButtonSelection(iValue) {
-			if (iValue == 2) {
-				navigator.app.exitApp();
-			}
-		}
-		navigator.notification.confirm("Are you sure you want to EXIT ?",
-				checkButtonSelection, 'EXIT APP:', [ 'Cancel', 'OK' ]);
-	} else if (currentPage == 'home') {
-		app.loadPage("login");
-		document.getElementById("txt_user").value = userName;
-	} else if (currentPage == 'startNewInsp') {
-		app.loadPage("home");
-	} else if (currentPage == 'gallery') {
-		app.onBackToStartInspection('gallery');
-	} else if (currentPage == 'SelectGallery') {
-		app.backToGallery();
-	} else if (currentPage == 'fileExpo') {
-		app.backToGallery();
-	} else if (currentPage == 'ftpExplorer') {
-		app.backToGallery();
-	} else if (currentPage == 'cropView') {
-		app.backToGallery();
-	} else if (currentPage == 'setting') {
-		app.onLoginpage();
-	} else if (currentPage == 'aboutUs') {
-		app.onLoginpage();
-	} else if (currentPage == 'editView') {
-		app.onBackToCropView();
-	} else {
-		navigator.app.backHistory();
-	}
-};
-
-App.prototype.validateLogin = function() {
-	var u_name = document.getElementById("txt_user").value;
-	var u_pass = document.getElementById("txt_password").value;
-	if (u_name == "" || u_name == null) {
-		document.getElementById("login_error").innerHTML = "Username Should Not Blank";
-		document.getElementById("txt_user").focus();
-	} else if (u_pass == "" || u_pass == null) {
-
-		document.getElementById("login_error").innerHTML = "Password Should Not Blank";
-		document.getElementById("txt_password").focus();
-	} else {
-		app.userName = u_name;
-		app.vis_pass = u_pass;
-		onLogin();
-	}
-}
 
 App.prototype.error = function(error) {
 	console.log("Error = " + error);
