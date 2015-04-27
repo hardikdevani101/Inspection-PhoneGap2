@@ -9,9 +9,9 @@ LoginPage.prototype.onLogin = function() {
 			username : $("#txt_user").val(),
 			password : $("#txt_password").val()
 		}, function(result) {
-			app.appCache.userinfo['username'] = $("#txt_user");
-			app.appCache.userinfo['password'] = $("#txt_password");
-			app.appCache.userinfo['userid'] = result.userinfo.ad_user_id;
+			app.appCache.loginInfo['username'] = $("#txt_user");
+			app.appCache.loginInfo['password'] = $("#txt_password");
+			app.appCache.loginInfo['userid'] = result.loginInfo.ad_user_id;
 			$(':mobile-pagecontainer').pagecontainer('change', '#pg_home', {
 				reload : false
 			})

@@ -1,8 +1,7 @@
-var AboutUsPage = function(app,event) {
+var AboutUsPage = function(app) {
 	this.releaseVersion = "1.0.16";
 	this.releaseDate = 'Release Date : SEP 11 2014';
 	this.applicationName = 'VISion Application';
-	this.event=event;
 	this.app=app;
 }
 

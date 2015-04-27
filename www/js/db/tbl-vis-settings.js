@@ -14,9 +14,14 @@ Tbl_VISSetting.prototype.find = function(filter, success, error) {
 	}
 	var sql = 'SELECT * FROM vis_setting';
 	if (filter.length > 0) {
-		for (var i = 0; i < size; i++) {
-			sql = sql + ' Where' + setting[i].columnname + ' '
-					+ setting[i].operation + ' ' + setting[i].value;
+		for ( var i = 0; i < size; i++) {
+			if (sql.indexOf(' WHERE ') > -1) {
+				sql = sql + ' AND ';
+			} else {
+				sql = sql + ' WHERE ';
+			}
+			sql = sql + filter[i].columnname + ' ' + filter[i].operation
+					+ ' ' + filter[i].value;
 		}
 	}
 	var setting = {};

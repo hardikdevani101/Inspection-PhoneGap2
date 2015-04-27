@@ -33,8 +33,7 @@
 <!--JQuery Mobile  JS-->
 <script src="js/lib/jmobile/jquery.mobile-1.4.2.min.js"></script>
 <!-- Form Validation JS  -->
-<script
-	src="js/lib/jquery.validate.min.js"></script>
+<script src="js/lib/jquery.validate.min.js"></script>
 
 <!-- Utitlity JS -->
 <script src="js/lib/jpeg_encoder_basic.js"></script>
@@ -56,15 +55,7 @@
 <script src="js/view/aboutus-view.js"></script>
 <script src="js/view/settings-view.js"></script>
 <script src="js/view/login-view.js"></script>
-
-
-<!-- <script src="scripts/aboutUs.js"></script>
-<script src="scripts/fileFunction.js"></script>
-<script src="scripts/dbFunction.js"></script>
-<script src="scripts/webserviceFunctions.js"></script>
-<script src="scripts/indexJS.js"></script>
-<script src="scripts/validationFunctions.js"></script>
-<script src="scripts/ftpFunctions.js"></script> -->
+<script src="js/view/inspection-view.js"></script>
 
 
 <style type="text/css">
@@ -83,6 +74,7 @@
 	left: 1px;
 }
 
+.ui-page { -webkit-backface-visibility: hidden; }
 -->
 .circle {
 	width: 200px;
@@ -145,16 +137,16 @@ span {
 		</div>
 		<!-------------- Login page main content ----------->
 		<div data-role="main" class="ui-content">
-			<form id="_form_login" action="#" >
-			                    <div data-role="fieldcontainer">
-				<input id="txt_user" name="txt_user" type="text" value=""
-					placeholder="Enter Username!" /> 			</div>
-			              <div data-role="fieldcontainer">
-<input
-					id="txt_password" name="txt_password"type="password" value=""
-					placeholder="Enter Password!" /> 
-			</div>
- 					<input id="loginbtn" type="submit" data-inline="true" value="Login"
+			<form id="_form_login" action="#">
+				<div data-role="fieldcontainer">
+					<input id="txt_user" name="txt_user" type="text" value="reyna.ramos"
+						placeholder="Enter Username!" />
+				</div>
+				<div data-role="fieldcontainer">
+					<input id="txt_password" name="txt_password" type="password"
+						value="password" placeholder="Enter Password!" />
+				</div>
+				<input id="loginbtn" type="submit" data-inline="true" value="Login"
 					data-theme="b">
 			</form>
 		</div>
@@ -167,35 +159,38 @@ span {
 						data-iconshadow="true" data-wrapperels="div" data-iconpos="right"
 						data-theme="a"><a href="#" data-rel="close">Settings</a></li>
 
-					<li class="ui-field-contain" data-corners="false" data-shadow="false" data-iconshadow="true"
-						data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-						data-theme="a">
-						<label for="select-server">Srv</label> <select
-						name="txt_url" id="txt_url" data-native-menu="false">
+					<li class="ui-field-contain" data-corners="false"
+						data-shadow="false" data-iconshadow="true" data-wrapperels="div"
+						data-icon="arrow-r" data-iconpos="right" data-theme="a"><label
+						for="select-server">Srv</label> <select name="txt_url"
+						id="txt_url" data-native-menu="false">
 							<option value="http://10.210.23.77:8088">Production</option>
 							<option value="http://10.210.23.78:8088">Development</option>
 							<option value="http://10.210.23.97:8088">Test</option>
 							<option value="http://203.88.138.222:8384" selected>Logilite-Dev</option>
 					</select></li>
 
-					<li class="ui-field-contain" data-corners="false" data-shadow="false" data-iconshadow="true"
-						data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-						data-theme="a"><label for="select-lang">Lang</label> <select
-						name="txt_lang"  id="txt_lang" data-native-menu="false">
+					<li class="ui-field-contain" data-corners="false"
+						data-shadow="false" data-iconshadow="true" data-wrapperels="div"
+						data-icon="arrow-r" data-iconpos="right" data-theme="a"><label
+						for="select-lang">Lang</label> <select name="txt_lang"
+						id="txt_lang" data-native-menu="false">
 							<option value="en_US">English</option>
 					</select></li>
 
-					<li class="ui-field-contain" data-corners="false" data-shadow="false" data-iconshadow="true"
-						data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-						data-theme="a"><label for="select-client">Client</label> <select
-						name="txt_client" id="txt_client" data-native-menu="false">
+					<li class="ui-field-contain" data-corners="false"
+						data-shadow="false" data-iconshadow="true" data-wrapperels="div"
+						data-icon="arrow-r" data-iconpos="right" data-theme="a"><label
+						for="select-client">Client</label> <select name="txt_client"
+						id="txt_client" data-native-menu="false">
 							<option value="1000000">Velocity</option>
 					</select></li>
 
-					<li class="ui-field-contain" data-corners="false" data-shadow="false" data-iconshadow="true"
-						data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-						data-theme="a"><label for="select-role">Role</label> <select
-						name="txt_role" id="txt_role" data-native-menu="false">
+					<li class="ui-field-contain" data-corners="false"
+						data-shadow="false" data-iconshadow="true" data-wrapperels="div"
+						data-icon="arrow-r" data-iconpos="right" data-theme="a"><label
+						for="select-role">Role</label> <select name="txt_role"
+						id="txt_role" data-native-menu="false">
 							<option value="1000043">Warehouse QA Team</option>
 							<option value="1000055">Warehouse QA Manager</option>
 							<option value="1000044">Warehouse Manager</option>
@@ -204,11 +199,11 @@ span {
 							<option value="1000000">Velocity Admin</option>
 					</select></li>
 
-					<li class="ui-field-contain" data-corners="false" data-shadow="false" data-iconshadow="true"
-						data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-						data-theme="a"><label for="select-org">Org</label>
-						<select name="txt_organization" id="txt_organization"
-						data-native-menu="false">
+					<li class="ui-field-contain" data-corners="false"
+						data-shadow="false" data-iconshadow="true" data-wrapperels="div"
+						data-icon="arrow-r" data-iconpos="right" data-theme="a"><label
+						for="select-org">Org</label> <select name="txt_organization"
+						id="txt_organization" data-native-menu="false">
 							<option value="0">*</option>
 							<option value="1000019">Amsterdam</option>
 							<option value="1000003">Austin</option>
@@ -216,29 +211,28 @@ span {
 							<option value="1000001">Singapore</option>
 					</select></li>
 
-					<li class="ui-field-contain" data-corners="false" data-shadow="false" data-iconshadow="true"
-						data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-						data-theme="a"><label for="select-warehouse">WH</label>
-						<select name="txt_warehouse" id="txt_warehouse"
-						data-native-menu="false">
+					<li class="ui-field-contain" data-corners="false"
+						data-shadow="false" data-iconshadow="true" data-wrapperels="div"
+						data-icon="arrow-r" data-iconpos="right" data-theme="a"><label
+						for="select-warehouse">WH</label> <select name="txt_warehouse"
+						id="txt_warehouse" data-native-menu="false">
 					</select></li>
 
-					<li class="ui-field-contain" data-corners="false" data-shadow="false" data-iconshadow="true"
-						data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-						data-theme="a"><label for="select-imgqua">Img</label> <select name="txt_imgQua" id="txt_imgQua"
-						data-native-menu="false">
+					<li class="ui-field-contain" data-corners="false"
+						data-shadow="false" data-iconshadow="true" data-wrapperels="div"
+						data-icon="arrow-r" data-iconpos="right" data-theme="a"><label
+						for="select-imgqua">Img</label> <select name="txt_imgQua"
+						id="txt_imgQua" data-native-menu="false">
 							<option value="50">50% (low)</option>
 							<option value="75">75% (default)</option>
 							<option value="80">80% (high)</option>
 							<option value="90">90% (higher)</option>
 							<option value="100">100% (highest)</option>
 					</select></li>
-					<li  data-corners="false" data-shadow="false" data-iconshadow="true"
+					<li data-corners="false" data-shadow="false" data-iconshadow="true"
 						data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-						data-theme="b">
-						<input id="btn_setting_save" type="submit" data-inline="true" value="Save"
-					data-theme="b">
-					</li>
+						data-theme="b"><input id="btn_setting_save" type="submit"
+						data-inline="true" value="Save" data-theme="b"></li>
 				</ul>
 			</form>
 		</div>
@@ -263,7 +257,7 @@ End of Login Page
 		<!-------------- Second page main content ----------->
 		<div data-role="main" class="ui-content">
 			<div class="circle">
-				<a href="#_inspection" data-icon="action" data-corners="true"
+				<a href="#pg_inspection" data-icon="action" data-corners="true"
 					data-shadow="true" data-iconshadow="true" data-wrapperels="div"
 					title="Start Inspection">Start Inspection</a>
 			</div>
@@ -289,9 +283,9 @@ End of Home page
 -------------------------------------------------------------->
 
 	<!-------------- Indpection page ----------->
-	<div data-role="page" id="_inspection">
+	<div data-role="page" id="pg_inspection">
 		<div data-role="header">
-			<h1 role="heading">User:username</h1>
+			<h1 role="heading"></h1>
 			<a href="#_main" data-icon="back" data-iconpos="notext"
 				data-corners="true" data-shadow="true" data-wrapperels="span"
 				title="Back" data-rel="back">Back</a> <a href="#_nav-panel"
@@ -301,8 +295,8 @@ End of Home page
 		<!-------------- Second page main content ----------->
 		<div data-role="main" class="ui-content">
 			<div data-role="collapsible-set" data-inset="false" data-theme="a"
-				data-content-theme="b">
-				<div data-role="collapsible">
+				data-content-theme="b" id="_list_mrlines">
+				<!-- <div data-role="collapsible">
 					<h2>Vendor Paper Work - 0(0)</h2>
 					<ul data-role="listview" data-split-icon="gear"
 						data-split-theme="a" data-count-theme="b" data-inset="true">
@@ -311,44 +305,24 @@ End of Home page
 						</a> <a href="#listitem_actions" data-rel="popup"
 							data-transition="flip">actions </a></li>
 					</ul>
-				</div>
-				<div data-role="collapsible">
-					<h2>Manufacturer's label(s) - 0(0)</h2>
-					<ul data-role="listview" data-split-icon="gear"
-						data-split-theme="a" data-count-theme="b" data-inset="true">
-						<li><a href="#_main"> <img
-								src="http://velocityelec.com/assets/img/asset-logo.png">
-						</a> <a href="#listitem_actions" data-rel="popup"
-							data-transition="flip">actions </a></li>
-						<li><a href="index.html"> <img
-								src="http://velocityelec.com/assets/img/asset-logo.png">
-						</a> <a href="#listitem_actions" data-rel="popup"
-							data-transition="flip">actions </a></li>
-						<li><a href="index.html"> <img
-								src="http://velocityelec.com/assets/img/asset-logo.png">
-						</a> <a href="#listitem_actions" data-rel="popup"
-							data-transition="flip">actions </a></li>
-						<li><a href="index.html"> <img
-								src="http://velocityelec.com/assets/img/asset-logo.png">
-						</a> <a href="#listitem_actions" data-rel="popup"
-							data-transition="flip">actions </a></li>
-					</ul>
-				</div>
-				<div data-role="collapsible">
-					<h2>Physical Dimentions(s) - 0(0)</h2>
-
-					<ul data-role="listview" data-split-icon="gear"
-						data-split-theme="a" data-count-theme="b" data-inset="true">
-						<li><a href="index.html"> <img
-								src="http://velocityelec.com/assets/img/asset-logo.png">
-						</a> <a href="#listitem_actions" data-rel="popup"
-							data-transition="flip">actions </a></li>
-					</ul>
-				</div>
+				</div> -->
 			</div>
 		</div>
-
+		
+		
 		<div data-role="popup" id=listitem_actions data-theme="b">
+			<ul data-role="listview" data-inset="true" style="min-width: 210px;">
+				<li data-role="list-divider">Choose an action</li>
+				<li><a href="#">FTP</a></li>
+				<li><a href="#">Gallery</a></li>
+				<li><a href="#_confirm_box" data-rel="popup"
+					data-transition="flip">Camera</a></li>
+				<li><a href="#_confirm_box" data-rel="popup"
+					data-transition="flip">File Explorer</a></li>
+			</ul>
+		</div>
+
+		<div data-role="popup" id=sublistitem_actions data-theme="b">
 			<ul data-role="listview" data-inset="true" style="min-width: 210px;">
 				<li data-role="list-divider">Choose an action</li>
 				<li><a href="#">View details</a></li>
@@ -391,14 +365,14 @@ End of Home page
 			</ul>
 		</div>
 
-		<div data-role="panel" data-display="overlay" data-position="right"
+		<!-- <div data-role="panel" data-display="overlay" data-position="right"
 			data-theme="b" id="_pnl_mrlines">
 			<ul data-role="listview" data-theme="a" id="_list_mrlines">
 				<li data-icon="delete" data-corners="false" data-shadow="false"
 					data-wrapperels="div" data-iconpos="right" data-theme="b"><a
 					href="#" data-rel="close">No Lines</a></li>
 			</ul>
-		</div>
+		</div> -->
 		<div data-role="footer">
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
@@ -423,5 +397,28 @@ End of Home page
 End of Inspection page
 -------------------------------------------------------------->
 
+	<!-------------------------------------------------------------
+Start of About page
+-------------------------------------------------------------->
+
+	<div data-role="page" id="pg_aboutus">
+		<!-------------- Login page header ----------->
+		<div data-role="header" role="banner">
+			<h1 role="heading">VIS Login</h1>
+			<a href="#pg_Login" data-icon="back" data-iconpos="notext"
+				data-corners="true" data-shadow="true" data-wrapperels="span"
+				title="Back" data-rel="back">Back</a>
+		</div>
+		<!-------------- Login page main content ----------->
+		<div data-role="main" class="ui-content">
+			<h2 id="visAppName"></h2>
+			<h4 id="visAppVersion"></h4>
+			<h4 id="visAppRelease"></h4>
+		</div>
+	</div>
+
+	<!-------------------------------------------------------------
+End of About page
+-------------------------------------------------------------->
 </body>
 </html>

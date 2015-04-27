@@ -63,15 +63,10 @@ VisionApi.prototype.login = function(params, success, error) {
 	$
 			.ajax({
 				beforeSend : function() {
-					$.mobile.loading('show', {
-						text : "Loading",
-						textVisible : true,
-						theme : 'b',
-						html : ""
-					});
+					_self.app.showDialog("Loading");
 				},
 				complete : function() {
-					$.mobile.loading("hide");
+					_self.app.hideDialog();
 				},
 				url : _self.completeUrl,
 				type : 'POST',
@@ -81,7 +76,7 @@ VisionApi.prototype.login = function(params, success, error) {
 			})
 			.then(
 					function(response) {
-						jsonResponse = [];
+						var jsonResponse;
 						var xmlResponse = response;
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
@@ -96,14 +91,14 @@ VisionApi.prototype.login = function(params, success, error) {
 										dval = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									}
 								}
-								resultline = {};
+								var resultline = {};
 								resultline["name"] = dlab;
 								resultline["ad_user_id"] = dval;
-								jsonResponse.push(resultline);
+								jsonResponse = resultline;
 							}
 						}
 						success({
-							'logininfo' : jsonResponse
+							'loginInfo' : jsonResponse
 						});
 					}).fail(function(err) {
 				error(err.responseText);
@@ -111,51 +106,54 @@ VisionApi.prototype.login = function(params, success, error) {
 }
 
 VisionApi.prototype.getMRLines = function(params, success, error) {
-	return $
-			.ajax(
-					{
-						beforeSend : function() {
-							$.mobile.showPageLoadingMsg('b', 'Loading..', true);
-						},
-						complete : function() {
-							$.mobile.hidePageLoadingMsg();
-						},
-						url : completeUrl,
-						type : 'POST',
-						data : '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
-								+ '<soapenv:Header/>'
-								+ '<soapenv:Body>'
-								+ '<_0:queryData>'
-								+ '<_0:ModelCRUDRequest>'
-								+ '<_0:ModelCRUD>'
-								+ '<_0:serviceType>VIS_MRLINE</_0:serviceType>'
-								+ '<_0:TableName>VIS_INSP_MRLine</_0:TableName>'
-								+ '<_0:RecordID>0</_0:RecordID>'
-								+ '<_0:DataRow>'
-								+ '<_0:field column="INSPECTOR_ID" >'
-								+ '<_0:val>'
-								+ params['userid']
-								+ '</_0:val>'
-								+ '</_0:field>'
-								+ '</_0:DataRow>'
-								+ '</_0:ModelCRUD>'
-								+ this.ADLoginRequest
-								+ '</_0:ModelCRUDRequest>'
-								+ '</_0:queryData>'
-								+ '</soapenv:Body>' + '</soapenv:Envelope>',
-						contentType : 'text/xml; charset=\"utf-8\"',
-						dataType : 'xml'
-					})
+	var _self = this;
+	this.resetADLoginRequest();
+	var reqBody = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
+			+ '<soapenv:Header/>'
+			+ '<soapenv:Body>'
+			+ '<_0:queryData>'
+			+ '<_0:ModelCRUDRequest>'
+			+ '<_0:ModelCRUD>'
+			+ '<_0:serviceType>VIS_MRLINE</_0:serviceType>'
+			+ '<_0:TableName>VIS_INSP_MRLine</_0:TableName>'
+			+ '<_0:RecordID>0</_0:RecordID>'
+			+ '<_0:DataRow>'
+			+ '<_0:field column="INSPECTOR_ID" >'
+			+ '<_0:val>'
+			+ params['userid']
+			+ '</_0:val>'
+			+ '</_0:field>'
+			+ '</_0:DataRow>'
+			+ '</_0:ModelCRUD>'
+			+ _self.ADLoginRequest
+			+ '</_0:ModelCRUDRequest>'
+			+ '</_0:queryData>'
+			+ '</soapenv:Body>'
+			+ '</soapenv:Envelope>';
+
+	$
+			.ajax({
+				beforeSend : function() {
+					_self.app.showDialog("Loading");
+				},
+				complete : function() {
+					_self.app.hideDialog();
+				},
+				url : _self.completeUrl,
+				type : 'POST',
+				data : reqBody,
+				contentType : 'text/xml; charset=\"utf-8\"',
+				dataType : 'xml'
+			})
 			.then(
 					function(response) {
-						jsonResponse = [];
+						var jsonResponse = [];
 						var xmlResponse = response;
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
 						if (fullNodeList.length > 0) {
 							for ( var i = 0; i < fullNodeList.length; i++) {
 								var dlab, dval, inOut, desc;
-								var option = document.createElement('option');
 								for ( var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'LABEL') {
 										dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent;
@@ -167,17 +165,14 @@ VisionApi.prototype.getMRLines = function(params, success, error) {
 										desc = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									}
 								}
-
-								mrLine = {}
+								var mrLine = {};
 								mrLine["label"] = dlab;
 								mrLine["m_inoutline_id"] = dval;
 								mrLine["m_inout_id"] = inOut;
 								mrLine["desc"] = desc;
-
 								jsonResponse.push(mrLine);
 							}
 						}
-
 						success({
 							'total' : jsonResponse.length,
 							'mrlines' : jsonResponse
@@ -188,51 +183,55 @@ VisionApi.prototype.getMRLines = function(params, success, error) {
 };
 
 VisionApi.prototype.getInspLines = function(params, success, error) {
-	return $
-			.ajax(
-					{
-						beforeSend : function() {
-							$.mobile.showPageLoadingMsg('b', 'Loading..', true);
-						},
-						complete : function() {
-							$.mobile.hidePageLoadingMsg();
-						},
-						url : completeUrl,
-						type : 'POST',
-						data : '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
-								+ '<soapenv:Header/>'
-								+ '<soapenv:Body>'
-								+ '<_0:readData>'
-								+ '<_0:ModelCRUDRequest>'
-								+ '<_0:ModelCRUD>'
-								+ '<_0:serviceType>VIS_PHOTO_INSP_LINE_V</_0:serviceType>'
-								+ '<_0:TableName>VIS_PHOTO_INSP_LINE_V</_0:TableName>'
-								+ '<_0:RecordID>0</_0:RecordID>'
-								+ '<_0:DataRow>'
-								+ '<_0:field column="M_InOutLine_ID" >'
-								+ '<_0:val>'
-								+ params.m_inoutline_id
-								+ '</_0:val>'
-								+ '</_0:field>'
-								+ '</_0:DataRow>'
-								+ '</_0:ModelCRUD>'
-								+ this.ADLoginRequest
-								+ '</_0:ModelCRUDRequest>'
-								+ '</_0:readData>'
-								+ '</soapenv:Body>' + '</soapenv:Envelope>',
-						contentType : 'text/xml; charset=\"utf-8\"',
-						dataType : 'xml'
-					})
+	var _self = this;
+	this.resetADLoginRequest();
+	var reqBody = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
+			+ '<soapenv:Header/>'
+			+ '<soapenv:Body>'
+			+ '<_0:queryData>'
+			+ '<_0:ModelCRUDRequest>'
+			+ '<_0:ModelCRUD>'
+			+ '<_0:serviceType>VIS_PHOTO_INSP_LINE_V</_0:serviceType>'
+			+ '<_0:TableName>VIS_PHOTO_INSP_LINE_V</_0:TableName>'
+			+ '<_0:RecordID>0</_0:RecordID>'
+			+ '<_0:DataRow>'
+			+ '<_0:field column="M_InOutLine_ID" >'
+			+ '<_0:val>'
+			+ params.m_inoutline_id
+			+ '</_0:val>'
+			+ '</_0:field>'
+			+ '</_0:DataRow>'
+			+ '</_0:ModelCRUD>'
+			+ _self.ADLoginRequest
+			+ '</_0:ModelCRUDRequest>'
+			+ '</_0:queryData>'
+			+ '</soapenv:Body>'
+			+ '</soapenv:Envelope>';
+	console.log(reqBody);
+	$
+			.ajax({
+				beforeSend : function() {
+					_self.app.showDialog("Loading");
+				},
+				complete : function() {
+					_self.app.hideDialog();
+				},
+				url : _self.completeUrl,
+				type : 'POST',
+				data : reqBody,
+				contentType : 'text/xml; charset=\"utf-8\"',
+				dataType : 'xml'
+			})
 			.then(
 					function(response) {
-						jsonResponse = [];
+						var jsonResponse = [];
 						var xmlResponse = response;
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
+						console.log(fullNodeList.length);
 						if (fullNodeList.length > 0) {
 							for ( var i = 0; i < fullNodeList.length; i++) {
-								var dlab, dval, inOut, desc;
-								var option = document.createElement('option');
+								var dlab, dval;
 								for ( var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {
@@ -241,18 +240,19 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 										dval = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									}
 								}
-								resultline = {};
+								var resultline = {};
 								resultline['x_instructionline_id'] = dval
 								resultline['name'] = dlab;
 								jsonResponse.push(resultline);
 							}
 						}
-						return {
+						console.log(jsonResponse);
+						success({
 							'insplines' : jsonResponse,
 							'total' : jsonResponse.length
-						};
-
+						});
 					}).fail(function(err) {
+				console.log(err.responseText);
 				return err.responseText;
 			});
 };

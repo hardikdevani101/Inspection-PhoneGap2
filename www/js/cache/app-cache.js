@@ -8,12 +8,6 @@ var AppCache = function(app) {
 	this.settingInfo = {};
 	this.appInfo = {};
 	this.pages = [];
-	this.loginInfo = {
-		usernmae : '',
-		userid : '',
-		password : '',
-		fname : ''
-	};
 }
 
 AppCache.prototype.addPage = function(pageid, page) {
@@ -128,16 +122,15 @@ AppCache.prototype.init = function() {
 		'img_quality' : '',
 		'lang' : ''
 	};
+
 	this.loginInfo = {
-		'name' : '',
-		'ad_user_id' : ''
+		username : '',
+		userid : '',
+		password : '',
+		fname : ''
 	};
 }
 
 AppCache.prototype.updateSettingInfo = function(settingInfo) {
 	this.settingInfo = settingInfo;
-	if (typeof this.app.settingsview === 'undefined') {
-		this.app.settingsview = new SettingsPage(this.app);
-	}
-	this.app.settingsview.init();
 }

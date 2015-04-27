@@ -48,27 +48,26 @@ var App = function() {
 
 App.prototype.onDeviceReady = function() {
 	var _self = this;
-	//Initialize Application Cache on page load.
+	
+	 $.mobile.allowCrossDomainPages=true; 
+	 
+	// Initialize Application Cache on page load.
 	_self.appCache = new AppCache(_self);
 	_self.appCache.init();
-	
+
 	// Initiate database-storage on page load.
 	_self.appDB = new DB(_self);
 	_self.appDB.init(function() {
-		var vissettings = new Tbl_VISSetting(_self.app);
-		vissettings.find({}, function(setting) {
-			_self.app.appCache.updateSettingInfo(setting);
-		}, _self.appDB.errorCB);
 
 	}, function(msg) {
-		console.log("App Init Error - "+msg)
+		console.log("App Init Error - " + msg)
 	});
 
 	// Initiate file-storage on page load.
 	_self.appFS = new FS(_self);
 	_self.appFS.init();
-	//_self.fileUtil = new FileUtils(_self);
-	
+	// _self.fileUtil = new FileUtils(_self);
+
 	$(document).on("pagecreate", "#pg_login", function(event) {
 		console.log("Login Called");
 		_self.loginview = new LoginPage(_self);
@@ -79,13 +78,13 @@ App.prototype.onDeviceReady = function() {
 	});
 
 	$(document).on("pagecreate", "#pg_inspection", function(event) {
-		_self.inspLinePage = new InspLinePage(this, event);
+		_self.inspLinePage = new InspLinesPage(_self);
 		_self.inspLinePage.init();
 		_self.appCache.addPage('pg_inspection', _self.inspLinePage);
 	});
 
 	$(document).on("pagecreate", "#pg_aboutus", function(event) {
-		_self.aboutusview = new AboutUsPage(this, event);
+		_self.aboutusview = new AboutUsPage(_self);
 		_self.aboutusview.init();
 		_self.appCache.addPage('pg_aboutus', _self.aboutusview);
 	});
@@ -94,4 +93,17 @@ App.prototype.onDeviceReady = function() {
 
 App.prototype.error = function(error) {
 	console.log("Error = " + error);
+};
+
+App.prototype.showDialog = function(msg) {
+	$.mobile.loading('show', {
+		text : msg,
+		textVisible : true,
+		theme : 'b',
+		html : ""
+	});
+};
+
+App.prototype.hideDialog = function() {
+	$.mobile.loading("hide");
 };

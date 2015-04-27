@@ -74,52 +74,16 @@ SettingsPage.prototype.init = function() {
 			return false;
 		}
 	});
-	
+
 	_self.visSettingsDAO.find({}, function(settingInfo) {
-		if(settingInfo.service_url){
+		if (settingInfo.service_url) {
 			_self.app.appCache.settingInfo = settingInfo;
+			_self.onSettingFind(settingInfo);
 		}
 	}, function(msg) {
 		console.log("SettingInfo Error - " + msg);
 	});
 
-	if (!_self.app.appCache.settingInfo.server_url || _self.app.appCache.settingInfo.server_url=='') {
-		$("#pg_settings").panel("open",{});
-	} else {
-		$("#pg_settings").panel("close");
-		$("#txt_url").val(_self.app.appCache.settingInfo.service_url).attr(
-				'selected', true).siblings('option').removeAttr('selected');
-		$("#txt_url").selectmenu("refresh", true);
-
-		$("#txt_role").val(_self.app.appCache.settingInfo.role).attr(
-				'selected', true).siblings('option').removeAttr('selected');
-		$("#txt_role").selectmenu("refresh", true);
-
-		$("#txt_client").val(_self.app.appCache.settingInfo.client_id).attr(
-				'selected', true).siblings('option').removeAttr('selected');
-		$("#txt_client").selectmenu("refresh", true);
-
-		$("#txt_imgQua").val(_self.app.appCache.settingInfo.img_quality).attr(
-				'selected', true).siblings('option').removeAttr('selected');
-		$("#txt_imgQua").selectmenu("refresh", true);
-
-		$("#txt_lang").val(_self.app.appCache.settingInfo.lang).attr(
-				'selected', true).siblings('option').removeAttr('selected');
-		$("#txt_lang").selectmenu("refresh", true);
-
-		$("#txt_warehouse").val(_self.app.appCache.settingInfo.warehouse_id)
-				.attr('selected', true).siblings('option').removeAttr(
-						'selected');
-		$("#txt_warehouse").selectmenu("refresh", true);
-
-		$("#txt_organization").val(_self.app.appCache.settingInfo.org_id).attr(
-				'selected', true).siblings('option').removeAttr('selected');
-		$("#txt_organization").selectmenu("refresh", true);
-		$("#txt_organization").trigger("change");
-
-		// Enhance new select element
-		// $('#txt_organization').selectmenu();
-	}
 }
 
 SettingsPage.prototype.onUpdate = function() {
@@ -134,16 +98,16 @@ SettingsPage.prototype.onUpdate = function() {
 	settingInfo['role'] = $("#txt_role option:selected").val();
 
 	var error = function(msg) {
-		console.log("Setting Info Updates Fails."+ msg);
+		console.log("Setting Info Updates Fails." + msg);
 	};
-	
+
 	this.visSettingsDAO.find({}, function(result) {
-		if(result.service_url){
+		if (result.service_url) {
 			_self.visSettingsDAO.update(settingInfo, function(data) {
 				_self.app.appCache.updateSettingInfo(settingInfo);
 				$("#pg_settings").panel("close");
 			}, error);
-		}else{
+		} else {
 			_self.visSettingsDAO.add(settingInfo, function(data) {
 				_self.app.appCache.updateSettingInfo(settingInfo);
 				$("#pg_settings").panel("close");
@@ -152,8 +116,6 @@ SettingsPage.prototype.onUpdate = function() {
 	}, function(msg) {
 		console.log("SettingInfo Error - " + msg);
 	});
-	
-
 }
 
 SettingsPage.prototype.onOrgChange = function() {
@@ -161,7 +123,7 @@ SettingsPage.prototype.onOrgChange = function() {
 	$("#txt_warehouse").empty();
 	var org_id = $("#txt_organization").val();
 	if (org_id == null || org_id == 0) {
-		for (var i = 0; i < app.appCache.warehouseList.length; i++) {
+		for ( var i = 0; i < app.appCache.warehouseList.length; i++) {
 			$("#txt_warehouse").append(
 					new Option(app.appCache.warehouseList[i].name,
 							app.appCache.warehouseList[i].warehouseid));
@@ -170,10 +132,49 @@ SettingsPage.prototype.onOrgChange = function() {
 		var result = $.grep(app.appCache.warehouseList, function(e) {
 			return e.orgid == org_id;
 		});
-		for (var i = 0; i < result.length; i++) {
+		for ( var i = 0; i < result.length; i++) {
 			$("#txt_warehouse").append(
 					new Option(result[i].name, result[i].warehouseid));
 		}
 	}
 	$('#txt_warehouse').selectmenu('refresh', true);
+}
+
+SettingsPage.prototype.onSettingFind = function(setting) {
+	if (!setting.service_url || setting.service_url == '') {
+		$("#pg_settings").panel("open", {});
+	} else {
+		$("#pg_settings").panel("close");
+		$("#txt_url").val(setting.service_url).attr('selected', true).siblings(
+				'option').removeAttr('selected');
+		$("#txt_url").selectmenu("refresh", true);
+
+		$("#txt_role").val(setting.role).attr('selected', true).siblings(
+				'option').removeAttr('selected');
+		$("#txt_role").selectmenu("refresh", true);
+
+		$("#txt_client").val(setting.client_id).attr('selected', true)
+				.siblings('option').removeAttr('selected');
+		$("#txt_client").selectmenu("refresh", true);
+
+		$("#txt_imgQua").val(setting.img_quality).attr('selected', true)
+				.siblings('option').removeAttr('selected');
+		$("#txt_imgQua").selectmenu("refresh", true);
+
+		$("#txt_lang").val(setting.lang).attr('selected', true).siblings(
+				'option').removeAttr('selected');
+		$("#txt_lang").selectmenu("refresh", true);
+
+		$("#txt_warehouse").val(setting.warehouse_id).attr('selected', true)
+				.siblings('option').removeAttr('selected');
+		$("#txt_warehouse").selectmenu("refresh", true);
+
+		$("#txt_organization").val(setting.org_id).attr('selected', true)
+				.siblings('option').removeAttr('selected');
+		$("#txt_organization").selectmenu("refresh", true);
+		$("#txt_organization").trigger("change");
+
+		// Enhance new select element
+		// $('#txt_organization').selectmenu();
+	}
 }
