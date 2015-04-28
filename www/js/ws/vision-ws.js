@@ -207,7 +207,6 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 			+ '</_0:queryData>'
 			+ '</soapenv:Body>'
 			+ '</soapenv:Envelope>';
-	console.log(reqBody);
 	$
 			.ajax({
 				beforeSend : function() {
@@ -228,7 +227,6 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 						var xmlResponse = response;
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
-						console.log(fullNodeList.length);
 						if (fullNodeList.length > 0) {
 							for ( var i = 0; i < fullNodeList.length; i++) {
 								var dlab, dval;
@@ -246,7 +244,6 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 								jsonResponse.push(resultline);
 							}
 						}
-						console.log(jsonResponse);
 						success({
 							'insplines' : jsonResponse,
 							'total' : jsonResponse.length

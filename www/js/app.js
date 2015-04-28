@@ -48,9 +48,9 @@ var App = function() {
 
 App.prototype.onDeviceReady = function() {
 	var _self = this;
-	
-	 $.mobile.allowCrossDomainPages=true; 
-	 
+
+	$.mobile.allowCrossDomainPages = true;
+
 	// Initialize Application Cache on page load.
 	_self.appCache = new AppCache(_self);
 	_self.appCache.init();
@@ -87,6 +87,20 @@ App.prototype.onDeviceReady = function() {
 		_self.aboutusview = new AboutUsPage(_self);
 		_self.aboutusview.init();
 		_self.appCache.addPage('pg_aboutus', _self.aboutusview);
+	});
+
+	$(document).on("pagecreate", "#pg_inspectionDetail", function(event) {
+		console.log("pg_inspectionDetail");
+		console.log(_self.appCache.session.m_inoutline_id);
+		_self.inspLinePage.loadInspLines({
+			m_inoutline_id : _self.appCache.session.m_inoutline_id
+		});
+	});
+
+	$(document).on("pagecreate", "#pg_gallery", function(event) {
+		_self.galleryview = new GalleryPage(_self);
+		_self.galleryview.init(_self.appCache.session.m_insp_id);
+		_self.appCache.addPage('pg_gallery', _self.galleryview);
 	});
 
 };

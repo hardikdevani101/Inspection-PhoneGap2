@@ -2,7 +2,8 @@ var AppCache = function(app) {
 	console.log("New AppCache");
 	this.app = app;
 	this.session = {
-		m_inoutline_id : ''
+		m_inoutline_id : '',
+		m_insp_id : ''
 	}
 	this.warehouseList = [];
 	this.settingInfo = {};
