@@ -47,9 +47,12 @@ var App = function() {
 };
 
 App.prototype.onDeviceReady = function() {
-	var _self = this;
-
+	
+	//$.mobile.allowCrossDomainPages=true;	
 	$.mobile.allowCrossDomainPages = true;
+	$.support.cors = true;
+	$.mobile.loadingMessage="Loading..";
+	var _self = this;
 
 	// Initialize Application Cache on page load.
 	_self.appCache = new AppCache(_self);

@@ -1,4 +1,5 @@
 ﻿var VisionApi = function(app) {
+	
 	this.app = app;
 	this.baseUrl = app.appCache.settingInfo.service_url;
 	this.wsTypeModelADService = "ModelADService";
@@ -68,22 +69,30 @@ VisionApi.prototype.login = function(params, success, error) {
 				complete : function() {
 					_self.app.hideDialog();
 				},
-				url : _self.completeUrl,
 				type : 'POST',
+				crossDomain:true,
 				data : reqBody,
-				contentType : 'text/xml; charset=\"utf-8\"',
+				url : _self.completeUrl,
+				accepts: {xml: 'text/xml', text: 'text/plain'},
+				contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
 				dataType : 'xml'
 			})
 			.then(
 					function(response) {
-						var jsonResponse;
+						var jsonResponse={};
 						var xmlResponse = response;
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
+						var error = xmlResponse
+								.getElementsByTagName("Error");
+						if(error.length > 0){
+								var resultline = {};
+								resultline["error"] = error[0].outerHTML;
+								jsonResponse = resultline;
+						}
 						if (fullNodeList.length > 0) {
 							for ( var i = 0; i < fullNodeList.length; i++) {
 								var dlab, dval;
-								var option = document.createElement('option');
 								for ( var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {
 										dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent;

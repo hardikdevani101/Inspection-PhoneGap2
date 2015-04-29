@@ -9,12 +9,16 @@ LoginPage.prototype.onLogin = function() {
 			username : $("#txt_user").val(),
 			password : $("#txt_password").val()
 		}, function(result) {
-			app.appCache.loginInfo['username'] = $("#txt_user");
-			app.appCache.loginInfo['password'] = $("#txt_password");
-			app.appCache.loginInfo['userid'] = result.loginInfo.ad_user_id;
-			$(':mobile-pagecontainer').pagecontainer('change', '#pg_home', {
-				reload : false
-			})
+			if(result.loginInfo.error){
+				alert(result.loginInfo.error);
+			}else{
+				app.appCache.loginInfo['username'] = $("#txt_user");
+				app.appCache.loginInfo['password'] = $("#txt_password");
+				app.appCache.loginInfo['userid'] = result.loginInfo.ad_user_id;
+				$(':mobile-pagecontainer').pagecontainer('change', '#pg_home', {
+					reload : false
+				})
+			}
 		}, function() {
 			console.log("Login failed");
 		});
