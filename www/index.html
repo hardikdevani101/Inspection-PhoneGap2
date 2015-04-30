@@ -57,6 +57,7 @@
 <script src="js/view/login-view.js"></script>
 <script src="js/view/inspection-view.js"></script>
 <script src="js/view/gallery-view.js"></script>
+<script src="js/view/cropImage-view.js"></script>
 
 
 <style type="text/css">
@@ -99,7 +100,7 @@
 	left: 26px;
 }
 
-.ui-mobile [data-role=header],.ui-mobile [data-role=footer] {
+.ui-mobile [data-role=header], .ui-mobile [data-role=footer] {
 	background-color: rgba(0, 89, 187, 0.71);
 	color: beige;
 	text-shadow: 1px 1px 12px #000;
@@ -110,7 +111,7 @@ img {
 	width: 100%;
 }
 
-form label,legend {
+form label, legend {
 	color: #123456;
 }
 
@@ -315,7 +316,8 @@ End of MR line page
 -------------------------------------------------------------->
 
 	<!-------------- Indpection page ----------->
-	<div data-role="page" id="pg_inspectionDetail" data-title="Inspection page">
+	<div data-role="page" id="pg_inspectionDetail"
+		data-title="Inspection page">
 		<div data-role="header" data-position="fixed">
 			<h2 data-role="heading">Inspection</h2>
 			<a href="#_main" data-icon="back" data-iconpos="notext"
@@ -382,16 +384,16 @@ End of Inspection page
 			<ul data-role="listview" data-theme="a">
 				<li data-icon="delete" data-corners="false" data-shadow="false"
 					data-iconshadow="true" data-wrapperels="div" data-iconpos="right"
-					data-theme="a"><a href="#" data-rel="close">FTP</a></li>
+					data-theme="a"><a href="#pg_ftp_explorer" data-rel="close">FTP</a></li>
 				<li data-corners="false" data-shadow="false" data-iconshadow="true"
 					data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-					data-theme="a"><a href="#_main">Gallery</a></li>
+					data-theme="a"><a href="#" id="btn_pic_gallery">Gallery</a></li>
 				<li data-corners="false" data-shadow="false" data-iconshadow="true"
 					data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-					data-theme="a"><a href="#_about-app">Camera</a></li>
+					data-theme="a"><a href="#" id="btn_pic_camera">Camera</a></li>
 				<li data-corners="false" data-shadow="false" data-iconshadow="true"
 					data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-					data-theme="a"><a href="#_about-app">File Explorer</a></li>
+					data-theme="a"><a href="#pg_file_explorer">File Explorer</a></li>
 			</ul>
 		</div>
 
@@ -440,5 +442,118 @@ Start of About page
 	<!-------------------------------------------------------------
 End of About page
 -------------------------------------------------------------->
+
+	<!-------------------------------------------------------------
+Start of File Explorer page
+-------------------------------------------------------------->
+
+	<div id="pg_file_explorer" data-role="page" data-theme="b">
+		<div data-role="header" data-position="fixed">
+			<div data-role="controlgroup" data-type="horizontal"
+				class="ui-mini ui-btn-left">
+				<button data-icon="back" data-iconpos="notext">Back</button>
+			</div>
+			<h1>File Explorer</h1>
+			<div data-role="controlgroup" data-type="horizontal"
+				class="ui-mini ui-btn-right">
+				<button data-icon="carat-l" data-iconpos="notext"
+					onClick="backFile()">Previous</button>
+				<button data-icon="check" data-iconpos="notext"
+					onClick="fileExplore()">Select</button>
+			</div>
+		</div>
+		<div role="main" class="ui-content">
+			<div id="dirContent"></div>
+		</div>
+	</div>
+
+	<!-------------------------------------------------------------
+End of File Explorer page
+-------------------------------------------------------------->
+
+
+	<!-------------------------------------------------------------
+Start of FTP Explorer page
+-------------------------------------------------------------->
+
+	<div id="pg_file_explorer" data-role="page" data-theme="b">
+		<div data-role="header" data-position="fixed">
+			<div data-role="controlgroup" data-type="horizontal"
+				class="ui-mini ui-btn-left">
+				<button data-icon="back" data-iconpos="notext"
+					onClick="backToGallery()">Back</button>
+			</div>
+			<h1>FTP Explorer</h1>
+			<div data-role="controlgroup" data-type="horizontal"
+				class="ui-mini ui-btn-right">
+				<select id="drop_ftp_name">
+
+				</select>
+				<button data-icon="carat-l" data-iconpos="notext"
+					onClick="ftpExplorer('-')">Previous</button>
+				<button data-icon="check" data-iconpos="notext"
+					onClick="onFinishFtpSelection()">Select</button>
+			</div>
+		</div>
+		<div role="main" class="ui-content">
+			<div id="ftpFileContent"></div>
+		</div>
+	</div>
+
+	<!-------------------------------------------------------------
+END of FTP Explorer page
+-------------------------------------------------------------->
+
+
+	<!-------------------------------------------------------------
+Start of Crop page
+-------------------------------------------------------------->
+
+	<div id="pg_cropView" data-role="page" data-theme="b">
+		<div data-role="header" data-position="fixed">
+			<h2 data-role="heading">Crop Image</h2>
+			<a href="#_main" data-icon="back" data-iconpos="notext"
+				data-corners="true" data-shadow="true" data-wrapperels="span"
+				title="Back" data-rel="back">Back</a>
+		</div>
+		<div data-role="main" class="ui-content"
+			style="margin: 0; padding: 0;">
+			<div id="insp-activity-panel">
+				<table style="width: 100%">
+					<tr>
+						<td style="width: 60%;">
+							<div id="cropImage"></div>
+						</td>
+						<td style="width: 10%;"><a href="#" data-role="none"
+							id="btn_zoom-out"></a>
+							<div id="slider-vertical"></div> <a data-role="none"
+							id="btn_zoom-in"></a></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div data-role="footer" data-position="fixed">
+			<div data-role="navbar" data-iconpos="left">
+				<ul>
+					<li><a href="#" data-shadow="true" data-corners="true"
+						data-wrapperels="span" data-theme="b" title="crop&Save">Crop &
+							Save</a></li>
+					<li><a href="#" data-icon="delete" data-shadow="true"
+						data-corners="true" data-wrapperels="span" data-theme="b"
+						title="save">Save</a></li>
+					<li><a href="#" data-shadow="true" data-corners="true"
+						data-wrapperels="span" data-theme="b" title="Edit">Edit</a></li>
+					<li><a href="#" data-shadow="true" data-corners="true"
+						data-wrapperels="span" data-theme="b" title="crop&Edit">Crop &
+							Edit</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<!-------------------------------------------------------------
+End of Crop page
+-------------------------------------------------------------->
+
 </body>
 </html>

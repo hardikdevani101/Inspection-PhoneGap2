@@ -148,10 +148,12 @@ VisionApi.prototype.getMRLines = function(params, success, error) {
 				complete : function() {
 					_self.app.hideDialog();
 				},
-				url : _self.completeUrl,
 				type : 'POST',
+				crossDomain:true,
 				data : reqBody,
-				contentType : 'text/xml; charset=\"utf-8\"',
+				url : _self.completeUrl,
+				accepts: {xml: 'text/xml', text: 'text/plain'},
+				contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
 				dataType : 'xml'
 			})
 			.then(
@@ -224,10 +226,12 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 				complete : function() {
 					_self.app.hideDialog();
 				},
-				url : _self.completeUrl,
 				type : 'POST',
+				crossDomain:true,
 				data : reqBody,
-				contentType : 'text/xml; charset=\"utf-8\"',
+				url : _self.completeUrl,
+				accepts: {xml: 'text/xml', text: 'text/plain'},
+				contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
 				dataType : 'xml'
 			})
 			.then(
