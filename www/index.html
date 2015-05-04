@@ -125,6 +125,10 @@ span {
 </style>
 <script>
 	var app = new App();
+	document.addEventListener('deviceready', function(){
+		app.appFS = new FS(app);
+		app.appFS.init();
+		}, false);
 </script>
 </head>
 
@@ -476,7 +480,7 @@ End of File Explorer page
 Start of FTP Explorer page
 -------------------------------------------------------------->
 
-	<div id="pg_file_explorer" data-role="page" data-theme="b">
+	<div id="pg_ftp_explorer" data-role="page" data-theme="b">
 		<div data-role="header" data-position="fixed">
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-left">
@@ -535,15 +539,15 @@ Start of Crop page
 		<div data-role="footer" data-position="fixed">
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
-					<li><a href="#" data-shadow="true" data-corners="true"
+					<li><a id="cropage_cpNsave" href="#" data-shadow="true" data-corners="true"
 						data-wrapperels="span" data-theme="b" title="crop&Save">Crop &
 							Save</a></li>
-					<li><a href="#" data-icon="delete" data-shadow="true"
+					<li><a id="cropage_save" href="#" data-icon="delete" data-shadow="true"
 						data-corners="true" data-wrapperels="span" data-theme="b"
 						title="save">Save</a></li>
-					<li><a href="#" data-shadow="true" data-corners="true"
+					<li><a id="cropage_edit" href="#" data-shadow="true" data-corners="true"
 						data-wrapperels="span" data-theme="b" title="Edit">Edit</a></li>
-					<li><a href="#" data-shadow="true" data-corners="true"
+					<li><a id="cropage_cpNedit" href="#" data-shadow="true" data-corners="true"
 						data-wrapperels="span" data-theme="b" title="crop&Edit">Crop &
 							Edit</a></li>
 				</ul>

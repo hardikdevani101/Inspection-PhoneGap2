@@ -3,7 +3,7 @@ var AppCache = function(app) {
 	this.app = app;
 	this.session = {
 		m_inoutline_id : '',
-		m_insp_id : ''
+		x_instructionline_id : ''
 	}
 	this.warehouseList = [];
 	this.settingInfo = {};

@@ -11,6 +11,7 @@
 	<feature name="http://api.phonegap.com/1.0/file"/> 
     
     <feature name="http://api.phonegap.com/1.0/device" />
+    
     <preference name="permissions" value="none" />
     <preference name="target-device" value="universal" />
     <preference name="fullscreen" value="true" />
@@ -56,10 +57,10 @@
     <gap:splash gap:platform="winphone" src="res/screen/windows-phone/screen-portrait.jpg" />
     
 	<gap:plugin name="camera-all-image.camera" />
-	<gap:plugin name="org.apache.cordova.file"/>
-	<gap:plugin name="org.apache.cordova.file-transfer"/>
 	<gap:plugin name="org.apache.cordova.dialogs" />
     <gap:plugin name="com.vis.plugin.ftp.FtpClient" />
+	<gap:plugin name="org.apache.cordova.file"/>
+	<gap:plugin name="org.apache.cordova.file-transfer"/>
 	
     <access origin="*" />	
 </widget>

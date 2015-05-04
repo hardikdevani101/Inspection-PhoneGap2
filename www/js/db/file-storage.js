@@ -1,9 +1,13 @@
 var FS = function(app) {
 	this.app = app;
+	this.fileSystem = null;
+	this.vis_dir = null;
+	this.vis_ftp_dir = null;
 }
 
 FS.prototype.errorHandler = function(e) {
 	var msg = '';
+	console.log('File Not Found');
 	switch (e.code) {
 	case FileError.QUOTA_EXCEEDED_ERR:
 		msg = 'QUOTA_EXCEEDED_ERR';
@@ -32,22 +36,77 @@ FS.prototype.errorHandler = function(e) {
 FS.prototype.init = function() {
 	this.fileSystem = "";
 	var _self = this;
-	console.log("File-Storage:init");
-	window.requestFileSystem = window.requestFileSystem
-			|| window.webkitRequestFileSystem;
 	if (window.requestFileSystem) {
-		console.log("File-Storage:Debug - " + window.requestFileSystem);
-//		window.requestFileSystem(window.PERSISTENT, 0, function(
-//				filesystem) {
-//			_self.fileSystem = filesystem;
-//		}, this.errorHandler);
+		console.log("Found File-Storage:Debug - ");
+		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(
+				filesystem) {
+			_self.fileSystem = filesystem;
+			filesystem.root.getDirectory('VIS_Inspection', {
+				create : true
+			}, function(filesystem) {
+				console.log('VIS Directory');
+				_self.vis_dir = filesystem;
+				filesystem.getDirectory('VIS_FTP', {
+					create : true
+				}, function(filesystem) {
+					console.log('VIS FTP');
+					_self.vis_ftp_dir = filesystem;
+				}, _self.errorHandler);
+			}, _self.errorHandler);
+		}, _self.errorHandler);
 	}
 }
 
+FS.prototype.saveVISFile = function(fileData) {
+	var _self = this;
+	var date = new Date;
+	var sec = date.getSeconds();
+	var mi = date.getMinutes();
+	var hh = date.getHours();
+	var yy = date.getFullYear();
+	var mm = date.getMonth() + 1;
+	var dd = date.getDate();
+	var fileName = mm + dd + yy + "_" + hh + mi + sec + ".jpg";
+	_self.vis_dir
+			.getFile(
+					fileName,
+					{
+						create : true,
+						exclusive : false
+					},
+					function(fileEntry) {
+						var fileFullPath = _self.getSDPath(fileEntry.fullPath)
+								.substring(1);
+						fileEntry
+								.createWriter(
+										function(writer) {
+											writer.onwrite = function(evt) {
+
+												var M_InOutLine_ID = _self.app.appCache.session.m_inoutline_id;
+												var X_INSTRUCTIONLINE_ID = _self.app.appCache.session.x_instructionline_id;
+												var M_INOUT_ID = _self.app.appCache.session.M_INOUT_ID;
+
+												_self.app.appDB.addGalleryEntry(
+														M_InOutLine_ID,
+														X_INSTRUCTIONLINE_ID,
+														M_INOUT_ID, fileName,
+														fileFullPath);
+												$.mobile
+														.changePage("#pg_inspectionDetail");
+												_self.app.appFTPUtil
+														.uploadFile(fileEntry);
+											};
+											writer.write(fileData);
+										}, _self.errorHandler);
+					}, _self.errorHandler);
+}
+
+FS.prototype.getSDPath = function(Fname) {
+	var tmpArray = Fname.split('mnt/sdcard');
+	return tmpArray.pop();
+}
+
 FS.prototype.getFileByURL = function(url, callback) {
-	var url = 'filesystem:' + url;
-	window.resolveLocalFileSystemURL = window.resolveLocalFileSystemURL
-			|| window.webkitResolveLocalFileSystemURL;
 	window.resolveLocalFileSystemURL(url, function(fileEntry) {
 		fileEntry.file(function(file) {
 			var reader = new FileReader();
@@ -265,7 +324,8 @@ FS.prototype.createDir = function(folders, callback) {
 	this.fileSystem.root.getDirectory(folders[0], {
 		create : true
 	}, function(dirEntry) {
-		// Recursively add the new subfolder (if we still have another to create).
+		// Recursively add the new subfolder (if we still have another to
+		// create).
 		if (folders.length) {
 			_self.createDir(dirEntry, folders.slice(1));
 		}

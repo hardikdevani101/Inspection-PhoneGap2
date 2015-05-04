@@ -67,7 +67,7 @@ InspLinesPage.prototype.loadInspLines = function(params) {
 		$('#_list_insp').html(items);
 		$('#_list_insp').listview("refresh");
 		$('#_list_insp li a').on('click', function() {
-			_self.app.appCache.session.m_insp_id = $(this).data("id");
+			_self.app.appCache.session.x_instructionline_id = $(this).data("id");
 			$.mobile.changePage("#pg_gallery");
 		});
 	}

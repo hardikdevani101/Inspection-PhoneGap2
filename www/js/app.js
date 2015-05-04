@@ -57,7 +57,11 @@ App.prototype.onDeviceReady = function() {
 	// Initialize Application Cache on page load.
 	_self.appCache = new AppCache(_self);
 	_self.appCache.init();
-
+	
+	// Initialize FTP Util.
+	_self.appFTPUtil = new FTPUtils(_self);
+	_self.appFTPUtil.init();
+	
 	// Initiate database-storage on page load.
 	_self.appDB = new DB(_self);
 	_self.appDB.init(function() {
@@ -67,8 +71,6 @@ App.prototype.onDeviceReady = function() {
 	});
 
 	// Initiate file-storage on page load.
-	_self.appFS = new FS(_self);
-	_self.appFS.init();
 	// _self.fileUtil = new FileUtils(_self);
 
 	$(document).on("pagecreate", "#pg_login", function(event) {
@@ -102,7 +104,7 @@ App.prototype.onDeviceReady = function() {
 
 	$(document).on("pagecreate", "#pg_gallery", function(event) {
 		_self.galleryview = new GalleryPage(_self);
-		_self.galleryview.init(_self.appCache.session.m_insp_id);
+		_self.galleryview.init(_self.appCache.session.x_instructionline_id);
 		_self.appCache.addPage('pg_gallery', _self.galleryview);
 	});
 

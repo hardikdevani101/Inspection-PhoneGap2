@@ -2,7 +2,7 @@ var GalleryPage = function(app) {
 	this.app = app;
 }
 
-GalleryPage.prototype.init = function(m_insp_id) {
+GalleryPage.prototype.init = function(x_instructionline_id) {
 	var _self = this;
 	var visGallery = Tbl_VISGallery(_self.app);
 	$('#btn_pic_camera').on('click', function() {
