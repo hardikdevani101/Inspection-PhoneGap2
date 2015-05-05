@@ -48,10 +48,19 @@ var App = function() {
 
 App.prototype.onDeviceReady = function() {
 	
-	//$.mobile.allowCrossDomainPages=true;	
 	$.mobile.allowCrossDomainPages = true;
 	$.support.cors = true;
 	$.mobile.loadingMessage="Loading..";
+	
+	if (navigator.userAgent.indexOf("Android") != -1)
+    {
+        $.mobile.defaultPageTransition = 'none';
+        $.mobile.defaultDialogTransition = 'none';
+        $("a").attr("data-transition", "none");
+        $.mobile.touchOverflowEnabled = true;
+    }
+	
+	
 	var _self = this;
 	// Initialize Application Cache on page load.
 	_self.appCache = new AppCache(_self);
