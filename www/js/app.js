@@ -53,7 +53,6 @@ App.prototype.onDeviceReady = function() {
 	$.support.cors = true;
 	$.mobile.loadingMessage="Loading..";
 	var _self = this;
-
 	// Initialize Application Cache on page load.
 	_self.appCache = new AppCache(_self);
 	_self.appCache.init();
@@ -81,7 +80,7 @@ App.prototype.onDeviceReady = function() {
 		_self.settingnview = new SettingsPage(_self);
 		_self.settingnview.init();
 	});
-
+	
 	$(document).on("pagecreate", "#pg_inspection", function(event) {
 		_self.inspLinePage = new InspLinesPage(_self);
 		_self.inspLinePage.init();
@@ -107,7 +106,16 @@ App.prototype.onDeviceReady = function() {
 		_self.galleryview.init(_self.appCache.session.x_instructionline_id);
 		_self.appCache.addPage('pg_gallery', _self.galleryview);
 	});
-
+	
+	$(document).on("click", "#btn_logout", function(event) {		
+		//TODO Clear Session
+		_self.appCache.reset();
+		
+		$.mobile.changePage("#pg_login", {
+			transition : "slide",
+			changeHash : false
+		});
+	});
 };
 
 App.prototype.error = function(error) {

@@ -15,6 +15,7 @@ LoginPage.prototype.onLogin = function() {
 				app.appCache.loginInfo['username'] = $("#txt_user");
 				app.appCache.loginInfo['password'] = $("#txt_password");
 				app.appCache.loginInfo['userid'] = result.loginInfo.ad_user_id;
+				
 				$(':mobile-pagecontainer').pagecontainer('change', '#pg_home', {
 					reload : false
 				})

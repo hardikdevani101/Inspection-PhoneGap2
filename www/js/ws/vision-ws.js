@@ -1,5 +1,5 @@
 ﻿var VisionApi = function(app) {
-	
+
 	this.app = app;
 	this.baseUrl = app.appCache.settingInfo.service_url;
 	this.wsTypeModelADService = "ModelADService";
@@ -62,38 +62,41 @@ VisionApi.prototype.login = function(params, success, error) {
 			+ '</_0:readData>'
 			+ '</soapenv:Body>' + '</soapenv:Envelope>';
 	$
-			.ajax({
-				beforeSend : function() {
-					_self.app.showDialog("Loading");
-				},
-				complete : function() {
-					_self.app.hideDialog();
-				},
-				type : 'POST',
-				crossDomain:true,
-				data : reqBody,
-				url : _self.completeUrl,
-				accepts: {xml: 'text/xml', text: 'text/plain'},
-				contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
-				dataType : 'xml'
-			})
+			.ajax(
+					{
+						beforeSend : function() {
+							_self.app.showDialog("Loading");
+						},
+						complete : function() {
+							_self.app.hideDialog();
+						},
+						type : 'POST',
+						crossDomain : true,
+						data : reqBody,
+						url : _self.completeUrl,
+						accepts : {
+							xml : 'text/xml',
+							text : 'text/plain'
+						},
+						contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
+						dataType : 'xml'
+					})
 			.then(
 					function(response) {
-						var jsonResponse={};
+						var jsonResponse = {};
 						var xmlResponse = response;
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
-						var error = xmlResponse
-								.getElementsByTagName("Error");
-						if(error.length > 0){
-								var resultline = {};
-								resultline["error"] = error[0].outerHTML;
-								jsonResponse = resultline;
+						var error = xmlResponse.getElementsByTagName("Error");
+						if (error.length > 0) {
+							var resultline = {};
+							resultline["error"] = error[0].outerHTML;
+							jsonResponse = resultline;
 						}
 						if (fullNodeList.length > 0) {
-							for ( var i = 0; i < fullNodeList.length; i++) {
+							for (var i = 0; i < fullNodeList.length; i++) {
 								var dlab, dval;
-								for ( var j = 0; j < fullNodeList[i].childNodes.length; j++) {
+								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {
 										dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'AD_User_ID') {
@@ -141,21 +144,25 @@ VisionApi.prototype.getMRLines = function(params, success, error) {
 			+ '</soapenv:Envelope>';
 
 	$
-			.ajax({
-				beforeSend : function() {
-					_self.app.showDialog("Loading");
-				},
-				complete : function() {
-					_self.app.hideDialog();
-				},
-				type : 'POST',
-				crossDomain:true,
-				data : reqBody,
-				url : _self.completeUrl,
-				accepts: {xml: 'text/xml', text: 'text/plain'},
-				contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
-				dataType : 'xml'
-			})
+			.ajax(
+					{
+						beforeSend : function() {
+							_self.app.showDialog("Loading");
+						},
+						complete : function() {
+							_self.app.hideDialog();
+						},
+						type : 'POST',
+						crossDomain : true,
+						data : reqBody,
+						url : _self.completeUrl,
+						accepts : {
+							xml : 'text/xml',
+							text : 'text/plain'
+						},
+						contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
+						dataType : 'xml'
+					})
 			.then(
 					function(response) {
 						var jsonResponse = [];
@@ -163,9 +170,9 @@ VisionApi.prototype.getMRLines = function(params, success, error) {
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
 						if (fullNodeList.length > 0) {
-							for ( var i = 0; i < fullNodeList.length; i++) {
+							for (var i = 0; i < fullNodeList.length; i++) {
 								var dlab, dval, inOut, desc;
-								for ( var j = 0; j < fullNodeList[i].childNodes.length; j++) {
+								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'LABEL') {
 										dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'M_InOutLine_ID') {
@@ -219,21 +226,25 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 			+ '</soapenv:Body>'
 			+ '</soapenv:Envelope>';
 	$
-			.ajax({
-				beforeSend : function() {
-					_self.app.showDialog("Loading");
-				},
-				complete : function() {
-					_self.app.hideDialog();
-				},
-				type : 'POST',
-				crossDomain:true,
-				data : reqBody,
-				url : _self.completeUrl,
-				accepts: {xml: 'text/xml', text: 'text/plain'},
-				contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
-				dataType : 'xml'
-			})
+			.ajax(
+					{
+						beforeSend : function() {
+							_self.app.showDialog("Loading");
+						},
+						complete : function() {
+							_self.app.hideDialog();
+						},
+						type : 'POST',
+						crossDomain : true,
+						data : reqBody,
+						url : _self.completeUrl,
+						accepts : {
+							xml : 'text/xml',
+							text : 'text/plain'
+						},
+						contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
+						dataType : 'xml'
+					})
 			.then(
 					function(response) {
 						var jsonResponse = [];
@@ -241,9 +252,9 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
 						if (fullNodeList.length > 0) {
-							for ( var i = 0; i < fullNodeList.length; i++) {
+							for (var i = 0; i < fullNodeList.length; i++) {
 								var dlab, dval;
-								for ( var j = 0; j < fullNodeList[i].childNodes.length; j++) {
+								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {
 										dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent;
@@ -268,7 +279,8 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 };
 
 VisionApi.prototype.uploadImage = function(params, success, error) {
-	return $
+	var _self = this;
+	$
 			.ajax(
 					{
 						beforeSend : function() {
@@ -318,7 +330,8 @@ VisionApi.prototype.uploadImage = function(params, success, error) {
 };
 
 VisionApi.prototype.uploadImageByMInOut = function(params) {
-	return $
+	var _self = this;
+	$
 			.ajax(
 					{
 						beforeSend : function() {
@@ -327,7 +340,6 @@ VisionApi.prototype.uploadImageByMInOut = function(params) {
 						complete : function() {
 							$.mobile.hidePageLoadingMsg();
 						},
-
 						url : completeUrl,
 						type : 'POST',
 						data : '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
@@ -369,8 +381,8 @@ VisionApi.prototype.uploadImageByMInOut = function(params) {
 			});
 };
 
-VisionApi.prototype.getFTPServerList = function(params) {
-	return $
+VisionApi.prototype.getFTPServerList = function(params, success, error) {
+	$
 			.ajax(
 					{
 						beforeSend : function() {
@@ -397,7 +409,7 @@ VisionApi.prototype.getFTPServerList = function(params) {
 								+ '</_0:field>'
 								+ '<_0:field column="AD_Org_ID" >'
 								+ '<_0:val>'
-								+ vis_org_id
+								+ params.vis_org_id
 								+ '</_0:val>'
 								+ '</_0:field>'
 								+ '</_0:DataRow>'
@@ -405,8 +417,7 @@ VisionApi.prototype.getFTPServerList = function(params) {
 								+ ADLoginRequest
 								+ '</_0:ModelCRUDRequest>'
 								+ '</_0:queryData>'
-								+ '</soapenv:Body>'
-								+ '</soapenv:Envelope>',
+								+ '</soapenv:Body>' + '</soapenv:Envelope>',
 						contentType : 'text/xml; charset=\"utf-8\"',
 						dataType : 'xml'
 					})
@@ -417,10 +428,9 @@ VisionApi.prototype.getFTPServerList = function(params) {
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
 						if (fullNodeList.length > 0) {
-							for ( var i = 0; i < fullNodeList.length; i++) {
+							for (var i = 0; i < fullNodeList.length; i++) {
 								var dlab, dval, inOut, desc;
-								var option = document.createElement('option');
-								for ( var j = 0; j < fullNodeList[i].childNodes.length; j++) {
+								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'FTP_Url') {
 										fUrl = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {
@@ -439,11 +449,11 @@ VisionApi.prototype.getFTPServerList = function(params) {
 								jsonResponse.push(resultline);
 							}
 						}
-						return {
+						success({
 							'ftpservers' : jsonResponse,
 							'total' : jsonResponse.length
-						};
+						});
 					}).fail(function(err) {
-				return err.responseText;
+				error(err.responseText);
 			});
 };

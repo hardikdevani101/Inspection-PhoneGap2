@@ -59,7 +59,6 @@
 <script src="js/view/gallery-view.js"></script>
 <script src="js/view/cropImage-view.js"></script>
 
-
 <style type="text/css">
 <!--
 #wmCanvasContainer {
@@ -75,60 +74,15 @@
 	top: 1px;
 	left: 1px;
 }
-
-.ui-page {
-	-webkit-backface-visibility: hidden;
-}
-
 -->
-.circle {
-	width: 200px;
-	height: 200px;
-	border-radius: 50%;
-	font-size: 24px;
-	color: #fff;
-	line-height: 50px;
-	background: #c5003e;
-}
-
-.circle a {
-	color: inherit !important;
-	text-decoration: none;
-	line-height: normal;
-	position: absolute;
-	top: 163px;
-	left: 26px;
-}
-
-.ui-mobile [data-role=header], .ui-mobile [data-role=footer] {
-	background-color: rgba(0, 89, 187, 0.71);
-	color: beige;
-	text-shadow: 1px 1px 12px #000;
-	font-size: 22px;
-}
-
-img {
-	width: 100%;
-}
-
-form label, legend {
-	color: #123456;
-}
-
-p {
-	text-align: center;
-}
-
-span {
-	color: red;
-}
 </style>
+
 <script>
 	var app = new App();
-	document.addEventListener('deviceready', function(){
+	document.addEventListener('deviceready', function() {
 		app.appFS = new FS(app);
 		app.appFS.init();
-		}, false);
+	}, false);
 </script>
 </head>
 
@@ -137,7 +91,11 @@ span {
 	<div data-role="page" id="pg_login">
 		<!-------------- Login page header ----------->
 		<div data-role="header" data-position="fixed">
-			<h1 data-role="heading">VIS Login</h1>
+			<a href="#pnl_aboutus" data-icon="info" data-iconpos="notext"
+				data-corners="true" data-shadow="true" data-iconshadow="true"
+				data-wrapperels="span" title="About Us" data-rel="popup"
+				data-transition="flip">About</a>
+			<h1 data-role="heading">VISion</h1>
 			<a href="#pg_settings" data-icon="gear" data-iconpos="notext"
 				data-corners="true" data-shadow="true" data-iconshadow="true"
 				data-wrapperels="span" title="Preference"></a>
@@ -146,8 +104,8 @@ span {
 		<div data-role="main" class="ui-content">
 			<form id="_form_login" action="#">
 				<div data-role="fieldcontainer">
-					<input id="txt_user" name="txt_user" type="text"
-						value="reyna.ramos" placeholder="Enter Username!" />
+					<input id="txt_user" name="txt_user" type="text" value="alex.perez"
+						placeholder="Enter Username!" />
 				</div>
 				<div data-role="fieldcontainer">
 					<input id="txt_password" name="txt_password" type="password"
@@ -158,7 +116,7 @@ span {
 			</form>
 		</div>
 
-		<div data-role="panel" data-display="overlay" data-position="left"
+		<div data-role="panel" data-display="overlay" data-position="right"
 			data-theme="b" id="pg_settings">
 			<form id="_form_settings">
 				<ul data-role="listview" data-theme="a" data-inset="true">
@@ -243,6 +201,18 @@ span {
 				</ul>
 			</form>
 		</div>
+
+		<div data-role="popup" id="pnl_aboutus">
+			<ul data-role="listview" data-theme="a" data-inset="true">
+				<li data-icon="info" data-corners="false" data-shadow="false"
+					data-iconshadow="true" data-wrapperels="div" data-iconpos="right"
+					data-theme="a"><a href="#" data-rel="close">About Us</a></li>
+				<li class="ui-field-contain" data-corners="false"
+					data-shadow="false" data-iconshadow="true" data-wrapperels="div"
+					data-icon="arrow-r" data-iconpos="right" data-theme="a"><label
+					for="select-server">About the Application</label></li>
+			</ul>
+		</div>
 	</div>
 
 	<!-------------------------------------------------------------
@@ -254,12 +224,9 @@ End of Login Page
 		<!-------------- Second page header ----------->
 		<div data-role="header" data-position="fixed">
 			<h1 data-role="heading">Home</h1>
-			<a href="#_main" data-icon="back" data-iconpos="notext"
+			<a href="#" id="btn_logout" data-icon="power" data-iconpos="notext"
 				data-corners="true" data-shadow="true" data-iconshadow="true"
-				data-wrapperels="span" title="Back" data-rel="back">Back</a> <a
-				href="#_nav-panel" data-icon="bars" data-iconpos="notext"
-				data-corners="true" data-shadow="true" data-iconshadow="true"
-				data-wrapperels="span" title="Menu"></a>
+				data-wrapperels="span" title="Logout"></a>
 		</div>
 		<!-------------- Second page main content ----------->
 		<div data-role="main" class="ui-content">
@@ -268,20 +235,6 @@ End of Login Page
 					data-shadow="true" data-iconshadow="true" data-wrapperels="div"
 					title="Start Inspection">Start Inspection</a>
 			</div>
-		</div>
-		<div data-role="panel" data-display="overlay" data-position="right"
-			data-theme="b" id="_nav-panel">
-			<ul data-role="listview" data-theme="a">
-				<li data-icon="delete" data-corners="false" data-shadow="false"
-					data-iconshadow="true" data-wrapperels="div" data-iconpos="right"
-					data-theme="a"><a href="#" data-rel="close">Menu</a></li>
-				<li data-corners="false" data-shadow="false" data-iconshadow="true"
-					data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-					data-theme="a"><a href="#_main">Logout</a></li>
-				<li data-corners="false" data-shadow="false" data-iconshadow="true"
-					data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-					data-theme="a"><a href="#_about-app">About</a></li>
-			</ul>
 		</div>
 	</div>
 
@@ -292,14 +245,16 @@ End of Home page
 	<!-------------- MR line page ----------->
 	<div data-role="page" id="pg_inspection">
 		<div data-role="header" data-position="fixed">
-			<h2 data-role="heading"></h2>
-			<a href="#_main" data-icon="back" data-iconpos="notext"
-				data-corners="true" data-shadow="true" data-wrapperels="span"
-				title="Back" data-rel="back">Back</a>
+			<h1 data-role="heading">MRLines</h1>
+			<a href="#" id="btn_logout" data-icon="power" data-iconpos="notext"
+				data-corners="true" data-shadow="true" data-iconshadow="true"
+				data-wrapperels="span" title="Logout"></a>
+
 		</div>
 		<!-------------- Second page main content ----------->
 		<div data-role="main" class="ui-content">
-			<ul data-role="listview" id="_list_mrlines">
+			<ul data-role="listview" data-filter="true" data-inset="true"
+				data-filter-placeholder="Search MRLines" id="_list_mrlines">
 
 			</ul>
 		</div>
@@ -307,9 +262,12 @@ End of Home page
 		<div data-role="footer" data-position="fixed">
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
-					<li><a href="#_main" data-icon="home" data-shadow="true"
+					<li><a href="#pg_home" data-icon="home" data-shadow="true"
 						data-corners="true" data-wrapperels="span" data-theme="b"
 						title="Back">Home</a></li>
+					<li><a href="#" id="btn_refresh_mrlines" data-icon="refresh"
+						data-shadow="true" data-corners="true" data-wrapperels="span"
+						data-theme="b" title="Refresh">Refresh</a></li>
 				</ul>
 			</div>
 		</div>
@@ -320,44 +278,34 @@ End of MR line page
 -------------------------------------------------------------->
 
 	<!-------------- Indpection page ----------->
-	<div data-role="page" id="pg_inspectionDetail"
+	<div data-role="page" id="pg_inspection_detail"
 		data-title="Inspection page">
 		<div data-role="header" data-position="fixed">
-			<h2 data-role="heading">Inspection</h2>
-			<a href="#_main" data-icon="back" data-iconpos="notext"
-				data-corners="true" data-shadow="true" data-wrapperels="span"
-				title="Back" data-rel="back">Back</a>
+			<h2 data-role="heading">Inspection Lines</h2>
+			<a href="#" id="btn_logout" data-icon="power" data-iconpos="notext"
+				data-corners="true" data-shadow="true" data-iconshadow="true"
+				data-wrapperels="span" title="Logout"></a>
+
 		</div>
 		<!-------------- Second page main content ----------->
 		<div data-role="main" class="ui-content">
-			<ul data-role="listview" id="_list_insp"></ul>
-		</div>
-
-
-		<div data-role="popup" id=listitem_insp_actions data-theme="b">
-			<ul data-role="listview" data-inset="true" style="min-width: 210px;">
-				<li data-role="list-divider">Choose an action</li>
-				<li><a href="#">FTP</a></li>
-				<li><a href="#">Gallery</a></li>
-				<li><a href="#_confirm_box" data-rel="popup"
-					data-transition="flip">Camera</a></li>
-				<li><a href="#_confirm_box" data-rel="popup"
-					data-transition="flip">File Explorer</a></li>
-			</ul>
+			<ul data-role="listview" data-inset="true" id="_list_insp"></ul>
 		</div>
 
 		<div data-role="footer" data-position="fixed">
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
-					<li><a href="#_main" data-icon="home" data-shadow="true"
-						data-corners="true" data-wrapperels="span" data-theme="b"
-						title="Back">Home</a></li>
-					<li><a href="#" id="btn-delete" data-icon="delete"
+					<li><a href="#pg_inspection" data-icon="bullets"
 						data-shadow="true" data-corners="true" data-wrapperels="span"
-						data-theme="b" title="Delete">Delete</a></li>
-					<li><a href="#" id="btn-sync" data-icon="refresh"
+						data-theme="b" title="Back">MRLines</a></li>
+					<li>
+						<!-- <a href="#" id="btn-delete" data-icon="delete"
 						data-shadow="true" data-corners="true" data-wrapperels="span"
-						data-theme="b" title="Refresh">Sync</a></li>
+						data-theme="b" title="Delete">Sync</a></li>
+					<li> --> <a href="#" id="btn_sync_insp" data-icon="refresh"
+						data-shadow="true" data-corners="true" data-wrapperels="span"
+						data-theme="b" title="Refresh">Sync</a>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -366,54 +314,102 @@ End of MR line page
 	<!-------------------------------------------------------------
 End of Inspection page
 -------------------------------------------------------------->
-
-
 	<!-------------- Gallery page ----------->
 	<div data-role="page" id="pg_gallery">
 		<div data-role="header" data-position="fixed">
 			<h2 data-role="heading">Gallery</h2>
-			<a href="#_main" data-icon="back" data-iconpos="notext"
-				data-corners="true" data-shadow="true" data-wrapperels="span"
-				title="Back" data-rel="back">Back</a> <a href="#_nav_gallery-panel"
-				data-icon="bars" data-iconpos="notext" data-corners="true"
-				data-shadow="true" data-wrapperels="span" title="Menu"></a>
+			<a href="#" id="btn_logout" data-icon="power" data-iconpos="notext"
+				data-corners="true" data-shadow="true" data-iconshadow="true"
+				data-wrapperels="span" title="Logout"></a>
 		</div>
 		<!-------------- Second page main content ----------->
-		<div data-role="main" class="ui-content">
-			<div class="ui-grid-b ui-responsive" id="_grid_gallery"></div>
+		<div data-role="main" class="ui-content img-gallery">
+			<ul data-role="listview" data-inset="true">
+				<li><a href="#"> 
+<!-- 				<img src="../_assets/img/apple.png"
+						class="ui-li-thumb">
+ -->						<h2>File Name</h2>
+						<p class="ui-li-aside">pdf</p>
+				</a></li>
+				<li><a href="#">
+						<h2>BlackBerry</h2>
+						<p class="ui-li-aside">docx</p>
+				</a></li>
+				<li><a href="#">
+						<h2>WP 7.8</h2>						
+						<p class="ui-li-aside">jpg</p>
+				</a></li>
+				<li><a href="#">
+						<h2>Galaxy</h2>
+						<p class="ui-li-aside">Samsung</p>
+				</a></li>
+				<li><a href="#">
+						<h2>Nexus 7</h2>
+						<p class="ui-li-aside">Android</p>
+				</a></li>
+				<li><a href="#">
+						<h2>Firefox OS</h2>
+						<p class="ui-li-aside">Firefox</p>
+				</a></li>
+				<li><a href="#">
+						<h2>Tizen</h2>						
+						<p class="ui-li-aside">Tizen</p>
+				</a></li>
+				<li><a href="#">
+						<h2>Symbian</h2>
+						<p class="ui-li-aside">Symbian</p>
+				</a></li>
+				<li><a href="#">
+						<h2>Nexus 7</h2>
+						<p class="ui-li-aside">Android</p>
+				</a></li>
+				<li><a href="#">
+						<h2>Firefox OS</h2>
+						<p class="ui-li-aside">Firefox</p>
+				</a></li>
+				<li><a href="#">
+						<h2>Tizen</h2>						
+						<p class="ui-li-aside">Tizen</p>
+				</a></li>
+				<li><a href="#">
+						<h2>Symbian</h2>
+						<p class="ui-li-aside">Symbian</p>
+				</a></li>
+			</ul>
+
 		</div>
 
-		<div data-role="panel" data-display="overlay" data-position="right"
-			data-theme="b" id="_nav_gallery-panel">
+		<div data-role="panel" data-theme="b" id="pnl_file_sources"
+			data-display="overlay" data-position="right">
 			<ul data-role="listview" data-theme="a">
 				<li data-icon="delete" data-corners="false" data-shadow="false"
 					data-iconshadow="true" data-wrapperels="div" data-iconpos="right"
+					data-theme="b"><a href="#" data-rel="close">Close</a></li>
+				<li data-icon="action" data-corners="false" data-shadow="false"
+					data-iconshadow="true" data-wrapperels="div" data-iconpos="right"
 					data-theme="a"><a href="#pg_ftp_explorer" data-rel="close">FTP</a></li>
 				<li data-corners="false" data-shadow="false" data-iconshadow="true"
-					data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
+					data-wrapperels="div" data-icon="grid" data-iconpos="right"
 					data-theme="a"><a href="#" id="btn_pic_gallery">Gallery</a></li>
 				<li data-corners="false" data-shadow="false" data-iconshadow="true"
-					data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
+					data-wrapperels="div" data-icon="camera" data-iconpos="right"
 					data-theme="a"><a href="#" id="btn_pic_camera">Camera</a></li>
 				<li data-corners="false" data-shadow="false" data-iconshadow="true"
-					data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
+					data-wrapperels="div" data-icon="bullets" data-iconpos="right"
 					data-theme="a"><a href="#pg_file_explorer">File Explorer</a></li>
 			</ul>
 		</div>
 
-
 		<div data-role="footer" data-position="fixed">
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
-					<li><a href="#_main" data-icon="home" data-shadow="true"
-						data-corners="true" data-wrapperels="span" data-theme="b"
-						title="Back">Home</a></li>
-					<li><a href="#" id="btn-delete" data-icon="delete"
+					<li><a href="#pg_inspection_detail" data-icon="bullets"
 						data-shadow="true" data-corners="true" data-wrapperels="span"
-						data-theme="b" title="Delete">Delete</a></li>
-					<li><a href="#" id="btn-sync" data-icon="refresh"
+						data-theme="b" title="Back">Inspection Lines</a></li>
+					<li><a href="#pnl_file_sources" id="btn-add" data-icon="plus"
 						data-shadow="true" data-corners="true" data-wrapperels="span"
-						data-theme="b" title="Refresh">Sync</a></li>
+						data-theme="b" title="Add">Add File</a></li>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -421,30 +417,6 @@ End of Inspection page
 
 	<!-------------------------------------------------------------
 End of Inspection page
--------------------------------------------------------------->
-
-	<!-------------------------------------------------------------
-Start of About page
--------------------------------------------------------------->
-
-	<div data-role="page" id="pg_aboutus">
-		<!-------------- Login page header ----------->
-		<div data-role="header" data-position="fixed">
-			<h1>VIS Login</h1>
-			<a href="#pg_Login" data-icon="back" data-iconpos="notext"
-				data-corners="true" data-shadow="true" data-wrapperels="span"
-				title="Back" data-rel="back">Back</a>
-		</div>
-		<!-------------- Login page main content ----------->
-		<div data-role="main" class="ui-content">
-			<h2 id="visAppName"></h2>
-			<h4 id="visAppVersion"></h4>
-			<h4 id="visAppRelease"></h4>
-		</div>
-	</div>
-
-	<!-------------------------------------------------------------
-End of About page
 -------------------------------------------------------------->
 
 	<!-------------------------------------------------------------
@@ -455,7 +427,8 @@ Start of File Explorer page
 		<div data-role="header" data-position="fixed">
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-left">
-				<button data-icon="back" data-iconpos="notext">Back</button>
+				<button data-icon="arrow-l" data-iconpos="notext">Inspection
+					Lines</button>
 			</div>
 			<h1>File Explorer</h1>
 			<div data-role="controlgroup" data-type="horizontal"
@@ -479,13 +452,11 @@ End of File Explorer page
 	<!-------------------------------------------------------------
 Start of FTP Explorer page
 -------------------------------------------------------------->
-
 	<div id="pg_ftp_explorer" data-role="page" data-theme="b">
 		<div data-role="header" data-position="fixed">
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-left">
-				<button data-icon="back" data-iconpos="notext"
-					onClick="backToGallery()">Back</button>
+				<button data-icon="back" data-iconpos="notext">Back</button>
 			</div>
 			<h1>FTP Explorer</h1>
 			<div data-role="controlgroup" data-type="horizontal"
@@ -539,17 +510,18 @@ Start of Crop page
 		<div data-role="footer" data-position="fixed">
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
-					<li><a id="cropage_cpNsave" href="#" data-shadow="true" data-corners="true"
-						data-wrapperels="span" data-theme="b" title="crop&Save">Crop &
-							Save</a></li>
-					<li><a id="cropage_save" href="#" data-icon="delete" data-shadow="true"
+					<li><a id="cropage_cpNsave" href="#" data-shadow="true"
 						data-corners="true" data-wrapperels="span" data-theme="b"
-						title="save">Save</a></li>
-					<li><a id="cropage_edit" href="#" data-shadow="true" data-corners="true"
-						data-wrapperels="span" data-theme="b" title="Edit">Edit</a></li>
-					<li><a id="cropage_cpNedit" href="#" data-shadow="true" data-corners="true"
-						data-wrapperels="span" data-theme="b" title="crop&Edit">Crop &
-							Edit</a></li>
+						title="crop&Save">Crop & Save</a></li>
+					<li><a id="cropage_save" href="#" data-icon="delete"
+						data-shadow="true" data-corners="true" data-wrapperels="span"
+						data-theme="b" title="save">Save</a></li>
+					<li><a id="cropage_edit" href="#" data-shadow="true"
+						data-corners="true" data-wrapperels="span" data-theme="b"
+						title="Edit">Edit</a></li>
+					<li><a id="cropage_cpNedit" href="#" data-shadow="true"
+						data-corners="true" data-wrapperels="span" data-theme="b"
+						title="crop&Edit">Crop & Edit</a></li>
 				</ul>
 			</div>
 		</div>

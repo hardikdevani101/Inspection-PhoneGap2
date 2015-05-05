@@ -9,6 +9,26 @@ var AppCache = function(app) {
 	this.settingInfo = {};
 	this.appInfo = {};
 	this.pages = [];
+	this.ftpServers= [];
+	this.mrLines= [];
+	this.inspLines= {};
+}
+
+
+AppCache.prototype.reset = function() {
+	var _self = this
+	this.app = app;
+	this.session = {
+		m_inoutline_id : '',
+		x_instructionline_id : ''
+	}
+	this.warehouseList = [];
+	this.settingInfo = {};
+	this.appInfo = {};
+	this.pages = [];
+	this.ftpServers= [];
+	this.mrLines= [];
+	this.inspLines= {};
 }
 
 AppCache.prototype.addPage = function(pageid, page) {
