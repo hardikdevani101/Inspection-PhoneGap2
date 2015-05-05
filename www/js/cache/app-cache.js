@@ -12,6 +12,7 @@ var AppCache = function(app) {
 	this.ftpServers= [];
 	this.mrLines= [];
 	this.inspLines= {};
+	this.inspFiles= {};
 }
 
 
@@ -29,6 +30,7 @@ AppCache.prototype.reset = function() {
 	this.ftpServers= [];
 	this.mrLines= [];
 	this.inspLines= {};
+	this.inspFiles= {};
 }
 
 AppCache.prototype.addPage = function(pageid, page) {

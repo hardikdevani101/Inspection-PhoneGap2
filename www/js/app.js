@@ -43,6 +43,7 @@ var App = function() {
 	this.editCtx;
 	this.bValue = 50;
 	this.cValue = 50;
+	DataTypes=["JPEG","JPG","BMP","PNG","GIF"];
 	this.onDeviceReady();
 };
 
@@ -79,6 +80,7 @@ App.prototype.onDeviceReady = function() {
 	});
 
 	// Initiate file-storage on page load.
+	
 	// _self.fileUtil = new FileUtils(_self);
 
 	$(document).on("pagecreate", "#pg_login", function(event) {

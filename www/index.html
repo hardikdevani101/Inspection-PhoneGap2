@@ -80,6 +80,8 @@
 <script>
 	var app = new App();
 	document.addEventListener('deviceready', function() {
+
+		// Initiate file-storage on page load.
 		app.appFS = new FS(app);
 		app.appFS.init();
 	}, false);
@@ -91,14 +93,15 @@
 	<div data-role="page" id="pg_login">
 		<!-------------- Login page header ----------->
 		<div data-role="header" data-position="fixed">
+			
+			<a href="#pg_settings" data-icon="gear" data-iconpos="notext"
+				data-corners="true" data-shadow="true" data-iconshadow="true"
+				data-wrapperels="span" title="Preference"></a>
+			<h1 data-role="heading">VISion</h1>
 			<a href="#pnl_aboutus" data-icon="info"
 				data-corners="true" data-shadow="true" data-iconshadow="true"
 				data-wrapperels="span" title="About Us" data-rel="popup"
 				data-transition="flip">About</a>
-			<h1 data-role="heading">VISion</h1>
-			<a href="#pg_settings" data-icon="gear" data-iconpos="notext"
-				data-corners="true" data-shadow="true" data-iconshadow="true"
-				data-wrapperels="span" title="Preference"></a>
 		</div>
 		<!-------------- Login page main content ----------->
 		<div data-role="main" class="ui-content">
@@ -116,7 +119,7 @@
 			</form>
 		</div>
 
-		<div data-role="panel" data-display="overlay" data-position="right"
+		<div data-role="panel" data-position="left"
 			data-theme="b" id="pg_settings">
 			<form id="_form_settings">
 				<ul data-role="listview" data-theme="a" data-inset="true">
@@ -324,63 +327,19 @@ End of Inspection page
 		</div>
 		<!-------------- Second page main content ----------->
 		<div data-role="main" class="ui-content img-gallery">
-			<ul data-role="listview" data-inset="true">
-				<li><a href="#"> <!-- 				<img src="../_assets/img/apple.png"
+			<ul data-role="listview" id="ls_inspFiles" data-inset="true">
+				<!-- <li><a href="#"> 				<img src="../_assets/img/apple.png"
 						class="ui-li-thumb">
- -->
+
 						<h2>File Name</h2>
 						<p class="ui-li-aside">pdf</p>
-				</a></li>
-				<li><a href="#">
-						<h2>BlackBerry</h2>
-						<p class="ui-li-aside">docx</p>
-				</a></li>
-				<li><a href="#">
-						<h2>WP 7.8</h2>
-						<p class="ui-li-aside">jpg</p>
-				</a></li>
-				<li><a href="#">
-						<h2>Galaxy</h2>
-						<p class="ui-li-aside">Samsung</p>
-				</a></li>
-				<li><a href="#">
-						<h2>Nexus 7</h2>
-						<p class="ui-li-aside">Android</p>
-				</a></li>
-				<li><a href="#">
-						<h2>Firefox OS</h2>
-						<p class="ui-li-aside">Firefox</p>
-				</a></li>
-				<li><a href="#">
-						<h2>Tizen</h2>
-						<p class="ui-li-aside">Tizen</p>
-				</a></li>
-				<li><a href="#">
-						<h2>Symbian</h2>
-						<p class="ui-li-aside">Symbian</p>
-				</a></li>
-				<li><a href="#">
-						<h2>Nexus 7</h2>
-						<p class="ui-li-aside">Android</p>
-				</a></li>
-				<li><a href="#">
-						<h2>Firefox OS</h2>
-						<p class="ui-li-aside">Firefox</p>
-				</a></li>
-				<li><a href="#">
-						<h2>Tizen</h2>
-						<p class="ui-li-aside">Tizen</p>
-				</a></li>
-				<li><a href="#">
-						<h2>Symbian</h2>
-						<p class="ui-li-aside">Symbian</p>
-				</a></li>
+				</a></li> -->
 			</ul>
 
 		</div>
 
 		<div data-role="panel" data-theme="b" id="pnl_file_sources"
-			data-display="overlay" data-position="right">
+			data-position="right">
 			<ul data-role="listview" data-theme="a">
 				<li data-icon="delete" data-corners="false" data-shadow="false"
 					data-iconshadow="true" data-wrapperels="div" data-iconpos="right"

@@ -12,7 +12,7 @@ DB.prototype.init = function(success, error) {
 	if (typeof (success) === "function") {
 		successCallback = success;
 	}
-	var errorCallback = _self.error;
+	var errorCallback = _self.errorCB;
 	if (typeof (error) === "function") {
 		errorCallback = error;
 	}
@@ -28,12 +28,17 @@ DB.prototype.init = function(success, error) {
 								.executeSql('CREATE TABLE IF NOT EXISTS '
 										+ ' vis_gallery '
 										+ ' (mr_line,insp_line DEFAULT "0",in_out_id DEFAULT "0",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F")');
-					}, _self.successCallback, _self.errorCallback);
+					}, _self.errorCallback, _self.successCallback);
 }
 
 DB.prototype.addGalleryEntry = function(M_InOutLine_ID, X_INSTRUCTIONLINE_ID,
 		M_INOUT_ID, fileName, fileFullPath) {
 	var _self = this;
+	console.log("Add Entry");
+	console.log("M_InOutLine_ID" + M_InOutLine_ID);
+	console.log("X_INSTRUCTIONLINE_ID" + X_INSTRUCTIONLINE_ID);
+	console.log("M_INOUT_ID" + M_INOUT_ID);
+
 	_self.dbstore
 			.transaction(
 					function(tx) {
@@ -58,7 +63,17 @@ DB.prototype.addGalleryEntry = function(M_InOutLine_ID, X_INSTRUCTIONLINE_ID,
 									+ fileName
 									+ '","' + fileFullPath + '")';
 						}
-						tx.executeSql(sqlQuery);
+						console.log(sqlQuery);
+						tx.executeSql(sqlQuery, [], function(tx, results) {
+							if (!results.rowsAffected) {
+								console.log('No rows affected!');
+								return false;
+							}
+							console.log("Last inserted row ID = "
+									+ results.insertId);
+						}, function() {
+
+						});
 					}, _self.errorCB);
 }
 
@@ -69,22 +84,17 @@ DB.prototype.updateFileNameGalleryEntry = function(M_InOutLine_ID,
 		var sqlQuery;
 
 		if (X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null) {
-			sqlQuery = 'UPDATE vis_gallery SET imgUpload="T",name="'
-					+ fileName + '" WHERE file="' + filePath
-					+ '" and in_out_id="' + InspNumber + '"';
+			sqlQuery = 'UPDATE vis_gallery SET imgUpload="T",name="' + fileName
+					+ '" WHERE file="' + fileFullPath + '" and in_out_id="'
+					+ M_INOUT_ID + '"';
 		} else {
-			sqlQuery = 'UPDATE vis_gallery SET imgUpload="T",name="'
-					+ fileName + '" WHERE file="' + filePath
-					+ '" and insp_line="' + InspNumber + '"';
+			sqlQuery = 'UPDATE vis_gallery SET imgUpload="T",name="' + fileName
+					+ '" WHERE file="' + fileFullPath + '" and insp_line="'
+					+ X_INSTRUCTIONLINE_ID + '"';
 		}
 
 		tx.executeSql(sqlQuery);
-	}, _self.errorCB, function() {
-		/*
-		 * setUploadedImg(fnEntries.name); imgUploadCount = imgUploadCount - 1;
-		 * if (callBack && imgUploadCount == 0) callBack();
-		 */
-	});
+	}, _self.errorCB, _self.success);
 }
 
 DB.prototype.errorCB = function(err) {
@@ -92,6 +102,5 @@ DB.prototype.errorCB = function(err) {
 }
 
 DB.prototype.success = function(tx, results) {
-	console.log("Success processing SQL - TX: " + tx);
-	console.log("Success processing SQL: " + results);
+	console.log("Success processing SQL");
 }

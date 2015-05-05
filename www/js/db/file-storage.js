@@ -57,6 +57,11 @@ FS.prototype.init = function() {
 	}
 }
 
+FS.prototype.getExtention = function(Fname) {
+	var tmpArray = Fname.split('.');
+	return tmpArray.pop();
+}
+
 FS.prototype.saveVISFile = function(fileData) {
 	var _self = this;
 	var date = new Date;
@@ -81,16 +86,16 @@ FS.prototype.saveVISFile = function(fileData) {
 								.createWriter(
 										function(writer) {
 											writer.onwrite = function(evt) {
-
 												var M_InOutLine_ID = _self.app.appCache.session.m_inoutline_id;
 												var X_INSTRUCTIONLINE_ID = _self.app.appCache.session.x_instructionline_id;
 												var M_INOUT_ID = _self.app.appCache.session.M_INOUT_ID;
-
-												_self.app.appDB.addGalleryEntry(
-														M_InOutLine_ID,
-														X_INSTRUCTIONLINE_ID,
-														M_INOUT_ID, fileName,
-														fileFullPath);
+												_self.app.appDB
+														.addGalleryEntry(
+																M_InOutLine_ID,
+																X_INSTRUCTIONLINE_ID,
+																M_INOUT_ID,
+																fileName,
+																fileFullPath);
 												$.mobile
 														.changePage("#pg_inspectionDetail");
 												_self.app.appFTPUtil
@@ -104,6 +109,25 @@ FS.prototype.saveVISFile = function(fileData) {
 FS.prototype.getSDPath = function(Fname) {
 	var tmpArray = Fname.split('mnt/sdcard');
 	return tmpArray.pop();
+}
+
+FS.prototype.getFileName = function(tmpFile) {
+	var tmpArray = tmpFile.split('/');
+	return tmpArray.pop();
+}
+
+FS.prototype.getVISFile = function(Fpath, inspID, callBack) {
+	var _self = this;
+	_self.fileSystem.root.getFile(Fpath, null, function(fileSystem) {
+		fileSystem.file(function(file) {
+			var reader = new FileReader();
+			reader.onloadend = function(evt) {
+				console.log("Read as data URL");
+				callBack(Fpath, inspID, evt.target.result);
+			};
+			reader.readAsDataURL(file);
+		}, _self.errorHandler);
+	}, _self.errorHandler);
 }
 
 FS.prototype.getFileByURL = function(url, callback) {

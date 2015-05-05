@@ -9,7 +9,7 @@ Tbl_VISGallery.prototype.addFile = function(fileInfo, success, error) {
 	if (typeof (success) === "function") {
 		successCallback = success;
 	}
-	var errorCallback = this.appDB.error;
+	var errorCallback = this.appDB.errorCB;
 	if (typeof (error) === "function") {
 		errorCallback = error;
 	}
@@ -47,31 +47,37 @@ Tbl_VISGallery.prototype.getFilesByMRInfo = function(fileInfo, sucsses, error) {
 	if (typeof (success) === "function") {
 		successCallback = success;
 	}
-	var errorCallback = this.appDB.error;
+	var errorCallback = this.appDB.errorCB;
 	if (typeof (error) === "function") {
 		errorCallback = error;
 	}
+	var sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
+		+ fileinfo.M_InOutLine_ID + '" and insp_line="'
+		+ fileinfo.X_INSTRUCTIONLINE_ID + '"';
+	console.log("DB query " + sqlQuery);
+	
 	this.appDB.dbstore.transaction(function(tx) {
-		var sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
-				+ fileinfo.M_InOutLine_ID + '" and in_out_id="'
-				+ fileinfo.M_INOUT_ID + '"';
 		tx.executeSql(sqlQuery, [], successCallback, errorCallback);
 	}, errorCallback);
 }
 
-Tbl_VISGallery.prototype.getFilesByInspInfo = function(fileInfo, sucsses, error) {
+Tbl_VISGallery.prototype.getFilesByInspInfo = function(fileInfo, success, error) {
 	var successCallback = this.appDB.success;
 	if (typeof (success) === "function") {
 		successCallback = success;
 	}
-	var errorCallback = this.appDB.error;
+	var errorCallback = this.appDB.errorCB;
 	if (typeof (error) === "function") {
 		errorCallback = error;
 	}
+	console.log("Get Entry");
+	console.log("M_InOutLine_ID" + fileInfo.M_InOutLine_ID);
+	console.log("X_INSTRUCTIONLINE_ID" + fileInfo.X_INSTRUCTIONLINE_ID);
 	this.appDB.dbstore.transaction(function(tx) {
 		sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
-				+ fileinfo.M_InOutLine_ID + '" and insp_line="'
-				+ fileinfo.X_INSTRUCTIONLINE_ID + '"';
+				+ fileInfo.M_InOutLine_ID + '" and insp_line="'
+				+ fileInfo.X_INSTRUCTIONLINE_ID + '"';
+		console.log("DB query " + sqlQuery);
 		tx.executeSql(sqlQuery, [], successCallback, errorCallback);
 	}, errorCallback);
 }
@@ -81,7 +87,7 @@ Tbl_VISGallery.prototype.addFileInfo = function(fileInfo, success, error) {
 	if (typeof (success) === "function") {
 		successCallback = success;
 	}
-	var errorCallback = this.appDB.error;
+	var errorCallback = this.appDB.errorCB;
 	if (typeof (error) === "function") {
 		errorCallback = error;
 	}
@@ -117,7 +123,7 @@ Tbl_VISGallery.prototype.getFilesToBeDeleted = function(fileInfo, success,
 	if (typeof (success) === "function") {
 		successCallback = success;
 	}
-	var errorCallback = this.appDB.error;
+	var errorCallback = this.appDB.errorCB;
 	if (typeof (error) === "function") {
 		errorCallback = error;
 	}
@@ -162,7 +168,7 @@ Tbl_VISGallery.prototype.discardGallery = function(fileInfo, success, error) {
 	if (typeof (success) === "function") {
 		successCallback = success;
 	}
-	var errorCallback = this.appDB.error;
+	var errorCallback = this.appDB.errorCB;
 	if (typeof (error) === "function") {
 		errorCallback = error;
 	}
@@ -171,7 +177,7 @@ Tbl_VISGallery.prototype.discardGallery = function(fileInfo, success, error) {
 
 	var deleteFiles = function(tx, results) {
 		var inCls = [];
-		for ( var i = 0; i < size; i++) {
+		for (var i = 0; i < size; i++) {
 			inCls.push(results.rows.item(i).id);
 		}
 		var sqlQuery = "Delete From vis_gallery where id in (" + inCls + ")=";// TODO
@@ -186,7 +192,7 @@ Tbl_VISGallery.prototype.getFilesByMR = function(fileInfo, success, error) {
 	if (typeof (success) === "function") {
 		successCallback = success;
 	}
-	var errorCallback = this.appDB.error;
+	var errorCallback = this.appDB.errorCB;
 	if (typeof (error) === "function") {
 		errorCallback = error;
 	}
@@ -210,7 +216,7 @@ Tbl_VISGallery.prototype.getUploadCounts = function(fileInfo, success, error) {
 	if (typeof (success) === "function") {
 		successCallback = success;
 	}
-	var errorCallback = this.appDB.error;
+	var errorCallback = this.appDB.errorCB;
 	if (typeof (error) === "function") {
 		errorCallback = error;
 	}
@@ -248,7 +254,7 @@ Tbl_VISGallery.prototype.updateFileOnSuccess = function(fileInfo, success,
 	if (typeof (success) === "function") {
 		successCallback = success;
 	}
-	var errorCallback = this.appDB.error;
+	var errorCallback = this.appDB.errorCB;
 	if (typeof (error) === "function") {
 		errorCallback = error;
 	}
@@ -279,7 +285,7 @@ Tbl_VISGallery.prototype.removeOtherFiles = function(fileInfo, success, error) {
 	if (typeof (success) === "function") {
 		successCallback = success;
 	}
-	var errorCallback = this.appDB.error;
+	var errorCallback = this.appDB.errorCB;
 	if (typeof (error) === "function") {
 		errorCallback = error;
 	}
@@ -306,7 +312,7 @@ Tbl_VISGallery.prototype.updateFileOnUploadFailure = function(fileInfo,
 	if (typeof (success) === "function") {
 		successCallback = success;
 	}
-	var errorCallback = this.appDB.error;
+	var errorCallback = this.appDB.errorCB;
 	if (typeof (error) === "function") {
 		errorCallback = error;
 	}
