@@ -255,31 +255,36 @@ body {
 	color: #FFFFFF;
 }
 
-
-.img-gallery .ui-corner-all{
-  margin: .0em auto !important;
+.img-gallery .ui-corner-all {
+	margin: .0em auto !important;
 }
 
-.img-gallery .ui-body{
+.img-gallery .ui-body {
 	padding: 0px;
-    margin: 0 auto;
-    background: transperant !important;
-  }
+	margin: 0 auto;
+	background: transperant !important;
+}
+
+.img-gallery .selected-file {
+	border: 2px solid rgb(187, 19, 62) !important;
+	background: url(../img/plus.png) no-repeat !important;
+}
+
 /* First breakpoint is 48em (768px). 3 column layout. Tiles 250x250 pixels incl. margin at the breakpoint. */
 @media ( min-width : 400px ) {
 	.img-gallery .ui-content {
 		padding: .5625em; /* 9px */
 	}
-	
-	.img-gallery  .ui-listview > .ui-li-has-thumb > .ui-btn, .ui-listview > .ui-li-static.ui-li-has-thumb {
- 		padding-left: 2.25em !important;
+	.img-gallery  .ui-listview>.ui-li-has-thumb>.ui-btn, .ui-listview>.ui-li-static.ui-li-has-thumb
+		{
+		padding-left: 2.25em !important;
 	}
-	
 	.img-gallery .ui-listview li {
 		float: left;
 		width: 14%; /* 33.3333% incl. 2 x 1.2% margin */
 		height: 60px; /* 232p */
 		margin: .5em 0.5em;
+		border: 2px solid transparent;
 	}
 	.img-gallery .ui-listview li>.ui-btn {
 		-webkit-box-sizing: border-box;
@@ -407,27 +412,26 @@ body {
 	padding: 0px 5px !important;
 }
 
-.file-explorer .ui-collapsible-set{
-	margin:0 0;
+.file-explorer .ui-collapsible-set {
+	margin: 0 0;
 }
 
 .file-explorer .ui-collapsible-content {
 	padding: 0em 1em;
 }
 
-.file-explorer  .ui-collapsible-content > .ui-listview {
-  margin: -0em -1em;
+.file-explorer  .ui-collapsible-content>.ui-listview {
+	margin: -0em -1em;
 }
 
 .file-explorer   a.ui-btn {
-  border-top-width: 0;
-  font-weight:nornal;
-  font-size: 12px !important;
-  background: rgb(81, 81, 100);
-  color: #FFFFFF;
+	border-top-width: 0;
+	font-weight: nornal;
+	font-size: 12px !important;
+	background: rgb(81, 81, 100);
+	color: #FFFFFF;
 }
 
-body .ui-body-c, body .ui-overlay-c
-{
-text-shadow:0 0 0;
+body .ui-body-c, body .ui-overlay-c {
+	text-shadow: 0 0 0;
 }
