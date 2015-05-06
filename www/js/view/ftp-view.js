@@ -1,4 +1,4 @@
-var FTPPage = function() {
+/*var FTPPage = function() {
 	this.vis_FtpUrl='';
 	this.isEditableImage = false;
 	this.pandingEditImage = [];
@@ -311,4 +311,4 @@ FTPPage.prototype.checkIsPendingEditing = function() {
 		isEditableImage = false;
 		backToGallery();
 	}
-}
+*/}

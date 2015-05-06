@@ -5,43 +5,45 @@ var CropImagePage = function(app, image64) {
 
 CropImagePage.prototype.init = function(width, height) {
 	var _self = this;
-	$('#btn_zoom-out').on('ontouchstart', function(event) {
-		console.log(event.pageX);
-	});
 
-	$('#btn_zoom-out').on('ontouchend', function(event) {
-		console.log(event.pageX);
-	});
+	$(document).on("pagebeforeshow", "#pg_gallery", function() {
+		$('#btn_zoom-out').on('ontouchstart', function(event) {
+			console.log(event.pageX);
+		});
 
-	$('#btn_zoom-in').on('ontouchstart', function(event) {
-		console.log(event.pageX);
-	});
+		$('#btn_zoom-out').on('ontouchend', function(event) {
+			console.log(event.pageX);
+		});
 
-	$('#btn_zoom-in').on('ontouchend', function(event) {
-		console.log(event.pageX);
-	});
+		$('#btn_zoom-in').on('ontouchstart', function(event) {
+			console.log(event.pageX);
+		});
 
-	$('#cropage_cpNsave').on('click', function(event) {
+		$('#btn_zoom-in').on('ontouchend', function(event) {
+			console.log(event.pageX);
+		});
 
-	});
+		$('#cropage_cpNsave').on('click', function(event) {
 
-	$('#cropage_save').on('click', function(event) {
-		_self.saveImage();
-	});
+		});
 
-	$('#cropage_edit').on('click', function(event) {
+		$('#cropage_save').on('click', function(event) {
+			_self.saveImage();
+		});
 
-	});
+		$('#cropage_edit').on('click', function(event) {
 
-	$('#cropage_cpNedit').on('click', function(event) {
+		});
 
-	});
+		$('#cropage_cpNedit').on('click', function(event) {
 
-	$('#cropImage').html(
-			[ '<img src="', _self.image64,
-					'" width="' + width + '" height="' + height + '" />' ]
-					.join(''));
-	$.mobile.changePage("#pg_cropView");
+		});
+		
+		$('#cropImage').html(
+				[ '<img src="', _self.image64,
+						'" width="' + width + '" height="' + height + '" />' ]
+						.join(''));
+	});	
 };
 
 CropImagePage.prototype.saveImage = function() {

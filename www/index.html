@@ -57,6 +57,7 @@
 <script src="js/view/login-view.js"></script>
 <script src="js/view/inspection-view.js"></script>
 <script src="js/view/gallery-view.js"></script>
+<script src="js/view/file-explorer-view.js"></script>
 <script src="js/view/cropImage-view.js"></script>
 
 <style type="text/css">
@@ -93,15 +94,14 @@
 	<div data-role="page" id="pg_login">
 		<!-------------- Login page header ----------->
 		<div data-role="header" data-position="fixed">
-			
+
 			<a href="#pg_settings" data-icon="gear" data-iconpos="notext"
 				data-corners="true" data-shadow="true" data-iconshadow="true"
 				data-wrapperels="span" title="Preference"></a>
 			<h1 data-role="heading">VISion</h1>
-			<a href="#pnl_aboutus" data-icon="info"
-				data-corners="true" data-shadow="true" data-iconshadow="true"
-				data-wrapperels="span" title="About Us" data-rel="popup"
-				data-transition="flip">About</a>
+			<a href="#pnl_aboutus" data-icon="info" data-corners="true"
+				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+				title="About Us" data-rel="popup" data-transition="flip">About</a>
 		</div>
 		<!-------------- Login page main content ----------->
 		<div data-role="main" class="ui-content">
@@ -119,17 +119,17 @@
 			</form>
 		</div>
 
-		<div data-role="panel" data-position="left"
-			data-theme="b" id="pg_settings">
+		<div data-role="panel" data-position="left" data-theme="b"
+			id="pg_settings" data-content-theme="b">
 			<form id="_form_settings">
-				<ul data-role="listview" data-theme="a" data-inset="true">
-					<li data-icon="delete" data-corners="false" data-shadow="false"
-						data-iconshadow="true" data-wrapperels="div" data-iconpos="right"
-						data-theme="a"><a href="#" data-rel="close">Settings</a></li>
+				<ul data-role="listview" data-theme="b" data-inset="true">
+					<li data-icon="delete" data-shadow="false" data-iconshadow="true"
+						data-wrapperels="div" data-iconpos="right" data-theme="b"><a
+						href="#" data-rel="close">Settings</a></li>
 
-					<li class="ui-field-contain" data-corners="false"
-						data-shadow="false" data-iconshadow="true" data-wrapperels="div"
-						data-icon="arrow-r" data-iconpos="right" data-theme="a"><label
+					<li class="ui-field-contain" data-shadow="false"
+						data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r"
+						data-iconpos="right" data-theme="b"><label
 						for="select-server">Srv</label> <select name="txt_url"
 						id="txt_url" data-native-menu="false">
 							<option value="http://10.210.23.77:8088">Production</option>
@@ -138,27 +138,25 @@
 							<option value="http://203.88.138.222:8384" selected>Logilite-Dev</option>
 					</select></li>
 
-					<li class="ui-field-contain" data-corners="false"
-						data-shadow="false" data-iconshadow="true" data-wrapperels="div"
-						data-icon="arrow-r" data-iconpos="right" data-theme="a"><label
-						for="select-lang">Lang</label> <select name="txt_lang"
-						id="txt_lang" data-native-menu="false">
+					<li class="ui-field-contain" data-shadow="false"
+						data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r"
+						data-iconpos="right" data-theme="b"><label for="select-lang">Lang</label>
+						<select name="txt_lang" id="txt_lang" data-native-menu="false">
 							<option value="en_US">English</option>
 					</select></li>
 
-					<li class="ui-field-contain" data-corners="false"
-						data-shadow="false" data-iconshadow="true" data-wrapperels="div"
-						data-icon="arrow-r" data-iconpos="right" data-theme="a"><label
+					<li class="ui-field-contain" data-shadow="false"
+						data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r"
+						data-iconpos="right" data-theme="b"><label
 						for="select-client">Client</label> <select name="txt_client"
 						id="txt_client" data-native-menu="false">
 							<option value="1000000">Velocity</option>
 					</select></li>
 
-					<li class="ui-field-contain" data-corners="false"
-						data-shadow="false" data-iconshadow="true" data-wrapperels="div"
-						data-icon="arrow-r" data-iconpos="right" data-theme="a"><label
-						for="select-role">Role</label> <select name="txt_role"
-						id="txt_role" data-native-menu="false">
+					<li class="ui-field-contain" data-shadow="false"
+						data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r"
+						data-iconpos="right" data-theme="b"><label for="select-role">Role</label>
+						<select name="txt_role" id="txt_role" data-native-menu="false">
 							<option value="1000043">Warehouse QA Team</option>
 							<option value="1000055">Warehouse QA Manager</option>
 							<option value="1000044">Warehouse Manager</option>
@@ -167,11 +165,11 @@
 							<option value="1000000">Velocity Admin</option>
 					</select></li>
 
-					<li class="ui-field-contain" data-corners="false"
-						data-shadow="false" data-iconshadow="true" data-wrapperels="div"
-						data-icon="arrow-r" data-iconpos="right" data-theme="a"><label
-						for="select-org">Org</label> <select name="txt_organization"
-						id="txt_organization" data-native-menu="false">
+					<li class="ui-field-contain" data-shadow="false"
+						data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r"
+						data-iconpos="right" data-theme="b"><label for="select-org">Org</label>
+						<select name="txt_organization" id="txt_organization"
+						data-native-menu="false">
 							<option value="0">*</option>
 							<option value="1000019">Amsterdam</option>
 							<option value="1000003">Austin</option>
@@ -179,16 +177,16 @@
 							<option value="1000001">Singapore</option>
 					</select></li>
 
-					<li class="ui-field-contain" data-corners="false"
-						data-shadow="false" data-iconshadow="true" data-wrapperels="div"
-						data-icon="arrow-r" data-iconpos="right" data-theme="a"><label
+					<li class="ui-field-contain" data-shadow="false"
+						data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r"
+						data-iconpos="right" data-theme="b"><label
 						for="select-warehouse">WH</label> <select name="txt_warehouse"
 						id="txt_warehouse" data-native-menu="false">
 					</select></li>
 
-					<li class="ui-field-contain" data-corners="false"
-						data-shadow="false" data-iconshadow="true" data-wrapperels="div"
-						data-icon="arrow-r" data-iconpos="right" data-theme="a"><label
+					<li class="ui-field-contain" data-shadow="false"
+						data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r"
+						data-iconpos="right" data-theme="b"><label
 						for="select-imgqua">Img</label> <select name="txt_imgQua"
 						id="txt_imgQua" data-native-menu="false">
 							<option value="50">50% (low)</option>
@@ -197,7 +195,7 @@
 							<option value="90">90% (higher)</option>
 							<option value="100">100% (highest)</option>
 					</select></li>
-					<li data-corners="false" data-shadow="false" data-iconshadow="true"
+					<li data-shadow="false" data-iconshadow="true"
 						data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
 						data-theme="b"><input id="btn_setting_save" type="submit"
 						data-inline="true" value="Save" data-theme="b"></li>
@@ -206,14 +204,14 @@
 		</div>
 
 		<div data-role="popup" id="pnl_aboutus">
-			<ul data-role="listview" data-theme="a" data-inset="true">
-				<li data-icon="info" data-corners="false" data-shadow="false"
-					data-iconshadow="true" data-wrapperels="div" data-iconpos="right"
-					data-theme="a"><a href="#" data-rel="close">About Us</a></li>
-				<li class="ui-field-contain" data-corners="false"
-					data-shadow="false" data-iconshadow="true" data-wrapperels="div"
-					data-icon="arrow-r" data-iconpos="right" data-theme="a"><label
-					for="select-server">About the Application</label></li>
+			<ul data-role="listview" data-theme="b" data-inset="true">
+				<li data-icon="info" data-shadow="false" data-iconshadow="true"
+					data-wrapperels="div" data-iconpos="right" data-theme="b"><a
+					href="#" data-rel="close">About Us</a></li>
+				<li class="ui-field-contain" data-shadow="false"
+					data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r"
+					data-iconpos="right" data-theme="b"><label for="select-server">About
+						the Application</label></li>
 			</ul>
 		</div>
 	</div>
@@ -228,14 +226,14 @@ End of Login Page
 		<div data-role="header" data-position="fixed">
 			<h1 data-role="heading">Home</h1>
 			<a href="#" id="btn_logout" data-icon="power" data-iconpos="notext"
-				data-corners="true" data-shadow="true" data-iconshadow="true"
-				data-wrapperels="span" title="Logout"></a>
+				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+				title="Logout"></a>
 		</div>
 		<!-------------- Second page main content ----------->
 		<div data-role="main" class="ui-content">
 			<div class="circle">
-				<a href="#pg_inspection" data-icon="action" data-corners="true"
-					data-shadow="true" data-iconshadow="true" data-wrapperels="div"
+				<a href="#pg_inspection" data-icon="action" data-shadow="true"
+					data-iconshadow="true" data-wrapperels="div"
 					title="Start Inspection">Start Inspection</a>
 			</div>
 		</div>
@@ -250,8 +248,8 @@ End of Home page
 		<div data-role="header" data-position="fixed">
 			<h1 data-role="heading">MRLines</h1>
 			<a href="#" id="btn_logout" data-icon="power" data-iconpos="notext"
-				data-corners="true" data-shadow="true" data-iconshadow="true"
-				data-wrapperels="span" title="Logout"></a>
+				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+				title="Logout"></a>
 
 		</div>
 		<!-------------- Second page main content ----------->
@@ -266,11 +264,10 @@ End of Home page
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
 					<li><a href="#pg_home" data-icon="home" data-shadow="true"
-						data-corners="true" data-wrapperels="span" data-theme="b"
-						title="Back">Home</a></li>
+						data-wrapperels="span" data-theme="b" title="Back">Home</a></li>
 					<li><a href="#" id="btn_refresh_mrlines" data-icon="refresh"
-						data-shadow="true" data-corners="true" data-wrapperels="span"
-						data-theme="b" title="Refresh">Refresh</a></li>
+						data-shadow="true" data-wrapperels="span" data-theme="b"
+						title="Refresh">Refresh</a></li>
 				</ul>
 			</div>
 		</div>
@@ -286,8 +283,8 @@ End of MR line page
 		<div data-role="header" data-position="fixed">
 			<h2 data-role="heading">Inspection Lines</h2>
 			<a href="#" id="btn_logout" data-icon="power" data-iconpos="notext"
-				data-corners="true" data-shadow="true" data-iconshadow="true"
-				data-wrapperels="span" title="Logout"></a>
+				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+				title="Logout"></a>
 
 		</div>
 		<!-------------- Second page main content ----------->
@@ -299,15 +296,15 @@ End of MR line page
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
 					<li><a href="#pg_inspection" data-icon="bullets"
-						data-shadow="true" data-corners="true" data-wrapperels="span"
-						data-theme="b" title="Back">MRLines</a></li>
+						data-shadow="true" data-wrapperels="span" data-theme="b"
+						title="Back">MRLines</a></li>
 					<li>
 						<!-- <a href="#" id="btn-delete" data-icon="delete"
-						data-shadow="true" data-corners="true" data-wrapperels="span"
+						data-shadow="true"  data-wrapperels="span"
 						data-theme="b" title="Delete">Sync</a></li>
 					<li> --> <a href="#" id="btn_sync_insp" data-icon="refresh"
-						data-shadow="true" data-corners="true" data-wrapperels="span"
-						data-theme="b" title="Refresh">Sync</a>
+						data-shadow="true" data-wrapperels="span" data-theme="b"
+						title="Refresh">Sync</a>
 					</li>
 				</ul>
 			</div>
@@ -322,8 +319,8 @@ End of Inspection page
 		<div data-role="header" data-position="fixed">
 			<h2 data-role="heading">Gallery</h2>
 			<a href="#" id="btn_logout" data-icon="power" data-iconpos="notext"
-				data-corners="true" data-shadow="true" data-iconshadow="true"
-				data-wrapperels="span" title="Logout"></a>
+				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+				title="Logout"></a>
 		</div>
 		<!-------------- Second page main content ----------->
 		<div data-role="main" class="ui-content img-gallery">
@@ -340,22 +337,19 @@ End of Inspection page
 
 		<div data-role="panel" data-theme="b" id="pnl_file_sources"
 			data-position="right">
-			<ul data-role="listview" data-theme="a">
-				<li data-icon="delete" data-corners="false" data-shadow="false"
-					data-iconshadow="true" data-wrapperels="div" data-iconpos="right"
-					data-theme="b"><a href="#" data-rel="close">Close</a></li>
-				<li data-icon="action" data-corners="false" data-shadow="false"
-					data-iconshadow="true" data-wrapperels="div" data-iconpos="right"
-					data-theme="a"><a href="#pg_ftp_explorer" data-rel="close">FTP</a></li>
-				<li data-corners="false" data-shadow="false" data-iconshadow="true"
-					data-wrapperels="div" data-icon="grid" data-iconpos="right"
-					data-theme="a"><a href="#" id="btn_pic_gallery">Gallery</a></li>
-				<li data-corners="false" data-shadow="false" data-iconshadow="true"
-					data-wrapperels="div" data-icon="camera" data-iconpos="right"
-					data-theme="a"><a href="#" id="btn_pic_camera">Camera</a></li>
-				<li data-corners="false" data-shadow="false" data-iconshadow="true"
-					data-wrapperels="div" data-icon="bullets" data-iconpos="right"
-					data-theme="a"><a href="#pg_file_explorer">File Explorer</a></li>
+			<ul data-role="listview" data-theme="b">
+				<li data-shadow="false" data-iconshadow="true" data-wrapperels="div"
+					data-icon="grid" data-iconpos="right" data-theme="b"><a
+					href="#" id="btn_pic_gallery">Gallery</a></li>
+				<li data-shadow="false" data-iconshadow="true" data-wrapperels="div"
+					data-icon="camera" data-iconpos="right" data-theme="b"><a
+					href="#" id="btn_pic_camera">Camera</a></li>
+				<li data-shadow="false" data-iconshadow="true" data-wrapperels="div"
+					data-icon="action" data-iconpos="right" data-theme="b"><a
+					href="#pg_file_explorer">File Explorer</a></li>
+				<li data-icon="cloud" data-shadow="false" data-iconshadow="true"
+					data-wrapperels="div" data-iconpos="right" data-theme="b"><a
+					href="#pg_file_explorer" data-rel="close">FTP</a></li>
 			</ul>
 		</div>
 
@@ -363,12 +357,11 @@ End of Inspection page
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
 					<li><a href="#pg_inspection_detail" data-icon="bullets"
-						data-shadow="true" data-corners="true" data-wrapperels="span"
-						data-theme="b" title="Back">Inspection Lines</a></li>
+						data-shadow="true" data-wrapperels="span" data-theme="b"
+						title="Back">Inspection Lines</a></li>
 					<li><a href="#pnl_file_sources" id="btn-add" data-icon="plus"
-						data-shadow="true" data-corners="true" data-wrapperels="span"
-						data-theme="b" title="Add">Add File</a></li>
-					</li>
+						data-shadow="true" data-wrapperels="span" data-theme="b"
+						title="Add">Add File</a></li>
 				</ul>
 			</div>
 		</div>
@@ -382,14 +375,15 @@ End of Inspection page
 Start of File Explorer page
 -------------------------------------------------------------->
 
-	<div id="pg_file_explorer" data-role="page" data-theme="b">
-		<div data-role="header" data-position="fixed">
+	<div id="pg_file_explorer" data-role="page">
+		<!-- 		<div data-role="header" data-position="fixed">
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-left">
 				<button data-icon="arrow-l" data-iconpos="notext">Inspection
 					Lines</button>
 			</div>
 			<h1>File Explorer</h1>
+
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-right">
 				<button data-icon="carat-l" data-iconpos="notext"
@@ -398,8 +392,177 @@ Start of File Explorer page
 					onClick="fileExplore()">Select</button>
 			</div>
 		</div>
-		<div role="main" class="ui-content">
-			<div id="dirContent"></div>
+ -->
+		<div data-role="header" data-position="fixed">
+			<a href="#pnl_aboutus" data-icon="tag" data-corners="true"
+				data-shadow="true" data-iconshadow="false" data-wrapperels="span"
+				title="User" data-rel="popup" data-transition="flip">5</a>
+			<h2 data-role="heading">File Explorer</h2>
+			<div data-role="controlgroup" data-type="horizontal"
+				class="ui-mini ui-btn-right">
+				<button href="#pnl_aboutus" data-icon="user" data-corners="false"
+					data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+					title="User" data-rel="popup" data-transition="flip">Hitesh</button>
+				<button href="#" id="btn_logout" data-icon="power"
+					data-corners="false" data-iconpos="notext" data-shadow="false"
+					data-iconshadow="false" data-wrapperels="span" title="Logout">SignOut</button>
+			</div>
+		</div>
+
+
+		<div data-role="main" class="ui-content">
+
+			<div class="ui-grid-b ui-responsive file-explorer-content">
+				<div class="ui-block-a file-explorer">
+					<div class="ui-corner-all custom-corners">
+						<div class="ui-bar ui-bar-c">
+							<h4>File Explorer</h4>
+						</div>
+						<div class="ui-body ui-body-b">
+							<div data-role="collapsible-set" data-mini="true"
+								data-inset="false" data-corners="false"
+								data-collapsed-icon="arrow-r" data-iconpos="right"
+								data-expanded-icon="arrow-d">
+								<div data-role="collapsible" data-mini="true"
+									data-collapsed="true" data-inset="false">
+									<h6>Root</h6>
+									<div data-role="collapsible-set" data-mini="true"
+										data-inset="false" data-corners="false"
+										data-collapsed-icon="arrow-r" data-iconpos="right"
+										data-expanded-icon="arrow-d">
+										<div data-role="collapsible" class="sub-menu"
+											data-collapsed="true" data-inset="false">
+											<h6>SubFolder</h6>
+											<ul data-role="listview" data-inset="false">
+												<li><a href="#">docs</a></li>
+												<li><a href="#">insp</a></li>
+												<li><a href="#">mrlines</a></li>
+												<li><a href="#">imps</a></li>
+												<li><a href="#">reading</a></li>
+												<li><a href="#">mostimp</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div data-role="collapsible" data-mini="true"
+									data-collapsed="true" data-inset="false">
+									<h6>Root 2</h6>
+									<div data-role="collapsible-set" data-mini="true"
+										data-inset="false" data-corners="false"
+										data-collapsed-icon="arrow-r" data-iconpos="right"
+										data-expanded-icon="arrow-d">
+										<div data-role="collapsible" class="sub-menu"
+											data-collapsed="true" data-inset="false">
+											<h6>SubFolder</h6>
+											<ul data-role="listview" data-inset="false">
+												<li><a href="#">docs</a></li>
+												<li><a href="#">insp</a></li>
+												<li><a href="#">mrlines</a></li>
+												<li><a href="#">imps</a></li>
+												<li><a href="#">reading</a></li>
+												<li><a href="#">mostimp</a></li>
+											</ul>
+										</div>
+										<div data-role="collapsible" class="sub-menu"
+											data-collapsed="true" data-inset="false">
+											<h6>SubFolder 2</h6>
+											<ul data-role="listview" data-inset="false">
+												<li><a href="#">docs</a></li>
+												<li><a href="#">insp</a></li>
+												<li><a href="#">mrlines</a></li>
+												<li><a href="#">imps</a></li>
+												<li><a href="#">reading</a></li>
+												<li><a href="#">mostimp</a></li>
+											</ul>
+										</div>
+
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="ui-grid-solo ui-responsive img-gallery">
+
+					<div class="ui-corner-all custom-corners">
+						<div class="ui-bar ui-bar-c">
+							<h4>Files</h4>
+						</div>
+						<div class="ui-body ui-body-a">
+							<ul data-role="listview" data-inset="true">
+								<li><a href="#"> <!-- 				<img src="../_assets/img/apple.png"
+						class="ui-li-thumb">
+ -->
+										<h2>File Name</h2>
+										<p class="ui-li-aside">pdf</p>
+								</a></li>
+								<li><a href="#">
+										<h2>BlackBerry</h2>
+										<p class="ui-li-aside">docx</p>
+								</a></li>
+								<li><a href="#">
+										<h2>WP 7.8</h2>
+										<p class="ui-li-aside">jpg</p>
+								</a></li>
+								<li><a href="#">
+										<h2>Galaxy</h2>
+										<p class="ui-li-aside">Samsung</p>
+								</a></li>
+								<li><a href="#">
+										<h2>Nexus 7</h2>
+										<p class="ui-li-aside">Android</p>
+								</a></li>
+								<li><a href="#">
+										<h2>Firefox OS</h2>
+										<p class="ui-li-aside">Firefox</p>
+								</a></li>
+								<li><a href="#">
+										<h2>Tizen</h2>
+										<p class="ui-li-aside">Tizen</p>
+								</a></li>
+								<li><a href="#">
+										<h2>Symbian</h2>
+										<p class="ui-li-aside">Symbian</p>
+								</a></li>
+								<li><a href="#">
+										<h2>Nexus 7</h2>
+										<p class="ui-li-aside">Android</p>
+								</a></li>
+								<li><a href="#">
+										<h2>Firefox OS</h2>
+										<p class="ui-li-aside">Firefox</p>
+								</a></li>
+								<li><a href="#">
+										<h2>Tizen</h2>
+										<p class="ui-li-aside">Tizen</p>
+								</a></li>
+								<li><a href="#">
+										<h2>Symbian</h2>
+										<p class="ui-li-aside">Symbian</p>
+								</a></li>
+							</ul>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+
+		<div data-role="footer" data-position="fixed" data-theme="b">
+			<div data-role="navbar" data-iconpos="left" data-theme="b">
+				<ul data-theme="b">
+					<li><a href="#" data-icon="check" data-shadow="true"
+						data-wrapperels="span" id="btn-finish-file-selection" title="Back">Done</a></li>
+					<li><a href="#" id="btn-add" data-icon="delete"
+						id="btn-clear-file-selection" data-shadow="true"
+						data-wrapperels="span" title="Clear Selected">Clear</a></li>
+				</ul>
+			</div>
 		</div>
 	</div>
 
@@ -447,8 +610,8 @@ Start of Crop page
 		<div data-role="header" data-position="fixed">
 			<h2 data-role="heading">Crop Image</h2>
 			<a href="#_main" data-icon="back" data-iconpos="notext"
-				data-corners="true" data-shadow="true" data-wrapperels="span"
-				title="Back" data-rel="back">Back</a>
+				data-shadow="true" data-wrapperels="span" title="Back"
+				data-rel="back">Back</a>
 		</div>
 		<div data-role="main" class="ui-content"
 			style="margin: 0; padding: 0;">
@@ -470,17 +633,16 @@ Start of Crop page
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
 					<li><a id="cropage_cpNsave" href="#" data-shadow="true"
-						data-corners="true" data-wrapperels="span" data-theme="b"
-						title="crop&Save">Crop & Save</a></li>
+						data-wrapperels="span" data-theme="b" title="crop&Save">Crop &
+							Save</a></li>
 					<li><a id="cropage_save" href="#" data-icon="delete"
-						data-shadow="true" data-corners="true" data-wrapperels="span"
-						data-theme="b" title="save">Save</a></li>
+						data-shadow="true" data-wrapperels="span" data-theme="b"
+						title="save">Save</a></li>
 					<li><a id="cropage_edit" href="#" data-shadow="true"
-						data-corners="true" data-wrapperels="span" data-theme="b"
-						title="Edit">Edit</a></li>
+						data-wrapperels="span" data-theme="b" title="Edit">Edit</a></li>
 					<li><a id="cropage_cpNedit" href="#" data-shadow="true"
-						data-corners="true" data-wrapperels="span" data-theme="b"
-						title="crop&Edit">Crop & Edit</a></li>
+						data-wrapperels="span" data-theme="b" title="crop&Edit">Crop &
+							Edit</a></li>
 				</ul>
 			</div>
 		</div>
@@ -489,6 +651,5 @@ Start of Crop page
 	<!-------------------------------------------------------------
 End of Crop page
 -------------------------------------------------------------->
-
 </body>
 </html>

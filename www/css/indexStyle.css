@@ -1,185 +1,187 @@
 @CHARSET "ISO-8859-1";
+
 * {
-    preventFocusZoom: true;
+	preventFocusZoom: true;
 }
 
 input:active[type="button"] {
-    color: #FFFFFF;
+	color: #FFFFFF;
 }
 
 .divMenuButton:active {
-    color: #FFFFFF;
+	color: #FFFFFF;
 }
 
 .login_btns:active {
-    color: #FFFFFF;
+	color: #FFFFFF;
 }
 
 .sync_btns:active {
-    color: #FFFFFF;
+	color: #FFFFFF;
 }
 
 .gallery_menubtn:active {
-    color: #FFFFFF;
+	color: #FFFFFF;
 }
 
 .InspButton:active {
-    color: #FFFFFF;
+	color: #FFFFFF;
 }
 
 input#zoom-in {
-    background-size: 25px 25px;
-    background: url(../img/minus.png) no-repeat;
-    padding: 0px;
-    border: none;
-    width: 25px;
-    height: 25px;
+	background-size: 25px 25px;
+	background: url(../img/minus.png) no-repeat;
+	padding: 0px;
+	border: none;
+	width: 25px;
+	height: 25px;
 }
 
 input#zoom-out {
-    background-size: 25px 25px;
-    background: url(../img/plus.png) no-repeat;
-    padding: 0px;
-    border: none;
-    width: 25px;
-    height: 25px;
+	background-size: 25px 25px;
+	background: url(../img/plus.png) no-repeat;
+	padding: 0px;
+	border: none;
+	width: 25px;
+	height: 25px;
 }
 
 input {
-    font-size: x-large;
+	font-size: x-large;
 }
 
 select {
-    font-size: x-large;
+	font-size: x-large;
 }
 
 .menuButton {
-    margin-top: 5%;
-    border: #000000 2px solid;
-    border-radius: 4px;
-    width: 75%;
-    height: 20%;
-    padding: 4px 0px;
+	margin-top: 5%;
+	border: #000000 2px solid;
+	border-radius: 4px;
+	width: 75%;
+	height: 20%;
+	padding: 4px 0px;
 }
 
 .page {
-    display: none;
-    text-align: center;
-    font-size: larger;
-    font-family: sans-serif;
+	display: none;
+	text-align: center;
+	font-size: larger;
+	font-family: sans-serif;
 }
 
 #disp {
-    text-align: center;
+	text-align: center;
 }
 
 .divButton {
-    float: left;
-    width: 18%;
-    padding: 25px 5%;
-    background-color: #0F96DA;
-    border: 2px solid #000000;
-    border-radius: 4px;
-    margin: .7%;
-    font-family: sans-serif;
-    font-weight: bold;
-    cursor: pointer;
+	float: left;
+	width: 18%;
+	padding: 25px 5%;
+	background-color: #0F96DA;
+	border: 2px solid #000000;
+	border-radius: 4px;
+	margin: .7%;
+	font-family: sans-serif;
+	font-weight: bold;
+	cursor: pointer;
 }
 
 .InspButton {
-    word-wrap: break-word;
-    float: left;
-    padding: 3px 3px;
-    background-color: #0F96DA;
-    border: 2px solid #000000;
-    border-radius: 4px;
-    font-family: sans-serif;
-    font-weight: bold;
-    cursor: pointer;
+	word-wrap: break-word;
+	float: left;
+	padding: 3px 3px;
+	background-color: #0F96DA;
+	border: 2px solid #000000;
+	border-radius: 4px;
+	font-family: sans-serif;
+	font-weight: bold;
+	cursor: pointer;
 }
 
 .divMenuButton {
-    float: left;
-    width: 100%;
-    background-color: #0F96DA;
-    border: 2px solid #000000;
-    border-radius: 4px;
-    margin: 5% 4% 5% 1%;
-    padding: 5px 2px;
-    font-family: sans-serif;
-    font-weight: bold;
-    cursor: pointer;
+	float: left;
+	width: 100%;
+	background-color: #0F96DA;
+	border: 2px solid #000000;
+	border-radius: 4px;
+	margin: 5% 4% 5% 1%;
+	padding: 5px 2px;
+	font-family: sans-serif;
+	font-weight: bold;
+	cursor: pointer;
 }
 
 .gallery_menubtn {
-    border: 1px solid #000000;
-    border-radius: 3px;
-    background-color: #3399CC;
-    margin-left: 10px;
-    float: left;
-    width: 80px;
-    padding: 3px;
-    font-size: larger;
+	border: 1px solid #000000;
+	border-radius: 3px;
+	background-color: #3399CC;
+	margin-left: 10px;
+	float: left;
+	width: 80px;
+	padding: 3px;
+	font-size: larger;
 }
 
 .crop_btn {
-    border: 1px solid #000000;
-    border-radius: 3px;
-    background-color: #3399CC;
-    margin: 15% 0%;
-    float: left;
-    width: 100%;
-    height: 100%;
-    padding: 5px 0px;
+	border: 1px solid #000000;
+	border-radius: 3px;
+	background-color: #3399CC;
+	margin: 15% 0%;
+	float: left;
+	width: 100%;
+	height: 100%;
+	padding: 5px 0px;
 }
 
 .login_btns {
-    border: 1px solid #000000;
-    border-radius: 3px;
-    background-color: #3399CC;
-    width: 21%;
-    margin: 0px 1%;
+	border: 1px solid #000000;
+	border-radius: 3px;
+	background-color: #3399CC;
+	width: 21%;
+	margin: 0px 1%;
 }
 
 .sync_btns {
-    border: 1px solid #000000;
-    border-radius: 3px;
-    background: #3399CC url('../img/refresh.png') no-repeat 0 0;
-    width: 48px;
-    height: 48px;
-    margin: 0 5px 10px 10px;
-    float: right;
+	border: 1px solid #000000;
+	border-radius: 3px;
+	background: #3399CC url('../img/refresh.png') no-repeat 0 0;
+	width: 48px;
+	height: 48px;
+	margin: 0 5px 10px 10px;
+	float: right;
 }
 
 .folder, .file {
-    font-family: sans-serif;
-    font-size: large;
-    cursor: pointer;
+	font-family: sans-serif;
+	font-size: large;
+	cursor: pointer;
 }
 
 .folder {
-    background-size: 30px;
-    background: url('../img/folder.jpg') no-repeat 0 0;
-    margin: 2px;
-    font-size: x-large;
-    padding: 12px 40px;
-    text-align: left;
+	background-size: 30px;
+	background: url('../img/folder.jpg') no-repeat 0 0;
+	margin: 2px;
+	font-size: x-large;
+	padding: 12px 40px;
+	text-align: left;
 }
 
 .file {
-    background-size: 30px;
-    background: url('../img/file.jpg') no-repeat 0 0;
-    margin: 2px;
-    padding: 12px 40px;
-    font-size: larger;
-    text-align: left;
+	background-size: 30px;
+	background: url('../img/file.jpg') no-repeat 0 0;
+	margin: 2px;
+	padding: 12px 40px;
+	font-size: larger;
+	text-align: left;
 }
+
 .ui-page {
 	-webkit-backface-visibility: hidden;
 }
 
 #pg_settings .ui-panel-inner {
-  padding: .2em;
+	padding: .2em;
 }
 
 .circle {
@@ -204,10 +206,10 @@ select {
 }
 
 .ui-mobile [data-role=header], .ui-mobile [data-role=footer] {
-  background-color: rgba(14, 14, 40, 0.71);
-  color: beige;
-  text-shadow: 1px 1px 12px #000;
-  /* font-size: 22px; */
+	background-color: rgba(14, 14, 40, 0.71);
+	color: beige;
+	text-shadow: 1px 1px 12px #000;
+	/* font-size: 22px; */
 }
 
 img {
@@ -227,160 +229,195 @@ span {
 }
 
 body {
-  width: 100%
-  overflow-x: hidden
-  position: absolute
-  top: 0
-  left: 0
-};
-
- .ui-panel.ui-panel-open {
-    position:fixed;
+	width: 100% overflow-x: hidden position: absolute top: 0 left: 0
 }
+
+.ui-panel.ui-panel-open {
+	position: fixed;
+}
+
 .ui-panel-inner {
-    position: absolute;
-    top: 1px;
-    left: 0;
-    right: 0;
-    bottom: 0px;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
+	position: absolute;
+	top: 1px;
+	left: 0;
+	right: 0;
+	bottom: 0px;
+	overflow: auto;
+	-webkit-overflow-scrolling: touch;
 }
 
 /* A bit custom styling */
 .img-gallery .ui-listview li .ui-btn p {
-    color: #c0c0c0;
+	color: #c0c0c0;
 }
+
 .img-gallery .ui-listview li .ui-btn .ui-li-aside {
-    color: #FFFFFF;
+	color: #FFFFFF;
 }
+
+
+.img-gallery .ui-corner-all{
+  margin: .0em auto !important;
+}
+
+.img-gallery .ui-body{
+	padding: 0px;
+    margin: 0 auto;
+    background: transperant !important;
+  }
 /* First breakpoint is 48em (768px). 3 column layout. Tiles 250x250 pixels incl. margin at the breakpoint. */
-@media ( min-width: 500px ) {
-    .img-gallery .ui-content {
-        padding: .5625em; /* 9px */
-    }
-    .img-gallery .ui-listview li {
-        float: left;
-        width: 14%; /* 33.3333% incl. 2 x 1.2% margin */
-        height: 95px; /* 232p */
-        margin: .5625em 1.2%;
-    }
-    .img-gallery .ui-listview li > .ui-btn {
-        -webkit-box-sizing: border-box; /* include padding and border in height so we can set it to 100% */
-        -moz-box-sizing: border-box;
-        -ms-box-sizing: border-box;
-        box-sizing: border-box;
-        height: 100%;
-    }
-    .img-gallery .ui-listview li.ui-li-has-thumb .ui-li-thumb {
-        height: auto; /* To keep aspect ratio. */
-        max-width: 100%;
-        max-height: none;
-    }
-    /* Make all list items and anchors inherit the border-radius from the UL. */
-    .img-gallery .ui-listview li,
-    .img-gallery .ui-listview li .ui-btn,
-    .img-gallery .ui-listview .ui-li-thumb {
-        -webkit-border-radius: inherit;
-        border-radius: inherit;
-    }
-    /* Hide the icon */
-    .img-gallery .ui-listview .ui-btn-icon-right:after {
-        display: none;
-    }
-    /* Make text wrap. */
-    .img-gallery .ui-listview h2,
-    .img-gallery .ui-listview p {
-        white-space: normal;
-        overflow: visible;
-        position: absolute;
-        left: 0;
-        right: 0;
-    }
-    /* Text position */
-    .img-gallery .ui-listview h2 {
-        xfont-size: 1.25em;
-        margin: 0;
-        padding: .125em 1em;
-        bottom: 50%;
-    }
-    .img-gallery .ui-listview p {
-        font-size: 1em;
-        margin: 0;
-        padding: 0 1.25em;
-        min-height: 50%;
-        bottom: 0;
-    }
-    /* Semi transparent background and different position if there is a thumb. The button has overflow hidden so we don't need to set border-radius. */
-    .ui-listview .ui-li-has-thumb h2,
-    .ui-listview .ui-li-has-thumb p {
-        background: #111;
-        background: rgba(232, 214, 218, 1);
-        color:#BB133E;
-    }
-    .ui-listview .ui-li-has-thumb h2 {
-        bottom: 35%;
-    }
-    .ui-listview .ui-li-has-thumb p {
-        min-height: 35%;
-    }
-    /* ui-li-aside has class .ui-li-desc as well so we have to override some things. */
-    .img-gallery .ui-listview .ui-li-aside {
-        padding: .125em .625em;
-        width: auto;
-        min-height: 0;
-        top: 0;
-        left: auto;
-        bottom: auto;
-        /* Custom styling. */
-        background: #BB133E;
-        background: rgba(187, 19, 62, 1);
-        -webkit-border-top-right-radius: inherit;
-        border-top-right-radius: inherit;
-        -webkit-border-bottom-left-radius: inherit;
-        border-bottom-left-radius: inherit;
-        -webkit-border-bottom-right-radius: 0;
-        border-bottom-right-radius: 0;
-    }
-    /* If you want to add shadow, don't kill the focus style. */
-    .img-gallery .ui-listview li {
-        -moz-box-shadow: 0px 0px 9px #111;
-        -webkit-box-shadow: 0px 0px 9px #111;
-        box-shadow: 0px 0px 9px #111;
-    }
-    /* Images mask the hover bg color so we give desktop users feedback by applying the focus style on hover as well. */
-    .img-gallery .ui-listview li > .ui-btn:hover {
-        -moz-box-shadow: 0px 0px 12px #33ccff;
-        -webkit-box-shadow: 0px 0px 12px #33ccff;
-        box-shadow: 0px 0px 12px #33ccff;
-    }
-    /* Animate focus and hover style, and resizing. */
-    .img-gallery .ui-listview li,
-    .img-gallery .ui-listview .ui-btn {
-        -webkit-transition: all 500ms ease;
-        -moz-transition: all 500ms ease;
-        -o-transition: all 500ms ease;
-        -ms-transition: all 500ms ease;
-        transition: all 500ms ease;
-    }
+@media ( min-width : 500px ) {
+	.img-gallery .ui-content {
+		padding: .5625em; /* 9px */
+	}
+	.img-gallery .ui-listview li {
+		float: left;
+		width: 14%; /* 33.3333% incl. 2 x 1.2% margin */
+		height: 60px; /* 232p */
+		margin: .5em 0.5em;
+	}
+	.img-gallery .ui-listview li>.ui-btn {
+		-webkit-box-sizing: border-box;
+		/* include padding and border in height so we can set it to 100% */
+		-moz-box-sizing: border-box;
+		-ms-box-sizing: border-box;
+		box-sizing: border-box;
+		height: 100%;
+	}
+	.img-gallery .ui-listview li.ui-li-has-thumb .ui-li-thumb {
+		height: auto; /* To keep aspect ratio. */
+		max-width: 100%;
+		max-height: none;
+	}
+	/* Make all list items and anchors inherit the border-radius from the UL. */
+	.img-gallery .ui-listview li, .img-gallery .ui-listview li .ui-btn,
+		.img-gallery .ui-listview .ui-li-thumb {
+		-webkit-border-radius: inherit;
+		border-radius: inherit;
+	}
+	/* Hide the icon */
+	.img-gallery .ui-listview .ui-btn-icon-right:after {
+		display: none;
+	}
+	/* Make text wrap. */
+	.img-gallery .ui-listview h2, .img-gallery .ui-listview p {
+		white-space: normal;
+		overflow: visible;
+		position: absolute;
+		left: 0;
+		right: 0;
+	}
+	/* Text position */
+	.img-gallery .ui-listview h2 {
+		font-size: 0.6em;
+		margin: 0;
+		padding: .025em .4em;
+		bottom: 0%;
+	}
+	.img-gallery .ui-listview p {
+		font-size: .6em;
+		margin: 0;
+		padding: 0 1.25em;
+		min-height: 50%;
+		bottom: 0;
+	}
+	/* Semi transparent background and different position if there is a thumb. The button has overflow hidden so we don't need to set border-radius. */
+	.ui-listview .ui-li-has-thumb h2, .ui-listview .ui-li-has-thumb p {
+		background: #111;
+		background: rgba(232, 214, 218, 1);
+		color: #BB133E;
+	}
+	.ui-listview .ui-li-has-thumb h2 {
+		bottom: 0%;
+	}
+	.ui-listview .ui-li-has-thumb p {
+		min-height: 35%;
+	}
+	/* ui-li-aside has class .ui-li-desc as well so we have to override some things. */
+	.img-gallery .ui-listview .ui-li-aside {
+		padding: .125em .625em;
+		width: auto;
+		min-height: 0;
+		top: 0;
+		left: auto;
+		bottom: auto;
+		/* Custom styling. */
+		background: #BB133E;
+		background: rgba(187, 19, 62, 1);
+		-webkit-border-top-right-radius: inherit;
+		border-top-right-radius: inherit;
+		-webkit-border-bottom-left-radius: inherit;
+		border-bottom-left-radius: inherit;
+		-webkit-border-bottom-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+	/* If you want to add shadow, don't kill the focus style. */
+	.img-gallery .ui-listview li {
+		-moz-box-shadow: 0px 0px 1px #111;
+		-webkit-box-shadow: 0px 0px 1px #111;
+		box-shadow: 0px 0px 9px #111;
+	}
+	/* Images mask the hover bg color so we give desktop users feedback by applying the focus style on hover as well. */
+	.img-gallery .ui-listview li>.ui-btn:hover {
+		-moz-box-shadow: 0px 0px 2px #33ccff;
+		-webkit-box-shadow: 0px 0px 2px #33ccff;
+		box-shadow: 0px 0px 2px #33ccff;
+	}
+	/* Animate focus and hover style, and resizing. */
+	.img-gallery .ui-listview li, .img-gallery .ui-listview .ui-btn {
+		-webkit-transition: all 500ms ease;
+		-moz-transition: all 500ms ease;
+		-o-transition: all 500ms ease;
+		-ms-transition: all 500ms ease;
+		transition: all 500ms ease;
+	}
 }
 /* Second breakpoint is 63.75em (1020px). 4 column layout. Tiles will be 250x250 pixels incl. margin again at the breakpoint. */
-@media ( min-width: 63.75em ) {
-    .img-gallery .ui-content {
-        padding: .625em; /* 10px */
-    }
-    /* Set a max-width for the last breakpoint to prevent too much stretching on large screens.
+@media ( min-width : 63.75em ) {
+	.img-gallery .ui-content {
+		padding: .625em; /* 10px */
+	}
+	/* Set a max-width for the last breakpoint to prevent too much stretching on large screens.
     By setting the max-width equal to the breakpoint width minus padding we keep square tiles. */
-    .img-gallery .ui-listview {
-        max-width: 62.5em; /* 1000px */
-        margin: 0 auto;
-    }
-    /* Because of the 1000px max-width the width will always be 230px (and margin left/right 10px),
+	.img-gallery .ui-listview {
+		max-width: 62.5em; /* 1000px */
+		margin: 0 auto;
+	}
+	/* Because of the 1000px max-width the width will always be 230px (and margin left/right 10px),
     but we stick to percentage values for demo purposes. */
-    .img-gallery .ui-listview li {
-        width: 20%;
-        height: 200px;
-        margin: .625em 1%;
-    }
+	.img-gallery .ui-listview li {
+		width: 14%;
+		height: 90px;
+		margin: .5em .5em;
+	}
 }
 /* For this demo we used images with a size of 310x310 pixels. Just before the second breakpoint the images reach their max width: 1019px - 2 x 9px padding = 1001px x 30.9333% = ~310px */
+.ui-btn-corner-all {
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+}
+
+.file-explorer-content .ui-block-a {
+	padding: 0px 5px !important;
+}
+
+.file-explorer .ui-collapsible-set{
+	margin:0 0;
+}
+
+.file-explorer .ui-collapsible-content {
+	padding: 0em 1em;
+}
+
+.file-explorer  .ui-collapsible-content > .ui-listview {
+  margin: -0em -1em;
+}
+
+.file-explorer   a.ui-btn {
+  border-top-width: 0;
+  font-weight:nornal;
+  font-size: 12px !important;
+  background: rgb(81, 81, 100);
+  color: #FFFFFF;
+}

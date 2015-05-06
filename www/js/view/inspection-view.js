@@ -34,7 +34,7 @@ InspLinesPage.prototype.renderMRLines = function() {
 	var _self = this;
 	var items = '';
 	$.each(_self.app.appCache.mrLines, function() {
-		var line = '<li><a id="mrline_' + this.m_inoutline_id + '" data-id="'
+		var line = '<li data-mini="true"><a  data-mini="true" id="mrline_' + this.m_inoutline_id + '" data-id="'
 				+ this.m_inoutline_id + '">' + this.label + ' / ' + this.desc
 				+ '</a></li>';
 		items = items + line;

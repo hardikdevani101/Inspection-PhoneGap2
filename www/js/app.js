@@ -59,6 +59,7 @@ App.prototype.onDeviceReady = function() {
         $.mobile.defaultDialogTransition = 'none';
         $("a").attr("data-transition", "none");
         $.mobile.touchOverflowEnabled = true;
+        $.fn.buttonMarkup.defaults.corners=false;
     }
 	
 	
@@ -116,6 +117,12 @@ App.prototype.onDeviceReady = function() {
 		_self.galleryview = new GalleryPage(_self);
 		_self.galleryview.init(_self.appCache.session.x_instructionline_id);
 		_self.appCache.addPage('pg_gallery', _self.galleryview);
+	});
+
+	$(document).on("pagecreate", "#pg_file_explorer", function(event) {
+		_self.fileExplorer = new FileExplorerPage(_self);
+		_self.fileExplorer.init();
+		_self.appCache.addPage('pg_file_explorer', _self.fileExplorer);
 	});
 	
 	$(document).on("click", "#btn_logout", function(event) {		
