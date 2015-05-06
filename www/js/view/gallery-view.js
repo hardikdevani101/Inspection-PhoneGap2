@@ -29,19 +29,19 @@ GalleryPage.prototype.loadInspFile = function() {
 		_self.renderInspFiles();
 	} else {
 		var success = function(tx, result) {
-			_self.app.appCache.inspFiles[_self.line_id] = {};
-			console.log("Results = " + result.rows.item.length);
-			$.each(result.rows.item, function() {
+			_self.app.appCache.inspFiles[_self.line_id] = [];
+			console.log("Results = " + result.rows.length);
+			for (var i = 0; i < result.rows.length; i++) {
 				var item = {};
-				item['filePath'] = this.file;
-				if (_self.app.DataTypes.indexOf(_self.app.appFS
-						.getExtention(this.file.toUpperCase())) >= 0) {
-					item['data'] = this.image64;
+				item['filePath'] = result.rows.item(i).file;
+				if (_self.app.dataTypes.indexOf(_self.app.appFS
+						.getExtention(result.rows.item(i).file.toUpperCase())) >= 0) {
+					item['data'] = _self.image64;
 				} else {
-					item['data'] = this.file64;
+					item['data'] = _self.file64;
 				}
 				_self.app.appCache.inspFiles[_self.line_id].push(item);
-			});
+			}
 			_self.renderInspFiles();
 			_self.loadInspFileData(_self.line_id);
 		};
@@ -64,16 +64,18 @@ GalleryPage.prototype.loadInspFileData = function(inspID) {
 }
 
 GalleryPage.prototype.updateInspFileThumb = function(filePath, inspID, result) {
+	var _self = this;
 	if (!(typeof _self.app.appCache.inspFiles[_self.line_id] === 'undefined')) {
 		console.log(" update inspection file data ");
 		$.each(_self.app.appCache.inspFiles[_self.line_id], function() {
 			if (this.filePath == filePath) {
 				this.data = result;
 				var fileName = _self.app.appFS.getFileName(filePath);
+				console.log(inspID + '_' + fileName);
 				$(
 						'#ls_inspFiles li [data-id=' + inspID + '_' + fileName
 								+ '] img').attr('src',
-						'data:image/png;base64,' + result);
+						"data:image/png;base64," + result);
 			}
 		});
 	}
@@ -86,14 +88,16 @@ GalleryPage.prototype.renderInspFiles = function() {
 		console.log(" render file data ");
 		$.each(_self.app.appCache.inspFiles[_self.line_id], function() {
 			var fileName = _self.app.appFS.getFileName(this.filePath);
+			console.log(fileName);
+			console.log(_self.line_id + '_' + fileName);
 			var line = '<li id="' + _self.line_id + '_' + fileName
 					+ '" data-id="' + _self.line_id + '_' + fileName
-					+ '"><a href="#">' + fileName + '</a><img src="'
-					+ this.data + '" /></li>';
+					+ '"><a href="#">' + fileName
+					+ '</a><img src="data:image/png;base64,' + this.data
+					+ '" /></li>';
 			items = items + line;
 		});
 	}
-	console.log(items);
 	$('#ls_inspFiles').html(items);
 	$('#ls_inspFiles').listview("refresh");
 }

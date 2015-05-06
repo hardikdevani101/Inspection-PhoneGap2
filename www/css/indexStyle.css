@@ -266,7 +266,7 @@ body {
     background: transperant !important;
   }
 /* First breakpoint is 48em (768px). 3 column layout. Tiles 250x250 pixels incl. margin at the breakpoint. */
-@media ( min-width : 500px ) {
+@media ( min-width : 400px ) {
 	.img-gallery .ui-content {
 		padding: .5625em; /* 9px */
 	}

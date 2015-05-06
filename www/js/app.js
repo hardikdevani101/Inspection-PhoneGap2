@@ -43,7 +43,7 @@ var App = function() {
 	this.editCtx;
 	this.bValue = 50;
 	this.cValue = 50;
-	DataTypes=["JPEG","JPG","BMP","PNG","GIF"];
+	this.dataTypes=["JPEG","JPG","BMP","PNG","GIF"];
 	this.onDeviceReady();
 };
 
