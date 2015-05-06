@@ -36,12 +36,10 @@ GalleryPage.prototype.loadInspFile = function() {
 	var _self = this;
 	if (!(typeof _self.app.appCache.inspFiles[_self.line_id] === 'undefined')
 			&& _self.app.appCache.inspFiles[_self.line_id].length > 0) {
-		console.log(" inspection line present ");
 		_self.renderInspFiles();
 	} else {
 		var success = function(tx, result) {
 			_self.app.appCache.inspFiles[_self.line_id] = [];
-			console.log("Results = " + result.rows.length);
 			for (var i = 0; i < result.rows.length; i++) {
 				var item = {};
 				item['filePath'] = result.rows.item(i).file;
@@ -66,7 +64,6 @@ GalleryPage.prototype.loadInspFile = function() {
 GalleryPage.prototype.loadInspFileData = function(inspID) {
 	var _self = this;
 	if (!(typeof _self.app.appCache.inspFiles[inspID] === 'undefined')) {
-		console.log(" load inspection file data ");
 		$.each(_self.app.appCache.inspFiles[inspID], function() {
 			_self.app.appFS.getVISFile(this.filePath, inspID,
 					_self.updateInspFileThumb);
@@ -76,17 +73,16 @@ GalleryPage.prototype.loadInspFileData = function(inspID) {
 
 GalleryPage.prototype.updateInspFileThumb = function(filePath, inspID, result) {
 	var _self = this;
-	if (!(typeof _self.app.appCache.inspFiles[_self.line_id] === 'undefined')) {
-		console.log(" update inspection file data ");
-		$.each(_self.app.appCache.inspFiles[_self.line_id], function() {
+	if (!(typeof _self.app.appCache.inspFiles[inspID] === 'undefined')) {
+		$.each(_self.app.appCache.inspFiles[inspID], function() {
 			if (this.filePath == filePath) {
 				this.data = result;
 				var fileName = _self.app.appFS.getFileName(filePath);
-				console.log(inspID + '_' + fileName);
+				d = new Date();
 				$(
-						'#ls_inspFiles li [data-id=' + inspID + '_' + fileName
-								+ '] img').attr('src',
-						"data:image/png;base64," + result);
+						'#ls_inspFiles li [data-id="' + inspID + '_' + fileName
+								+ '"] img').removeAttr("src").attr('src',
+						"data:image/png;base64," + result + "?" + d.getTime());
 			}
 		});
 	}
@@ -96,11 +92,8 @@ GalleryPage.prototype.renderInspFiles = function() {
 	var _self = this;
 	var items = '';
 	if (!(typeof _self.app.appCache.inspFiles[_self.line_id] === 'undefined')) {
-		console.log(" render file data ");
 		$.each(_self.app.appCache.inspFiles[_self.line_id], function() {
 			var fileName = _self.app.appFS.getFileName(this.filePath);
-			console.log(fileName);
-			console.log(_self.line_id + '_' + fileName);
 			var line = '<li id="' + _self.line_id + '_' + fileName
 					+ '" data-id="' + _self.line_id + '_' + fileName
 					+ '" class="file-placeholder"><a href="#">'

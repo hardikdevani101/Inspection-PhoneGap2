@@ -457,3 +457,69 @@ VisionApi.prototype.getFTPServerList = function(params, success, error) {
 				error(err.responseText);
 			});
 };
+
+VisionApi.prototype.getWaterMarkList = function(success, error) {
+
+	var reqBody = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
+			+ '<soapenv:Header/>'
+			+ '<soapenv:Body>'
+			+ '<_0:getList>'
+			+ '<_0:ModelGetListRequest>'
+			+ '<_0:ModelGetList>'
+			+ '<_0:serviceType>Watermark List</_0:serviceType>'
+			+ '<_0:AD_Reference_ID>0</_0:AD_Reference_ID>'
+			+ '<_0:Filter></_0:Filter>'
+			+ '</_0:ModelGetList>'
+			+ ADLoginRequest
+			+ '</_0:ModelGetListRequest>'
+			+ '</_0:getList>'
+			+ '</soapenv:Body>'
+			+ '</soapenv:Envelope>';
+	$
+			.ajax(
+					{
+
+						beforeSend : function() {
+							_self.app.showDialog("Loading");
+						},
+						complete : function() {
+							_self.app.hideDialog();
+						},
+						type : 'POST',
+						crossDomain : true,
+						data : reqBody,
+						url : _self.completeUrl,
+						accepts : {
+							xml : 'text/xml',
+							text : 'text/plain'
+						},
+						contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
+						dataType : 'xml'
+					})
+			.then(
+					function(response) {
+						jsonResponse = [];
+						var xmlResponse = response;
+						var fullNodeList = xmlResponse
+								.getElementsByTagName("DataRow");
+						var data = [];
+						if (fullNodeList.length > 0) {
+							for (var i = 0; i < fullNodeList.length; i++) {
+								var item = {};
+								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
+									if (fullNodeList[i].childNodes[j].attributes[0].value == 'Description') {
+										item["url"] = fullNodeList[i].childNodes[j].childNodes[0].textContent;
+									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {
+										item["name"] = fullNodeList[i].childNodes[j].childNodes[0].textContent;
+									}
+								}
+								data.push(item);
+							}
+						}
+						success({
+							'responce' : data
+						});
+					}).fail(function(err) {
+				error(err.responseText);
+			});
+}
