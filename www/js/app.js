@@ -1,77 +1,30 @@
 var App = function() {
-	this.canvas;
-	this.gcanvas;
-	this.boundX, this.BoundY;
-	this.jcrop_api;
-	this.finalSelection;
-	this.crop_img;
-	this.userName = "";
-	this.INSPECTOR_ID;
-	this.M_InOutLine_ID = 0;
-	this.M_line_name;
-	this.X_INSTRUCTIONLINE_ID;
-	this.M_INOUT_ID = 0;
-	this.M_Line_Desc = "";
-	this.X_instruction_name;
-	this.vis_pass;
-	this.Disp_row;
-	this.Disp_col;
-	this.SelectedGalleryList;
-	this.attachCount;
-	this.itemCount;
-	this.imgUploadCount = 0;
-	this.mrLinesArray = new Array();
-	this.backPage;
-	this.galleryTable = "";
-	this.totColumns = 0;
-	this.pageState = 0;
-	this.deleteCount = 0;
-	this.inspLinesArray = new Array();
-	this.pandingUploads = new Array();
-	this.pandingCounts = 0;
-	this.currentPage = "";
-	this.warehouseListArray = new Array();
-	this.cropImageW;
-	this.cropImageH;
-	this.scrollHeight;
-	this.canX = 0;
-	this.canY = 0;
-	this.canX1 = 0;
-	this.canY1 = 0;
-	this.actArray;
-	this.aNo = -1;
-	this.editCtx;
-	this.bValue = 50;
-	this.cValue = 50;
-	this.dataTypes=["JPEG","JPG","BMP","PNG","GIF"];
-	this.onDeviceReady();
+	this.dataTypes = [ "JPEG", "JPG", "BMP", "PNG", "GIF" ];
 };
 
 App.prototype.onDeviceReady = function() {
-	
+
 	$.mobile.allowCrossDomainPages = true;
 	$.support.cors = true;
-	$.mobile.loadingMessage="Loading..";
-	
-	if (navigator.userAgent.indexOf("Android") != -1)
-    {
-        $.mobile.defaultPageTransition = 'none';
-        $.mobile.defaultDialogTransition = 'none';
-        $("a").attr("data-transition", "none");
-        $.mobile.touchOverflowEnabled = true;
-        $.fn.buttonMarkup.defaults.corners=false;
-    }
-	
-	
+	$.mobile.loadingMessage = "Loading..";
+
+	if (navigator.userAgent.indexOf("Android") != -1) {
+		$.mobile.defaultPageTransition = 'none';
+		$.mobile.defaultDialogTransition = 'none';
+		$("a").attr("data-transition", "none");
+		$.mobile.touchOverflowEnabled = true;
+		$.fn.buttonMarkup.defaults.corners = false;
+	}
+
 	var _self = this;
 	// Initialize Application Cache on page load.
 	_self.appCache = new AppCache(_self);
 	_self.appCache.init();
-	
+
 	// Initialize FTP Util.
 	_self.appFTPUtil = new FTPUtils(_self);
 	_self.appFTPUtil.init();
-	
+
 	// Initiate database-storage on page load.
 	_self.appDB = new DB(_self);
 	_self.appDB.init(function() {
@@ -81,7 +34,9 @@ App.prototype.onDeviceReady = function() {
 	});
 
 	// Initiate file-storage on page load.
-	
+	app.appFS = new FS(app);
+	app.appFS.init();
+
 	// _self.fileUtil = new FileUtils(_self);
 
 	$(document).on("pagecreate", "#pg_login", function(event) {
@@ -92,7 +47,7 @@ App.prototype.onDeviceReady = function() {
 		_self.settingnview = new SettingsPage(_self);
 		_self.settingnview.init();
 	});
-	
+
 	$(document).on("pagecreate", "#pg_inspection", function(event) {
 		_self.inspLinePage = new InspLinesPage(_self);
 		_self.inspLinePage.init();
@@ -124,11 +79,11 @@ App.prototype.onDeviceReady = function() {
 		_self.fileExplorer.init();
 		_self.appCache.addPage('pg_file_explorer', _self.fileExplorer);
 	});
-	
-	$(document).on("click", "#btn_logout", function(event) {		
-		//TODO Clear Session
+
+	$(document).on("click", "#btn_logout", function(event) {
+		// TODO Clear Session
 		_self.appCache.reset();
-		
+
 		$.mobile.changePage("#pg_login", {
 			transition : "slide",
 			changeHash : false
@@ -152,3 +107,18 @@ App.prototype.showDialog = function(msg) {
 App.prototype.hideDialog = function() {
 	$.mobile.loading("hide");
 };
+
+// Initialize application.
+
+var app = new App();
+$(document).ready(function() {
+	console.log('DOM ready called!!')
+	console.log('User Agent!!' + navigator.userAgent)
+	if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
+		console.log('Registered deviceready listener!!')
+		document.addEventListener("deviceready", app.onDeviceReady, false);
+	} else {
+		console.log('Explicitly called onDeviceReady!!')
+		app.onDeviceReady();
+	}
+});

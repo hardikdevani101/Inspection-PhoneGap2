@@ -435,3 +435,17 @@ body {
 body .ui-body-c, body .ui-overlay-c {
 	text-shadow: 0 0 0;
 }
+
+#wmCanvasContainer {
+	position: relative;
+}
+
+#WatermarkCanvas {
+	border: 1px solid #000;
+}
+
+#waterimageTemp {
+	position: absolute;
+	top: 1px;
+	left: 1px;
+}

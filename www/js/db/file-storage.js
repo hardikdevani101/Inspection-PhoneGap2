@@ -55,6 +55,19 @@ FS.prototype.init = function() {
 			}, _self.errorHandler);
 		}, _self.errorHandler);
 	}
+
+	if (window.webkitRequestFileSystem) {
+		console.log('Found >> '+window.webkitRequestFileSystem);
+		window.requestFileSystem = window.webkitRequestFileSystem;
+//
+//		window.webkitPersistentStorage.requestQuota(window.PERSISTENT,
+//				5 * 1024 * 1024 /* 5MB */, function(grantedBytes) {
+//					window.webkitRequestFileSystem(window.PERSISTENT,
+//							grantedBytes, onInitFs, errorHandler);
+//				}, function(e) {
+//					console.log('Error', e);
+//				});
+	}
 }
 
 FS.prototype.getExtention = function(Fname) {

@@ -40,8 +40,8 @@
 <script src="js/lib/base64-binary.js"></script>
 
 <!--Cordova JS-->
-<script src="cordova.js"></script>
-
+<!-- <script src="cordova.js"></script>
+ -->
 <!--VISION JS-->
 <script src="js/app.js"></script>
 <script src="js/cache/app-cache.js"></script>
@@ -60,33 +60,6 @@
 <script src="js/view/file-explorer-view.js"></script>
 <script src="js/view/cropImage-view.js"></script>
 
-<style type="text/css">
-<!--
-#wmCanvasContainer {
-	position: relative;
-}
-
-#WatermarkCanvas {
-	border: 1px solid #000;
-}
-
-#waterimageTemp {
-	position: absolute;
-	top: 1px;
-	left: 1px;
-}
--->
-</style>
-
-<script>
-	var app = new App();
-	document.addEventListener('deviceready', function() {
-
-		// Initiate file-storage on page load.
-		app.appFS = new FS(app);
-		app.appFS.init();
-	}, false);
-</script>
 </head>
 
 <body>
@@ -464,7 +437,7 @@ Start of File Explorer page
 										<h2>File Name</h2>
 										<p class="ui-li-aside">
 											<a
-												class="ui-btn ui-corner-all ui-icon-arrow-u ui-btn-icon-notext ui-btn-inline"></a>												
+												class="ui-btn ui-corner-all ui-icon-arrow-u ui-btn-icon-notext ui-btn-inline"></a>
 										</p>
 								</a></li>
 								<li><a href="#">
@@ -514,13 +487,9 @@ Start of File Explorer page
 							</ul>
 						</div>
 					</div>
-
 				</div>
-
 			</div>
-
 		</div>
-
 
 		<div data-role="footer" data-position="fixed" data-theme="b">
 			<div data-role="navbar" data-iconpos="left" data-theme="b">
