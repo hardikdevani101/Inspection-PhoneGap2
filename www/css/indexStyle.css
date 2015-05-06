@@ -270,6 +270,11 @@ body {
 	.img-gallery .ui-content {
 		padding: .5625em; /* 9px */
 	}
+	
+	.img-gallery  .ui-listview > .ui-li-has-thumb > .ui-btn, .ui-listview > .ui-li-static.ui-li-has-thumb {
+ 		padding-left: 2.25em !important;
+	}
+	
 	.img-gallery .ui-listview li {
 		float: left;
 		width: 14%; /* 33.3333% incl. 2 x 1.2% margin */
@@ -353,9 +358,9 @@ body {
 	}
 	/* If you want to add shadow, don't kill the focus style. */
 	.img-gallery .ui-listview li {
-		-moz-box-shadow: 0px 0px 1px #111;
-		-webkit-box-shadow: 0px 0px 1px #111;
-		box-shadow: 0px 0px 9px #111;
+		-moz-box-shadow: 0px 0px 0px #111;
+		-webkit-box-shadow: 0px 0px 0px #111;
+		box-shadow: 0px 0px 0px #111;
 	}
 	/* Images mask the hover bg color so we give desktop users feedback by applying the focus style on hover as well. */
 	.img-gallery .ui-listview li>.ui-btn:hover {
@@ -420,4 +425,9 @@ body {
   font-size: 12px !important;
   background: rgb(81, 81, 100);
   color: #FFFFFF;
+}
+
+body .ui-body-c, body .ui-overlay-c
+{
+text-shadow:0 0 0;
 }
