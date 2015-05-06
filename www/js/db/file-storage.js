@@ -55,8 +55,7 @@ FS.prototype.init = function() {
 			}, _self.errorHandler);
 		}, _self.errorHandler);
 	}
-
-	if (window.webkitRequestFileSystem) {
+	else if (window.webkitRequestFileSystem) {
 		console.log('Found >> '+window.webkitRequestFileSystem);
 		window.requestFileSystem = window.webkitRequestFileSystem;
 //
@@ -109,8 +108,15 @@ FS.prototype.saveVISFile = function(fileData) {
 																M_INOUT_ID,
 																fileName,
 																fileFullPath);
+												var item = {};
+												item['filePath'] = fileEntry.fullPath;
+												item['data'] = evt.target.result;
+
+												_self.app.appCache.inspFiles[X_INSTRUCTIONLINE_ID]
+														.push(item);
+
 												$.mobile
-														.changePage("#pg_inspectionDetail");
+														.changePage("#pg_gallery");
 												_self.app.appFTPUtil
 														.uploadFile(fileEntry);
 											};

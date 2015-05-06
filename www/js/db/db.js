@@ -28,6 +28,21 @@ DB.prototype.init = function(success, error) {
 								.executeSql('CREATE TABLE IF NOT EXISTS '
 										+ ' vis_gallery '
 										+ ' (mr_line,insp_line DEFAULT "0",in_out_id DEFAULT "0",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F")');
+						
+						/*tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="1596522" and insp_line="4151823" ',[],function(txx,results){
+							$.each(results.rows.item, function() {
+								var item = {};
+								item['filePath'] = this.file;
+								if (_self.app.DataTypes.indexOf(_self.app.appFS
+										.getExtention(this.file.toUpperCase())) >= 0) {
+									item['data'] = this.image64;
+								} else {
+									item['data'] = this.file64;
+								}
+								_self.app.appCache.inspFiles[_self.line_id].push(item);
+							});
+							});*/
+						
 					}, _self.errorCallback, _self.successCallback);
 }
 

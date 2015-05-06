@@ -459,7 +459,7 @@ VisionApi.prototype.getFTPServerList = function(params, success, error) {
 };
 
 VisionApi.prototype.getWaterMarkList = function(success, error) {
-
+	var _self = this;
 	var reqBody = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
 			+ '<soapenv:Header/>'
 			+ '<soapenv:Body>'
@@ -470,11 +470,9 @@ VisionApi.prototype.getWaterMarkList = function(success, error) {
 			+ '<_0:AD_Reference_ID>0</_0:AD_Reference_ID>'
 			+ '<_0:Filter></_0:Filter>'
 			+ '</_0:ModelGetList>'
-			+ ADLoginRequest
+			+ _self.ADLoginRequest
 			+ '</_0:ModelGetListRequest>'
-			+ '</_0:getList>'
-			+ '</soapenv:Body>'
-			+ '</soapenv:Envelope>';
+			+ '</_0:getList>' + '</soapenv:Body>' + '</soapenv:Envelope>';
 	$
 			.ajax(
 					{

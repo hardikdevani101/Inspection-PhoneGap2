@@ -46,10 +46,7 @@ InspLinesPage.prototype.renderMRLines = function() {
 	$('#_list_mrlines li a').on('click', function() {
 		console.log($(this).data("id"));
 		_self.app.appCache.session.m_inoutline_id = $(this).data("id");
-		$.mobile.changePage("#pg_inspection_detail", {
-			transition : "slide",
-			changeHash : false
-		});
+		$.mobile.changePage("#pg_inspection_detail");
 	});
 
 	$.mobile.changePage("#pg_inspection", {
@@ -105,10 +102,7 @@ InspLinesPage.prototype.renderInspLines = function() {
 				function() {
 					_self.app.appCache.session.x_instructionline_id = $(this)
 							.data("id");
-					$.mobile.changePage("#pg_gallery", {
-						transition : "slide",
-						changeHash : false
-					});
+					$.mobile.changePage("#pg_gallery");
 				});
 	}
 	_self.app.hideDialog();

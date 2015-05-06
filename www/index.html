@@ -40,10 +40,9 @@
 <script src="js/lib/base64-binary.js"></script>
 
 <!--Cordova JS-->
-<!-- <script src="cordova.js"></script>
- -->
+<script src="cordova.js"></script>
+
 <!--VISION JS-->
-<script src="js/app.js"></script>
 <script src="js/cache/app-cache.js"></script>
 <script src="js/db/db.js"></script>
 <script src="js/db/file-storage.js"></script>
@@ -59,6 +58,7 @@
 <script src="js/view/gallery-view.js"></script>
 <script src="js/view/file-explorer-view.js"></script>
 <script src="js/view/cropImage-view.js"></script>
+<script src="js/app.js"></script>
 
 </head>
 
@@ -550,6 +550,10 @@ Start of Crop page
 			<a href="#_main" data-icon="back" data-iconpos="notext"
 				data-shadow="true" data-wrapperels="span" title="Back"
 				data-rel="back">Back</a>
+			<div data-role="controlgroup" data-type="horizontal" class="ui-mini">
+				<select name="select-waterMark" data-wrapperels="span">
+				</select>
+			</div>
 		</div>
 		<div data-role="main" class="ui-content"
 			style="margin: 0; padding: 0;">

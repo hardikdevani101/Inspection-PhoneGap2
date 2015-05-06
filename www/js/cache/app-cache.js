@@ -13,6 +13,7 @@ var AppCache = function(app) {
 	this.mrLines= [];
 	this.inspLines= {};
 	this.inspFiles= {};
+	this.waterMarkImgs= [];
 }
 
 
@@ -31,6 +32,7 @@ AppCache.prototype.reset = function() {
 	this.mrLines= [];
 	this.inspLines= {};
 	this.inspFiles= {};
+	this.waterMarkImgs= [];
 }
 
 AppCache.prototype.addPage = function(pageid, page) {
