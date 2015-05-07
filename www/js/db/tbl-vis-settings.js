@@ -96,3 +96,21 @@ Tbl_VISSetting.prototype.update = function(setting, success, error) {
 		});
 	}, errorCallback, this.appDB.success);
 }
+
+Tbl_VISSetting.prototype.login= function(isLogin, success, error) {
+//	var successCallback = this.appDB.success;
+//	if (typeof success === "function") {
+//		successCallback = success;
+//	}
+//
+//	var errorCallback = this.appDB.error;
+//	if (typeof error === "function") {
+//		errorCallback = error;
+//	}
+//	var sql = 'UPDATE vis_setting SET is_login = "' + isLogin+'"';
+//	this.appDB.dbstore.transaction(function(tx) {
+//		tx.executeSql(sql, [], function(tx, results) {
+//			successCallback(results)
+//		});
+//	}, errorCallback, this.appDB.success);
+}

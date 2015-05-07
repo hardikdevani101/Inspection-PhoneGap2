@@ -16,6 +16,13 @@ LoginPage.prototype.onLogin = function() {
 				app.appCache.loginInfo['password'] = $("#txt_password");
 				app.appCache.loginInfo['userid'] = result.loginInfo.ad_user_id;
 				
+				var visSettingsDAO = new Tbl_VISSetting(this);
+				visSettingsDAO.login("Y", function(data) {
+					console.log("DB-Login Success!")
+				}, function(msg) {
+					console.log("DB-Login Failed!")
+				});
+				
 				$(':mobile-pagecontainer').pagecontainer('change', '#pg_home', {
 					reload : false
 				})

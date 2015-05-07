@@ -277,7 +277,7 @@ body {
 	}
 	.img-gallery  .ui-listview>.ui-li-has-thumb>.ui-btn, .ui-listview>.ui-li-static.ui-li-has-thumb
 		{
-		padding-left: 2.25em !important;
+		padding-left: 1.25em !important;
 	}
 	.img-gallery .ui-listview li {
 		float: left;
@@ -302,7 +302,7 @@ body {
 	/* Make all list items and anchors inherit the border-radius from the UL. */
 	.img-gallery .ui-listview li, .img-gallery .ui-listview li .ui-btn,
 		.img-gallery .ui-listview .ui-li-thumb {
-		-webkit-border-radius: inherit;
+		-webkit-border-radius: 0;
 		border-radius: inherit;
 	}
 	/* Hide the icon */

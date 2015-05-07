@@ -439,9 +439,12 @@ VisionApi.prototype.getFTPServerList = function(params, success, error) {
 										fPass = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'Username') {
 										fUser = fullNodeList[i].childNodes[j].childNodes[0].textContent;
+									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'record_id') {
+										recordId = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									}
 								}
 								resultline = {};
+								resultline['record-id'] = recordId
 								resultline['url'] = furl
 								resultline['name'] = fName
 								resultline['password'] = fPass

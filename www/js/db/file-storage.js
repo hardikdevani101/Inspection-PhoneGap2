@@ -38,7 +38,7 @@ FS.prototype.init = function() {
 	var _self = this;
 	if (window.requestFileSystem) {
 		console.log("Found File-Storage:Debug - ");
-		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(
+		window.requestFileSystem(Window.PERSISTENT, 0, function(
 				filesystem) {
 			_self.fileSystem = filesystem;
 			filesystem.root.getDirectory('VIS_Inspection', {
