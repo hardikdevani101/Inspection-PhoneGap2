@@ -96,25 +96,27 @@ FTPPage.prototype.renderContent = function(dirPath) {
 
 	var serverData = ftpServerInfo.data;
 	if (serverData) {
-		var files = serverData[_self.currentDirPath].files;
-		var dirs = serverData[_self.currentDirPath].dirs;
-		var ftpUrl = "ftp://" + selected_ftpserver;
+		if(serverData[_self.currentDirPath]){
+			var files = serverData[_self.currentDirPath].files;
+			var dirs = serverData[_self.currentDirPath].dirs;
+			var ftpUrl = "ftp://" + selected_ftpserver;
 
-		var fileItems = _self.renderFiles(files);
-		var dirItems = _self.renderDirs(dirs);
+			var fileItems = _self.renderFiles(files);
+			var dirItems = _self.renderDirs(dirs);
 
-		$('#ls_ftpFiles').html(fileItems);
-		$('#ls_ftpFiles').listview("refresh");
-		$('#ls_ftpDirs').html(dirItems);
-		$('#ls_ftpDirs').listview("refresh");
+			$('#ls_ftpFiles').html(fileItems);
+			$('#ls_ftpFiles').listview("refresh");
+			$('#ls_ftpDirs').html(dirItems);
+			$('#ls_ftpDirs').listview("refresh");
 
-		$(".dir-placeholder").bind("tap", function(event) {
-			_self.onDirTap(event)
-		});
-		
-		$(".file-placeholder").bind("tap", function(event) {
-			_self.onFileTap(event)
-		});
+			$(".dir-placeholder").bind("tap", function(event) {
+				_self.onDirTap(event)
+			});
+			
+			$(".file-placeholder").bind("tap", function(event) {
+				_self.onFileTap(event)
+			});
+		}
 	}
 	_self.app.hideDialog();
 }
@@ -160,7 +162,7 @@ FTPPage.prototype.renderDirs = function(dirs) {
 	var dirItems = '';
 	$.each(dirs, function(index, value) {
 		var fileData = _self.app.dir64;
-		var line = '<li data-id="' + _self.currentDirPath + '/' + value
+		var line = '<li data-id="' + _self.currentDirPath + value
 				+ '" class="dir-placeholder"><a href="#">'
 				+ '<img class="ui-li-thumb" src="data:image/png;base64,'
 				+ fileData + '" /><h2>' + value + '</h2></a></li>';
@@ -222,9 +224,9 @@ FTPPage.prototype.explodeServerDir = function(dirName, success, error) {
 		});
 
 		ftpServerInfo.data = {};
-		var dirPath = '/';
+		var dirPath = _self.currentDirPath;
 		if (dirName != '/') {
-			dirPath += dirName;
+			dirPath = dirPath+dirName+'/';
 		}
 
 		var resultline = {};
