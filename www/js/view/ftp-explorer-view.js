@@ -33,14 +33,15 @@ FTPPage.prototype.init = function() {
 	});
 }
 
-FTPPage.prototype.fillFTPServerList = function(ftpServersArray) {
-	if (ftpServersArray.length>0) {
-		$.each(ftpServersArray, function(key, value) {
-			$("#sel_ftpservers").append(
-					new Option(_self.app.appCache.ftpServers[key].info.name,
-							_self.app.appCache.ftpServers[key].url));
+FTPPage.prototype.fillFTPServerList = function() {
+	var _self = this;
+	if (_self.app.appCache.ftpServers.length > 0) {
+		$.each(_self.app.appCache.ftpServers, function(key, data) {
+			if (data.isFTP == 'Y') {
+				$("#sel_ftpservers").append(new Option(data.name, data.url));
+			}
 		});
-		var option1 = $($("option", select).get(1));
+		var option1 = $($("option", $('#sel_ftpservers')).get(1));
 		option1.attr('selected', 'selected');
 		$('#sel_ftpservers').selectmenu();
 		$('#sel_ftpservers').selectmenu('refresh', true);
@@ -51,21 +52,17 @@ FTPPage.prototype.fillFTPServerList = function(ftpServersArray) {
 FTPPage.prototype.loadFTPServers = function() {
 	var _self = this;
 	_self.app.showDialog("Loading..");
-	var ftpServersArray = jQuery.parseJSON(_self.app.appCache.ftpServers);
-	if (ftpServersArray.length>0) {
-		_self.fillFTPServerList(ftpServersArray);
+	if (_self.app.appCache.ftpServers.length > 0) {
+		_self.fillFTPServerList();
 		_self.renderContent();
 	} else {
 		var success = function(result) {
 			var items = '';
-			$.each(result.ftpservers, function(index, value) {
-				_self.app.appCache.ftpServers[value.url] = {
-					'info' : value,
-					'data' : {}
-				};
+			_self.app.appCache.ftpServers = [];
+			$.each(result.ftpservers, function(index, data) {
+				_self.app.appCache.ftpServers.push(data);
 			});
-			ftpServersArray = jQuery.parseJSON(_self.app.appCache.ftpServers);
-			_self.fillFTPServerList(ftpServersArray);
+			_self.fillFTPServerList();
 			// Initialize selected FTP Server DirTree
 			_self.explodeServerDir(_self.currentDirPath, function() {
 				_self.renderContent()
@@ -87,28 +84,52 @@ FTPPage.prototype.loadFTPServers = function() {
 
 FTPPage.prototype.renderContent = function(dirPath) {
 	var _self = this;
-	var items = '';
+
 	var selected_ftpserver = $("#sel_ftpservers").val();
-	var serverData = _self.app.appCache.ftpServers[selected_ftpserver].data;
-	var files = serverData[dirPath].files;
-	var dirs = serverData[dirPath].dirs;
-	var ftpUrl = "ftp://" + selected_ftpserver;
+	var ftpServerInfo = '';
+	jQuery.grep(_self.app.appCache.ftpServers, function(item, index) {
+		if (item.url == selected_ftpserver) {
+			ftpServerInfo = item;
+		}
+		return (item.url == selected_ftpserver);
+	});
 
-	$('#ls_ftpServers').html(items);
-	$('#ls_ftpServers').listview("refresh");
+	var serverData = ftpServerInfo.data;
+	if (serverData) {
+		var files = serverData[_self.currentDirPath].files;
+		var dirs = serverData[_self.currentDirPath].dirs;
+		var ftpUrl = "ftp://" + selected_ftpserver;
 
-	$(".dir-placeholder").bind("tap", onDirTap);
-	$(".file-placeholder").bind("tap", onFileTap);
+		var fileItems = _self.renderFiles(files);
+		var dirItems = _self.renderDirs(dirs);
 
+		$('#ls_ftpFiles').html(fileItems);
+		$('#ls_ftpFiles').listview("refresh");
+		$('#ls_ftpDirs').html(dirItems);
+		$('#ls_ftpDirs').listview("refresh");
+
+		$(".dir-placeholder").bind("tap", function(event) {
+			_self.onDirTap(event)
+		});
+		
+		$(".file-placeholder").bind("tap", function(event) {
+			_self.onFileTap(event)
+		});
+	}
 	_self.app.hideDialog();
 }
 
 FTPPage.prototype.onFileTap = function(event) {
+	var _self = this;
 	var selected = $(event.delegateTarget).data('id')
 	console.log('Tap >> ' + selected);
-	var findResult = jQuery.grep(_self.selFiles, function(item, index) {
-		return item.id == selected;
-	});
+	var findResult = [];
+	if (_self.selFiles.length > 0) {
+		var findResult = jQuery.grep(_self.selFiles, function(item, index) {
+			return item.id == selected;
+		});
+
+	}
 	if (!findResult.length > 0) {
 		_self.selFiles.push({
 			id : selected
@@ -125,67 +146,50 @@ FTPPage.prototype.onFileTap = function(event) {
 FTPPage.prototype.onDirTap = function(event) {
 	var _self = this;
 	_self.currentDirPath = $(event.delegateTarget).data('id')
-	console.log('Tap >> ' + selected);
+	console.log('Tap _self.currentDirPath>> ' + _self.currentDirPath);
 	_self.explodeServerDir(_self.currentDirPath, function() {
 		_self.renderContent(_self.currentDirPath);
-	}, error);
+	}, function(msg) {
+		console.log(msg)
+	});
 
 }
 
 FTPPage.prototype.renderDirs = function(dirs) {
 	var _self = this;
 	var dirItems = '';
-	$
-			.each(
-					dirs,
-					function(index, value) {
-						var fileData = _self.app.dir64;
-						var line = '<li data-id="'
-								+ _self.currentDirPath
-								+ '/'
-								+ value
-								+ '" class="dir-placeholder"><a href="#">'
-								+ '<img class="ui-li-thumb" src="data:image/png;base64,'
-								+ fileData
-								+ '" /><h2>'
-								+ value
-								+ '</h2><p class="ui-li-aside"><a class="ui-btn ui-corner-all ui-icon-arrow-u ui-btn-icon-notext ui-btn-inline"></a></p></a></li>';
-						dirItems = dirItems + line;
-					});
+	$.each(dirs, function(index, value) {
+		var fileData = _self.app.dir64;
+		var line = '<li data-id="' + _self.currentDirPath + '/' + value
+				+ '" class="dir-placeholder"><a href="#">'
+				+ '<img class="ui-li-thumb" src="data:image/png;base64,'
+				+ fileData + '" /><h2>' + value + '</h2></a></li>';
+		dirItems = dirItems + line;
+	});
 	return dirItems;
 }
 
 FTPPage.prototype.renderFiles = function(files) {
 	var _self = this;
 	var fileItems = '';
-	$
-			.each(
-					files,
-					function(index, value) {
-						var extension = value
-								.substr((value.lastIndexOf('.') + 1));
-						var findResult = jQuery.grep(_self.app.imgDataTypes,
-								function(item, index) {
-									return item == extension.toUpperCase();
-								});
-						var fileData = _self.app.file64;
-						if (findResult.length > 0) {
-							fileData = _self.app.image64
-						}
-						var line = '<li id="'
-								+ _self.line_id
-								+ '" data-id="'
-								+ $("#sel_ftpservers").val()
-								+ _self.currentDirPath
-								+ value
-								+ '" class="file-placeholder"><a href="#">'
-								+ '<img class="ui-li-thumb" src="data:image/png;base64,'
-								+ fileData
-								+ '" /><h2>'
-								+ value.substr(0, (value.lastIndexOf('.')))
-								+ '</h2><p class="ui-li-aside"><a class="ui-btn ui-corner-all ui-icon-arrow-u ui-btn-icon-notext ui-btn-inline"></a></p></a></li>';
-						fileItems = fileItems + line;
-					});
+	$.each(files, function(index, value) {
+		var extension = value.substr((value.lastIndexOf('.') + 1));
+		var findResult = jQuery.grep(_self.app.imgDataTypes, function(item,
+				index) {
+			return item == extension.toUpperCase();
+		});
+		var fileData = _self.app.file64;
+		if (findResult.length > 0) {
+			fileData = _self.app.image64
+		}
+		var line = '<li id="' + _self.line_id + '" data-id="'
+				+ $("#sel_ftpservers").val() + _self.currentDirPath + value
+				+ '" class="file-placeholder"><a href="#">'
+				+ '<img class="ui-li-thumb" src="data:image/png;base64,'
+				+ fileData + '" /><h2>'
+				+ value.substr(0, (value.lastIndexOf('.'))) + '</h2></a></li>';
+		fileItems = fileItems + line;
+	});
 
 	return fileItems;
 }
@@ -193,9 +197,12 @@ FTPPage.prototype.renderFiles = function(files) {
 FTPPage.prototype.explodeServerDir = function(dirName, success, error) {
 	var _self = this;
 	var selected_ftpserver = $("#sel_ftpservers").val();
-	var ftpServerInfo = jQuery.grep(_self.app.appCache.ftpServers, function(
-			item, index) {
-		return item.url == selected_ftpserver;
+	var ftpServerInfo = '';
+	jQuery.grep(_self.app.appCache.ftpServers, function(item, index) {
+		if (item.url == selected_ftpserver) {
+			ftpServerInfo = item;
+		}
+		return (item.url == selected_ftpserver);
 	});
 
 	var ftpUrl = "ftp://" + selected_ftpserver + "/";
@@ -204,20 +211,27 @@ FTPPage.prototype.explodeServerDir = function(dirName, success, error) {
 	}
 
 	var updateFTPCache = function(files, dirs) {
-		if (!_self.app.appCache.ftpServers[selected_ftpserver]) {
-			_self.app.appCache.ftpServers[selected_ftpserver] = {};
-		}
-		var serverData = _self.app.appCache.ftpServers[selected_ftpserver].data
+		var selIndex = 0
+		var ftpServerInfo = '';
+		jQuery.grep(_self.app.appCache.ftpServers, function(item, index) {
+			if (item.url == selected_ftpserver) {
+				selIndex = index;
+				ftpServerInfo = item;
+			}
+			return (item.url == selected_ftpserver);
+		});
+
+		ftpServerInfo.data = {};
 		var dirPath = '/';
-		if (dirName != '') {
+		if (dirName != '/') {
 			dirPath += dirName;
 		}
 
 		var resultline = {};
 		resultline['files'] = files
 		resultline['dirs'] = dirs
-		serverData[dirPath] = resultline;
-		_self.app.appCache.ftpServers[selected_ftpserver].data = serverData;
+		ftpServerInfo.data[dirPath] = resultline;
+		_self.app.appCache.ftpServers[selIndex] = ftpServerInfo;
 		success();
 	}
 
@@ -228,7 +242,11 @@ FTPPage.prototype.explodeServerDir = function(dirName, success, error) {
 	};
 
 	// _self.app.ftpClient.filelist(ftpUrl, successCB, error);
-	tempFiles = [ "file.jpg", "file.pdf", "file.png", "file.txt" ];
-	tempDir = [ "subfolder1", "subfolder2", "testf1", "testf2" ];
+	tempFiles = [ "file.jpg", "file.pdf", "file.png", "file.txt", "file.jpg",
+			"file.pdf", "file.png", "file.txt", "file.jpg", "file.pdf",
+			"file.png", "file.txt" ];
+	tempDir = [ "subfolder1", "subfolder2", "testf1", "testf2", "subfolder1",
+			"subfolder2", "testf1", "testf2", "subfolder1", "subfolder2",
+			"testf1", "testf2" ];
 	updateFTPCache(tempFiles, tempDir);
 }

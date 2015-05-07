@@ -413,6 +413,10 @@ body {
 	padding: 0px 5px !important;
 }
 
+.ftp-explorer-content .ui-block-a {
+	padding: 0px 5px !important;
+}
+
 .file-explorer .ui-collapsible-set {
 	margin: 0 0;
 }
@@ -426,6 +430,26 @@ body {
 }
 
 .file-explorer   a.ui-btn {
+	border-top-width: 0;
+	font-weight: nornal;
+	font-size: 12px !important;
+	background: rgb(81, 81, 100);
+	color: #FFFFFF;
+}
+
+.ftp-explorer .ui-collapsible-set {
+	margin: 0 0;
+}
+
+.ftp-explorer .ui-collapsible-content {
+	padding: 0em 1em;
+}
+
+.ftp-explorer  .ui-collapsible-content>.ui-listview {
+	margin: -0em -1em;
+}
+
+.ftp-explorer   a.ui-btn {
 	border-top-width: 0;
 	font-weight: nornal;
 	font-size: 12px !important;
