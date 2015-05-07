@@ -77,10 +77,7 @@ FileExplorerPage.prototype.init = function() {
 		$("#pnl_file_explorer").panel("open");
 		$("#btn-finish-file-selection").on('click', function() {
 			// Push Selected File information to Gallery Page.
-			$.mobile.changePage("#pg_gallery", {
-				transition : "slide",
-				changeHash : false
-			});
+			$.mobile.changePage("#pg_gallery");
 		});
 
 		// if(_self.app.appCache.ftpServers.length>0){

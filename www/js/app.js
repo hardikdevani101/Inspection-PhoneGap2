@@ -173,6 +173,7 @@ App.prototype.register = function() {
 		_self.uploadWorker = undefined;
 		_self.downloadWorker.terminate();
 		_self.downloadWorker = undefined;
+		$.mobile.changePage("#pg_login");
 		$.mobile.loadPage("index.html",{reloadPage:true});
 	});
 	

@@ -3,5 +3,5 @@ self.addEventListener('message', function(event) {
 }, false);
 
 self.addEventListener('message', function(event) {
-	console.log('Error -Donwload-Worker said: ' + event.message, event);
+//	console.log('Error -Donwload-Worker said: ' + event.message, event);
 }, false);

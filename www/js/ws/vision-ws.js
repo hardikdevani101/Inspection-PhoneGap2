@@ -394,7 +394,7 @@ VisionApi.prototype.getFTPServerList = function(params, success, error) {
 			+ '</_0:field>'
 			+ '<_0:field column="AD_Org_ID" >'
 			+ '<_0:val>'
-			+ params.vis_org_id
+			+ params.orgid
 			+ '</_0:val>'
 			+ '</_0:field>'
 			+ '</_0:DataRow>'
@@ -412,11 +412,15 @@ VisionApi.prototype.getFTPServerList = function(params, success, error) {
 				complete : function() {
 					_self.app.hideDialog();
 				},
-
-				url : _self.completeUrl,
 				type : 'POST',
+				crossDomain : true,
 				data : reqBody,
-				contentType : 'text/xml; charset=\"utf-8\"',
+				url : _self.completeUrl,
+				accepts : {
+					xml : 'text/xml',
+					text : 'text/plain'
+				},
+				contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
 				dataType : 'xml'
 			})
 			.then(
@@ -437,16 +441,19 @@ VisionApi.prototype.getFTPServerList = function(params, success, error) {
 										fPass = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'Username') {
 										fUser = fullNodeList[i].childNodes[j].childNodes[0].textContent;
-									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'record_id') {
+									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'Vision_FTP_ID') {
 										recordId = fullNodeList[i].childNodes[j].childNodes[0].textContent;
+									}else if (fullNodeList[i].childNodes[j].attributes[0].value == 'isFTP') {
+										isFTP = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									}
 								}
 								resultline = {};
-								resultline['record-id'] = recordId
-								resultline['url'] = furl
-								resultline['name'] = fName
-								resultline['password'] = fPass
-								resultline['user'] = fUser
+								resultline['record-id'] = recordId;
+								resultline['url'] = fUrl;
+								resultline['isFTP'] = isFTP;
+								resultline['name'] = fName;
+								resultline['password'] = fPass;
+								resultline['user'] = fUser;
 								jsonResponse.push(resultline);
 							}
 						}

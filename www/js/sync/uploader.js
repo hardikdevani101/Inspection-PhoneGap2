@@ -3,5 +3,5 @@ self.addEventListener('message', function(event) {
 }, false);
 
 self.addEventListener('error', function(event) {
-	console.log('Error -Upload-Worker said: ' + event.message, event);
+	//console.log('Error -Upload-Worker said: ' + event.message, event);
 }, false);
