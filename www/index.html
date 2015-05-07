@@ -83,6 +83,9 @@
 		<!-------------- Login page main content ----------->
 		<div data-role="main" class="ui-content">
 			<form id="_form_login" action="#">
+				<div class="logoimage">
+					<img src="icon.png">
+				</div>
 				<div data-role="fieldcontainer">
 					<input id="txt_user" name="txt_user" type="text" value="alex.perez"
 						placeholder="Enter Username!" />
@@ -202,9 +205,16 @@ End of Login Page
 		<!-------------- Second page header ----------->
 		<div data-role="header" data-position="fixed">
 			<h1 data-role="heading">Home</h1>
-			<a href="#" id="btn_logout" data-icon="power" data-iconpos="notext"
-				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
-				title="Logout"></a>
+			<div data-role="controlgroup" data-type="horizontal"
+				class="ui-mini ui-btn-right">
+				<button id="btn_user" href="#pnl_aboutus" data-icon="user"
+					data-corners="false" data-shadow="true" data-iconshadow="true"
+					data-wrapperels="span" title="User" data-rel="popup"
+					data-transition="flip"></button>
+				<button href="#" id="btn_logout" data-icon="power"
+					data-corners="false" data-iconpos="notext" data-shadow="false"
+					data-iconshadow="false" data-wrapperels="span" title="Logout">SignOut</button>
+			</div>
 		</div>
 		<!-------------- Second page main content ----------->
 		<div data-role="main" class="ui-content">
@@ -224,10 +234,16 @@ End of Home page
 	<div data-role="page" id="pg_inspection">
 		<div data-role="header" data-position="fixed">
 			<h1 data-role="heading">MRLines</h1>
-			<a href="#" id="btn_logout" data-icon="power" data-iconpos="notext"
-				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
-				title="Logout"></a>
-
+			<div data-role="controlgroup" data-type="horizontal"
+				class="ui-mini ui-btn-right">
+				<button id="btn_user" href="#pnl_aboutus" data-icon="user"
+					data-corners="false" data-shadow="true" data-iconshadow="true"
+					data-wrapperels="span" title="User" data-rel="popup"
+					data-transition="flip"></button>
+				<button href="#" id="btn_logout" data-icon="power"
+					data-corners="false" data-iconpos="notext" data-shadow="false"
+					data-iconshadow="false" data-wrapperels="span" title="Logout">SignOut</button>
+			</div>
 		</div>
 		<!-------------- Second page main content ----------->
 		<div data-role="main" class="ui-content">
@@ -259,10 +275,16 @@ End of MR line page
 		data-title="Inspection page">
 		<div data-role="header" data-position="fixed">
 			<h2 data-role="heading">Inspection Lines</h2>
-			<a href="#" id="btn_logout" data-icon="power" data-iconpos="notext"
-				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
-				title="Logout"></a>
-
+			<div data-role="controlgroup" data-type="horizontal"
+				class="ui-mini ui-btn-right">
+				<button id="btn_user" href="#pnl_aboutus" data-icon="user"
+					data-corners="false" data-shadow="true" data-iconshadow="true"
+					data-wrapperels="span" title="User" data-rel="popup"
+					data-transition="flip"></button>
+				<button href="#" id="btn_logout" data-icon="power"
+					data-corners="false" data-iconpos="notext" data-shadow="false"
+					data-iconshadow="false" data-wrapperels="span" title="Logout">SignOut</button>
+			</div>
 		</div>
 		<!-------------- Second page main content ----------->
 		<div data-role="main" class="ui-content">
@@ -295,9 +317,16 @@ End of Inspection page
 	<div data-role="page" id="pg_gallery">
 		<div data-role="header" data-position="fixed">
 			<h2 data-role="heading">Gallery</h2>
-			<a href="#" id="btn_logout" data-icon="power" data-iconpos="notext"
-				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
-				title="Logout"></a>
+			<div data-role="controlgroup" data-type="horizontal"
+				class="ui-mini ui-btn-right">
+				<button id="btn_user" href="#pnl_aboutus" data-icon="user"
+					data-corners="false" data-shadow="true" data-iconshadow="true"
+					data-wrapperels="span" title="User" data-rel="popup"
+					data-transition="flip"></button>
+				<button href="#" id="btn_logout" data-icon="power"
+					data-corners="false" data-iconpos="notext" data-shadow="false"
+					data-iconshadow="false" data-wrapperels="span" title="Logout">SignOut</button>
+			</div>
 		</div>
 		<!-------------- Second page main content ----------->
 		<div data-role="main" class="ui-content img-gallery">
@@ -326,7 +355,7 @@ End of Inspection page
 					href="#pg_file_explorer">File Explorer</a></li>
 				<li data-icon="cloud" data-shadow="false" data-iconshadow="true"
 					data-wrapperels="div" data-iconpos="right" data-theme="b"><a
-					href="#pg_file_explorer" data-rel="close">FTP</a></li>
+					href="#pg_ftp_explorer" data-rel="close">FTP</a></li>
 			</ul>
 		</div>
 
@@ -377,16 +406,15 @@ Start of File Explorer page
 			<h2 data-role="heading">File Explorer</h2>
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-right">
-				<button href="#pnl_aboutus" data-icon="user" data-corners="false"
-					data-shadow="true" data-iconshadow="true" data-wrapperels="span"
-					title="User" data-rel="popup" data-transition="flip">Hitesh</button>
+				<button id="btn_user" href="#pnl_aboutus" data-icon="user"
+					data-corners="false" data-shadow="true" data-iconshadow="true"
+					data-wrapperels="span" title="User" data-rel="popup"
+					data-transition="flip"></button>
 				<button href="#" id="btn_logout" data-icon="power"
 					data-corners="false" data-iconpos="notext" data-shadow="false"
 					data-iconshadow="false" data-wrapperels="span" title="Logout">SignOut</button>
 			</div>
 		</div>
-
-
 		<div data-role="main" class="ui-content">
 
 			<div class="ui-grid-b file-explorer-content">
@@ -550,9 +578,9 @@ Start of FTP Explorer page
 				<button data-icon="check" data-iconpos="notext"
 					onClick="onFinishFtpSelection()">Select</button>
  -->
-				<button href="#pnl_aboutus" data-icon="user" data-corners="false"
+				<button id="btn_user" href="#pnl_aboutus" data-icon="user" data-corners="false"
 					data-shadow="true" data-iconshadow="true" data-wrapperels="span"
-					title="User" data-rel="popup" data-transition="flip">Hitesh</button>
+					title="User" data-rel="popup" data-transition="flip"></button>
 				<button href="#" id="btn_logout" data-icon="power"
 					data-corners="false" data-iconpos="notext" data-shadow="false"
 					data-iconshadow="false" data-wrapperels="span" title="Logout">SignOut</button>

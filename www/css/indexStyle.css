@@ -152,7 +152,7 @@ select {
 	float: right;
 }
 
-.folder, .file {
+.folder,.file {
 	font-family: sans-serif;
 	font-size: large;
 	cursor: pointer;
@@ -205,7 +205,7 @@ select {
 	margin: 0 auto;
 }
 
-.ui-mobile [data-role=header], .ui-mobile [data-role=footer] {
+.ui-mobile [data-role=header],.ui-mobile [data-role=footer] {
 	background-color: rgba(14, 14, 40, 0.71);
 	color: beige;
 	text-shadow: 1px 1px 12px #000;
@@ -216,7 +216,7 @@ img {
 	width: 100%;
 }
 
-form label, legend {
+form label,legend {
 	color: #123456;
 }
 
@@ -229,7 +229,8 @@ span {
 }
 
 body {
-	width: 100% overflow-x: hidden position: absolute top: 0 left: 0
+	width: 100% overflow-x:    hidden position:    absolute top:    0 left:
+		   0
 }
 
 .ui-panel.ui-panel-open {
@@ -275,7 +276,7 @@ body {
 	.img-gallery .ui-content {
 		padding: .5625em; /* 9px */
 	}
-	.img-gallery  .ui-listview>.ui-li-has-thumb>.ui-btn, .ui-listview>.ui-li-static.ui-li-has-thumb
+	.img-gallery  .ui-listview>.ui-li-has-thumb>.ui-btn,.ui-listview>.ui-li-static.ui-li-has-thumb
 		{
 		padding-left: 1.25em !important;
 	}
@@ -300,8 +301,8 @@ body {
 		max-height: none;
 	}
 	/* Make all list items and anchors inherit the border-radius from the UL. */
-	.img-gallery .ui-listview li, .img-gallery .ui-listview li .ui-btn,
-		.img-gallery .ui-listview .ui-li-thumb {
+	.img-gallery .ui-listview li,.img-gallery .ui-listview li .ui-btn,.img-gallery .ui-listview .ui-li-thumb
+		{
 		-webkit-border-radius: 0;
 		border-radius: inherit;
 	}
@@ -310,7 +311,7 @@ body {
 		display: none;
 	}
 	/* Make text wrap. */
-	.img-gallery .ui-listview h2, .img-gallery .ui-listview p {
+	.img-gallery .ui-listview h2,.img-gallery .ui-listview p {
 		white-space: normal;
 		overflow: visible;
 		position: absolute;
@@ -332,7 +333,7 @@ body {
 		bottom: 0;
 	}
 	/* Semi transparent background and different position if there is a thumb. The button has overflow hidden so we don't need to set border-radius. */
-	.ui-listview .ui-li-has-thumb h2, .ui-listview .ui-li-has-thumb p {
+	.ui-listview .ui-li-has-thumb h2,.ui-listview .ui-li-has-thumb p {
 		background: #111;
 		background: rgba(232, 214, 218, 1);
 		color: #BB133E;
@@ -374,7 +375,7 @@ body {
 		box-shadow: 0px 0px 2px #33ccff;
 	}
 	/* Animate focus and hover style, and resizing. */
-	.img-gallery .ui-listview li, .img-gallery .ui-listview .ui-btn {
+	.img-gallery .ui-listview li,.img-gallery .ui-listview .ui-btn {
 		-webkit-transition: all 500ms ease;
 		-moz-transition: all 500ms ease;
 		-o-transition: all 500ms ease;
@@ -432,7 +433,7 @@ body {
 	color: #FFFFFF;
 }
 
-body .ui-body-c, body .ui-overlay-c {
+body .ui-body-c,body .ui-overlay-c {
 	text-shadow: 0 0 0;
 }
 
@@ -448,4 +449,11 @@ body .ui-body-c, body .ui-overlay-c {
 	position: absolute;
 	top: 1px;
 	left: 1px;
+}
+
+.logoimage {
+	margin-left: auto;
+	margin-right: auto;
+	height: 100px;
+	width: 100px
 }

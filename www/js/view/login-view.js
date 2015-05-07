@@ -4,28 +4,29 @@ var LoginPage = function(app) {
 
 LoginPage.prototype.onLogin = function() {
 	try {
-		this.visionApi=new VisionApi(this.app);
+		this.visionApi = new VisionApi(this.app);
 		this.visionApi.login({
 			username : $("#txt_user").val(),
 			password : $("#txt_password").val()
 		}, function(result) {
-			if(result.loginInfo.error){
+			if (result.loginInfo.error) {
 				alert(result.loginInfo.error);
-			}else{
+			} else {
 				app.appCache.loginInfo['username'] = $("#txt_user");
 				app.appCache.loginInfo['password'] = $("#txt_password");
 				app.appCache.loginInfo['userid'] = result.loginInfo.ad_user_id;
-				
+
 				var visSettingsDAO = new Tbl_VISSetting(this);
 				visSettingsDAO.login("Y", function(data) {
 					console.log("DB-Login Success!")
 				}, function(msg) {
 					console.log("DB-Login Failed!")
 				});
-				
-				$(':mobile-pagecontainer').pagecontainer('change', '#pg_home', {
-					reload : false
-				})
+
+				$(':mobile-pagecontainer').pagecontainer('change', '#pg_home',
+						{
+							reload : false
+						})
 			}
 		}, function() {
 			console.log("Login failed");
@@ -57,9 +58,9 @@ LoginPage.prototype.init = function() {
 			}
 		},
 		errorPlacement : function(error, element) {
-			//error.appendTo(element.parent().prev());
-			element.attr("placeholder","Required Field!");
-			element.attr("style","border:1px solid red;");
+			// error.appendTo(element.parent().prev());
+			element.attr("placeholder", "Required Field!");
+			element.attr("style", "border:1px solid red;");
 		},
 		invalidHandler : function() {
 			alert("invalid form"); // for demo

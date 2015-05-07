@@ -94,9 +94,9 @@ VisionApi.prototype.login = function(params, success, error) {
 							jsonResponse = resultline;
 						}
 						if (fullNodeList.length > 0) {
-							for (var i = 0; i < fullNodeList.length; i++) {
+							for ( var i = 0; i < fullNodeList.length; i++) {
 								var dlab, dval;
-								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
+								for ( var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {
 										dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'AD_User_ID') {
@@ -170,9 +170,9 @@ VisionApi.prototype.getMRLines = function(params, success, error) {
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
 						if (fullNodeList.length > 0) {
-							for (var i = 0; i < fullNodeList.length; i++) {
+							for ( var i = 0; i < fullNodeList.length; i++) {
 								var dlab, dval, inOut, desc;
-								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
+								for ( var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'LABEL') {
 										dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'M_InOutLine_ID') {
@@ -252,9 +252,9 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
 						if (fullNodeList.length > 0) {
-							for (var i = 0; i < fullNodeList.length; i++) {
+							for ( var i = 0; i < fullNodeList.length; i++) {
 								var dlab, dval;
-								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
+								for ( var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {
 										dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent;
@@ -280,147 +280,145 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 
 VisionApi.prototype.uploadImage = function(params, success, error) {
 	var _self = this;
-	$
-			.ajax(
-					{
-						beforeSend : function() {
-							$.mobile.showPageLoadingMsg('b', 'Loading..', true);
-						},
-						complete : function() {
-							$.mobile.hidePageLoadingMsg();
-						},
+	var reqBody = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
+			+ '<soapenv:Header/>'
+			+ '<soapenv:Body>'
+			+ '<_0:runProcess>'
+			+ '<_0:ModelRunProcessRequest>'
+			+ '<_0:ModelRunProcess AD_Record_ID="2272195">'
+			+ '<_0:serviceType>AttachImage</_0:serviceType>'
+			+ '<_0:ParamValues>'
+			+ '<_0:field column="X_InstructionLine_ID">'
+			+ '<_0:val>'
+			+ params[imginspline]
+			+ '</_0:val>'
+			+ '</_0:field>'
+			+ '<_0:field column="imgName">'
+			+ '<_0:val>'
+			+ params[imgname]
+			+ '</_0:val>'
+			+ '</_0:field>'
+			+ '</_0:ParamValues>'
+			+ '</_0:ModelRunProcess>'
+			+ ADLoginRequest
+			+ '</_0:ModelRunProcessRequest>'
+			+ '</_0:runProcess>'
+			+ '</soapenv:Body>' + '</soapenv:Envelope>';
+	$.ajax({
+		beforeSend : function() {
+			_self.app.showDialog("Loading");
+		},
+		complete : function() {
+			_self.app.hideDialog();
+		},
 
-						url : completeUrl,
-						type : 'POST',
-						data : '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
-								+ '<soapenv:Header/>'
-								+ '<soapenv:Body>'
-								+ '<_0:runProcess>'
-								+ '<_0:ModelRunProcessRequest>'
-								+ '<_0:ModelRunProcess AD_Record_ID="2272195">'
-								+ '<_0:serviceType>AttachImage</_0:serviceType>'
-								+ '<_0:ParamValues>'
-								+ '<_0:field column="X_InstructionLine_ID">'
-								+ '<_0:val>'
-								+ params[imginspline]
-								+ '</_0:val>'
-								+ '</_0:field>'
-								+ '<_0:field column="imgName">'
-								+ '<_0:val>'
-								+ params[imgname]
-								+ '</_0:val>'
-								+ '</_0:field>'
-								+ '</_0:ParamValues>'
-								+ '</_0:ModelRunProcess>'
-								+ ADLoginRequest
-								+ '</_0:ModelRunProcessRequest>'
-								+ '</_0:runProcess>'
-								+ '</soapenv:Body>'
-								+ '</soapenv:Envelope>',
-						contentType : 'text/xml; charset=\"utf-8\"',
-						dataType : 'xml'
-					}).then(function(response) {
-				var summary = response.getElementsByTagName("Summary");
-				return {
-					'summary' : summary
-				};
-			}).fail(function(err) {
-				return err.responseText;
-			});
+		url : completeUrl,
+		type : 'POST',
+		data : reqBody,
+		contentType : 'text/xml; charset=\"utf-8\"',
+		dataType : 'xml'
+	}).then(function(response) {
+		var summary = response.getElementsByTagName("Summary");
+		return {
+			'summary' : summary
+		};
+	}).fail(function(err) {
+		return err.responseText;
+	});
 };
 
 VisionApi.prototype.uploadImageByMInOut = function(params) {
 	var _self = this;
-	$
-			.ajax(
-					{
-						beforeSend : function() {
-							$.mobile.showPageLoadingMsg('b', 'Loading..', true);
-						},
-						complete : function() {
-							$.mobile.hidePageLoadingMsg();
-						},
-						url : completeUrl,
-						type : 'POST',
-						data : '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
-								+ '<soapenv:Header/>'
-								+ '<soapenv:Body>'
-								+ '<_0:runProcess>'
-								+ '<_0:ModelRunProcessRequest>'
-								+ '<_0:ModelRunProcess AD_Record_ID="'
-								+ params.recid
-								+ '">'
-								+ '<_0:serviceType>AttachImage</_0:serviceType>'
-								+ '<_0:ParamValues>'
-								+ '<_0:field column="TableName">'
-								+ '<_0:val>'
-								+ params.tabname
-								+ '</_0:val>'
-								+ '</_0:field>'
-								+ '<_0:field column="imgName">'
-								+ '<_0:val>'
-								+ params.imgname
-								+ '</_0:val>'
-								+ '</_0:field>'
-								+ '</_0:ParamValues>'
-								+ '</_0:ModelRunProcess>'
-								+ ADLoginRequest
-								+ '</_0:ModelRunProcessRequest>'
-								+ '</_0:runProcess>'
-								+ '</soapenv:Body>'
-								+ '</soapenv:Envelope>',
-						contentType : 'text/xml; charset=\"utf-8\"',
-						dataType : 'xml'
-					}).then(function(response) {
-				var summary = response.getElementsByTagName("Summary");
-				return {
-					'summary' : summary
-				};
-			}).fail(function(err) {
-				return err.responseText;
-			});
+	var reqBody = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
+			+ '<soapenv:Header/>'
+			+ '<soapenv:Body>'
+			+ '<_0:runProcess>'
+			+ '<_0:ModelRunProcessRequest>'
+			+ '<_0:ModelRunProcess AD_Record_ID="'
+			+ params.recid
+			+ '">'
+			+ '<_0:serviceType>AttachImage</_0:serviceType>'
+			+ '<_0:ParamValues>'
+			+ '<_0:field column="TableName">'
+			+ '<_0:val>'
+			+ params.tabname
+			+ '</_0:val>'
+			+ '</_0:field>'
+			+ '<_0:field column="imgName">'
+			+ '<_0:val>'
+			+ params.imgname
+			+ '</_0:val>'
+			+ '</_0:field>'
+			+ '</_0:ParamValues>'
+			+ '</_0:ModelRunProcess>'
+			+ ADLoginRequest
+			+ '</_0:ModelRunProcessRequest>'
+			+ '</_0:runProcess>'
+			+ '</soapenv:Body>' + '</soapenv:Envelope>';
+	$.ajax({
+		beforeSend : function() {
+			_self.app.showDialog("Loading");
+		},
+		complete : function() {
+			_self.app.hideDialog();
+		},
+		url : completeUrl,
+		type : 'POST',
+		data : reqBody,
+		contentType : 'text/xml; charset=\"utf-8\"',
+		dataType : 'xml'
+	}).then(function(response) {
+		var summary = response.getElementsByTagName("Summary");
+		return {
+			'summary' : summary
+		};
+	}).fail(function(err) {
+		return err.responseText;
+	});
 };
 
 VisionApi.prototype.getFTPServerList = function(params, success, error) {
+	var _self = this;
+	var reqBody = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
+			+ '<soapenv:Header/>'
+			+ '<soapenv:Body>'
+			+ '<_0:queryData>'
+			+ '<_0:ModelCRUDRequest>'
+			+ '<_0:ModelCRUD>'
+			+ '<_0:serviceType>Vision_FTP</_0:serviceType>'
+			+ '<_0:TableName>Vision_FTP</_0:TableName>'
+			+ '<_0:RecordID>0</_0:RecordID>'
+			+ '<_0:DataRow>'
+			+ '<_0:field column="IsActive" >'
+			+ '<_0:val>Y</_0:val>'
+			+ '</_0:field>'
+			+ '<_0:field column="AD_Org_ID" >'
+			+ '<_0:val>'
+			+ params.vis_org_id
+			+ '</_0:val>'
+			+ '</_0:field>'
+			+ '</_0:DataRow>'
+			+ '</_0:ModelCRUD>'
+			+ _self.ADLoginRequest
+			+ '</_0:ModelCRUDRequest>'
+			+ '</_0:queryData>'
+			+ '</soapenv:Body>'
+			+ '</soapenv:Envelope>';
 	$
-			.ajax(
-					{
-						beforeSend : function() {
-							$.mobile.showPageLoadingMsg('b', 'Loading..', true);
-						},
-						complete : function() {
-							$.mobile.hidePageLoadingMsg();
-						},
+			.ajax({
+				beforeSend : function() {
+					_self.app.showDialog("Loading");
+				},
+				complete : function() {
+					_self.app.hideDialog();
+				},
 
-						url : completeUrl,
-						type : 'POST',
-						data : '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
-								+ '<soapenv:Header/>'
-								+ '<soapenv:Body>'
-								+ '<_0:queryData>'
-								+ '<_0:ModelCRUDRequest>'
-								+ '<_0:ModelCRUD>'
-								+ '<_0:serviceType>Vision_FTP</_0:serviceType>'
-								+ '<_0:TableName>Vision_FTP</_0:TableName>'
-								+ '<_0:RecordID>0</_0:RecordID>'
-								+ '<_0:DataRow>'
-								+ '<_0:field column="IsActive" >'
-								+ '<_0:val>Y</_0:val>'
-								+ '</_0:field>'
-								+ '<_0:field column="AD_Org_ID" >'
-								+ '<_0:val>'
-								+ params.vis_org_id
-								+ '</_0:val>'
-								+ '</_0:field>'
-								+ '</_0:DataRow>'
-								+ '</_0:ModelCRUD>'
-								+ ADLoginRequest
-								+ '</_0:ModelCRUDRequest>'
-								+ '</_0:queryData>'
-								+ '</soapenv:Body>' + '</soapenv:Envelope>',
-						contentType : 'text/xml; charset=\"utf-8\"',
-						dataType : 'xml'
-					})
+				url : _self.completeUrl,
+				type : 'POST',
+				data : reqBody,
+				contentType : 'text/xml; charset=\"utf-8\"',
+				dataType : 'xml'
+			})
 			.then(
 					function(response) {
 						jsonResponse = [];
@@ -428,9 +426,9 @@ VisionApi.prototype.getFTPServerList = function(params, success, error) {
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
 						if (fullNodeList.length > 0) {
-							for (var i = 0; i < fullNodeList.length; i++) {
+							for ( var i = 0; i < fullNodeList.length; i++) {
 								var dlab, dval, inOut, desc;
-								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
+								for ( var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'FTP_Url') {
 										fUrl = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {
@@ -505,9 +503,9 @@ VisionApi.prototype.getWaterMarkList = function(success, error) {
 								.getElementsByTagName("DataRow");
 						var data = [];
 						if (fullNodeList.length > 0) {
-							for (var i = 0; i < fullNodeList.length; i++) {
+							for ( var i = 0; i < fullNodeList.length; i++) {
 								var item = {};
-								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
+								for ( var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'Description') {
 										item["url"] = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {

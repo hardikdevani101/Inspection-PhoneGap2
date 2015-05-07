@@ -8,6 +8,7 @@ InspLinesPage.prototype.init = function() {
 	// String(_self.app.appCache.loginInfo.username));
 	// _self.loadMRLines();
 	$(document).on("pagebeforeshow", "#pg_inspection", function() {
+		$('#btn_user').append($(_self.app.appCache.loginInfo.username).val());
 		_self.loadMRLines();
 		$('#btn_refresh_mrlines').on("click", function() {
 			_self.app.appCache.mrLines = [];
@@ -27,16 +28,16 @@ InspLinesPage.prototype.init = function() {
 }
 
 InspLinesPage.prototype.syncInspLines = function() {
-	
+
 }
 
 InspLinesPage.prototype.renderMRLines = function() {
 	var _self = this;
 	var items = '';
 	$.each(_self.app.appCache.mrLines, function() {
-		var line = '<li data-mini="true"><a  data-mini="true" id="mrline_' + this.m_inoutline_id + '" data-id="'
-				+ this.m_inoutline_id + '">' + this.label + ' / ' + this.desc
-				+ '</a></li>';
+		var line = '<li data-mini="true"><a  data-mini="true" id="mrline_'
+				+ this.m_inoutline_id + '" data-id="' + this.m_inoutline_id
+				+ '">' + this.label + ' / ' + this.desc + '</a></li>';
 		items = items + line;
 	});
 
@@ -47,11 +48,6 @@ InspLinesPage.prototype.renderMRLines = function() {
 		console.log($(this).data("id"));
 		_self.app.appCache.session.m_inoutline_id = $(this).data("id");
 		$.mobile.changePage("#pg_inspection_detail");
-	});
-
-	$.mobile.changePage("#pg_inspection", {
-		transition : "slide",
-		changeHash : false
 	});
 
 	$.mobile.loading('hide');
