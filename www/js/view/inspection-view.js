@@ -81,12 +81,22 @@ InspLinesPage.prototype.loadMRLines = function() {
 			_self.app.hideDialog();
 		});
 	}
-}
+};
+InspLinesPage.prototype.updateInspLinesDetail = function() {
 
+};
 InspLinesPage.prototype.renderInspLines = function() {
 	var _self = this;
 	var sel_inoutline_id = _self.app.appCache.session.m_inoutline_id;
 	var items = '';
+	function mrLine(element, index, array) {
+		return (element.m_inoutline_id == sel_inoutline_id);
+	}
+	var mr_lines = _self.app.inspLinePage.mrLines.filter(mrLine);
+	if (mr_lines.length > 0) {
+		$('#inspMRDetail').html(mr_lines[0].label);
+		$('#prefixInpectLine').html(mr_lines[0].desc);
+	}
 	if (!(typeof _self.app.appCache.inspLines[sel_inoutline_id] === 'undefined')
 			&& _self.app.appCache.inspLines[sel_inoutline_id].length > 0) {
 		$.each(_self.app.appCache.inspLines[sel_inoutline_id], function() {
@@ -102,6 +112,9 @@ InspLinesPage.prototype.renderInspLines = function() {
 				function() {
 					_self.app.appCache.session.x_instructionline_id = $(this)
 							.data("id");
+					$('#inspMRDetGallery').html(
+							$("#inspMRDetail").html() + " (" + $(this).html()
+									+ ") ");
 					$.mobile.changePage("#pg_gallery");
 				});
 	}

@@ -274,6 +274,10 @@ End of MR line page
 	<div data-role="page" id="pg_inspection_detail"
 		data-title="Inspection page">
 		<div data-role="header" data-position="fixed">
+			<a href="#pnl_inspModify" id="inspMRDetail" data-corners="true"
+				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+				title="Inspection Line" data-rel="popup" data-rel="popup"
+				data-transition="flip"></a>
 			<h2 data-role="heading">Inspection Lines</h2>
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-right">
@@ -288,10 +292,8 @@ End of MR line page
 		</div>
 		<!-------------- Second page main content ----------->
 		<div data-role="main" class="ui-content">
-			<div id="galleryBreadCrumb"></div>
 			<ul data-role="listview" data-inset="true" id="_list_insp"></ul>
 		</div>
-
 		<div data-role="footer" data-position="fixed">
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
@@ -317,6 +319,26 @@ End of Inspection page
 	<!-------------- Gallery page ----------->
 	<div data-role="page" id="pg_gallery">
 		<div data-role="header" data-position="fixed">
+			<a id="prefixInpectLine" href="#prefixModify" data-rel="popup"
+				data-position-to="window"
+				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-check ui-btn-icon-left ui-btn-a"
+				data-transition="pop"></a>
+			<div data-role="popup" id="prefixModify" data-theme="a"
+				class="ui-corner-all">
+				<form id="_prefix_modify" action="#">
+					<div style="padding: 10px 20px;">
+						<h3>Modify Prefix</h3>
+						<label for="prefixInpect" class="ui-hidden-accessible">Prefix:</label>
+						<input type="text" name="prefixInpect" id="prefixInpect" value=""
+							placeholder="prefix" data-theme="a"> <input id="prefixbtn"
+							type="submit" data-inline="true" value="Update" data-theme="b">
+					</div>
+				</form>
+			</div>
+			<!-- 			<a href="#pnl_inspModify" id="prefixInpectLine" data-corners="true" -->
+			<!-- 				data-shadow="true" data-iconshadow="true" data-wrapperels="span" -->
+			<!-- 				title="Inspection Line Gallery" data-rel="popup" -->
+			<!-- 				data-transition="flip"></a> -->
 			<h2 data-role="heading">Gallery</h2>
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-right">
@@ -331,7 +353,7 @@ End of Inspection page
 		</div>
 		<!-------------- Second page main content ----------->
 		<div data-role="main" class="ui-content img-gallery">
-			<div id="galleryBreadCrumb"></div>
+			<div id="inspMRDetGallery"></div>
 			<ul data-role="listview" id="ls_inspFiles" data-inset="true">
 				<!-- <li><a href="#"> 				<img src="../_assets/img/apple.png"
 						class="ui-li-thumb">
@@ -372,6 +394,18 @@ End of Inspection page
 						title="Add">Add File</a></li>
 				</ul>
 			</div>
+		</div>
+		<div data-role="popup" id="pnl_inspModify">
+			<ul data-role="listview" data-theme="b" data-inset="true">
+				<li data-icon="info" data-shadow="false" data-iconshadow="true"
+					data-wrapperels="div" data-iconpos="right" data-theme="b"><a
+					href="#" data-rel="close">Prefix</a></li>
+				<li class="ui-field-contain" data-shadow="false"
+					data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r"
+					data-iconpos="right" data-theme="b"><input type="text"
+					name="txtInpect" id="inspectName" />
+					<button>OK</button></li>
+			</ul>
 		</div>
 	</div>
 

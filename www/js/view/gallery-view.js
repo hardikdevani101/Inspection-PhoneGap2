@@ -9,6 +9,9 @@ GalleryPage.prototype.rederBreadCrumb = function() {
 	$('#pg_gallery #btn_user').html(
 			$(_self.app.appCache.loginInfo.username).val());
 };
+GalleryPage.prototype.demo = function() {
+	console.log('i am here');
+};
 GalleryPage.prototype.init = function(x_instructionline_id) {
 	var _self = this;
 	$(document).on("pagebeforeshow", "#pg_gallery", function() {

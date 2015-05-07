@@ -147,7 +147,7 @@ FTPPage.prototype.onFileTap = function(event) {
 
 FTPPage.prototype.onDirTap = function(event) {
 	var _self = this;
-	_self.currentDirPath = $(event.delegateTarget).data('id')
+	_self.currentDirPath = $(event.delegateTarget).data('id')+'/'
 	console.log('Tap _self.currentDirPath>> ' + _self.currentDirPath);
 	_self.explodeServerDir(_self.currentDirPath, function() {
 		_self.renderContent(_self.currentDirPath);
@@ -224,15 +224,15 @@ FTPPage.prototype.explodeServerDir = function(dirName, success, error) {
 		});
 
 		ftpServerInfo.data = {};
-		var dirPath = _self.currentDirPath;
-		if (dirName != '/') {
-			dirPath = dirPath+dirName+'/';
-		}
+//		var dirPath = _self.currentDirPath;
+//		if (dirName != '/') {
+//			dirPath = dirPath+dirName+'/';
+//		}
 
 		var resultline = {};
 		resultline['files'] = files
 		resultline['dirs'] = dirs
-		ftpServerInfo.data[dirPath] = resultline;
+		ftpServerInfo.data[_self.currentDirPath] = resultline;
 		_self.app.appCache.ftpServers[selIndex] = ftpServerInfo;
 		success();
 	}
