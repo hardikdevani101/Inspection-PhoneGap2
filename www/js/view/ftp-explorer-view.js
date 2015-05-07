@@ -5,9 +5,9 @@ var FTPPage = function(app) {
 }
 
 FTPPage.prototype.rederBreadCrumb = function() {
-	// $('#ftp_explorer_bc').text(
-	// String(_self.app.appCache.loginInfo.username));
-}
+	var _self = this;
+	$('#pg_ftp_explorer #btn_user').html($(_self.app.appCache.loginInfo.username).val());
+};
 
 FTPPage.prototype.init = function() {
 	var _self = this;
@@ -16,6 +16,7 @@ FTPPage.prototype.init = function() {
 					"pagebeforeshow",
 					"#pg_ftp_explorer",
 					function() {
+						_self.rederBreadCrumb();
 						// Initialize serverlist Drop down
 						_self.visionApi = new VisionApi(_self.app);
 						for ( var i = 0; i < _self.app.appCache.ftpServers.length; i++) {

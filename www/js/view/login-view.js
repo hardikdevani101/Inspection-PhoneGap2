@@ -1,8 +1,13 @@
 var LoginPage = function(app) {
 	this.app = app;
 };
-
+LoginPage.prototype.rederBreadCrumb = function() {
+	var _self = this;
+	$('#pg_home #btn_user').html(
+			$(_self.app.appCache.loginInfo.username).val());
+};
 LoginPage.prototype.onLogin = function() {
+	var _self = this;
 	try {
 		this.visionApi = new VisionApi(this.app);
 		this.visionApi.login({
@@ -22,11 +27,11 @@ LoginPage.prototype.onLogin = function() {
 				}, function(msg) {
 					console.log("DB-Login Failed!")
 				});
-
+				_self.rederBreadCrumb();
 				$(':mobile-pagecontainer').pagecontainer('change', '#pg_home',
 						{
 							reload : false
-						})
+						});
 			}
 		}, function() {
 			console.log("Login failed");

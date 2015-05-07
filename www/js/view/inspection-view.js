@@ -1,14 +1,18 @@
 var InspLinesPage = function(app) {
 	this.app = app;
 }
-
+InspLinesPage.prototype.rederBreadCrumb = function() {
+	var _self = this;
+	$('#pg_inspection #btn_user').html(
+			$(_self.app.appCache.loginInfo.username).val());
+};
 InspLinesPage.prototype.init = function() {
 	var _self = this;
 	// $('#pg_inspection div h2').text(
 	// String(_self.app.appCache.loginInfo.username));
 	// _self.loadMRLines();
 	$(document).on("pagebeforeshow", "#pg_inspection", function() {
-		$('#btn_user').append($(_self.app.appCache.loginInfo.username).val());
+		_self.rederBreadCrumb();
 		_self.loadMRLines();
 		$('#btn_refresh_mrlines').on("click", function() {
 			_self.app.appCache.mrLines = [];
@@ -102,10 +106,15 @@ InspLinesPage.prototype.renderInspLines = function() {
 				});
 	}
 	_self.app.hideDialog();
-}
-
+};
+InspLinesPage.prototype.rederInspLinesDetailsBreadCrumb = function() {
+	var _self = this;
+	$('#pg_inspection_detail #btn_user').html(
+			$(_self.app.appCache.loginInfo.username).val());
+};
 InspLinesPage.prototype.loadInspLines = function(params) {
 	var _self = this;
+	_self.rederInspLinesDetailsBreadCrumb();
 	_self.app.showDialog('Loading..');
 	var sel_inoutline_id = _self.app.appCache.session.m_inoutline_id;
 	if (!(typeof params === 'undefined')) {
