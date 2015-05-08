@@ -35,6 +35,7 @@ FTPPage.prototype.init = function() {
 
 FTPPage.prototype.fillFTPServerList = function() {
 	var _self = this;
+	$("#sel_ftpservers").html('');
 	if (_self.app.appCache.ftpServers.length > 0) {
 		$.each(_self.app.appCache.ftpServers, function(key, data) {
 			if (data.isFTP == 'Y') {
@@ -96,7 +97,7 @@ FTPPage.prototype.renderContent = function(dirPath) {
 
 	var serverData = ftpServerInfo.data;
 	if (serverData) {
-		if(serverData[_self.currentDirPath]){
+		if (serverData[_self.currentDirPath]) {
 			var files = serverData[_self.currentDirPath].files;
 			var dirs = serverData[_self.currentDirPath].dirs;
 			var ftpUrl = "ftp://" + selected_ftpserver;
@@ -112,7 +113,7 @@ FTPPage.prototype.renderContent = function(dirPath) {
 			$(".dir-placeholder").bind("tap", function(event) {
 				_self.onDirTap(event)
 			});
-			
+
 			$(".file-placeholder").bind("tap", function(event) {
 				_self.onFileTap(event)
 			});
@@ -123,7 +124,9 @@ FTPPage.prototype.renderContent = function(dirPath) {
 
 FTPPage.prototype.onFileTap = function(event) {
 	var _self = this;
-	var selected = $(event.delegateTarget).data('id')
+	var selected = $(event.delegateTarget).data('id');
+	$('#currentDirPath').html(selected);
+	$('#currentDirPath').attr('title', selected);
 	console.log('Tap >> ' + selected);
 	var findResult = [];
 	if (_self.selFiles.length > 0) {
@@ -147,8 +150,10 @@ FTPPage.prototype.onFileTap = function(event) {
 
 FTPPage.prototype.onDirTap = function(event) {
 	var _self = this;
-	_self.currentDirPath = $(event.delegateTarget).data('id')+'/'
+	_self.currentDirPath = $(event.delegateTarget).data('id') + '/'
 	console.log('Tap _self.currentDirPath>> ' + _self.currentDirPath);
+	$('#currentDirPath').attr('title', _self.currentDirPath);
+	$('#currentDirPath').html(_self.currentDirPath);
 	_self.explodeServerDir(_self.currentDirPath, function() {
 		_self.renderContent(_self.currentDirPath);
 	}, function(msg) {
@@ -224,10 +229,10 @@ FTPPage.prototype.explodeServerDir = function(dirName, success, error) {
 		});
 
 		ftpServerInfo.data = {};
-//		var dirPath = _self.currentDirPath;
-//		if (dirName != '/') {
-//			dirPath = dirPath+dirName+'/';
-//		}
+		// var dirPath = _self.currentDirPath;
+		// if (dirName != '/') {
+		// dirPath = dirPath+dirName+'/';
+		// }
 
 		var resultline = {};
 		resultline['files'] = files
@@ -244,11 +249,19 @@ FTPPage.prototype.explodeServerDir = function(dirName, success, error) {
 	};
 
 	// _self.app.ftpClient.filelist(ftpUrl, successCB, error);
-	tempFiles = [ "file.jpg", "file.pdf", "file.png", "file.txt", "file.jpg",
-			"file.pdf", "file.png", "file.txt", "file.jpg", "file.pdf",
-			"file.png", "file.txt" ];
-	tempDir = [ "subfolder1", "subfolder2", "testf1", "testf2", "subfolder1",
-			"subfolder2", "testf1", "testf2", "subfolder1", "subfolder2",
-			"testf1", "testf2" ];
+	var randomNum = Math.floor(Math.random() * (30 - 0 + 1)) + 0;
+	var extensionList = [ "jpg", "pdf", "png", "txt" ];
+	var tempFiles = [], tempDir = [];
+	for ( var i = 0; i < randomNum; i++) {
+		tempFiles.push('file.'
+				+ extensionList[Math.floor(Math.random()
+						* (extensionList.length))]);
+	}
+	randomNum = Math.floor(Math.random() * (30 - 0 + 1)) + 0;
+	var dirList = [ "subfolder", "textf" ];
+	for ( var i = 0; i < randomNum; i++) {
+		tempDir.push(dirList[Math.floor(Math.random() * (dirList.length))]
+				+ "_" + i);
+	}
 	updateFTPCache(tempFiles, tempDir);
 }

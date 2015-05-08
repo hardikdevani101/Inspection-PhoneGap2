@@ -15,14 +15,15 @@
 <!--JQuery Mobile CSS -->
 <!-- <link rel="stylesheet"
 	href="js/lib/jmobile/1.4.5/jquery.mobile-1.4.5.min.css">
- --><link rel="stylesheet"
+ -->
+<link rel="stylesheet"
 	href="js/lib/jmobile/1.4.5/jquery.mobile.structure-1.4.5.min.css"
 	type="text/css" />
 <link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css" />
 
 <!--JQuery Core Lib  -->
 <script src="js/lib/jquery-1.11.1.min.js"></script>
- 
+
 <!--JQuery Mobile  JS-->
 <script src="js/lib/jmobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 <!-- Form Validation JS  -->
@@ -64,18 +65,21 @@
 	<!-------------- Login Page ----------->
 	<div data-role="page" id="pg_login" data-theme="c">
 		<!-------------- Login page header ----------->
-		<div data-role="header" data-position="fixed"  data-theme="c">
+		<div data-role="header" data-position="fixed" data-theme="c">
 
-			<a href="#pg_settings" data-icon="gear" data-iconpos="notext" data-mini="true" 
-				data-corners="false" data-shadow="false" data-theme="c" data-mini="true" data-iconshadow="false"
+			<a href="#pg_settings" data-icon="gear" data-iconpos="notext"
+				data-mini="true" data-corners="false" data-shadow="false"
+				data-theme="c" data-mini="true" data-iconshadow="false"
 				data-wrapperels="span" title="Preference"></a>
 			<h1 data-role="heading">VISion</h1>
 			<a href="#pnl_aboutus" data-icon="info" data-corners="false"
-				data-shadow="false" data-iconshadow="false" data-wrapperels="span" data-mini="true" 
-				title="About Us" data-rel="popup" data-theme="c" data-transition="flip">About</a>
+				data-shadow="false" data-iconshadow="false" data-wrapperels="span"
+				data-mini="true" title="About Us" data-rel="popup" data-theme="c"
+				data-transition="flip">About</a>
 		</div>
 		<!-------------- Login page main content ----------->
-		<div data-role="main" class="ui-content"   data-theme="c" data-mini="true" >
+		<div data-role="main" class="ui-content" data-theme="c"
+			data-mini="true">
 			<form id="_form_login" action="#">
 				<div class="logoimage">
 					<img src="icon.png">
@@ -88,15 +92,16 @@
 					<input id="txt_password" name="txt_password" type="password"
 						value="password" placeholder="Enter Password!" data-mini="true" />
 				</div>
-				<input id="loginbtn" type="submit" data-mini="true"  data-inline="true" value="Login"
-					data-theme="c">
+				<input id="loginbtn" type="submit" data-mini="true"
+					data-inline="true" value="Login" data-theme="c">
 			</form>
 		</div>
 
 		<div data-role="panel" data-position="left" data-theme="c"
 			id="pg_settings" data-content-theme="c">
 			<form id="_form_settings">
-				<ul data-role="listview" data-mini="true" data-theme="c" data-inset="false">
+				<ul data-role="listview" data-mini="true" data-theme="c"
+					data-inset="false">
 					<li data-icon="delete" data-shadow="false" data-iconshadow="false"
 						data-wrapperels="div" data-iconpos="right" data-theme="c"><a
 						href="#" data-rel="close">Settings</a></li>
@@ -115,7 +120,8 @@
 					<li class="ui-field-contain" data-shadow="false"
 						data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
 						data-iconpos="right" data-theme="c"><label for="select-lang">Lang</label>
-						<select name="txt_lang" id="txt_lang" data-native-menu="false">
+						<select name="txt_lang" id="txt_lang" data-native-menu="false"
+						data-mini="true">
 							<option value="en_US">English</option>
 					</select></li>
 
@@ -123,14 +129,15 @@
 						data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
 						data-iconpos="right" data-theme="c"><label
 						for="select-client">Client</label> <select name="txt_client"
-						id="txt_client" data-native-menu="false">
+						id="txt_client" data-native-menu="false" data-mini="true">
 							<option value="1000000">Velocity</option>
 					</select></li>
 
 					<li class="ui-field-contain" data-shadow="false"
 						data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
 						data-iconpos="right" data-theme="c"><label for="select-role">Role</label>
-						<select name="txt_role" id="txt_role" data-native-menu="false">
+						<select name="txt_role" id="txt_role" data-native-menu="false"
+						data-mini="true">
 							<option value="1000043">Warehouse QA Team</option>
 							<option value="1000055">Warehouse QA Manager</option>
 							<option value="1000044">Warehouse Manager</option>
@@ -143,7 +150,7 @@
 						data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
 						data-iconpos="right" data-theme="c"><label for="select-org">Org</label>
 						<select name="txt_organization" id="txt_organization"
-						data-native-menu="false">
+						data-native-menu="false" data-mini="true">
 							<option value="0">*</option>
 							<option value="1000019">Amsterdam</option>
 							<option value="1000003">Austin</option>
@@ -155,14 +162,14 @@
 						data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
 						data-iconpos="right" data-theme="c"><label
 						for="select-warehouse">WH</label> <select name="txt_warehouse"
-						id="txt_warehouse" data-native-menu="false">
+						id="txt_warehouse" data-native-menu="false" data-mini="true">
 					</select></li>
 
 					<li class="ui-field-contain" data-shadow="false"
 						data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
 						data-iconpos="right" data-theme="c"><label
 						for="select-imgqua">Img</label> <select name="txt_imgQua"
-						id="txt_imgQua" data-native-menu="false">
+						id="txt_imgQua" data-native-menu="false" data-mini="true">
 							<option value="50">50% (low)</option>
 							<option value="75">75% (default)</option>
 							<option value="80">80% (high)</option>
@@ -172,7 +179,7 @@
 					<li data-shadow="false" data-iconshadow="false"
 						data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
 						data-theme="c"><input id="btn_setting_save" type="submit"
-						data-inline="true" value="Save" data-theme="c"></li>
+						data-inline="true" value="Save" data-theme="c" data-mini="true"></li>
 				</ul>
 			</form>
 		</div>
@@ -195,9 +202,9 @@ End of Login Page
 -------------------------------------------------------------->
 
 	<!-------------- Home page ----------->
-	<div data-role="page" id="pg_home"  data-theme="c">
+	<div data-role="page" id="pg_home" data-theme="c">
 		<!-------------- Second page header ----------->
-		<div data-role="header" data-position="fixed"  data-theme="c">
+		<div data-role="header" data-position="fixed" data-theme="c">
 			<h1 data-role="heading">Home</h1>
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-right">
@@ -225,8 +232,8 @@ End of Home page
 -------------------------------------------------------------->
 
 	<!-------------- MR line page ----------->
-	<div data-role="page" id="pg_inspection"  data-theme="c">
-		<div data-role="header" data-position="fixed"  data-theme="c">
+	<div data-role="page" id="pg_inspection" data-theme="c">
+		<div data-role="header" data-position="fixed" data-theme="c">
 			<h1 data-role="heading">MRLines</h1>
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-right">
@@ -240,14 +247,14 @@ End of Home page
 			</div>
 		</div>
 		<!-------------- Second page main content ----------->
-		<div data-role="main" class="ui-content"  data-theme="c">
+		<div data-role="main" class="ui-content" data-theme="c">
 			<ul data-role="listview" data-filter="true" data-inset="false"
 				data-filter-placeholder="Search MRLines" id="_list_mrlines">
 
 			</ul>
 		</div>
 
-		<div data-role="footer" data-position="fixed"  data-theme="a">
+		<div data-role="footer" data-position="fixed" data-theme="a">
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
 					<li><a href="#pg_home" data-icon="home" data-shadow="false"
@@ -265,9 +272,8 @@ End of MR line page
 -------------------------------------------------------------->
 
 	<!-------------- Indpection page ----------->
-	<div data-role="page" id="pg_inspection_detail"
-		data-title="Inspection page">
-		<div data-role="header" data-position="fixed">
+	<div data-role="page" id="pg_inspection_detail" data-theme="c">
+		<div data-role="header" data-position="fixed" data-theme="c">
 			<a href="#pnl_inspModify" id="inspMRDetail" data-corners="false"
 				data-shadow="false" data-iconshadow="false" data-wrapperels="span"
 				title="Inspection Line" data-rel="popup" data-rel="popup"
@@ -285,21 +291,21 @@ End of MR line page
 			</div>
 		</div>
 		<!-------------- Second page main content ----------->
-		<div data-role="main" class="ui-content">
+		<div data-role="main" class="ui-content" data-theme="c">
 			<ul data-role="listview" data-inset="false" id="_list_insp"></ul>
 		</div>
-		<div data-role="footer" data-position="fixed"  data-theme="c">
+		<div data-role="footer" data-position="fixed" data-theme="a">
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
 					<li><a href="#pg_inspection" data-icon="bullets"
-						data-shadow="false" data-wrapperels="span" data-theme="c"
+						data-shadow="false" data-wrapperels="span" data-theme="a"
 						title="Back">MRLines</a></li>
 					<li>
 						<!-- <a href="#" id="btn-delete" data-icon="delete"
 						data-shadow="false"  data-wrapperels="span"
 						data-theme="c" title="Delete">Sync</a></li>
 					<li> --> <a href="#" id="btn_sync_insp" data-icon="refresh"
-						data-shadow="false" data-wrapperels="span" data-theme="c"
+						data-shadow="false" data-wrapperels="span" data-theme="a"
 						title="Refresh">Sync</a>
 					</li>
 				</ul>
@@ -311,8 +317,8 @@ End of MR line page
 End of Inspection page
 -------------------------------------------------------------->
 	<!-------------- Gallery page ----------->
-	<div data-role="page" id="pg_gallery">
-		<div data-role="header" data-position="fixed">
+	<div data-role="page" id="pg_gallery" data-theme="c">
+		<div data-role="header" data-position="fixed" data-theme="c">
 			<a id="prefixInpectLine" href="#prefixModify" data-rel="popup"
 				data-position-to="window"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-check ui-btn-icon-left ui-btn-a"
@@ -324,8 +330,9 @@ End of Inspection page
 						<h3>Modify Prefix</h3>
 						<label for="prefixInpect" class="ui-hidden-accessible">Prefix:</label>
 						<input type="text" name="prefixInpect" id="prefixInpect" value=""
-							placeholder="prefix" data-theme="c"> <input id="prefixbtn"
-							type="submit" data-inline="true" value="Update" data-theme="c">
+							placeholder="prefix" data-theme="a"> <input
+							id="prefixbtn" type="submit" data-inline="true" value="Update"
+							data-theme="b">
 					</div>
 				</form>
 			</div>
@@ -346,8 +353,8 @@ End of Inspection page
 			</div>
 		</div>
 		<!-------------- Second page main content ----------->
-		<div data-role="main" class="ui-content img-gallery">
-			<div id="inspMRDetGallery"></div>
+		<div data-role="main" class="ui-content img-gallery" data-theme="c">
+			<div id="inspMRDetGallery">Current Selected Path</div>
 			<ul data-role="listview" id="ls_inspFiles" data-inset="false">
 				<!-- <li><a href="#"> 				<img src="../_assets/img/apple.png"
 						class="ui-li-thumb">
@@ -362,42 +369,42 @@ End of Inspection page
 		<div data-role="panel" data-theme="c" id="pnl_file_sources"
 			data-position="right">
 			<ul data-role="listview" data-theme="c">
-				<li data-shadow="false" data-iconshadow="false" data-wrapperels="div"
-					data-icon="grid" data-iconpos="right" data-theme="c"><a
-					href="#" id="btn_pic_gallery">Gallery</a></li>
-				<li data-shadow="false" data-iconshadow="false" data-wrapperels="div"
-					data-icon="camera" data-iconpos="right" data-theme="c"><a
-					href="#" id="btn_pic_camera">Camera</a></li>
-				<li data-shadow="false" data-iconshadow="false" data-wrapperels="div"
-					data-icon="action" data-iconpos="right" data-theme="c"><a
-					href="#pg_file_explorer">File Explorer</a></li>
+				<li data-shadow="false" data-iconshadow="false"
+					data-wrapperels="div" data-icon="grid" data-iconpos="right"
+					data-theme="c"><a href="#" id="btn_pic_gallery">Gallery</a></li>
+				<li data-shadow="false" data-iconshadow="false"
+					data-wrapperels="div" data-icon="camera" data-iconpos="right"
+					data-theme="c"><a href="#" id="btn_pic_camera">Camera</a></li>
+				<li data-shadow="false" data-iconshadow="false"
+					data-wrapperels="div" data-icon="action" data-iconpos="right"
+					data-theme="c"><a href="#pg_file_explorer">File Explorer</a></li>
 				<li data-icon="cloud" data-shadow="false" data-iconshadow="false"
 					data-wrapperels="div" data-iconpos="right" data-theme="c"><a
 					href="#pg_ftp_explorer" data-rel="close">FTP</a></li>
 			</ul>
 		</div>
 
-		<div data-role="footer" data-position="fixed">
+		<div data-role="footer" data-position="fixed" data-theme="a">
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
 					<li><a href="#pg_inspection_detail" data-icon="bullets"
-						data-shadow="false" data-wrapperels="span" data-theme="c"
+						data-shadow="false" data-wrapperels="span" data-theme="a"
 						title="Back">Inspection Lines</a></li>
 					<li><a href="#pnl_file_sources" id="btn-add" data-icon="plus"
-						data-shadow="false" data-wrapperels="span" data-theme="c"
+						data-shadow="false" data-wrapperels="span" data-theme="a"
 						title="Add">Add File</a></li>
 				</ul>
 			</div>
 		</div>
-		<div data-role="popup" id="pnl_inspModify">
-			<ul data-role="listview" data-theme="c" data-inset="false">
+		<div data-role="popup" id="pnl_inspModify" data-theme="a">
+			<ul data-role="listview" data-theme="a" data-inset="false">
 				<li data-icon="info" data-shadow="false" data-iconshadow="false"
-					data-wrapperels="div" data-iconpos="right" data-theme="c"><a
+					data-wrapperels="div" data-iconpos="right" data-theme="a"><a
 					href="#" data-rel="close">Prefix</a></li>
 				<li class="ui-field-contain" data-shadow="false"
 					data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-					data-iconpos="right" data-theme="c"><input type="text"
-					name="txtInpect" id="inspectName" />
+					data-iconpos="right" data-theme="a"><input type="text"
+					name="txtInpect" id="inspectName" class="ui-mini"/>
 					<button>OK</button></li>
 			</ul>
 		</div>
@@ -509,9 +516,9 @@ Start of File Explorer page
 			</div>
 		</div>
 
-		<div data-role="footer" data-position="fixed" data-theme="c">
-			<div data-role="navbar" data-iconpos="left" data-theme="c">
-				<ul data-theme="c">
+		<div data-role="footer" data-position="fixed" data-theme="a">
+			<div data-role="navbar" data-iconpos="left" data-theme="a">
+				<ul data-theme="a">
 					<li><a href="#" data-icon="check" data-shadow="false"
 						data-wrapperels="span" id="btn-finish-file-selection" title="Back">Done</a></li>
 					<li><a href="#" id="btn-add" data-icon="delete"
@@ -534,7 +541,12 @@ Start of FTP Explorer page
 		<div data-role="header" data-position="fixed">
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-left">
-				<button data-icon="tag" data-iconpos="notext">5</button>
+				<div class="ui-grid-b">
+					<div class="ui-block-a">
+						<select data-native-menu="false" id="sel_ftpservers">
+						</select>
+					</div>
+				</div>
 			</div>
 			<h1>FTP Explorer</h1>
 			<div data-role="controlgroup" data-type="horizontal"
@@ -549,11 +561,12 @@ Start of FTP Explorer page
 			</div>
 		</div>
 		<div role="main" class="ui-content">
-			<div class="ui-grid-b">
-				<div class="ui-block-a">
-					<select data-native-menu="false" id="sel_ftpservers">
-					</select>
-				</div>
+			<div>
+				<button id="currentDirPath" href="#pnl_aboutus" data-icon="user"
+					data-corners="false" data-shadow="false" data-iconshadow="false"
+					data-wrapperels="span" title="User" data-rel="popup"
+					data-transition="flip"
+					class="ui-btn ui-corner-all ui-btn-icon-left ui-shadow-icon ui-shadow ui-first-child"></button>
 			</div>
 			<div class="ui-grid-solo ftp-explorer-content img-gallery">
 				<div class="ui-block-a ftp-explorer">
@@ -569,9 +582,9 @@ Start of FTP Explorer page
 			</div>
 		</div>
 
-		<div data-role="footer" data-position="fixed" data-theme="c">
-			<div data-role="navbar" data-iconpos="left" data-theme="c">
-				<ul data-theme="c">
+		<div data-role="footer" data-position="fixed" data-theme="a">
+			<div data-role="navbar" data-iconpos="left" data-theme="a">
+				<ul data-theme="a">
 					<li><a href="#" data-icon="check" data-shadow="false"
 						data-wrapperels="span" id="btn-finish-ftp-file-selection"
 						title="Back">Done</a></li>

@@ -4,9 +4,8 @@
 	preventFocusZoom: true;
 }
 
-.ui-page-theme-a .ui-focus, html .ui-bar-a .ui-focus, html .ui-body-a .ui-focus,
-	html body .ui-group-theme-a .ui-focus, html head+body .ui-btn-a.ui-focus,
-	html head+body .ui-body-a.ui-focus {
+.ui-page-theme-a .ui-focus,html .ui-bar-a .ui-focus,html .ui-body-a .ui-focus,html body .ui-group-theme-a .ui-focus,html head+body .ui-btn-a.ui-focus,html head+body .ui-body-a.ui-focus
+	{
 	-webkit-box-shadow: 0 0 0px #3388cc /*{c-active-background-color}*/;
 	-moz-box-shadow: 0 0 0px #3388cc /*{c-active-background-color}*/;
 	box-shadow: 0 0 0px #3388cc /*{c-active-background-color}*/;
@@ -41,7 +40,7 @@
 	margin: 0 auto;
 }
 
-.ui-mobile [data-role=header], .ui-mobile [data-role=footer] {
+.ui-mobile [data-role=header],.ui-mobile [data-role=footer] {
 	text-shadow: 0px 0px 0px #000 !important;
 }
 
@@ -61,7 +60,8 @@ p {
 	color: red;
 } */
 body {
-	width: 100% overflow-x:    hidden position:    absolute top:    0 left:
+	width: 100% overflow-x:     hidden position:     absolute top:     0
+		left: 
 		   0
 }
 
@@ -111,7 +111,7 @@ body {
 	.logoimage img {
 		width: 50%;
 	}
-	.img-gallery  .ui-listview>.ui-li-has-thumb>.ui-btn, .ui-listview>.ui-li-static.ui-li-has-thumb
+	.img-gallery  .ui-listview>.ui-li-has-thumb>.ui-btn,.ui-listview>.ui-li-static.ui-li-has-thumb
 		{
 		padding-left: 1.25em !important;
 	}
@@ -136,8 +136,8 @@ body {
 		max-height: none;
 	}
 	/* Make all list items and anchors inherit the border-radius from the UL. */
-	.img-gallery .ui-listview li, .img-gallery .ui-listview li .ui-btn,
-		.img-gallery .ui-listview .ui-li-thumb {
+	.img-gallery .ui-listview li,.img-gallery .ui-listview li .ui-btn,.img-gallery .ui-listview .ui-li-thumb
+		{
 		-webkit-border-radius: 0;
 		border-radius: inherit;
 	}
@@ -146,7 +146,7 @@ body {
 		display: none;
 	}
 	/* Make text wrap. */
-	.img-gallery .ui-listview h2, .img-gallery .ui-listview p {
+	.img-gallery .ui-listview h2,.img-gallery .ui-listview p {
 		white-space: normal;
 		overflow: visible;
 		position: absolute;
@@ -168,7 +168,7 @@ body {
 		bottom: 0;
 	}
 	/* Semi transparent background and different position if there is a thumb. The button has overflow hidden so we don't need to set border-radius. */
-	.ui-listview .ui-li-has-thumb h2, .ui-listview .ui-li-has-thumb p {
+	.ui-listview .ui-li-has-thumb h2,.ui-listview .ui-li-has-thumb p {
 		background: #111;
 		background: rgba(232, 214, 218, 1);
 		color: #BB133E;
@@ -210,7 +210,7 @@ body {
 		box-shadow: 0px 0px 2px #33ccff;
 	}
 	/* Animate focus and hover style, and resizing. */
-	.img-gallery .ui-listview li, .img-gallery .ui-listview .ui-btn {
+	.img-gallery .ui-listview li,.img-gallery .ui-listview .ui-btn {
 		-webkit-transition: all 500ms ease;
 		-moz-transition: all 500ms ease;
 		-o-transition: all 500ms ease;
@@ -295,7 +295,7 @@ body {
 	color: #FFFFFF;
 }
 
-body .ui-body-c, body .ui-overlay-c {
+body .ui-body-c,body .ui-overlay-c {
 	text-shadow: 0 0 0;
 }
 
@@ -318,4 +318,8 @@ body .ui-body-c, body .ui-overlay-c {
 	margin-right: auto;
 	height: 100px;
 	width: 100px
+}
+.ui-controlgroup-horizontal .ui-controlgroup-controls .ui-btn-icon-notext, .ui-controlgroup-horizontal .ui-controlgroup-controls button.ui-btn-icon-notext{
+	width: 2.5em !important;
+	height: 2.7em !important;
 }
