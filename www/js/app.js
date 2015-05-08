@@ -15,7 +15,7 @@ App.prototype.onDeviceReady = function() {
 	$.mobile.allowCrossDomainPages = true;
 	$.support.cors = true;
 	$.mobile.loadingMessage = "Loading..";
-	app.ftpClient = '';
+	this.ftpClient = '';
 	
 	this.isOnline = navigator.onLine ? true : false;
 	if (navigator.network) {
@@ -180,6 +180,12 @@ App.prototype.register = function() {
 	// _self.uploadWorker.postMessage('Hello World'); // Send data to our
 	// worker.
 	// _self.downloadWorker.postMessage('Hello World');
+	
+	_self.downloadWorker.addEventListener('message', function(event) {
+		console.log("callback app.js >>>>> imageData>>>> " + event.data.image);
+	});
+	
+	_self.downloadWorker.postMessage({isFTP:true,selFiles:[{placeholderId:'pg_ftp_explorer',name:'file',url:'url',ext:'ext'}]});
 }
 
 // Initialize application.
