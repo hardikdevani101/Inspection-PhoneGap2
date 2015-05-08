@@ -6,12 +6,12 @@ var App = function() {
 };
 
 App.prototype.onDeviceReady = function() {
-	// if (typeof (Worker) !== "undefined") {
-	// this.uploadWorker = new Worker("js/sync/uploader.js");
-	// this.downloadWorker = new Worker("js/sync/downloader.js");
-	// } else {
-	// console.log("Sorry! No Web Worker support.");
-	// }
+	 if (typeof (Worker) !== "undefined") {
+		 this.uploadWorker = new Worker("js/sync/uploader.js");
+		 this.downloadWorker = new Worker("js/sync/downloader.js");
+	 } else {
+	 console.log("Sorry! No Web Worker support.");
+	 }
 	$.mobile.allowCrossDomainPages = true;
 	$.support.cors = true;
 	$.mobile.loadingMessage = "Loading..";
@@ -21,10 +21,6 @@ App.prototype.onDeviceReady = function() {
 		this.connectionTye = navigator.network.connection.type
 	}
 	this.ftpClient = '';
-	
-	// if(vision){
-	// this.ftpClient = vision.ftpclient;
-	// }
 
 	// setInterval(function () {
 	// connectionStatus = navigator.onLine ? 'online' : 'offline';
@@ -161,7 +157,11 @@ App.prototype.register = function() {
 		_self.ftpExplorer.init();
 		_self.appCache.addPage('pg_ftp_explorer', _self.ftpExplorer);
 	});
-
+	
+	$(document).on("click", "#pg_ftp_explorer", function(event) {
+		console.log(" >>>> triggered from download worker");
+	});
+	
 	$(document).on("click", "#btn_logout", function(event) {
 		_self.appCache.reset();
 		var visSettingsDAO = new Tbl_VISSetting(this);
@@ -180,9 +180,13 @@ App.prototype.register = function() {
 			reloadPage : true
 		});
 	});
-
+	
+	_self.downloadWorker.addEventListener('message', function(event) {
+		console.log("callback app.js >>>>> imageData>>>> " + e.data.image);
+	});
+		
 //	_self.uploadWorker.postMessage('Hello World'); // Send data to our worker.
-//	_self.downloadWorker.postMessage('Hello World');
+	_self.downloadWorker.postMessage({isFTP:true,selFiles:[{placeholderId:'pg_ftp_explorer',name:'file',url:'url',ext:'ext'}]});
 }
 
 // Initialize application.
