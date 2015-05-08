@@ -4,8 +4,9 @@
 	preventFocusZoom: true;
 }
 
-.ui-page-theme-a .ui-focus,html .ui-bar-a .ui-focus,html .ui-body-a .ui-focus,html body .ui-group-theme-a .ui-focus,html head+body .ui-btn-a.ui-focus,html head+body .ui-body-a.ui-focus
-	{
+.ui-page-theme-a .ui-focus, html .ui-bar-a .ui-focus, html .ui-body-a .ui-focus,
+	html body .ui-group-theme-a .ui-focus, html head+body .ui-btn-a.ui-focus,
+	html head+body .ui-body-a.ui-focus {
 	-webkit-box-shadow: 0 0 0px #3388cc /*{c-active-background-color}*/;
 	-moz-box-shadow: 0 0 0px #3388cc /*{c-active-background-color}*/;
 	box-shadow: 0 0 0px #3388cc /*{c-active-background-color}*/;
@@ -40,7 +41,7 @@
 	margin: 0 auto;
 }
 
-.ui-mobile [data-role=header],.ui-mobile [data-role=footer] {
+.ui-mobile [data-role=header], .ui-mobile [data-role=footer] {
 	text-shadow: 0px 0px 0px #000 !important;
 }
 
@@ -99,10 +100,13 @@ body {
 }
 
 .img-gallery .selected-file {
-	border: 2px solid rgb(187, 19, 62) !important;
-	background: url(../img/plus.png) no-repeat !important;
+	border: 1px solid rgb(187, 19, 62) !important;
+	xbackground: url(../img/plus.png) no-repeat !important;
 }
 
+.img-gallery .ui-listview>.ui-li-has-thumb>.ui-btn, .ui-listview>.ui-li-static.ui-li-has-thumb {
+  min-height: 6.625em;
+}
 /* First breakpoint is 48em (768px). 3 column layout. Tiles 250x250 pixels incl. margin at the breakpoint. */
 @media ( min-width : 400px ) {
 	.img-gallery .ui-content {
@@ -111,16 +115,16 @@ body {
 	.logoimage img {
 		width: 50%;
 	}
-	.img-gallery  .ui-listview>.ui-li-has-thumb>.ui-btn,.ui-listview>.ui-li-static.ui-li-has-thumb
+	.img-gallery  .ui-listview>.ui-li-has-thumb>.ui-btn, .ui-listview>.ui-li-static.ui-li-has-thumb
 		{
 		padding-left: 1.25em !important;
 	}
 	.img-gallery .ui-listview li {
 		float: left;
-		width: 14%; /* 33.3333% incl. 2 x 1.2% margin */
+		width: 10%; /* 33.3333% incl. 2 x 1.2% margin */
 		height: 60px; /* 232p */
 		margin: .5em 0.5em;
-		border: 2px solid transparent;
+		border: 1px solid transparent;
 	}
 	.img-gallery .ui-listview li>.ui-btn {
 		-webkit-box-sizing: border-box;
@@ -135,9 +139,12 @@ body {
 		max-width: 100%;
 		max-height: none;
 	}
+	.img-gallery .ui-listview li{		
+		padding:1px !important;
+	}
 	/* Make all list items and anchors inherit the border-radius from the UL. */
-	.img-gallery .ui-listview li,.img-gallery .ui-listview li .ui-btn,.img-gallery .ui-listview .ui-li-thumb
-		{
+	.img-gallery .ui-listview li, .img-gallery .ui-listview li .ui-btn,
+		.img-gallery .ui-listview .ui-li-thumb {
 		-webkit-border-radius: 0;
 		border-radius: inherit;
 	}
@@ -146,7 +153,7 @@ body {
 		display: none;
 	}
 	/* Make text wrap. */
-	.img-gallery .ui-listview h2,.img-gallery .ui-listview p {
+	.img-gallery .ui-listview h2, .img-gallery .ui-listview p {
 		white-space: normal;
 		overflow: visible;
 		position: absolute;
@@ -167,14 +174,24 @@ body {
 		min-height: 50%;
 		bottom: 0;
 	}
+	.img-gallery .ui-listview a {
+		background: transparent !important;
+		padding:0px !important;
+		margin:0px !important;
+		border:0px !important;
+	}
+
 	/* Semi transparent background and different position if there is a thumb. The button has overflow hidden so we don't need to set border-radius. */
-	.ui-listview .ui-li-has-thumb h2,.ui-listview .ui-li-has-thumb p {
+	.ui-listview .ui-li-has-thumb h2, .ui-listview .ui-li-has-thumb p {
 		background: #111;
 		background: rgba(232, 214, 218, 1);
 		color: #BB133E;
 	}
 	.ui-listview .ui-li-has-thumb h2 {
 		bottom: 0%;
+		background: transparent !important;
+		color: #202C3C !important;
+		font-size: .9em !important;
 	}
 	.ui-listview .ui-li-has-thumb p {
 		min-height: 35%;
@@ -190,32 +207,32 @@ body {
 		/* Custom styling. */
 		background: #BB133E;
 		background: rgba(187, 19, 62, 1);
-		-webkit-border-top-right-radius: inherit;
-		border-top-right-radius: inherit;
-		-webkit-border-bottom-left-radius: inherit;
-		border-bottom-left-radius: inherit;
-		-webkit-border-bottom-right-radius: 0;
-		border-bottom-right-radius: 0;
+		x-webkit-border-top-right-radius: inherit;
+		xborder-top-right-radius: inherit;
+		x-webkit-border-bottom-left-radius: inherit;
+		xborder-bottom-left-radius: inherit;
+		x-webkit-border-bottom-right-radius: 0;
+		xborder-bottom-right-radius: 0;
 	}
 	/* If you want to add shadow, don't kill the focus style. */
 	.img-gallery .ui-listview li {
-		-moz-box-shadow: 0px 0px 0px #111;
-		-webkit-box-shadow: 0px 0px 0px #111;
-		box-shadow: 0px 0px 0px #111;
+		x-moz-box-shadow: 0px 0px 0px #111;
+		x-webkit-box-shadow: 0px 0px 0px #111;
+		xbox-shadow: 0px 0px 0px #111;
 	}
 	/* Images mask the hover bg color so we give desktop users feedback by applying the focus style on hover as well. */
 	.img-gallery .ui-listview li>.ui-btn:hover {
-		-moz-box-shadow: 0px 0px 2px #33ccff;
-		-webkit-box-shadow: 0px 0px 2px #33ccff;
-		box-shadow: 0px 0px 2px #33ccff;
+		x-moz-box-shadow: 0px 0px 2px #33ccff;
+		x-webkit-box-shadow: 0px 0px 2px #33ccff;
+		xbox-shadow: 0px 0px 2px #33ccff;
 	}
 	/* Animate focus and hover style, and resizing. */
-	.img-gallery .ui-listview li,.img-gallery .ui-listview .ui-btn {
-		-webkit-transition: all 500ms ease;
-		-moz-transition: all 500ms ease;
-		-o-transition: all 500ms ease;
-		-ms-transition: all 500ms ease;
-		transition: all 500ms ease;
+	.img-gallery .ui-listview li, .img-gallery .ui-listview .ui-btn {
+		x-webkit-transition: all 500ms ease;
+		x-moz-transition: all 500ms ease;
+		x-o-transition: all 500ms ease;
+		x-ms-transition: all 500ms ease;
+		xtransition: all 500ms ease;
 	}
 }
 /* Second breakpoint is 63.75em (1020px). 4 column layout. Tiles will be 250x250 pixels incl. margin again at the breakpoint. */
@@ -295,7 +312,7 @@ body {
 	color: #FFFFFF;
 }
 
-body .ui-body-c,body .ui-overlay-c {
+body .ui-body-c, body .ui-overlay-c {
 	text-shadow: 0 0 0;
 }
 
@@ -319,7 +336,10 @@ body .ui-body-c,body .ui-overlay-c {
 	height: 100px;
 	width: 100px
 }
-.ui-controlgroup-horizontal .ui-controlgroup-controls .ui-btn-icon-notext, .ui-controlgroup-horizontal .ui-controlgroup-controls button.ui-btn-icon-notext{
+
+.ui-controlgroup-horizontal .ui-controlgroup-controls .ui-btn-icon-notext,
+	.ui-controlgroup-horizontal .ui-controlgroup-controls button.ui-btn-icon-notext
+	{
 	width: 2.5em !important;
 	height: 2.7em !important;
 }

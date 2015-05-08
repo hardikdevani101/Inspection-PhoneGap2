@@ -100,7 +100,6 @@ FTPPage.prototype.renderContent = function(dirPath) {
 		if (serverData[_self.currentDirPath]) {
 			var files = serverData[_self.currentDirPath].files;
 			var dirs = serverData[_self.currentDirPath].dirs;
-			var ftpUrl = "ftp://" + selected_ftpserver;
 
 			var fileItems = _self.renderFiles(files);
 			var dirItems = _self.renderDirs(dirs);
@@ -169,7 +168,7 @@ FTPPage.prototype.renderDirs = function(dirs) {
 		var fileData = _self.app.dir64;
 		var line = '<li data-id="' + _self.currentDirPath + value
 				+ '" class="dir-placeholder"><a href="#">'
-				+ '<img class="ui-li-thumb" src="data:image/png;base64,'
+				+ '<img class="ui-li-thumb" src="'
 				+ fileData + '" /><h2>' + value + '</h2></a></li>';
 		dirItems = dirItems + line;
 	});
@@ -192,7 +191,7 @@ FTPPage.prototype.renderFiles = function(files) {
 		var line = '<li id="' + _self.line_id + '" data-id="'
 				+ $("#sel_ftpservers").val() + _self.currentDirPath + value
 				+ '" class="file-placeholder"><a href="#">'
-				+ '<img class="ui-li-thumb" src="data:image/png;base64,'
+				+ '<img class="ui-li-thumb" src="'
 				+ fileData + '" /><h2>'
 				+ value.substr(0, (value.lastIndexOf('.'))) + '</h2></a></li>';
 		fileItems = fileItems + line;
@@ -212,7 +211,7 @@ FTPPage.prototype.explodeServerDir = function(dirName, success, error) {
 		return (item.url == selected_ftpserver);
 	});
 
-	var ftpUrl = "ftp://" + selected_ftpserver + "/";
+	var ftpUrl = ftpServerInfo.url
 	if (dirName != '/') {
 		ftpUrl += dirName;
 	}
