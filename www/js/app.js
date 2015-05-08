@@ -6,16 +6,17 @@ var App = function() {
 };
 
 App.prototype.onDeviceReady = function() {
-	// if (typeof (Worker) !== "undefined") {
-	// this.uploadWorker = new Worker("js/sync/uploader.js");
-	// this.downloadWorker = new Worker("js/sync/downloader.js");
-	// } else {
-	// console.log("Sorry! No Web Worker support.");
-	// }
+	if (typeof (Worker) !== "undefined") {
+		this.uploadWorker = new Worker("js/sync/uploader.js");
+		this.downloadWorker = new Worker("js/sync/downloader.js");
+	} else {
+		console.log("Sorry! No Web Worker support.");
+	}
 	$.mobile.allowCrossDomainPages = true;
 	$.support.cors = true;
 	$.mobile.loadingMessage = "Loading..";
-
+	app.ftpClient = '';
+	
 	this.isOnline = navigator.onLine ? true : false;
 	if (navigator.network) {
 		this.connectionTye = navigator.network.connection.type
@@ -193,18 +194,14 @@ $(document).ready(function() {
 
 	if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
 		console.log('Registered deviceready listener!!')
-			
 		// $(document).bind("mobileinit", app.onDeviceReady());
 		document.addEventListener("deviceready", function() {
 			app.appFS = new FS(app);
 			app.appFS.init();
-
 			app.ftpClient = '';
-
 			if (vision) {
 				app.ftpClient = vision.ftpclient;
 			}
-
 		}, false);
 	} else {
 		console.log('Explicitly called onDeviceReady!!')
