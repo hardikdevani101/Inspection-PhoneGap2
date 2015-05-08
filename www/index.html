@@ -353,10 +353,9 @@ End of Inspection page
 			<div data-role="fieldcontainer">
 				<div id="inspMRDetGallery">Current Selected Path</div>
 			</div>
-			<ul data-role="listview" id="ls_inspFiles">
+			<ul data-role="listview" id="ls_inspFiles" >
 			</ul>
 		</div>
-
 
 		<div data-role="panel" data-theme="c" id="pnl_file_sources"
 			data-position="right">
@@ -388,8 +387,19 @@ End of Inspection page
 				</ul>
 			</div>
 		</div>
+		<div data-role="popup" id="pnl_inspModify" data-theme="a">
+			<ul data-role="listview" data-theme="a" data-inset="false">
+				<li data-icon="info" data-shadow="false" data-iconshadow="false"
+					data-wrapperels="div" data-iconpos="right" data-theme="a"><a
+					href="#" data-rel="close">Prefix</a></li>
+				<li class="ui-field-contain" data-shadow="false"
+					data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
+					data-iconpos="right" data-theme="a"><input type="text"
+					name="txtInpect" id="inspectName" class="ui-mini" />
+					<button>OK</button></li>
+			</ul>
+		</div>
 	</div>
-
 	<!-------------------------------------------------------------
 End of Inspection page
 -------------------------------------------------------------->
@@ -524,7 +534,13 @@ Start of FTP Explorer page
 			</div>
 		</div>
 		<div role="main" class="ui-content">
-			<div id="currentDirPath" class="current_dir_location"></div>
+			<div>
+				<button id="currentDirPath" href="#pnl_aboutus" data-icon="user"
+					data-corners="false" data-shadow="false" data-iconshadow="false"
+					data-wrapperels="span" title="User" data-rel="popup"
+					data-transition="flip"
+					class="ui-btn ui-corner-all ui-btn-icon-left ui-shadow-icon ui-shadow ui-first-child"></button>
+			</div>
 			<div class="ui-grid-solo ftp-explorer-content img-gallery">
 				<div class="ui-block-a ftp-explorer">
 					<ul data-role="listview" id="ls_ftpDirs" data-inset="false">
@@ -545,8 +561,9 @@ Start of FTP Explorer page
 							data-wrapperels="span" id="btn-finish-ftp-file-selection"
 							title="Back">Done</a></li>
 						<li><a href="#" id="btn-clear-ftp-files" data-icon="delete"
-							id="btn-clear-file-selection" data-shadow="false"
-							data-wrapperels="span" title="Clear Selected">Clear</a></li>
+							data-shadow="false" data-wrapperels="span" title="Clear Selected">Clear</a></li>
+						<li><a href="#" id="btn-reload-ftp-files" data-icon="refresh"
+							data-shadow="false" data-wrapperels="span" title="Clear Selected">Reload</a></li>
 					</ul>
 				</div>
 			</div>
@@ -562,44 +579,16 @@ Start of Crop page
 -------------------------------------------------------------->
 
 	<div id="pg_cropView" data-role="page" data-theme="c">
-		<div data-role="header" data-position="fixed" data-theme="c">
-			<div class="ui-mini ui-btn-left">
-				<!-- 				<div style="float: left" class="ui-mini"> -->
-				<select name="select-crop-waterMark" data-mini="true"
-					data-wrapperels="span" data-native-menu="false"></select>
-				<!-- 				</div> -->
-				<!-- 				<a id="prefixInpectLine" href="#prefixModify" data-rel="popup" -->
-				<!-- 					data-position-to="window" -->
-				<!-- 					class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-check ui-btn-icon-left ui-btn-a" -->
-				<!-- 					data-transition="pop">aaaaaaaaaa</a> -->
-			</div>
-			<h2 data-role="heading">Gallery</h2>
-			<div data-role="popup" id="cropPrefixModify" data-theme="c"
-				class="ui-corner-all">
-				<form id="_crop_prefix_modify" action="#">
-					<div style="padding: 10px 20px;" data-theme="c">
-						<h3 data-theme="c">Modify Prefix</h3>
-						<label for="cropPrefixInpect" class="ui-hidden-accessible">Prefix:</label>
-						<input type="text" name="prefixInpect" id="txtPrefixInpect"
-							value="" placeholder="prefix" data-theme="c" data-mini="true">
-						<input id="btnPrefixUpdate" type="submit" data-inline="true"
-							value="Update" data-theme="c" data-mini="true">
-					</div>
-				</form>
-			</div>
-			<!-- 			<a href="#pnl_inspModify" id="prefixInpectLine" data-corners="false" -->
-			<!-- 				data-shadow="false" data-iconshadow="false" data-wrapperels="span" -->
-			<!-- 				title="Inspection Line Gallery" data-rel="popup" -->
-			<!-- 				data-transition="flip"></a> -->
+		<div data-role="header" data-position="fixed">
+			<h2 data-role="heading">Crop Image</h2>
+			<a href="#_main" data-icon="back" data-iconpos="notext"
+				class="ui-btn-left" data-shadow="true" data-wrapperels="span"
+				title="Back" data-rel="back">Back</a>
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-right">
-				<button id="btn_user" href="#pnl_aboutus" data-icon="user"
-					data-corners="false" data-shadow="false" data-iconshadow="false"
-					data-wrapperels="span" title="User" data-rel="popup"
-					data-transition="flip"></button>
-				<button href="#" id="btn_logout" data-icon="power"
-					data-corners="false" data-iconpos="notext" data-shadow="false"
-					data-iconshadow="false" data-wrapperels="span" title="Logout">SignOut</button>
+				<select name="select-crop-waterMark" data-wrapperels="span"
+					data-native-menu="false">
+				</select>
 			</div>
 		</div>
 		<div data-role="main" class="ui-content"
@@ -618,19 +607,19 @@ Start of Crop page
 				</table>
 			</div>
 		</div>
-		<div data-role="footer" data-position="fixed" data-theme="a">
+		<div data-role="footer" data-position="fixed" data-theme="c">
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
 					<li><a id="cropage_cpNsave" href="#" data-shadow="false"
-						data-wrapperels="span" data-theme="a" title="crop&Save">Crop &
+						data-wrapperels="span" data-theme="c" title="crop&Save">Crop &
 							Save</a></li>
 					<li><a id="cropage_save" href="#" data-icon="delete"
-						data-shadow="false" data-wrapperels="span" data-theme="a"
+						data-shadow="false" data-wrapperels="span" data-theme="c"
 						title="save">Save</a></li>
 					<li><a id="cropage_edit" href="#" data-shadow="false"
-						data-wrapperels="span" data-theme="a" title="Edit">Edit</a></li>
+						data-wrapperels="span" data-theme="c" title="Edit">Edit</a></li>
 					<li><a id="cropage_cpNedit" href="#" data-shadow="false"
-						data-wrapperels="span" data-theme="a" title="crop&Edit">Crop &
+						data-wrapperels="span" data-theme="c" title="crop&Edit">Crop &
 							Edit</a></li>
 				</ul>
 			</div>
@@ -645,28 +634,21 @@ End of Crop page
 Start of Edit page
 -------------------------------------------------------------->
 
-	<div id="pg_editView" data-role="page" data-theme="c">
-		<div data-role="header" data-position="fixed" data-theme="c">
-			<div class="ui-mini ui-btn-left">
+	<div id="pg_editView" data-role="page" data-theme="b">
+		<div data-role="header" data-position="fixed">
+			<h2 data-role="heading">Edit</h2>
+			<a href="#_main" data-icon="back" data-iconpos="notext"
+				class="ui-btn-left" data-shadow="true" data-wrapperels="span"
+				title="Back" data-rel="back">Back</a>
+			<div data-role="controlgroup" data-type="horizontal"
+				class="ui-mini ui-btn-right">
 				<select name="select-edit-waterMark" data-wrapperels="span"
-					data-native-menu="false" data-mini="true" data-theme="c">
+					data-native-menu="false">
 				</select>
 			</div>
-			<h2 data-role="heading">Edit</h2>
-			<div data-role="controlgroup" data-type="horizontal"
-				class="ui-mini ui-btn-right" data-theme="c">
-				<button id="btn_user" href="#pnl_aboutus" data-icon="user"
-					data-corners="false" data-shadow="false" data-iconshadow="false"
-					data-wrapperels="span" title="User" data-rel="popup"
-					data-transition="flip"></button>
-				<button href="#" id="btn_logout" data-icon="power"
-					data-corners="false" data-iconpos="notext" data-shadow="false"
-					data-iconshadow="false" data-wrapperels="span" title="Logout">SignOut</button>
-			</div>
 		</div>
-		<div role="main" class="ui-content" style="margin: 0; padding: 0;"
-			data-theme="c">
-			<div class="ui-grid-a" id="photo-set-panel" data-theme="c">
+		<div role="main" class="ui-content" style="margin: 0; padding: 0;">
+			<div class="ui-grid-a" id="photo-set-panel">
 				<div class="ui-block-a" style="width: 60%">
 					<canvas id="editCanvas"></canvas>
 				</div>
@@ -676,10 +658,7 @@ Start of Edit page
 							style="width: 10%;">
 							<img src="img/brightness.png" height="25" width="25"
 								alt="brightness" />
-							<div id="_slider-brightness" data-role="fieldcontain" width="500px">
-								<input type="range" name="slider-brightness" id="slider-brightness"
-									value="25" min="0" max="100" data-highlight="true" data-mini="true">
-							</div>
+							<div id="slider-brightness"></div>
 						</div>
 						<div class="ui-block-b" data-role="controlgroup"
 							style="width: 10%;">
@@ -690,13 +669,13 @@ Start of Edit page
 				</div>
 			</div>
 		</div>
-		<div data-role="footer" data-position="fixed" data-theme="a">
+		<div data-role="footer" data-position="fixed">
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
 					<li><a href="#" data-icon="action" id="btn_editSave"
-						data-wrapperels="span" data-theme="a" title="Back">Save</a></li>
+						data-wrapperels="span" data-theme="b" title="Back">Save</a></li>
 					<li><a href="#" id="btn_editUndo" data-icon="plus"
-						data-wrapperels="span" data-theme="a" title="Add">Undo</a></li>
+						data-wrapperels="span" data-theme="b" title="Add">Undo</a></li>
 				</ul>
 			</div>
 		</div>
