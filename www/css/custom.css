@@ -121,8 +121,8 @@ body {
 	}
 	.img-gallery .ui-listview li {
 		float: left;
-		width: 10%; /* 33.3333% incl. 2 x 1.2% margin */
-		height: 60px; /* 232p */
+		width: 15%; /* 33.3333% incl. 2 x 1.2% margin */
+		xheight: 60px; /* 232p */
 		margin: .5em 0.5em;
 		border: 1px solid transparent;
 	}
@@ -168,11 +168,12 @@ body {
 		bottom: 0%;
 	}
 	.img-gallery .ui-listview p {
-		font-size: .6em;
-		margin: 0;
-		padding: 0 1.25em;
-		min-height: 50%;
+		xfont-size: .6em;
+		xmargin: 0;
+		xpadding: 0 1.25em;
+		xmin-height: 50%;
 		bottom: 0;
+		background: transparent !important;
 	}
 	.img-gallery .ui-listview a {
 		background: transparent !important;
@@ -198,14 +199,14 @@ body {
 	}
 	/* ui-li-aside has class .ui-li-desc as well so we have to override some things. */
 	.img-gallery .ui-listview .ui-li-aside {
-		padding: .125em .625em;
-		width: auto;
-		min-height: 0;
-		top: 0;
-		left: auto;
-		bottom: auto;
+		xpadding: .125em .625em;
+		xwidth: auto;
+		xmin-height: 0;
+		xtop: 0;
+		xleft: auto;
+		xbottom: auto;
 		/* Custom styling. */
-		background: #BB133E;
+		background:transparent !important;
 		background: rgba(187, 19, 62, 1);
 		x-webkit-border-top-right-radius: inherit;
 		xborder-top-right-radius: inherit;
@@ -235,6 +236,17 @@ body {
 		xtransition: all 500ms ease;
 	}
 }
+
+@media ( min-width : 600px) {
+	.img-gallery .ui-listview li {
+		float: left;
+		width: 12%;
+		xheight: 60px;
+		margin: .5em 0.5em;
+		border: 1px solid transparent;
+	}
+}
+
 /* Second breakpoint is 63.75em (1020px). 4 column layout. Tiles will be 250x250 pixels incl. margin again at the breakpoint. */
 @media ( min-width : 63.75em ) {
 	.logoimage img {
@@ -252,8 +264,8 @@ body {
 	/* Because of the 1000px max-width the width will always be 230px (and margin left/right 10px),
     but we stick to percentage values for demo purposes. */
 	.img-gallery .ui-listview li {
-		width: 14%;
-		height: 90px;
+		width: 8%;
+		xheight: 90px;
 		margin: .5em .5em;
 	}
 }
@@ -342,4 +354,8 @@ body .ui-body-c, body .ui-overlay-c {
 	{
 	width: 2.5em !important;
 	height: 2.7em !important;
+}
+#inspMRDetGallery
+{  margin: 0 0 1em !important;
+	
 }
