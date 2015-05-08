@@ -2,7 +2,11 @@ var EditImagePage = function(app, imageObj) {
 	this.app = app;
 	this.imageObj = imageObj;
 }
-
+EditImagePage.prototype.rederBreadCrumb = function() {
+	var _self = this;
+	$('#pg_editView #btn_user').html(
+			$(_self.app.appCache.loginInfo.username).val());
+};
 EditImagePage.prototype.init = function(width, height) {
 	var _self = this;
 	_self.imageObj.height = height;
@@ -12,7 +16,7 @@ EditImagePage.prototype.init = function(width, height) {
 					"pagebeforeshow",
 					"#pg_editView",
 					function() {
-
+						_self.rederBreadCrumb();
 						$('#btn_editSave').on('click', function(event) {
 							_self.saveImage($('#cropImage img')[0]);
 						});
@@ -20,43 +24,6 @@ EditImagePage.prototype.init = function(width, height) {
 						$('#btn_editUndo').on('click', function(event) {
 
 						});
-
-						$('#slider-brightness').attr("style", "height:100px");
-						$('#slider-brightness').slider({
-							orientation : "vertical",
-							min : 0,
-							max : 100,
-							value : 50,
-							slide : function(event, ui) {
-								_self.onBrightnessChange(event, ui);
-							},
-							change : function(event, ui) {
-								_self.onBrightnessChange(event, ui);
-							},
-							start : function(event, ui) {
-							}
-						});
-
-						$('#slider-brightness').slider('refresh');
-
-						$('#slider-contrast').attr("style", "height:100px");
-						$('#slider-contrast').slider({
-							orientation : "vertical",
-							min : 0,
-							max : 100,
-							value : 50,
-							slide : function(event, ui) {
-								_self.onContrastChange(event, ui);
-							},
-							change : function(event, ui) {
-								_self.onContrastChange(event, ui);
-							},
-							start : function(event, ui) {
-							}
-						});
-
-						$('#slider-contrast').slider('refresh');
-
 						_self.renderEditImage();
 						if (_self.app.appCache.waterMarkImgs.length > 0) {
 							$('select[name="select-edit-waterMark"]').empty();
@@ -77,8 +44,38 @@ EditImagePage.prototype.init = function(width, height) {
 						}
 						$('select[name="select-edit-waterMark"]').selectmenu(
 								'refresh');
+
+						$('#slider-brightness').attr("style", "height:100px");
+						$('#slider-brightness').slider({
+							slide : function(event, ui) {
+								_self.onBrightnessChange(event, ui);
+							},
+							change : function(event, ui) {
+								_self.onBrightnessChange(event, ui);
+							},
+							start : function(event, ui) {
+							}
+						});
+						$('#slider-brightness').slider('refresh');
+						$('#slider-contrast').attr("style", "height:100px");
+						$('#slider-contrast').slider({
+							orientation : "vertical",
+							min : 0,
+							max : 100,
+							value : 50,
+							slide : function(event, ui) {
+								_self.onContrastChange(event, ui);
+							},
+							change : function(event, ui) {
+								_self.onContrastChange(event, ui);
+							},
+							start : function(event, ui) {
+							}
+						});
+
+						$('#slider-contrast').slider('refresh');
 					});
-}
+};
 
 EditImagePage.prototype.renderEditImage = function() {
 	var _self = this;
@@ -142,7 +139,7 @@ EditImagePage.prototype.onContrastChange = function(event, ui) {
 	var _self = this;
 	var data = contraImageData.data;
 	var factor = (259 * (contraValue + 255)) / (255 * (259 - contraValue));
-	for (var i = 0; i < data.length; i += 4) {
+	for ( var i = 0; i < data.length; i += 4) {
 		data[i] = factor * (data[i] - 128) + 128;
 		data[i + 1] = factor * (data[i + 1] - 128) + 128;
 		data[i + 2] = factor * (data[i + 2] - 128) + 128;
@@ -170,7 +167,7 @@ EditImagePage.prototype.onBrightnessChange = function(event, ui) {
 			_self.gcanvas.height);
 	var _self = this;
 	var pixels = brightImageData.data;
-	for (var i = 0; i < pixels.length; i += 4) {
+	for ( var i = 0; i < pixels.length; i += 4) {
 		pixels[i] += brightValue;
 		pixels[i + 1] += brightValue;
 		pixels[i + 2] += brightValue;
@@ -210,7 +207,7 @@ EditImagePage.prototype.onUndoEdit = function() {
 		_self.editCtx.drawImage(_self.edit_image, 0, 0, _self.cropImageW,
 				_self.cropImageH);
 		var b = 50, c = 50;
-		for (var j = 0; j < _self.actArray.length; j++) {
+		for ( var j = 0; j < _self.actArray.length; j++) {
 			var valueArray = _self.actArray[j];
 			b = valueArray[0];
 			c = valueArray[1]

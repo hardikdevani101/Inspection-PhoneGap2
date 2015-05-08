@@ -147,6 +147,7 @@ FTPPage.prototype.onFileTap = function(event) {
 
 FTPPage.prototype.onDirTap = function(event) {
 	var _self = this;
+	
 	_self.currentDirPath = $(event.delegateTarget).data('id') + '/'
 	console.log('Tap _self.currentDirPath>> ' + _self.currentDirPath);
 	$('#currentDirPath').attr('title', _self.currentDirPath);
@@ -156,7 +157,6 @@ FTPPage.prototype.onDirTap = function(event) {
 	}, function(msg) {
 		console.log(msg)
 	});
-
 }
 
 FTPPage.prototype.renderDirs = function(dirs) {
@@ -178,7 +178,7 @@ FTPPage.prototype.renderFiles = function(files) {
 	var fileItems = '';
 	$.each(files, function(index, value) {
 		var extension = value.substr((value.lastIndexOf('.') + 1));
-		var findResult = jQuery.grep(_self.app.imgDataTypes, function(item,
+		var findResult = jQuery.grep(_self.app.dataTypes, function(item,
 				index) {
 			return item == extension.toUpperCase();
 		});

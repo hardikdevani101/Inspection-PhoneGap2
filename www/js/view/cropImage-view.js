@@ -2,7 +2,11 @@ var CropImagePage = function(app, image64) {
 	this.app = app;
 	this.image64 = image64;
 }
-
+CropImagePage.prototype.rederBreadCrumb = function() {
+	var _self = this;
+	$('#pg_cropView #btn_user').html(
+			$(_self.app.appCache.loginInfo.username).val());
+};
 CropImagePage.prototype.init = function(width, height) {
 	var _self = this;
 
@@ -11,6 +15,7 @@ CropImagePage.prototype.init = function(width, height) {
 					"pagebeforeshow",
 					"#pg_cropView",
 					function() {
+						_self.rederBreadCrumb();
 						$('#btn_zoom-out').on('ontouchstart', function(event) {
 							console.log(event.pageX);
 						});
