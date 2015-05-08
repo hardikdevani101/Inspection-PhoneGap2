@@ -4,9 +4,8 @@
 	preventFocusZoom: true;
 }
 
-.ui-page-theme-a .ui-focus, html .ui-bar-a .ui-focus, html .ui-body-a .ui-focus,
-	html body .ui-group-theme-a .ui-focus, html head+body .ui-btn-a.ui-focus,
-	html head+body .ui-body-a.ui-focus {
+.ui-page-theme-a .ui-focus,html .ui-bar-a .ui-focus,html .ui-body-a .ui-focus,html body .ui-group-theme-a .ui-focus,html head+body .ui-btn-a.ui-focus,html head+body .ui-body-a.ui-focus
+	{
 	-webkit-box-shadow: 0 0 0px #3388cc /*{c-active-background-color}*/;
 	-moz-box-shadow: 0 0 0px #3388cc /*{c-active-background-color}*/;
 	box-shadow: 0 0 0px #3388cc /*{c-active-background-color}*/;
@@ -41,7 +40,7 @@
 	margin: 0 auto;
 }
 
-.ui-mobile [data-role=header], .ui-mobile [data-role=footer] {
+.ui-mobile [data-role=header],.ui-mobile [data-role=footer] {
 	text-shadow: 0px 0px 0px #000 !important;
 }
 
@@ -61,8 +60,8 @@ p {
 	color: red;
 } */
 body {
-	width: 100% overflow-x:     hidden position:     absolute top:     0
-		left: 
+	width: 100% overflow-x:      hidden position:      absolute top:      0
+		left:  
 		   0
 }
 
@@ -104,8 +103,9 @@ body {
 	xbackground: url(../img/plus.png) no-repeat !important;
 }
 
-.img-gallery .ui-listview>.ui-li-has-thumb>.ui-btn, .ui-listview>.ui-li-static.ui-li-has-thumb {
-  min-height: 6.625em;
+.img-gallery .ui-listview>.ui-li-has-thumb>.ui-btn,.ui-listview>.ui-li-static.ui-li-has-thumb
+	{
+	min-height: 6.625em;
 }
 /* First breakpoint is 48em (768px). 3 column layout. Tiles 250x250 pixels incl. margin at the breakpoint. */
 @media ( min-width : 400px ) {
@@ -115,14 +115,14 @@ body {
 	.logoimage img {
 		width: 50%;
 	}
-	.img-gallery  .ui-listview>.ui-li-has-thumb>.ui-btn, .ui-listview>.ui-li-static.ui-li-has-thumb
+	.img-gallery  .ui-listview>.ui-li-has-thumb>.ui-btn,.ui-listview>.ui-li-static.ui-li-has-thumb
 		{
 		padding-left: 1.25em !important;
 	}
 	.img-gallery .ui-listview li {
 		float: left;
-		width: 10%; /* 33.3333% incl. 2 x 1.2% margin */
-		height: 60px; /* 232p */
+		width: 15%; /* 33.3333% incl. 2 x 1.2% margin */
+		xheight: 60px; /* 232p */
 		margin: .5em 0.5em;
 		border: 1px solid transparent;
 	}
@@ -139,12 +139,12 @@ body {
 		max-width: 100%;
 		max-height: none;
 	}
-	.img-gallery .ui-listview li{		
-		padding:1px !important;
+	.img-gallery .ui-listview li {
+		padding: 1px !important;
 	}
 	/* Make all list items and anchors inherit the border-radius from the UL. */
-	.img-gallery .ui-listview li, .img-gallery .ui-listview li .ui-btn,
-		.img-gallery .ui-listview .ui-li-thumb {
+	.img-gallery .ui-listview li,.img-gallery .ui-listview li .ui-btn,.img-gallery .ui-listview .ui-li-thumb
+		{
 		-webkit-border-radius: 0;
 		border-radius: inherit;
 	}
@@ -153,7 +153,7 @@ body {
 		display: none;
 	}
 	/* Make text wrap. */
-	.img-gallery .ui-listview h2, .img-gallery .ui-listview p {
+	.img-gallery .ui-listview h2,.img-gallery .ui-listview p {
 		white-space: normal;
 		overflow: visible;
 		position: absolute;
@@ -168,21 +168,22 @@ body {
 		bottom: 0%;
 	}
 	.img-gallery .ui-listview p {
-		font-size: .6em;
-		margin: 0;
-		padding: 0 1.25em;
-		min-height: 50%;
+		xfont-size: .6em;
+		xmargin: 0;
+		xpadding: 0 1.25em;
+		xmin-height: 50%;
 		bottom: 0;
+		background: transparent !important;
 	}
 	.img-gallery .ui-listview a {
 		background: transparent !important;
-		padding:0px !important;
-		margin:0px !important;
-		border:0px !important;
+		padding: 0px !important;
+		margin: 0px !important;
+		border: 0px !important;
 	}
 
 	/* Semi transparent background and different position if there is a thumb. The button has overflow hidden so we don't need to set border-radius. */
-	.ui-listview .ui-li-has-thumb h2, .ui-listview .ui-li-has-thumb p {
+	.ui-listview .ui-li-has-thumb h2,.ui-listview .ui-li-has-thumb p {
 		background: #111;
 		background: rgba(232, 214, 218, 1);
 		color: #BB133E;
@@ -198,14 +199,14 @@ body {
 	}
 	/* ui-li-aside has class .ui-li-desc as well so we have to override some things. */
 	.img-gallery .ui-listview .ui-li-aside {
-		padding: .125em .625em;
-		width: auto;
-		min-height: 0;
-		top: 0;
-		left: auto;
-		bottom: auto;
+		xpadding: .125em .625em;
+		xwidth: auto;
+		xmin-height: 0;
+		xtop: 0;
+		xleft: auto;
+		xbottom: auto;
 		/* Custom styling. */
-		background: #BB133E;
+		background: transparent !important;
 		background: rgba(187, 19, 62, 1);
 		x-webkit-border-top-right-radius: inherit;
 		xborder-top-right-radius: inherit;
@@ -227,7 +228,7 @@ body {
 		xbox-shadow: 0px 0px 2px #33ccff;
 	}
 	/* Animate focus and hover style, and resizing. */
-	.img-gallery .ui-listview li, .img-gallery .ui-listview .ui-btn {
+	.img-gallery .ui-listview li,.img-gallery .ui-listview .ui-btn {
 		x-webkit-transition: all 500ms ease;
 		x-moz-transition: all 500ms ease;
 		x-o-transition: all 500ms ease;
@@ -235,6 +236,17 @@ body {
 		xtransition: all 500ms ease;
 	}
 }
+
+@media ( min-width : 600px) {
+	.img-gallery .ui-listview li {
+		float: left;
+		width: 12%;
+		xheight: 60px;
+		margin: .5em 0.5em;
+		border: 1px solid transparent;
+	}
+}
+
 /* Second breakpoint is 63.75em (1020px). 4 column layout. Tiles will be 250x250 pixels incl. margin again at the breakpoint. */
 @media ( min-width : 63.75em ) {
 	.logoimage img {
@@ -252,8 +264,8 @@ body {
 	/* Because of the 1000px max-width the width will always be 230px (and margin left/right 10px),
     but we stick to percentage values for demo purposes. */
 	.img-gallery .ui-listview li {
-		width: 14%;
-		height: 90px;
+		width: 8%;
+		xheight: 90px;
 		margin: .5em .5em;
 	}
 }
@@ -312,7 +324,7 @@ body {
 	color: #FFFFFF;
 }
 
-body .ui-body-c, body .ui-overlay-c {
+body .ui-body-c,body .ui-overlay-c {
 	text-shadow: 0 0 0;
 }
 
@@ -337,13 +349,17 @@ body .ui-body-c, body .ui-overlay-c {
 	width: 100px
 }
 
-.ui-controlgroup-horizontal .ui-controlgroup-controls .ui-btn-icon-notext,
-	.ui-controlgroup-horizontal .ui-controlgroup-controls button.ui-btn-icon-notext
+.ui-controlgroup-horizontal .ui-controlgroup-controls .ui-btn-icon-notext,.ui-controlgroup-horizontal .ui-controlgroup-controls button.ui-btn-icon-notext
 	{
 	width: 2.5em !important;
 	height: 2.7em !important;
 }
-.current_dir_location{
+
+#inspMRDetGallery {
+	margin: 0 0 1em !important;
+}
+
+.current_dir_location {
 	margin-bottom: 5px;
 	font-weight: bold;
 }

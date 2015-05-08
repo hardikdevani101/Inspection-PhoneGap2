@@ -17,16 +17,16 @@ GalleryPage.prototype.init = function(x_instructionline_id) {
 		_self.rederBreadCrumb();
 		_self.line_id = x_instructionline_id;
 		_self.visGallery = new Tbl_VISGallery(_self.app);
-		_self.loadInspFile();
-		// _self.line_id=152452;
-		// _self.app.appCache.inspFiles[152452]=[];
-		// for (var i = 0; i < 15; i++) {
-		// var item = {};
-		// item['filePath'] = '/file/path';
-		// item['data'] = _self.app.image64;
-		// _self.app.appCache.inspFiles[152452].push(item);
-		// }
-		// _self.renderInspFiles();
+		//_self.loadInspFile();
+		 _self.line_id=152452;
+		 _self.app.appCache.inspFiles[152452]=[];
+		 for (var i = 0; i < 15; i++) {
+		 var item = {};
+		 item['filePath'] = '/file/path';
+		 item['data'] = _self.app.image64;
+		 _self.app.appCache.inspFiles[152452].push(item);
+		 }
+		 _self.renderInspFiles();
 
 		$('#btn_pic_camera').on('click', function() {
 			_self.onPhotoDataSuccess(_self.tempImage);
@@ -103,9 +103,9 @@ GalleryPage.prototype.renderInspFiles = function() {
 				.each(
 						_self.app.appCache.inspFiles[_self.line_id],
 						function() {
-							// var fileName = this.fileName;
-							var fileName = _self.app.appFS
-									.getFileName(this.filePath);
+							 var fileName = this.fileName;
+//							var fileName = _self.app.appFS
+//									.getFileName(this.filePath);
 							var line = '<li id="'
 									+ _self.line_id
 									+ '_'

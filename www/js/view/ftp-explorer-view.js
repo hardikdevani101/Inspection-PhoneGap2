@@ -28,7 +28,8 @@ FTPPage.prototype.init = function() {
 			// Push Selected File information to Gallery Page.
 			$.mobile.changePage("#pg_gallery");
 		});
-
+		$('#currentDirPath').attr('title', '');
+		$('#currentDirPath').html('');
 		$("#sel_ftpservers").on("change", _self.onFTPServerChange);
 	});
 }
@@ -147,8 +148,11 @@ FTPPage.prototype.onFileTap = function(event) {
 
 FTPPage.prototype.onDirTap = function(event) {
 	var _self = this;
-	
-	_self.currentDirPath = $(event.delegateTarget).data('id') + '/'
+	_self.currentDirPath = $(event.delegateTarget).data('id') + '/';
+	var currentSelectedDirectory = _self.currentDirPath.substring($('#currentDirPath')
+			.html().length, _self.currentDirPath.length - 1);
+	var count = _self.currentDirPath.split('/').length - 2;
+	$("#currentDirPath").addpend("<a href='#' id='dir1'>"+currentSelectedDirectory+"</a>/")
 	console.log('Tap _self.currentDirPath>> ' + _self.currentDirPath);
 	$('#currentDirPath').attr('title', _self.currentDirPath);
 	$('#currentDirPath').html(_self.currentDirPath);
@@ -166,8 +170,8 @@ FTPPage.prototype.renderDirs = function(dirs) {
 		var fileData = _self.app.dir64;
 		var line = '<li data-id="' + _self.currentDirPath + value
 				+ '" class="dir-placeholder"><a href="#">'
-				+ '<img class="ui-li-thumb" src="'
-				+ fileData + '" /><h2>' + value + '</h2></a></li>';
+				+ '<img class="ui-li-thumb" src="' + fileData + '" /><h2>'
+				+ value + '</h2></a></li>';
 		dirItems = dirItems + line;
 	});
 	return dirItems;
@@ -178,10 +182,10 @@ FTPPage.prototype.renderFiles = function(files) {
 	var fileItems = '';
 	$.each(files, function(index, value) {
 		var extension = value.substr((value.lastIndexOf('.') + 1));
-		var findResult = jQuery.grep(_self.app.dataTypes, function(item,
-				index) {
-			return item == extension.toUpperCase();
-		});
+		var findResult = jQuery.grep(_self.app.dataTypes,
+				function(item, index) {
+					return item == extension.toUpperCase();
+				});
 		var fileData = _self.app.file64;
 		if (findResult.length > 0) {
 			fileData = _self.app.image64
@@ -189,8 +193,7 @@ FTPPage.prototype.renderFiles = function(files) {
 		var line = '<li id="' + _self.line_id + '" data-id="'
 				+ $("#sel_ftpservers").val() + _self.currentDirPath + value
 				+ '" class="file-placeholder"><a href="#">'
-				+ '<img class="ui-li-thumb" src="'
-				+ fileData + '" /><h2>'
+				+ '<img class="ui-li-thumb" src="' + fileData + '" /><h2>'
 				+ value.substr(0, (value.lastIndexOf('.'))) + '</h2></a></li>';
 		fileItems = fileItems + line;
 	});
