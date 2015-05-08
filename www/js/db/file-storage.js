@@ -38,7 +38,7 @@ FS.prototype.init = function() {
 	var _self = this;
 	if (window.requestFileSystem) {
 		console.log("Found File-Storage:Debug - ");
-		window.requestFileSystem(Window.PERSISTENT, 0, function(
+		window.requestFileSystem(window.PERSISTENT, 0, function(
 				filesystem) {
 			_self.fileSystem = filesystem;
 			filesystem.root.getDirectory('VIS_Inspection', {
@@ -54,18 +54,17 @@ FS.prototype.init = function() {
 				}, _self.errorHandler);
 			}, _self.errorHandler);
 		}, _self.errorHandler);
-	}
-	else if (window.webkitRequestFileSystem) {
-		console.log('Found >> '+window.webkitRequestFileSystem);
+	} else if (window.webkitRequestFileSystem) {
+		console.log('Found >> ' + window.webkitRequestFileSystem);
 		window.requestFileSystem = window.webkitRequestFileSystem;
-//
-//		window.webkitPersistentStorage.requestQuota(window.PERSISTENT,
-//				5 * 1024 * 1024 /* 5MB */, function(grantedBytes) {
-//					window.webkitRequestFileSystem(window.PERSISTENT,
-//							grantedBytes, onInitFs, errorHandler);
-//				}, function(e) {
-//					console.log('Error', e);
-//				});
+		//
+		// window.webkitPersistentStorage.requestQuota(window.PERSISTENT,
+		// 5 * 1024 * 1024 /* 5MB */, function(grantedBytes) {
+		// window.webkitRequestFileSystem(window.PERSISTENT,
+		// grantedBytes, onInitFs, errorHandler);
+		// }, function(e) {
+		// console.log('Error', e);
+		// });
 	}
 }
 
@@ -118,7 +117,11 @@ FS.prototype.saveVISFile = function(fileData) {
 												$.mobile
 														.changePage("#pg_gallery");
 												_self.app.appFTPUtil
-														.uploadFile(fileEntry);
+														.uploadFile(
+																fileEntry,
+																M_InOutLine_ID,
+																X_INSTRUCTIONLINE_ID,
+																M_INOUT_ID);
 											};
 											writer.write(fileData);
 										}, _self.errorHandler);
@@ -133,6 +136,14 @@ FS.prototype.getSDPath = function(Fname) {
 FS.prototype.getFileName = function(tmpFile) {
 	var tmpArray = tmpFile.split('/');
 	return tmpArray.pop();
+}
+
+FS.prototype.uploadFile = function(file, mr_line, insp_line, in_out_id) {
+	var _self = this;
+	_self.fileSystem.root.getFile(file, null, function(fileEntry) {
+		_self.app.appFTPUtil.uploadFile(fileEntry, mr_line, insp_line,
+				in_out_id);
+	}, _self.errorHandler);
 }
 
 FS.prototype.getVISFile = function(Fpath, inspID, callBack) {

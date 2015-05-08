@@ -28,31 +28,14 @@ DB.prototype.init = function(success, error) {
 								.executeSql('CREATE TABLE IF NOT EXISTS '
 										+ ' vis_gallery '
 										+ ' (mr_line,insp_line DEFAULT "0",in_out_id DEFAULT "0",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F")');
-						
-						/*tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="1596522" and insp_line="4151823" ',[],function(txx,results){
-							$.each(results.rows.item, function() {
-								var item = {};
-								item['filePath'] = this.file;
-								if (_self.app.DataTypes.indexOf(_self.app.appFS
-										.getExtention(this.file.toUpperCase())) >= 0) {
-									item['data'] = this.image64;
-								} else {
-									item['data'] = this.file64;
-								}
-								_self.app.appCache.inspFiles[_self.line_id].push(item);
-							});
-							});*/
-						
+
 					}, _self.errorCallback, _self.successCallback);
 }
 
 DB.prototype.addGalleryEntry = function(M_InOutLine_ID, X_INSTRUCTIONLINE_ID,
 		M_INOUT_ID, fileName, fileFullPath) {
 	var _self = this;
-	console.log("Add Entry");
-	console.log("M_InOutLine_ID" + M_InOutLine_ID);
-	console.log("X_INSTRUCTIONLINE_ID" + X_INSTRUCTIONLINE_ID);
-	console.log("M_INOUT_ID" + M_INOUT_ID);
+	console.log(fileFullPath);
 
 	_self.dbstore
 			.transaction(
@@ -78,18 +61,54 @@ DB.prototype.addGalleryEntry = function(M_InOutLine_ID, X_INSTRUCTIONLINE_ID,
 									+ fileName
 									+ '","' + fileFullPath + '")';
 						}
-						console.log(sqlQuery);
 						tx.executeSql(sqlQuery, [], function(tx, results) {
 							if (!results.rowsAffected) {
 								console.log('No rows affected!');
 								return false;
 							}
-							console.log("Last inserted row ID = "
-									+ results.insertId);
 						}, function() {
 
 						});
 					}, _self.errorCB);
+}
+
+DB.prototype.onAttachSucess = function(param) {
+	var _self = this;
+	var sql = '';
+	if (param.failer.length > 0) {
+		if (param.success.length > 0) {
+			sql = 'UPDATE vis_gallery SET imgAttach="T" WHERE name in (';
+			for (var i = 0; i < param.success; i++) {
+				sql = sql + '"' + param.success[i] + '",';
+			}
+			sql = sql.substring(0, sql.length - 1) + ') and ';
+			if (param.type == 0) {
+				sql = ' in_out_id = "' + param.id + '"';
+			} else {
+				sql = 'insp_line = "' + param.id + '"';
+			}
+		}
+		alert(param.failer.toString());
+	} else {
+		if (param.type == 1) {
+			sql = 'UPDATE vis_gallery SET imgAttach="T" WHERE insp_line="'
+					+ param.id + '"';
+		} else {
+			sql = 'UPDATE vis_gallery SET imgAttach="T" WHERE in_out_id="'
+					+ param.id + '"';
+		}
+	}
+	_self.dbstore.transaction(function(tx) {
+		tx.executeSql(sql);
+		tx.executeSql('SELECT * FROM vis_gallery WHERE mr_line="'
+				+ app.appCache.session.m_inoutline_id
+				+ '" and (imgUpload="F" or imgAttach="F")', [], function(tx,
+				results) {
+			if (results.rows.length <= 0) {
+				alert("All Files Attached");
+			}
+		}, _self.errorCB);
+	});
 }
 
 DB.prototype.updateFileNameGalleryEntry = function(M_InOutLine_ID,
@@ -107,9 +126,30 @@ DB.prototype.updateFileNameGalleryEntry = function(M_InOutLine_ID,
 					+ '" WHERE file="' + fileFullPath + '" and insp_line="'
 					+ X_INSTRUCTIONLINE_ID + '"';
 		}
-
 		tx.executeSql(sqlQuery);
 	}, _self.errorCB, _self.success);
+}
+
+DB.prototype.getUploadFailedEntry = function(sucess) {
+	var _self = this;
+	_self.dbstore.transaction(function(tx) {
+		var sqlQuery;
+		sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
+				+ _self.app.appCache.session.m_inoutline_id
+				+ '" and imgUpload="F"';
+		tx.executeSql(sqlQuery, [], sucess, _self.errorCB);
+	}, _self.errorCB);
+}
+
+DB.prototype.getAttachPendingEntry = function(sucess) {
+	var _self = this;
+	_self.dbstore.transaction(function(tx) {
+		var sqlQuery;
+		sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
+				+ _self.app.appCache.session.m_inoutline_id
+				+ '" and imgUpload="T" and imgAttach="F"';
+		tx.executeSql(sqlQuery, [], sucess, _self.errorCB);
+	}, _self.errorCB);
 }
 
 DB.prototype.errorCB = function(err) {

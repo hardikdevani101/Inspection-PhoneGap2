@@ -46,7 +46,6 @@ FTPPage.prototype.fillFTPServerList = function() {
 		option1.attr('selected', 'selected');
 		$('#sel_ftpservers').selectmenu();
 		$('#sel_ftpservers').selectmenu('refresh', true);
-		_self.renderContent();
 	}
 }
 
@@ -100,7 +99,6 @@ FTPPage.prototype.renderContent = function(dirPath) {
 		if (serverData[_self.currentDirPath]) {
 			var files = serverData[_self.currentDirPath].files;
 			var dirs = serverData[_self.currentDirPath].dirs;
-
 			var fileItems = _self.renderFiles(files);
 			var dirItems = _self.renderDirs(dirs);
 

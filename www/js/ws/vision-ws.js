@@ -94,9 +94,9 @@ VisionApi.prototype.login = function(params, success, error) {
 							jsonResponse = resultline;
 						}
 						if (fullNodeList.length > 0) {
-							for ( var i = 0; i < fullNodeList.length; i++) {
+							for (var i = 0; i < fullNodeList.length; i++) {
 								var dlab, dval;
-								for ( var j = 0; j < fullNodeList[i].childNodes.length; j++) {
+								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {
 										dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'AD_User_ID') {
@@ -170,9 +170,9 @@ VisionApi.prototype.getMRLines = function(params, success, error) {
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
 						if (fullNodeList.length > 0) {
-							for ( var i = 0; i < fullNodeList.length; i++) {
+							for (var i = 0; i < fullNodeList.length; i++) {
 								var dlab, dval, inOut, desc;
-								for ( var j = 0; j < fullNodeList[i].childNodes.length; j++) {
+								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'LABEL') {
 										dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'M_InOutLine_ID') {
@@ -252,9 +252,9 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
 						if (fullNodeList.length > 0) {
-							for ( var i = 0; i < fullNodeList.length; i++) {
+							for (var i = 0; i < fullNodeList.length; i++) {
 								var dlab, dval;
-								for ( var j = 0; j < fullNodeList[i].childNodes.length; j++) {
+								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {
 										dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent;
@@ -290,17 +290,17 @@ VisionApi.prototype.uploadImage = function(params, success, error) {
 			+ '<_0:ParamValues>'
 			+ '<_0:field column="X_InstructionLine_ID">'
 			+ '<_0:val>'
-			+ params[imginspline]
+			+ params.imginspline
 			+ '</_0:val>'
 			+ '</_0:field>'
 			+ '<_0:field column="imgName">'
 			+ '<_0:val>'
-			+ params[imgname]
+			+ params.imgname
 			+ '</_0:val>'
 			+ '</_0:field>'
 			+ '</_0:ParamValues>'
 			+ '</_0:ModelRunProcess>'
-			+ ADLoginRequest
+			+ _self.ADLoginRequest
 			+ '</_0:ModelRunProcessRequest>'
 			+ '</_0:runProcess>'
 			+ '</soapenv:Body>' + '</soapenv:Envelope>';
@@ -311,23 +311,35 @@ VisionApi.prototype.uploadImage = function(params, success, error) {
 		complete : function() {
 			_self.app.hideDialog();
 		},
-
-		url : completeUrl,
 		type : 'POST',
+		crossDomain : true,
 		data : reqBody,
-		contentType : 'text/xml; charset=\"utf-8\"',
+		url : _self.completeUrl,
+		accepts : {
+			xml : 'text/xml',
+			text : 'text/plain'
+		},
+		contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
 		dataType : 'xml'
 	}).then(function(response) {
 		var summary = response.getElementsByTagName("Summary");
-		return {
-			'summary' : summary
-		};
+		var tmpArray = summary[0].textContent.split(']$[');
+		var successArrayList = tmpArray[0].split('$$');
+		var failedArrayList = [];
+		if (!tmpArray[1] == "")
+			failedArrayList = tmpArray[1].split('$$');
+		success({
+			'id' : params.imginspline,
+			'success' : successArrayList,
+			'failer' : failedArrayList,
+			'type' : 1
+		});
 	}).fail(function(err) {
-		return err.responseText;
+		console.log(err.responseText);
 	});
 };
 
-VisionApi.prototype.uploadImageByMInOut = function(params) {
+VisionApi.prototype.uploadImageByMInOut = function(params, success, error) {
 	var _self = this;
 	var reqBody = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
 			+ '<soapenv:Header/>'
@@ -351,7 +363,7 @@ VisionApi.prototype.uploadImageByMInOut = function(params) {
 			+ '</_0:field>'
 			+ '</_0:ParamValues>'
 			+ '</_0:ModelRunProcess>'
-			+ ADLoginRequest
+			+ _self.ADLoginRequest
 			+ '</_0:ModelRunProcessRequest>'
 			+ '</_0:runProcess>'
 			+ '</soapenv:Body>' + '</soapenv:Envelope>';
@@ -362,18 +374,29 @@ VisionApi.prototype.uploadImageByMInOut = function(params) {
 		complete : function() {
 			_self.app.hideDialog();
 		},
-		url : completeUrl,
 		type : 'POST',
+		crossDomain : true,
 		data : reqBody,
-		contentType : 'text/xml; charset=\"utf-8\"',
+		url : _self.completeUrl,
+		accepts : {
+			xml : 'text/xml',
+			text : 'text/plain'
+		},
+		contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
 		dataType : 'xml'
 	}).then(function(response) {
 		var summary = response.getElementsByTagName("Summary");
-		return {
-			'summary' : summary
-		};
+		var tmpArray = summary[0].textContent.split(']$[');
+		var successArrayList = tmpArray[0].split('$$');
+		var failedArrayList = tmpArray[1].split('$$');
+		success({
+			'id' : params.recid,
+			'success' : successArrayList,
+			'failer' : failedArrayList,
+			'type' : 0
+		});
 	}).fail(function(err) {
-		return err.responseText;
+		console.log(err.responseText);
 	});
 };
 
@@ -405,24 +428,26 @@ VisionApi.prototype.getFTPServerList = function(params, success, error) {
 			+ '</soapenv:Body>'
 			+ '</soapenv:Envelope>';
 	$
-			.ajax({
-				beforeSend : function() {
-					_self.app.showDialog("Loading");
-				},
-				complete : function() {
-					_self.app.hideDialog();
-				},
-				type : 'POST',
-				crossDomain : true,
-				data : reqBody,
-				url : _self.completeUrl,
-				accepts : {
-					xml : 'text/xml',
-					text : 'text/plain'
-				},
-				contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
-				dataType : 'xml'
-			})
+			.ajax(
+					{
+						beforeSend : function() {
+							_self.app.showDialog("Loading");
+						},
+						complete : function() {
+							_self.app.hideDialog();
+						},
+						type : 'POST',
+						crossDomain : true,
+						data : reqBody,
+						url : _self.completeUrl,
+						accepts : {
+							xml : 'text/xml',
+							text : 'text/plain'
+						},
+						contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
+						dataType : 'xml'
+
+					})
 			.then(
 					function(response) {
 						jsonResponse = [];
@@ -430,9 +455,9 @@ VisionApi.prototype.getFTPServerList = function(params, success, error) {
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
 						if (fullNodeList.length > 0) {
-							for ( var i = 0; i < fullNodeList.length; i++) {
+							for (var i = 0; i < fullNodeList.length; i++) {
 								var dlab, dval, inOut, desc;
-								for ( var j = 0; j < fullNodeList[i].childNodes.length; j++) {
+								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'FTP_Url') {
 										fUrl = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {
@@ -443,11 +468,19 @@ VisionApi.prototype.getFTPServerList = function(params, success, error) {
 										fUser = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'Vision_FTP_ID') {
 										recordId = fullNodeList[i].childNodes[j].childNodes[0].textContent;
-									}else if (fullNodeList[i].childNodes[j].attributes[0].value == 'isFTP') {
+									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'isFTP') {
 										isFTP = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									}
 								}
 								resultline = {};
+
+								if (isFTP == 'Y') {
+									fUrl = "ftp://" + fUrl + ":" + fUser + "@"
+											+ fPass;
+								} else {
+									fUrl = "http://" + fUrl;
+								}
+
 								resultline['record-id'] = recordId;
 								resultline['url'] = fUrl;
 								resultline['isFTP'] = isFTP;
@@ -510,9 +543,9 @@ VisionApi.prototype.getWaterMarkList = function(success, error) {
 								.getElementsByTagName("DataRow");
 						var data = [];
 						if (fullNodeList.length > 0) {
-							for ( var i = 0; i < fullNodeList.length; i++) {
+							for (var i = 0; i < fullNodeList.length; i++) {
 								var item = {};
-								for ( var j = 0; j < fullNodeList[i].childNodes.length; j++) {
+								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'Description') {
 										item["url"] = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {

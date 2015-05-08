@@ -54,6 +54,7 @@
 <script src="js/view/file-explorer-view.js"></script>
 <script src="js/view/ftp-explorer-view.js"></script>
 <script src="js/view/cropImage-view.js"></script>
+<script src="js/view/editImage-view.js"></script>
 
 <script src="js/app.js"></script>
 <script src="js/sync/uploader.js"></script>
@@ -301,14 +302,12 @@ End of MR line page
 					<li><a href="#pg_inspection" data-icon="bullets"
 						data-shadow="false" data-wrapperels="span" data-theme="a"
 						title="Back">MRLines</a></li>
-					<li>
-						<!-- <a href="#" id="btn-delete" data-icon="delete"
-						data-shadow="false"  data-wrapperels="span"
-						data-theme="c" title="Delete">Sync</a></li>
-					<li> --> <a href="#" id="btn_sync_insp" data-icon="refresh"
+					<li><a href="#" id="btn_finish_mr" data-icon="check"
 						data-shadow="false" data-wrapperels="span" data-theme="a"
-						title="Refresh">Sync</a>
-					</li>
+						title="Finish">Finish</a></li>
+					<li><a href="#" id="btn_sync_insp" data-icon="refresh"
+						data-shadow="true" data-wrapperels="span" data-theme="b"
+						title="Refresh">Sync</a></li>
 				</ul>
 			</div>
 		</div>
@@ -552,13 +551,13 @@ Start of FTP Explorer page
 			<h1>FTP Explorer</h1>
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-right">
-				<button id="btn_user" href="#pnl_aboutus" data-icon="user"
+				<a id="btn_user" href="#pnl_aboutus" data-icon="user"
 					data-corners="false" data-shadow="false" data-iconshadow="false"
 					data-wrapperels="span" title="User" data-rel="popup"
-					data-transition="flip"></button>
-				<button href="#" id="btn_logout" data-icon="power"
-					data-corners="false" data-iconpos="notext" data-shadow="false"
-					data-iconshadow="false" data-wrapperels="span" title="Logout">SignOut</button>
+					data-transition="flip"></a> <a href="#" id="btn_logout"
+					data-icon="power" data-corners="false" data-iconpos="notext"
+					data-shadow="false" data-iconshadow="false" data-wrapperels="span"
+					title="Logout">SignOut</a>
 			</div>
 		</div>
 		<div role="main" class="ui-content">
@@ -581,22 +580,21 @@ Start of FTP Explorer page
 					</ul>
 				</div>
 			</div>
-		</div>
 
 		<div data-role="footer" data-position="fixed" data-theme="a">
 			<div data-role="navbar" data-iconpos="left" data-theme="a">
 				<ul data-theme="a">
-					<li><a href="#" data-icon="check" data-shadow="false"
-						data-wrapperels="span" id="btn-finish-ftp-file-selection"
-						title="Back">Done</a></li>
-					<li><a href="#" id="btn-clear-ftp-files" data-icon="delete"
-						id="btn-clear-file-selection" data-shadow="false"
-						data-wrapperels="span" title="Clear Selected">Clear</a></li>
-				</ul>
+						<li><a href="#" data-icon="check" data-shadow="false"
+							data-wrapperels="span" id="btn-finish-ftp-file-selection"
+							title="Back">Done</a></li>
+						<li><a href="#" id="btn-clear-ftp-files" data-icon="delete"
+							id="btn-clear-file-selection" data-shadow="false"
+							data-wrapperels="span" title="Clear Selected">Clear</a></li>
+					</ul>
+				</div>
 			</div>
 		</div>
 	</div>
-
 	<!-------------------------------------------------------------
 END of FTP Explorer page
 -------------------------------------------------------------->
@@ -610,10 +608,12 @@ Start of Crop page
 		<div data-role="header" data-position="fixed">
 			<h2 data-role="heading">Crop Image</h2>
 			<a href="#_main" data-icon="back" data-iconpos="notext"
-				data-shadow="false" data-wrapperels="span" title="Back"
-				data-rel="back">Back</a>
-			<div data-role="controlgroup" data-type="horizontal" class="ui-mini">
-				<select name="select-waterMark" data-wrapperels="span">
+				class="ui-btn-left" data-shadow="true" data-wrapperels="span"
+				title="Back" data-rel="back">Back</a>
+			<div data-role="controlgroup" data-type="horizontal"
+				class="ui-mini ui-btn-right">
+				<select name="select-crop-waterMark" data-wrapperels="span"
+					data-native-menu="false">
 				</select>
 			</div>
 		</div>
@@ -654,6 +654,61 @@ Start of Crop page
 
 	<!-------------------------------------------------------------
 End of Crop page
+-------------------------------------------------------------->
+
+	<!-------------------------------------------------------------
+Start of Edit page
+-------------------------------------------------------------->
+
+	<div id="pg_editView" data-role="page" data-theme="b">
+		<div data-role="header" data-position="fixed">
+			<h2 data-role="heading">Edit</h2>
+			<a href="#_main" data-icon="back" data-iconpos="notext"
+				class="ui-btn-left" data-shadow="true" data-wrapperels="span"
+				title="Back" data-rel="back">Back</a>
+			<div data-role="controlgroup" data-type="horizontal"
+				class="ui-mini ui-btn-right">
+				<select name="select-edit-waterMark" data-wrapperels="span"
+					data-native-menu="false">
+				</select>
+			</div>
+		</div>
+		<div role="main" class="ui-content" style="margin: 0; padding: 0;">
+			<div class="ui-grid-a" id="photo-set-panel">
+				<div class="ui-block-a" style="width: 60%">
+					<canvas id="editCanvas"></canvas>
+				</div>
+				<div class="ui-block-b" style="width: 35%">
+					<div class="ui-grid-a">
+						<div class="ui-block-a" data-role="controlgroup"
+							style="width: 10%;">
+							<img src="img/brightness.png" height="25" width="25"
+								alt="brightness" />
+							<div id="slider-brightness"></div>
+						</div>
+						<div class="ui-block-b" data-role="controlgroup"
+							style="width: 10%;">
+							<img src="img/contrast.png" height="25" width="25" alt="contrast" />
+							<div id="slider-contrast"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div data-role="footer" data-position="fixed">
+			<div data-role="navbar" data-iconpos="left">
+				<ul>
+					<li><a href="#" data-icon="action" id="btn_editSave"
+						data-wrapperels="span" data-theme="b" title="Back">Save</a></li>
+					<li><a href="#" id="btn_editUndo" data-icon="plus"
+						data-wrapperels="span" data-theme="b" title="Add">Undo</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<!-------------------------------------------------------------
+End of Edit page
 -------------------------------------------------------------->
 </body>
 </html>

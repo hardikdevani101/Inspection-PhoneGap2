@@ -6,7 +6,6 @@ var FileUtils = function(app) {
 	this.parlistArray = [];
 	this.dirVISInspectionFTP = '';
 	this.isGalleryLoad = true;
-	this.DataTypes = [ "JPEG", "JPG", "BMP", "PNG", "GIF" ];
 }
 
 FileUtils.prototype.onInitFs = function(fileSystem) {
@@ -75,7 +74,7 @@ FileUtils.prototype.afterSaveFile = function(fileinfo, callBack) {
 			if (totColumns < results.rows.length) {
 				var colNum = Math.ceil(imagelistarray.rows.length / 3);
 				colNum = colNum - 1;
-				for ( var j = 0; j < 3; j++) {
+				for (var j = 0; j < 3; j++) {
 					var tr = document.getElementById("tr-" + j);
 					var td = document.createElement('td');
 					td.setAttribute("id", "td-" + j + "-" + colNum);
@@ -107,9 +106,10 @@ FileUtils.prototype.afterSaveFile = function(fileinfo, callBack) {
 }
 
 FileUtils.prototype.fillSingleTD = function(fileFullPath, callBack) {
+	var _self = this;
 	document.getElementById("disp-tab1").innerHTML = galleryTable;
-	if (DataTypes
-			.indexOf(getExtention(getFileName(fileFullPath)).toUpperCase()) >= 0) {
+	if (_self.app.dataTypes.indexOf(getExtention(getFileName(fileFullPath))
+			.toUpperCase()) >= 0) {
 		root
 				.getFile(
 						fileFullPath,
@@ -319,7 +319,7 @@ FileUtils.prototype.onUploadFile = function(filePath, InspNumber, callBack) {
 }
 
 FileUtils.prototype.setUploadedImg = function(fileName) {
-	for ( var i = 0; i < pandingUploads.length; i++) {
+	for (var i = 0; i < pandingUploads.length; i++) {
 		if (pandingUploads[i][1] == fileName) {
 			var tdDiv = document.getElementById(pandingUploads[i][0]);
 			if (tdDiv != null)
@@ -361,7 +361,7 @@ FileUtils.prototype.listDir = function(DirEntry) {
 		var div = document.createElement('div');
 		div.innerHTML = DirEntry.name + ".....";
 		dirContent.append(div);
-		for ( var i = 0; i < entries.length; ++i) { // sort entries
+		for (var i = 0; i < entries.length; ++i) { // sort entries
 			var entry = entries[i];
 			var div = document.createElement('div');
 			if (entry.isDirectory && entry.name[0] != '.') {

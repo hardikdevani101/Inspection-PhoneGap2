@@ -6,30 +6,24 @@ FTPUtils.prototype.init = function() {
 
 }
 
-FTPUtils.prototype.uploadFile = function(fnEntries) {
+FTPUtils.prototype.uploadFile = function(fnEntries, M_InOutLine_ID,
+		X_INSTRUCTIONLINE_ID, M_INOUT_ID) {
 	var _self = this;
 	var ft = new FileTransfer();
 	var options = new FileUploadOptions();
 	options.fileKey = "file";
 	options.fileName = fnEntries.name;
-	ft
-			.upload(
-					fnEntries.toURL(),
-					encodeURI(_self.app.appCache.settingInfo.service_url
-							+ "/VISService/fileUpload"),
-					function(result) {
-						var xmlResponse = result.response;
-						var newFileName = $(xmlResponse).find('newName').text()
-								.trim();
-
-						var M_InOutLine_ID = _self.app.appCache.session.m_inoutline_id;
-						var X_INSTRUCTIONLINE_ID = _self.app.appCache.session.x_instructionline_id;
-						var M_INOUT_ID = _self.app.appCache.session.M_INOUT_ID;
-
-						_self.app.appDB.updateFileNameGalleryEntry(
-								M_InOutLine_ID, X_INSTRUCTIONLINE_ID,
-								M_INOUT_ID, newFileName, fnEntries.fullPath);
-					}, _self.uploadFail, options);
+	ft.upload(fnEntries.toURL(),
+			encodeURI(_self.app.appCache.settingInfo.service_url
+					+ "/VISService/fileUpload"), function(result) {
+				var xmlResponse = result.response;
+				var newFileName = $(xmlResponse).find('newName').text().trim();
+				var fileFullPath = _self.app.appFS
+						.getSDPath(fnEntries.fullPath).substring(1);
+				_self.app.appDB.updateFileNameGalleryEntry(M_InOutLine_ID,
+						X_INSTRUCTIONLINE_ID, M_INOUT_ID, newFileName,
+						fileFullPath);
+			}, _self.uploadFail, options);
 }
 
 FTPUtils.prototype.getSDPath = function(Fname) {

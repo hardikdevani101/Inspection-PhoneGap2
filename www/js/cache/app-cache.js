@@ -6,16 +6,17 @@ var AppCache = function(app) {
 		x_instructionline_id : ''
 	}
 	this.warehouseList = [];
+	this.organizationList = [];
+	this.roleList = [];
 	this.settingInfo = {};
 	this.appInfo = {};
 	this.pages = [];
 	this.ftpServers= [];
-	this.mrLines= [];
-	this.inspLines= {};
-	this.inspFiles= {};
-	this.waterMarkImgs= [];
+	this.mrLines = [];
+	this.inspLines = {};
+	this.inspFiles = {};
+	this.waterMarkImgs = [];
 }
-
 
 AppCache.prototype.reset = function() {
 	var _self = this
@@ -29,10 +30,12 @@ AppCache.prototype.reset = function() {
 	this.appInfo = {};
 	this.pages = [];
 	this.ftpServers= [];
-	this.mrLines= [];
-	this.inspLines= {};
-	this.inspFiles= {};
-	this.waterMarkImgs= [];
+	this.mrLines = [];
+	this.inspLines = {};
+	this.inspFiles = {};
+	this.waterMarkImgs = [];
+	this.organizationList = [];
+	this.roleList = [];
 }
 
 AppCache.prototype.addPage = function(pageid, page) {

@@ -1,11 +1,13 @@
 var InspLinesPage = function(app) {
 	this.app = app;
 }
+
 InspLinesPage.prototype.rederBreadCrumb = function() {
 	var _self = this;
 	$('#pg_inspection #btn_user').html(
 			$(_self.app.appCache.loginInfo.username).val());
 };
+
 InspLinesPage.prototype.init = function() {
 	var _self = this;
 	// $('#pg_inspection div h2').text(
@@ -52,6 +54,13 @@ InspLinesPage.prototype.renderMRLines = function() {
 		console.log($(this).data("id"));
 		_self.app.appCache.session.m_inoutline_id = $(this).data("id");
 		$.mobile.changePage("#pg_inspection_detail");
+	});
+
+	$('#btn_finish_mr').on('click', function() {
+		_self.onFinishedCalled();
+	});
+	$('#btn_sync_insp').on('click', function() {
+		_self.onSyncCalled();
 	});
 
 	$.mobile.loading('hide');
@@ -120,11 +129,95 @@ InspLinesPage.prototype.renderInspLines = function() {
 	}
 	_self.app.hideDialog();
 };
+
 InspLinesPage.prototype.rederInspLinesDetailsBreadCrumb = function() {
 	var _self = this;
 	$('#pg_inspection_detail #btn_user').html(
 			$(_self.app.appCache.loginInfo.username).val());
 };
+
+InspLinesPage.prototype.onSyncCalled = function() {
+	var _self = this;
+	var success = function(tx, results) {
+		if (results.rows.length > 0) {
+			for (var i = 0; i < results.rows.length; i++) {
+				_self.app.appFS.uploadFile(results.rows.item(i).file,
+						results.rows.item(i).mr_line,
+						results.rows.item(i).insp_line,
+						results.rows.item(i).in_out_id);
+			}
+		} else {
+			alert("Completed");
+		}
+	};
+	_self.app.appDB.getUploadFailedEntry(success);
+}
+
+InspLinesPage.prototype.onFinishedCalled = function() {
+	var _self = this;
+	var onUploadedEntrySucess = function(tx, results) {
+		if (results.rows.length > 0) {
+			var attachmentList = [];
+			for (var i = 0; i < results.rows.length; i++) {
+				var item = {};
+				if (results.rows.item(i).insp_line == null
+						|| results.rows.item(i).insp_line == 0) {
+					item['id'] = results.rows.item(i).in_out_id;
+					item['type'] = 0;
+				} else {
+					item['id'] = results.rows.item(i).insp_line;
+					item['type'] = 1;
+				}
+				item['files'] = results.rows.item(i).name;
+
+				var isUpdated = false;
+				$.each(attachmentList, function() {
+					if (this.id == item['id']) {
+						this.files = this.files + "," + item['files'];
+						isUpdated = true;
+					}
+				});
+
+				if (!isUpdated) {
+					attachmentList.push(item);
+				}
+			}
+
+			var visService = new VisionApi(app);
+			$.each(attachmentList, function() {
+				if (this.type == 1) {
+					visService.uploadImage({
+						imginspline : this.id,
+						imgname : this.files
+					}, function(param) {
+						_self.app.appDB.onAttachSucess(param);
+					});
+				} else {
+					visService.uploadImageByMInOut({
+						recid : this.id,
+						tabname : 'M_InOut',
+						imgname : this.files
+					}, function(param) {
+						_self.app.appDB.onAttachSucess(param);
+					});
+				}
+			});
+
+		} else {
+			alert("Uploaded");
+		}
+	};
+
+	var onFailedUplodEntrysuccess = function(tx, results) {
+		if (results.rows.length > 0) {
+			alert("Please first sync all files");
+		} else {
+			_self.app.appDB.getAttachPendingEntry(onUploadedEntrySucess);
+		}
+	};
+	_self.app.appDB.getUploadFailedEntry(onFailedUplodEntrysuccess);
+};
+
 InspLinesPage.prototype.loadInspLines = function(params) {
 	var _self = this;
 	_self.rederInspLinesDetailsBreadCrumb();
