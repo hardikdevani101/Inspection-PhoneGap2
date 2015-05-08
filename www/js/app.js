@@ -187,6 +187,9 @@ App.prototype.register = function() {
 		
 //	_self.uploadWorker.postMessage('Hello World'); // Send data to our worker.
 	// _self.downloadWorker.postMessage({isFTP:true,selFiles:[{placeholderId:'pg_ftp_explorer',name:'file',url:'url',ext:'ext'}]});
+	});
+	
+	_self.downloadWorker.postMessage({isFTP:true,selFiles:[{placeholderId:'pg_ftp_explorer',name:'file',url:'url',ext:'ext'}]});
 }
 
 // Initialize application.
