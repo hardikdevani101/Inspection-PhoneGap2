@@ -353,7 +353,7 @@ End of Inspection page
 			<div data-role="fieldcontainer">
 				<div id="inspMRDetGallery">Current Selected Path</div>
 			</div>
-			<ul data-role="listview" id="ls_inspFiles" >
+			<ul data-role="listview" id="ls_inspFiles">
 			</ul>
 		</div>
 
@@ -534,13 +534,8 @@ Start of FTP Explorer page
 			</div>
 		</div>
 		<div role="main" class="ui-content">
-			<div>
-				<button id="currentDirPath" href="#pnl_aboutus" data-icon="user"
-					data-corners="false" data-shadow="false" data-iconshadow="false"
-					data-wrapperels="span" title="User" data-rel="popup"
-					data-transition="flip"
-					class="ui-btn ui-corner-all ui-btn-icon-left ui-shadow-icon ui-shadow ui-first-child"></button>
-			</div>
+			<div id="prevPath" class=""></div>
+			<div id="currentDirPath" class="current_dir_location"></div>
 			<div class="ui-grid-solo ftp-explorer-content img-gallery">
 				<div class="ui-block-a ftp-explorer">
 					<ul data-role="listview" id="ls_ftpDirs" data-inset="false">

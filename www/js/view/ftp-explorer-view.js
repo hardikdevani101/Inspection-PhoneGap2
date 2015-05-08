@@ -18,7 +18,9 @@ FTPPage.prototype.init = function() {
 		_self.visionApi = new VisionApi(_self.app);
 		_self.rederBreadCrumb();
 		_self.loadFTPServers();
-
+		$("#prevPath").html('');
+		$("#prevPath").hide();
+		$("#currentDirPath").html('');
 		$('#btn_refresh_ftpServers').on("click", function() {
 			_self.app.appCache.ftpServers = {};
 			_self.loadFTPServers();
@@ -171,18 +173,74 @@ FTPPage.prototype.onFileTap = function(event) {
 
 FTPPage.prototype.onDirTap = function(event) {
 	var _self = this;
-	_self.currentDirPath = $(event.delegateTarget).data('id') + '/'
+	_self.currentDirPath = $(event.delegateTarget).data('id') + '/';
+	_self.addDirItemLink();
+	_self.changeCurrentDir();
+};
+FTPPage.prototype.addDirItemLink = function() {
+	var _self = this;
+	// var currentSelectedDirectory = _self.currentDirPath.substring(
+	// $('#prevPath').html().length, _self.currentDirPath.length);
+	var dirPathArray = _self.currentDirPath.split('/');
+	var items = '';
+	var dirPath = '/';
+	// var count = _self.currentDirPath.split('/').length - 2;
+	$.each(dirPathArray, function(index, value) {
+		var line = "<a href='#' id='bc-link' data-id='" + dirPath + "'>"
+				+ value + "</a>";
+		if (index == dirPathArray.length) {
+			line = value;
+		}
+		dirPath += dirPath + "/" + value;
+		items += line;
+		items += "/"
+	});
+
+	$("#currentDirPath").html(items);
+
+	$("bc-link").on("click", function(event) {
+		_self.onDirTap(event);
+	});
+
+	// if ($("#prevPath").html().length > 0) {
+	// $("#currentDirPath").append(
+	// "<a href='#' id='dir" + count + "'>" + currentSelectedDirectory
+	// + "</a>");
+	// } else {
+	//
+	// }
+	// $("#prevPath").html(currentSelectedDirectory);
+	// _self.tempPath = "";
+	// _self.addDirItemEvent(count);
+};
+FTPPage.prototype.addDirItemEvent = function(id) {
+	var _self = this;
+	$('#dir' + id).on("click", function() {
+		if ($("#prevPath").html().split("/").length - 2 != id) {
+			$("#currentDirPath").html('');
+			var path = $("#prevPath").html();
+			var curpaths = path.split("/");
+			_self.currentDirPath = "/";
+			$("#prevPath").html('');
+			$.each(curpaths, function(index, value) {
+				if (index != 0 && index <= id) {
+					_self.currentDirPath = _self.currentDirPath + value + "/";
+					_self.addDirItemLink();
+				}
+			});
+			_self.changeCurrentDir();
+		}
+	});
+};
+FTPPage.prototype.changeCurrentDir = function() {
+	var _self = this;
 	console.log('Tap _self.currentDirPath>> ' + _self.currentDirPath);
-	$('#currentDirPath').attr('title', _self.currentDirPath);
-	$('#currentDirPath').html(_self.currentDirPath);
 	_self.explodeServerDir(_self.currentDirPath, function() {
 		_self.renderContent(_self.currentDirPath);
 	}, function(msg) {
-		console.log(msg)
+		console.log(msg);
 	});
-
-}
-
+};
 FTPPage.prototype.renderDirs = function(dirs) {
 	var _self = this;
 	var dirItems = '';
@@ -200,23 +258,34 @@ FTPPage.prototype.renderDirs = function(dirs) {
 FTPPage.prototype.renderFiles = function(files) {
 	var _self = this;
 	var fileItems = '';
-	$.each(files, function(index, value) {
-		var extension = value.substr((value.lastIndexOf('.') + 1));
-		var findResult = jQuery.grep(_self.app.dataTypes,
-				function(item, index) {
-					return item == extension.toUpperCase();
-				});
-		var fileData = _self.app.file64;
-		if (findResult.length > 0) {
-			fileData = _self.app.image64
-		}
-		var line = '<li id="' + _self.line_id + '" data-id="'
-				+ $("#sel_ftpservers").val() + _self.currentDirPath + value
-				+ '" class="file-placeholder"><a href="#">'
-				+ '<img class="ui-li-thumb" src="' + fileData + '" /><h2>'
-				+ value.substr(0, (value.lastIndexOf('.'))) + '</h2></a></li>';
-		fileItems = fileItems + line;
-	});
+	$
+			.each(
+					files,
+					function(index, value) {
+						var extension = value
+								.substr((value.lastIndexOf('.') + 1));
+						var findResult = jQuery.grep(_self.app.dataTypes,
+								function(item, index) {
+									return item == extension.toUpperCase();
+								});
+						var fileData = _self.app.file64;
+						if (findResult.length > 0) {
+							fileData = _self.app.image64
+						}
+						var line = '<li id="'
+								+ _self.line_id
+								+ '" data-id="'
+								+ $("#sel_ftpservers").val()
+								+ _self.currentDirPath
+								+ value
+								+ '" class="file-placeholder"><a href="#">'
+								+ '<img class="ui-li-thumb" src="'
+								+ fileData
+								+ '" /><h2>'
+								+ value.substr(0, (value.lastIndexOf('.')))
+								+ '</h2><p class="ui-li-aside"><a class="ui-btn ui-corner-all ui-icon-arrow-d ui-btn-icon-notext ui-btn-inline"></a></p></a></li>';
+						fileItems = fileItems + line;
+					});
 
 	return fileItems;
 }
@@ -269,20 +338,20 @@ FTPPage.prototype.explodeServerDir = function(dirName, success, error) {
 		updateFTPCache(files, dirs);
 	};
 	console.log(ftpUrl);
-	_self.app.ftpClient.filelist(ftpUrl, successCB, error);
-	// var randomNum = Math.floor(Math.random() * (30 - 0 + 1)) + 0;
-	// var extensionList = [ "jpg", "pdf", "png", "txt" ];
-	// var tempFiles = [], tempDir = [];
-	// for (var i = 0; i < randomNum; i++) {
-	// tempFiles.push('file.'
-	// + extensionList[Math.floor(Math.random()
-	// * (extensionList.length))]);
-	// }
-	// randomNum = Math.floor(Math.random() * (30 - 0 + 1)) + 0;
-	// var dirList = [ "subfolder", "textf" ];
-	// for (var i = 0; i < randomNum; i++) {
-	// tempDir.push(dirList[Math.floor(Math.random() * (dirList.length))]
-	// + "_" + i);
-	// }
-	// updateFTPCache(tempFiles, tempDir);
+	// _self.app.ftpClient.filelist(ftpUrl, successCB, error);
+	var randomNum = Math.floor(Math.random() * (30 - 0 + 1)) + 0;
+	var extensionList = [ "jpg", "pdf", "png", "txt" ];
+	var tempFiles = [], tempDir = [];
+	for ( var i = 0; i < randomNum; i++) {
+		tempFiles.push('file.'
+				+ extensionList[Math.floor(Math.random()
+						* (extensionList.length))]);
+	}
+	randomNum = Math.floor(Math.random() * (30 - 0 + 1)) + 0;
+	var dirList = [ "subfolder", "textf" ];
+	for ( var i = 0; i < randomNum; i++) {
+		tempDir.push(dirList[Math.floor(Math.random() * (dirList.length))]
+				+ "_" + i);
+	}
+	updateFTPCache(tempFiles, tempDir);
 }
