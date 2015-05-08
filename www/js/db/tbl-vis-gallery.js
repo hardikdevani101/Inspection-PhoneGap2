@@ -70,14 +70,10 @@ Tbl_VISGallery.prototype.getFilesByInspInfo = function(fileInfo, success, error)
 	if (typeof (error) === "function") {
 		errorCallback = error;
 	}
-	console.log("Get Entry");
-	console.log("M_InOutLine_ID" + fileInfo.M_InOutLine_ID);
-	console.log("X_INSTRUCTIONLINE_ID" + fileInfo.X_INSTRUCTIONLINE_ID);
 	this.appDB.dbstore.transaction(function(tx) {
 		sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
 				+ fileInfo.M_InOutLine_ID + '" and insp_line="'
 				+ fileInfo.X_INSTRUCTIONLINE_ID + '"';
-		console.log("DB query " + sqlQuery);
 		tx.executeSql(sqlQuery, [], successCallback, errorCallback);
 	}, errorCallback);
 }

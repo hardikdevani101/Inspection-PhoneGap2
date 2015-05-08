@@ -475,8 +475,8 @@ VisionApi.prototype.getFTPServerList = function(params, success, error) {
 								resultline = {};
 
 								if (isFTP == 'Y') {
-									fUrl = "ftp://" + fUrl + ":" + fUser + "@"
-											+ fPass;
+									fUrl = "ftp://" + fUser + ":" + fPass + "@"
+											+ fUrl;
 								} else {
 									fUrl = "http://" + fUrl;
 								}

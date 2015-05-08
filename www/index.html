@@ -293,7 +293,7 @@ End of MR line page
 		</div>
 		<!-------------- Second page main content ----------->
 		<div data-role="main" class="ui-content" data-theme="c">
-			<ul data-role="listview"  data-filter="true" data-inset="false"
+			<ul data-role="listview" data-filter="true" data-inset="false"
 				data-filter-placeholder="Search Inspection Lines" id="_list_insp"></ul>
 		</div>
 		<div data-role="footer" data-position="fixed" data-theme="a">
@@ -395,12 +395,11 @@ End of Inspection page
 				<li class="ui-field-contain" data-shadow="false"
 					data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
 					data-iconpos="right" data-theme="a"><input type="text"
-					name="txtInpect" id="inspectName" class="ui-mini"/>
+					name="txtInpect" id="inspectName" class="ui-mini" />
 					<button>OK</button></li>
 			</ul>
 		</div>
 	</div>
-
 	<!-------------------------------------------------------------
 End of Inspection page
 -------------------------------------------------------------->
@@ -525,13 +524,13 @@ Start of FTP Explorer page
 			<h1>FTP Explorer</h1>
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-right">
-				<a id="btn_user" href="#pnl_aboutus" data-icon="user"
+				<button id="btn_user" href="#pnl_aboutus" data-icon="user"
 					data-corners="false" data-shadow="false" data-iconshadow="false"
 					data-wrapperels="span" title="User" data-rel="popup"
-					data-transition="flip"></a> <a href="#" id="btn_logout"
-					data-icon="power" data-corners="false" data-iconpos="notext"
-					data-shadow="false" data-iconshadow="false" data-wrapperels="span"
-					title="Logout">SignOut</a>
+					data-transition="flip"></button>
+				<button href="#" id="btn_logout" data-icon="power"
+					data-corners="false" data-iconpos="notext" data-shadow="false"
+					data-iconshadow="false" data-wrapperels="span" title="Logout">SignOut</button>
 			</div>
 		</div>
 		<div role="main" class="ui-content">
@@ -555,15 +554,16 @@ Start of FTP Explorer page
 				</div>
 			</div>
 
-		<div data-role="footer" data-position="fixed" data-theme="a">
-			<div data-role="navbar" data-iconpos="left" data-theme="a">
-				<ul data-theme="a">
+			<div data-role="footer" data-position="fixed" data-theme="a">
+				<div data-role="navbar" data-iconpos="left" data-theme="a">
+					<ul data-theme="a">
 						<li><a href="#" data-icon="check" data-shadow="false"
 							data-wrapperels="span" id="btn-finish-ftp-file-selection"
 							title="Back">Done</a></li>
 						<li><a href="#" id="btn-clear-ftp-files" data-icon="delete"
-							id="btn-clear-file-selection" data-shadow="false"
-							data-wrapperels="span" title="Clear Selected">Clear</a></li>
+							data-shadow="false" data-wrapperels="span" title="Clear Selected">Clear</a></li>
+						<li><a href="#" id="btn-reload-ftp-files" data-icon="refresh"
+							data-shadow="false" data-wrapperels="span" title="Clear Selected">Reload</a></li>
 					</ul>
 				</div>
 			</div>

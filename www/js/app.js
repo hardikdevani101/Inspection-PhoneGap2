@@ -15,16 +15,11 @@ App.prototype.onDeviceReady = function() {
 	$.mobile.allowCrossDomainPages = true;
 	$.support.cors = true;
 	$.mobile.loadingMessage = "Loading..";
-	
+
 	this.isOnline = navigator.onLine ? true : false;
 	if (navigator.network) {
 		this.connectionTye = navigator.network.connection.type
 	}
-	this.ftpClient = '';
-	
-	// if(vision){
-	// this.ftpClient = vision.ftpclient;
-	// }
 
 	// setInterval(function () {
 	// connectionStatus = navigator.onLine ? 'online' : 'offline';
@@ -181,8 +176,9 @@ App.prototype.register = function() {
 		});
 	});
 
-//	_self.uploadWorker.postMessage('Hello World'); // Send data to our worker.
-//	_self.downloadWorker.postMessage('Hello World');
+	// _self.uploadWorker.postMessage('Hello World'); // Send data to our
+	// worker.
+	// _self.downloadWorker.postMessage('Hello World');
 }
 
 // Initialize application.
@@ -197,15 +193,18 @@ $(document).ready(function() {
 
 	if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
 		console.log('Registered deviceready listener!!')
+			
 		// $(document).bind("mobileinit", app.onDeviceReady());
 		document.addEventListener("deviceready", function() {
 			app.appFS = new FS(app);
 			app.appFS.init();
-			navigator.camera.cleanup(function() {
-				console.log("Camera Clean");
-			}, function() {
-				console.log("Camera Clean Failed");
-			});
+
+			app.ftpClient = '';
+
+			if (vision) {
+				app.ftpClient = vision.ftpclient;
+			}
+
 		}, false);
 	} else {
 		console.log('Explicitly called onDeviceReady!!')
