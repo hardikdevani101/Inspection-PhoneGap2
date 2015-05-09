@@ -233,8 +233,13 @@ FTPPage.prototype.onFileTap = function(event) {
 
 	}
 	if (!findResult.length > 0) {
+		dataSrc = "FTP";
+		if (_self.isLocalStorage) {
+			dataSrc = "LS";
+		}
 		_self.selFiles.push({
 			id : selected,
+			dataSource : dataSrc,
 			name : file_name
 		});
 		$('li[data-id="' + selected + '"] .ui-icon-arrow-d').show();

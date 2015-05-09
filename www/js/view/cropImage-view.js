@@ -16,107 +16,7 @@ CropImagePage.prototype.init = function(width, height) {
 					"#pg_cropView",
 					function() {
 						_self.rederBreadCrumb();
-						$('#btn_zoom-out').on('ontouchstart', function(event) {
-							console.log(event.pageX);
-						});
-
-						$('#btn_zoom-out').on('ontouchend', function(event) {
-							console.log(event.pageX);
-						});
-
-						$('#btn_zoom-in').on('ontouchstart', function(event) {
-							console.log(event.pageX);
-						});
-
-						$('#btn_zoom-in').on('ontouchend', function(event) {
-							console.log(event.pageX);
-						});
-
-						$('#cropage_cpNsave').on('click', function(event) {
-
-						});
-
-						$('#cropage_save').on('click', function(event) {
-							_self.saveImage($('#cropImage img')[0]);
-						});
-
-						$('#cropage_edit').on('click', function(event) {
-
-						});
-
-						$('#cropage_cpNedit').on('click', function(event) {
-							_self.cropImage(_self.onEditPage);
-						});
-
-						$('#cropImage').html(
-								[
-										'<img src="',
-										_self.image64,
-										'" width="' + width + '" height="'
-												+ height + '" />' ].join(''));
-
-						_self.crop_img = $('#cropImage img')[0];
-						var xsize, ysize, totH;
-						if (_self.crop_img.width * 3 / 4 > _self.crop_img.height) {
-							ysize = _self.crop_img.height;
-							xsize = _self.crop_img.height * 4 / 3;
-						} else {
-							xsize = _self.crop_img.width;
-							ysize = _self.crop_img.width * 3 / 4;
-						}
-						_self.scrollHeight = ysize;
-						$('#cropImage img')
-								.Jcrop(
-										{
-											bgColor : 'black',
-											bgOpacity : .3,
-											onSelect : function(selection) {
-												_self
-														.cropAreaChanged(selection);
-											},
-											onChange : function(selection) {
-												_self
-														.cropAreaChanged(selection);
-											},
-											aspectRatio : 4 / 3,
-											allowResize : false,
-											setSelect : [
-													(_self.crop_img.width - xsize) / 2,
-													(_self.crop_img.height - ysize) / 2,
-													xsize, ysize ]
-										}, function() {
-											// Use the API to get the real image
-											// size
-											var bounds = this.getBounds();
-											_self.boundx = bounds[0];
-											_self.boundy = bounds[1];
-											// Store the API in the jcrop_api
-											// variable
-											jcrop_api = this;
-										});
-
-						// document.getElementById("slider-vertical")
-						// .setAttribute(
-						// "style",
-						// "height:" + (cropImageH - 50)
-						// + "px;margin:35% 0px 25% 0px;");
-						// $('#slider-vertical').slider(
-						// {
-						// orientation : "vertical",
-						// min : 5,
-						// max : ysize,
-						// value : ysize,
-						// change : function(event, ui) {
-						// selectCropArea(ui.value, ui.value * 100
-						// / ysize);
-						// },
-						// slide : function(event, ui) {
-						// clearInterval(myVar);
-						// selectCropArea(ui.value, ui.value * 100
-						// / ysize);
-						// }
-						// });
-
+						_self.initCropper()
 						if (_self.app.appCache.waterMarkImgs.length > 0) {
 							$('select[name="select-crop-waterMark"]').empty();
 							$
@@ -138,6 +38,60 @@ CropImagePage.prototype.init = function(width, height) {
 								'refresh');
 					});
 };
+
+CropImagePage.prototype.initCropper = function() {
+	var $image = $('.img-container > img'), $dataX = $('#dataX'), $dataY = $('#dataY'), $dataHeight = $('#dataHeight'), $dataWidth = $('#dataWidth'), $dataRotate = $('#dataRotate'), options = {
+		highlight : true,
+		rotatable : true,
+		zoomable : true,
+		touchDragZoom : true,
+		// minCanvasWidth: window.innerWidth,
+		// minCanvasHeight:window.innerHeight,
+		// minCropBoxWidth: '160',
+		// minCropBoxHeight: '90',
+		// minContainerWidth: $('.img-container').width(),
+		// minContainerHeight: $('.img-container').height(),
+		// build: null,
+		// built: null,
+		// dragstart: null,
+		// dragmove: null,
+		// dragend: null,
+		// zoomin: null,
+		// zoomout: null,
+		aspectRatio : 16 / 9,
+		crop : function(data) {
+			$dataX.val(Math.round(data.x));
+			$dataY.val(Math.round(data.y));
+			$dataHeight.val(Math.round(data.height));
+			$dataWidth.val(Math.round(data.width));
+			$dataRotate.val(Math.round(data.rotate));
+		}
+	};
+
+	$image.on({
+		'build.cropper' : function(e) {
+			console.log(e.type);
+		},
+		'built.cropper' : function(e) {
+			console.log(e.type);
+		},
+		'dragstart.cropper' : function(e) {
+			console.log(e.type, e.dragType);
+		},
+		'dragmove.cropper' : function(e) {
+			console.log(e.type, e.dragType);
+		},
+		'dragend.cropper' : function(e) {
+			console.log(e.type, e.dragType);
+		},
+		'zoomin.cropper' : function(e) {
+			console.log(e.type);
+		},
+		'zoomout.cropper' : function(e) {
+			console.log(e.type);
+		}
+	}).cropper(options);
+}
 
 CropImagePage.prototype.cropAreaChanged = function(selection) {
 	var _self = this;

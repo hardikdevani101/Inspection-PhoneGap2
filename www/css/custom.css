@@ -108,8 +108,37 @@ body {
 	{
 	min-height: 6.625em;
 }
+
+.cropper-container{
+	min-width: 100%;
+	min-height: 100%;
+	padding:0px !important;
+	margin:0px !important;
+	
+}
+
+
+.img-container{
+	min-width: 100%;
+	min-height: 100%;
+	padding:0px !important;
+	margin:0px !important;
+	
+}
+
+.cropper-point .point-se {
+	background-image: url("assets/img/icons.png") !important;
+}
+
 /* First breakpoint is 48em (768px). 3 column layout. Tiles 250x250 pixels incl. margin at the breakpoint. */
 @media ( min-width : 400px ) {
+	.cropper-container {
+		min-height: 205px;
+	}
+	
+	.img-container {
+		min-height: 205px;
+	}
 	#pnl_selected_ftp_files .ui-listview li {
 		float: left;
 		width: 25% !important;
@@ -132,11 +161,9 @@ body {
 	.img-gallery .ui-content {
 		padding: .5625em; /* 9px */
 	}
-	
-	.logoimage{
+	.logoimage {
 		width: 80%;
 	}
-	
 	.img-gallery  .ui-listview>.ui-li-has-thumb>.ui-btn, .ui-listview>.ui-li-static.ui-li-has-thumb
 		{
 		padding-left: 1.25em !important;
@@ -260,6 +287,12 @@ body {
 }
 
 @media ( min-width : 600px) {
+	.cropper-container {
+		min-height: 400px;
+	}
+	.img-container {
+		min-height: 400px;
+	}
 	.img-gallery .ui-listview li {
 		float: left;
 		width: 12%;
@@ -271,7 +304,13 @@ body {
 
 /* Second breakpoint is 63.75em (1020px). 4 column layout. Tiles will be 250x250 pixels incl. margin again at the breakpoint. */
 @media ( min-width : 63.75em ) {
-	.logoimage{
+	.cropper-container {
+		min-height: 480px;
+	}
+	.img-container {
+		min-height: 480px;
+	}
+	.logoimage {
 		width: 100%;
 	}
 	.img-gallery .ui-content {
@@ -367,7 +406,7 @@ body .ui-body-c, body .ui-overlay-c {
 .logoimage {
 	margin-left: auto;
 	margin-right: auto;
-	text-align:center;
+	text-align: center;
 }
 
 .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-btn-icon-notext,

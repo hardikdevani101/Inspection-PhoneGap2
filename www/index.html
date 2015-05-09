@@ -20,6 +20,7 @@
 	href="js/lib/jmobile/1.4.5/jquery.mobile.structure-1.4.5.min.css"
 	type="text/css" />
 <link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css" />
+<link rel="stylesheet" href="css/cropper/cropper.min.css" />
 
 <!--JQuery Core Lib  -->
 <script src="js/lib/jquery-1.11.1.min.js"></script>
@@ -28,11 +29,12 @@
 <script src="js/lib/jmobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 <!-- Form Validation JS  -->
 <script src="js/lib/jquery.validate.min.js"></script>
-<script src="js/lib/jquery.Jcrop.min.js"></script>
-
+<!-- <script src="js/lib/jquery.Jcrop.min.js"></script>
+ -->
 <!-- Utitlity JS -->
 <script src="js/lib/jpeg_encoder_basic.js"></script>
 <script src="js/lib/base64-binary.js"></script>
+<script src="js/lib/cropper.min.js"></script>
 
 <!--Cordova JS-->
 <script src="cordova.js"></script>
@@ -578,26 +580,16 @@ Start of Crop page
 				</select>
 			</div>
 		</div>
-		<div data-role="main" class="ui-content"
-			style="margin: 0; padding: 0;">
-			<div id="insp-activity-panel">
-				<table style="width: 100%">
-					<tr>
-						<td style="width: 60%;">
-							<div id="cropImage"></div>
-						</td>
-						<td style="width: 10%;"><a href="#" data-role="none"
-							id="btn_zoom-out"></a>
-							<div id="slider-vertical"></div> <a data-role="none"
-							id="btn_zoom-in"></a></td>
-					</tr>
-				</table>
+		<div data-role="main" class="ui-content">
+			<div class="ui-grid-solo cropper-container">
+				<div class="ui-block-a img-container">
+				</div>
 			</div>
 		</div>
 		<div data-role="footer" data-position="fixed" data-theme="c">
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
-					<li><a id="cropage_cpNsave" href="#" data-shadow="false"
+					<li><a data-method="setDragMode" data-option="move" id="cropage_cpNsave" href="#" data-shadow="false"
 						data-wrapperels="span" data-theme="c" title="crop&Save">Crop &
 							Save</a></li>
 					<li><a id="cropage_save" href="#" data-icon="delete"
