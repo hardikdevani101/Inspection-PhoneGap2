@@ -6,16 +6,10 @@ var App = function() {
 };
 
 App.prototype.onDeviceReady = function() {
-	 if (typeof (Worker) !== "undefined") {
-//		 this.uploadWorker = new Worker("js/sync/uploader.js");
-//		 this.downloadWorker = new Worker("js/sync/downloader.js");
-	 } else {
-	 console.log("Sorry! No Web Worker support.");
-	 }
 	$.mobile.allowCrossDomainPages = true;
 	$.support.cors = true;
 	$.mobile.loadingMessage = "Loading..";
-	
+
 	this.isOnline = navigator.onLine ? true : false;
 	if (navigator.network) {
 		this.connectionTye = navigator.network.connection.type
@@ -103,6 +97,21 @@ App.prototype.hideDialog = function() {
 
 App.prototype.register = function() {
 	var _self = this;
+
+	$(document).on("pagecreate", "#pg_home", function(event) {
+		// Check if already login
+		_self.isLogin = false;
+		$("#btn_start").on('tap', function() {
+			if (!_self.isLogin) {
+				$.mobile.changePage("#pg_login")
+			} else {
+				_self.settingnview = new SettingsPage(_self);
+				_self.settingnview.init();
+				$.mobile.changePage("#pg_inspection")
+			}
+		})
+	});
+
 	$(document).on("pagecreate", "#pg_login", function(event) {
 		console.log("Login Called");
 		_self.loginview = new LoginPage(_self);
@@ -116,13 +125,22 @@ App.prototype.register = function() {
 		_self.inspLinePage = new InspLinesPage(_self);
 		_self.inspLinePage.init();
 		_self.appCache.addPage('pg_inspection', _self.inspLinePage);
-	});
 
-	$(document).on("pagecreate", "#pg_home", function(event) {
 		var visionApi = new VisionApi(_self);
 		visionApi.getWaterMarkList(function(data) {
 			_self.appCache.waterMarkImgs = data.responce;
 			_self.loadWaterMarkFiles();
+		}, function() {
+			console.log("Error");
+		});
+
+		visionApi.getFTPServerList({
+			'orgid' : _self.appCache.settingInfo.org_id
+		}, function(result) {
+			_self.appCache.ftpServers = [];
+			$.each(result.ftpservers, function(index, data) {
+				_self.appCache.ftpServers.push(data);
+			});
 		}, function() {
 			console.log("Error");
 		});
@@ -157,39 +175,30 @@ App.prototype.register = function() {
 		_self.ftpExplorer.init();
 		_self.appCache.addPage('pg_ftp_explorer', _self.ftpExplorer);
 	});
-	
-	$(document).on("click", "#pg_ftp_explorer", function(event) {
-		console.log(" >>>> triggered from download worker");
-	});
-	
-	$(document).on("click", "#btn_logout", function(event) {
-		_self.appCache.reset();
-		var visSettingsDAO = new Tbl_VISSetting(this);
-		visSettingsDAO.login("N", function(data) {
-			console.log("DB-Logout Success!")
-		}, function(msg) {
-			console.log("DB-Logout Failed!")
-		});
 
-		_self.uploadWorker.terminate();
-		_self.uploadWorker = undefined;
-		_self.downloadWorker.terminate();
-		_self.downloadWorker = undefined;
-		$.mobile.changePage("#pg_login");
-		$.mobile.loadPage("index.html", {
-			reloadPage : true
-		});
+	$(document).on("click", "#btn_logout", function(event) {
+		_self.logout();
 	});
-	
-//	_self.downloadWorker.addEventListener('message', function(event) {
-//		console.log("callback app.js >>>>> imageData>>>> " + e.data.image);
-//	});
-		
-//	_self.uploadWorker.postMessage('Hello World'); // Send data to our worker.
-	// _self.downloadWorker.postMessage({isFTP:true,selFiles:[{placeholderId:'pg_ftp_explorer',name:'file',url:'url',ext:'ext'}]});
+}
+
+App.prototype.logout = function() {
+	var _self = this;
+	_self.appCache.reset();
+	var visSettingsDAO = new Tbl_VISSetting(this);
+	visSettingsDAO.login("N", function(data) {
+		console.log("DB-Logout Success!")
+	}, function(msg) {
+		console.log("DB-Logout Failed!")
 	});
-	
-	_self.downloadWorker.postMessage({isFTP:true,selFiles:[{placeholderId:'pg_ftp_explorer',name:'file',url:'url',ext:'ext'}]});
+
+	// _self.uploadWorker.terminate();
+	// _self.uploadWorker = undefined;
+	// _self.downloadWorker.terminate();
+	// _self.downloadWorker = undefined;
+	$.mobile.changePage("#pg_login");
+	$.mobile.loadPage("index.html", {
+		reloadPage : true
+	});
 }
 
 // Initialize application.
@@ -208,11 +217,6 @@ $(document).ready(function() {
 		document.addEventListener("deviceready", function() {
 			app.appFS = new FS(app);
 			app.appFS.init();
-			navigator.camera.cleanup(function() {
-				console.log("Camera Clean");
-			}, function() {
-				console.log("Camera Clean Failed");
-			});
 		}, false);
 	} else {
 		console.log('Explicitly called onDeviceReady!!')

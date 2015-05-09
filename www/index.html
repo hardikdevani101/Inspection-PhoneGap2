@@ -63,21 +63,24 @@
 </head>
 
 <body>
+
+	<!-------------- Home page ----------->
+	<div data-role="page" id="pg_home" data-theme="c">
+		<div data-role="main" class="ui-content">
+			<div class="logoimage">
+				<img src="icon.png">
+			</div>
+			<a href="#" id="btn_start"
+				class="ui-btn  ui-icon-check ui-btn-icon-right">Start Inspection</a>
+		</div>
+	</div>
+	<!-------------------------------------------------------------
+End of Home page
+-------------------------------------------------------------->
+
 	<!-------------- Login Page ----------->
 	<div data-role="page" id="pg_login" data-theme="c">
 		<!-------------- Login page header ----------->
-		<div data-role="header" data-position="fixed" data-theme="c">
-
-			<a href="#pg_settings" data-icon="gear" data-iconpos="notext"
-				data-mini="true" data-corners="false" data-shadow="false"
-				data-theme="c" data-mini="true" data-iconshadow="false"
-				data-wrapperels="span" title="Preference"></a>
-			<h1 data-role="heading">VISion</h1>
-			<a href="#pnl_aboutus" data-icon="info" data-corners="false"
-				data-shadow="false" data-iconshadow="false" data-wrapperels="span"
-				data-mini="true" title="About Us" data-rel="popup" data-theme="c"
-				data-transition="flip">About</a>
-		</div>
 		<!-------------- Login page main content ----------->
 		<div data-role="main" class="ui-content" data-theme="c"
 			data-mini="true">
@@ -85,6 +88,8 @@
 				<div class="logoimage">
 					<img src="icon.png">
 				</div>
+				<div id="login-error-box" data-role="popup" data-theme="a"
+					class="ui-content"></div>
 				<div data-role="fieldcontainer">
 					<input id="txt_user" name="txt_user" type="text" value="alex.perez"
 						placeholder="Enter Username!" data-mini="true" />
@@ -97,7 +102,25 @@
 					data-inline="true" value="Login" data-theme="c">
 			</form>
 		</div>
-
+		<div data-role="footer" data-position="fixed" data-theme="a">
+			<div data-role="navbar" data-iconpos="left">
+				<ul>
+					<li><a href="#pg_home" data-icon="home" data-iconpos="notext"
+						data-mini="true" data-corners="false" data-shadow="false"
+						data-theme="c" data-mini="true" data-iconshadow="false"
+						data-wrapperels="span" title="Home">Home</a></li>
+					<li><a href="#pg_settings" data-icon="gear"
+						data-iconpos="notext" data-mini="true" data-corners="false"
+						data-shadow="false" data-theme="c" data-mini="true"
+						data-iconshadow="false" data-wrapperels="span" title="Preference">Settings</a>
+					</li>
+					<li><a href="#pnl_aboutus" data-icon="info"
+						data-corners="false" data-shadow="false" data-iconshadow="false"
+						data-wrapperels="span" data-mini="true" title="About Us"
+						data-rel="popup" data-theme="c" data-transition="flip">About</a></li>
+				</ul>
+			</div>
+		</div>
 		<div data-role="panel" data-position="left" data-theme="c"
 			id="pg_settings" data-content-theme="c">
 			<form id="_form_settings">
@@ -187,49 +210,19 @@
 
 		<div data-role="popup" id="pnl_aboutus">
 			<ul data-role="listview" data-theme="c" data-inset="false">
-				<li data-icon="info" data-shadow="false" data-iconshadow="false"
-					data-wrapperels="div" data-iconpos="right" data-theme="c"><a
-					href="#" data-rel="close">About Us</a></li>
 				<li class="ui-field-contain" data-shadow="false"
 					data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-					data-iconpos="right" data-theme="c"><label for="select-server">About
-						the Application</label></li>
+					data-iconpos="right" data-theme="c"><label for="select-server">Version:1.0</label></li>
+				<li class="ui-field-contain" data-shadow="false"
+					data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
+					data-iconpos="right" data-theme="c"><label for="select-server">Release
+						Date: 5th May, 2015</label></li>
 			</ul>
 		</div>
 	</div>
 
 	<!-------------------------------------------------------------
 End of Login Page
--------------------------------------------------------------->
-
-	<!-------------- Home page ----------->
-	<div data-role="page" id="pg_home" data-theme="c">
-		<!-------------- Second page header ----------->
-		<div data-role="header" data-position="fixed" data-theme="c">
-			<h1 data-role="heading">Home</h1>
-			<div data-role="controlgroup" data-type="horizontal"
-				class="ui-mini ui-btn-right">
-				<button id="btn_user" href="#pnl_aboutus" data-icon="user"
-					data-corners="false" data-shadow="false" data-iconshadow="false"
-					data-wrapperels="span" title="User" data-rel="popup"
-					data-transition="flip"></button>
-				<button href="#" id="btn_logout" data-icon="power"
-					data-corners="false" data-iconpos="notext" data-shadow="false"
-					data-iconshadow="false" data-wrapperels="span" title="Logout">SignOut</button>
-			</div>
-		</div>
-		<!-------------- Second page main content ----------->
-		<div data-role="main" class="ui-content">
-			<div class="circle">
-				<a href="#pg_inspection" data-icon="action" data-shadow="false"
-					data-iconshadow="false" data-wrapperels="div"
-					title="Start Inspection">Start Inspection</a>
-			</div>
-		</div>
-	</div>
-
-	<!-------------------------------------------------------------
-End of Home page
 -------------------------------------------------------------->
 
 	<!-------------- MR line page ----------->
@@ -350,9 +343,6 @@ End of Inspection page
 		</div>
 		<!-------------- Second page main content ----------->
 		<div data-role="main" class="ui-content img-gallery" data-theme="c">
-			<div data-role="fieldcontainer">
-				<div id="inspMRDetGallery">Current Selected Path</div>
-			</div>
 			<ul data-role="listview" id="ls_inspFiles">
 			</ul>
 		</div>
@@ -514,6 +504,10 @@ Start of FTP Explorer page
 		<div data-role="header" data-position="fixed">
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-left">
+				<button id="selected-files-count" href="#pnl_selected_ftp_files"
+					data-icon="tag" data-corners="false" data-shadow="false"
+					data-iconshadow="false" data-wrapperels="span" title="User"
+					data-rel="popup" data-transition="flip">0</button>
 				<div class="ui-grid-b">
 					<div class="ui-block-a">
 						<select data-native-menu="false" id="sel_ftpservers">
@@ -533,34 +527,32 @@ Start of FTP Explorer page
 					data-iconshadow="false" data-wrapperels="span" title="Logout">SignOut</button>
 			</div>
 		</div>
-		<div role="main" class="ui-content">
-			<div id="prevPath" class=""></div>
-			<div id="currentDirPath" class="current_dir_location"></div>
-			<div class="ui-grid-solo ftp-explorer-content img-gallery">
-				<div class="ui-block-a ftp-explorer">
-					<ul data-role="listview" id="ls_ftpDirs" data-inset="false">
-					</ul>
-				</div>
-			</div>
-			<div class="ui-grid-solo ftp-explorer-content img-gallery">
-				<div class="ui-block-a ftp-explorer">
-					<ul data-role="listview" id="ls_ftpFiles" data-inset="false">
-					</ul>
-				</div>
-			</div>
+		<div role="main" class="ui-content img-gallery" data-theme="c">
+			<div id="current-dir-path" class="current_dir_location"></div>
+			<ul data-role="listview" id="ls_ftpDirs" data-inset="false">
+			</ul>
+			<ul data-role="listview" id="ls_ftpFiles" data-inset="false">
+			</ul>
+		</div>
 
-			<div data-role="footer" data-position="fixed" data-theme="a">
-				<div data-role="navbar" data-iconpos="left" data-theme="a">
-					<ul data-theme="a">
-						<li><a href="#" data-icon="check" data-shadow="false"
-							data-wrapperels="span" id="btn-finish-ftp-file-selection"
-							title="Back">Done</a></li>
-						<li><a href="#" id="btn-clear-ftp-files" data-icon="delete"
-							data-shadow="false" data-wrapperels="span" title="Clear Selected">Clear</a></li>
-						<li><a href="#" id="btn-reload-ftp-files" data-icon="refresh"
-							data-shadow="false" data-wrapperels="span" title="Clear Selected">Reload</a></li>
-					</ul>
-				</div>
+		<div data-role="panel" data-position="left" data-theme="c"
+			id="pnl_selected_ftp_files">
+			<div class="ui-content img-gallery">
+				<h3 class="ui-bar ui-bar-c">Selected Files</h3>
+				<ul data-role="listview" id="ls_sel_ftpFiles" data-inset="false">
+				</ul>
+			</div>
+		</div>
+
+		<div data-role="footer" data-position="fixed" data-theme="a">
+			<div data-role="navbar" data-iconpos="left" data-theme="a">
+				<ul data-theme="a">
+					<li><a href="#" data-icon="check" data-shadow="false"
+						data-wrapperels="span" id="btn-finish-ftp-file-selection"
+						title="Back">Done</a></li>
+					<li><a href="#" id="btn-reload-ftp-files" data-icon="refresh"
+						data-shadow="false" data-wrapperels="span" title="Clear Selected">Reload</a></li>
+				</ul>
 			</div>
 		</div>
 	</div>

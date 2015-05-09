@@ -28,7 +28,7 @@ LoginPage.prototype.onLogin = function() {
 					console.log("DB-Login Failed!")
 				});
 				_self.rederBreadCrumb();
-				$(':mobile-pagecontainer').pagecontainer('change', '#pg_home',
+				$(':mobile-pagecontainer').pagecontainer('change', '#pg_inspection',
 						{
 							reload : false
 						});
@@ -56,19 +56,21 @@ LoginPage.prototype.init = function() {
 		},
 		messages : {
 			txt_user : {
-				required : "Required Field!."
+				required : "UserName is Required!."
 			},
 			txt_password : {
-				required : "Required Field!."
+				required : "Password is Required!."
 			}
 		},
 		errorPlacement : function(error, element) {
 			// error.appendTo(element.parent().prev());
-			element.attr("placeholder", "Required Field!");
-			element.attr("style", "border:1px solid red;");
+			$("#login-error-box").html(error);
+//			
+//			element.attr("placeholder", error);
+//			element.attr("style", "border:1px solid red;");
 		},
 		invalidHandler : function() {
-			alert("invalid form"); // for demo
+			$("#login-error-box").popup("open",{ overlayTheme: "a" , positionTo:"#txt_user"});
 		},
 		submitHandler : function(form) {
 			_self.onLogin();

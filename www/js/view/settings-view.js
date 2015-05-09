@@ -142,6 +142,9 @@ SettingsPage.prototype.onOrgChange = function() {
 
 SettingsPage.prototype.onSettingFind = function(setting) {
 	if (!setting.service_url || setting.service_url == '') {
+		if(_self.app.isLogin){
+			_self.app.logout();
+		}
 		$("#pg_settings").panel("open", {});
 	} else {
 		$("#pg_settings").panel("close");

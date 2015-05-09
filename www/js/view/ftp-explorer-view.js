@@ -1,6 +1,7 @@
 var FTPPage = function(app) {
 	this.app = app;
 	this.currentDirPath = '/';
+	this.isLocalStorage = false;
 	this.selFiles = [];
 }
 
@@ -18,22 +19,23 @@ FTPPage.prototype.init = function() {
 		_self.visionApi = new VisionApi(_self.app);
 		_self.rederBreadCrumb();
 		_self.loadFTPServers();
-		$("#prevPath").html('');
-		$("#prevPath").hide();
-		$("#currentDirPath").html('');
+
+		$("#current-dir-path").html('<h3 class="ui-bar ui-bar-c">root</h3>');
+
 		$('#btn_refresh_ftpServers').on("click", function() {
 			_self.app.appCache.ftpServers = {};
 			_self.loadFTPServers();
 		});
 
 		$("#btn-finish-ftp-file-selection").on('click', function() {
-			// Push Selected File information to Gallery Page.
+			// Push Selected File information to Gallery
+			// Page.
 			$.mobile.changePage("#pg_gallery");
 		});
 
-		$("#btn-reload-ftp-files").on("click", function() {
+		$("#btn-reload-ftp-files").on("tap", function() {
 			_self.currentDirPath = '/';
-			_self.selFiles = [];
+			// _self.selFiles = [];
 			_self.explodeServerDir(_self.currentDirPath, function() {
 				_self.renderContent()
 			}, function(msg) {
@@ -42,15 +44,63 @@ FTPPage.prototype.init = function() {
 		});
 
 		$("#sel_ftpservers").on("change", function() {
-			_self.onFTPServerChange;
+			_self.onFTPServerChange();
+		});
+
+		$('#selected-files-count').on("tap", function(event) {
+			_self.renderSelectedFiles();
 		});
 	});
+}
+
+FTPPage.prototype.renderSelectedFiles = function() {
+	var _self = this;
+	var fileItems = '';
+	$
+			.each(
+					_self.selFiles,
+					function(index, value) {
+						var extension = value.name.substr((value.name
+								.lastIndexOf('.') + 1));
+						var findResult = jQuery.grep(_self.app.dataTypes,
+								function(item, index) {
+									return item == extension.toUpperCase();
+								});
+						var fileData = _self.app.file64;
+						if (findResult.length > 0) {
+							fileData = _self.app.image64
+						}
+						var dataid = value.id;
+						var line = '<li data-name="'
+								+ value.name
+								+ '"data-id="'
+								+ dataid
+								+ '" class="file-placeholder"><a href="#">'
+								+ '<img class="ui-li-thumb" src="'
+								+ fileData
+								+ '" /><h2>'
+								+ value.name.substr(0, (value.name
+										.lastIndexOf('.')))
+								+ '</h2><p class="ui-li-aside"><a class="ui-btn ui-shadow ui-corner-all ui-icon-delete ui-btn-icon-notext ui-btn-b ui-btn-inline"></a></p></a></li>';
+						fileItems = fileItems + line;
+					});
+
+	$('#ls_sel_ftpFiles').html(fileItems);
+	$('#ls_sel_ftpFiles').listview("refresh");
+	$("#ls_sel_ftpFiles .ui-icon-arrow-d").hide();
+	$("#ls_sel_ftpFiles .file-placeholder").on("tap", function(event) {
+		_self.onFileTap(event);
+		_self.renderSelectedFiles();
+	});
+
+	$("#pnl_selected_ftp_files").panel("open");
 }
 
 FTPPage.prototype.onFTPServerChange = function() {
 	var _self = this;
 	_self.currentDirPath = '/';
-	_self.selFiles = [];
+	$("#current-dir-path").html('<h3 class="ui-bar ui-bar-c">root</h3>');
+	// _self.selFiles = [];
 	_self.explodeServerDir(_self.currentDirPath, function() {
 		_self.renderContent()
 	}, function(msg) {
@@ -61,6 +111,7 @@ FTPPage.prototype.onFTPServerChange = function() {
 FTPPage.prototype.fillFTPServerList = function() {
 	var _self = this;
 	$("#sel_ftpservers").html('');
+	$("#sel_ftpservers").append(new Option("Local Storage", "LS"));
 	if (_self.app.appCache.ftpServers.length > 0) {
 		$.each(_self.app.appCache.ftpServers, function(key, data) {
 			if (data.isFTP == 'Y') {
@@ -71,15 +122,20 @@ FTPPage.prototype.fillFTPServerList = function() {
 		option1.attr('selected', 'selected');
 		$('#sel_ftpservers').selectmenu();
 		$('#sel_ftpservers').selectmenu('refresh', true);
+		_self.isLocalStorage = true;
 	}
 }
 
 FTPPage.prototype.loadFTPServers = function() {
 	var _self = this;
-	_self.app.showDialog("Loading..");
+
 	if (_self.app.appCache.ftpServers.length > 0) {
 		_self.fillFTPServerList();
-		_self.renderContent();
+		_self.explodeServerDir(_self.currentDirPath, function() {
+			_self.renderContent()
+		}, function(msg) {
+			console.log("Error in loading ftp server data.")
+		});
 	} else {
 		var success = function(result) {
 			var items = '';
@@ -99,6 +155,19 @@ FTPPage.prototype.loadFTPServers = function() {
 		_self.visionApi.getFTPServerList({
 			orgid : app.appCache.settingInfo.org_id
 		}, success, function(msg) {
+			_self.app.showDialog("Loading..");
+//			resultline = {};
+//			resultline['record-id'] = '2323';
+//			resultline['url'] = 'ftp://343.343.343.34';
+//			resultline['isFTP'] = 'Y';
+//			resultline['name'] = 'Ftp Server';
+//			resultline['password'] = 'username';
+//			resultline['user'] = 'username';
+//			_self.app.appCache.ftpServers.push(resultline);
+//			success({
+//				'ftpservers' : [ resultline, resultline, resultline ],
+//				'total' : 1
+//			});
 			// popup Errorbox.
 			console.log("Load FTP Servers failed" + msg);
 			_self.app.hideDialog();
@@ -133,6 +202,12 @@ FTPPage.prototype.renderContent = function(dirPath) {
 			$('#ls_ftpDirs').html(dirItems);
 			$('#ls_ftpDirs').listview("refresh");
 
+			$.each(_self.selFiles, function(index, file) {
+				$('li[data-id="' + file.id + '"] .ui-icon-arrow-d').show();
+			});
+
+			$(".ui-icon-arrow-d").hide();
+
 			$(".dir-placeholder").bind("tap", function(event) {
 				_self.onDirTap(event)
 			});
@@ -148,8 +223,7 @@ FTPPage.prototype.renderContent = function(dirPath) {
 FTPPage.prototype.onFileTap = function(event) {
 	var _self = this;
 	var selected = $(event.delegateTarget).data('id');
-	$('#currentDirPath').html(selected);
-	$('#currentDirPath').attr('title', selected);
+	var file_name = $(event.delegateTarget).data('name');
 	console.log('Tap >> ' + selected);
 	var findResult = [];
 	if (_self.selFiles.length > 0) {
@@ -160,79 +234,62 @@ FTPPage.prototype.onFileTap = function(event) {
 	}
 	if (!findResult.length > 0) {
 		_self.selFiles.push({
-			id : selected
+			id : selected,
+			name : file_name
 		});
-		$(event.delegateTarget).addClass("selected-file");
+		$('li[data-id="' + selected + '"] .ui-icon-arrow-d').show();
 	} else {
 		_self.selFiles = jQuery.grep(_self.selFiles, function(item, index) {
 			return item.id != selected;
 		});
-		$(event.delegateTarget).removeClass("selected-file");
+		$('li[data-id="' + selected + '"] .ui-icon-arrow-d').hide();
 	}
+	$('#selected-files-count').html(_self.selFiles.length);
 }
 
 FTPPage.prototype.onDirTap = function(event) {
 	var _self = this;
-	_self.currentDirPath = $(event.delegateTarget).data('id') + '/';
-	_self.addDirItemLink();
-	_self.changeCurrentDir();
+	_self.currentDirPath = $(event.delegateTarget).data('id');
+	if (!_self.currentDirPath.endsWith('/')) {
+		_self.currentDirPath += '/';
+	}
+	if ($(event.delegateTarget).data('id') == '/') {
+		_self.currentDirPath = '/';
+	}
+	_self.renderDirPath();
+	_self.changeDir();
 };
-FTPPage.prototype.addDirItemLink = function() {
+
+FTPPage.prototype.renderDirPath = function() {
 	var _self = this;
-	// var currentSelectedDirectory = _self.currentDirPath.substring(
-	// $('#prevPath').html().length, _self.currentDirPath.length);
 	var dirPathArray = _self.currentDirPath.split('/');
 	var items = '';
 	var dirPath = '/';
-	// var count = _self.currentDirPath.split('/').length - 2;
 	$.each(dirPathArray, function(index, value) {
-		var line = "<a href='#' id='bc-link' data-id='" + dirPath + "'>"
-				+ value + "</a>";
-		if (index == dirPathArray.length) {
-			line = value;
+		if (index != dirPathArray.length - 1) {
+			dirPath += value + '/';
+			if (value == '') {
+				value = 'root ';
+				dirPath = '/'
+			}
+			var line = "<a href='#' class='bc-link' data-id='" + dirPath + "'>"
+					+ value + " /</a>";
+			if (index == dirPathArray.length - 2) {
+				line = value;
+			}
+			items += line;
 		}
-		dirPath += dirPath + "/" + value;
-		items += line;
-		items += "/"
 	});
 
-	$("#currentDirPath").html(items);
+	$("#current-dir-path").html(
+			'<h3 class="ui-bar ui-bar-c">' + items + '</h3>');
 
-	$("bc-link").on("click", function(event) {
+	$(".bc-link").on("tap", function(event) {
 		_self.onDirTap(event);
 	});
+};
 
-	// if ($("#prevPath").html().length > 0) {
-	// $("#currentDirPath").append(
-	// "<a href='#' id='dir" + count + "'>" + currentSelectedDirectory
-	// + "</a>");
-	// } else {
-	//
-	// }
-	// $("#prevPath").html(currentSelectedDirectory);
-	// _self.tempPath = "";
-	// _self.addDirItemEvent(count);
-};
-FTPPage.prototype.addDirItemEvent = function(id) {
-	var _self = this;
-	$('#dir' + id).on("click", function() {
-		if ($("#prevPath").html().split("/").length - 2 != id) {
-			$("#currentDirPath").html('');
-			var path = $("#prevPath").html();
-			var curpaths = path.split("/");
-			_self.currentDirPath = "/";
-			$("#prevPath").html('');
-			$.each(curpaths, function(index, value) {
-				if (index != 0 && index <= id) {
-					_self.currentDirPath = _self.currentDirPath + value + "/";
-					_self.addDirItemLink();
-				}
-			});
-			_self.changeCurrentDir();
-		}
-	});
-};
-FTPPage.prototype.changeCurrentDir = function() {
+FTPPage.prototype.changeDir = function() {
 	var _self = this;
 	console.log('Tap _self.currentDirPath>> ' + _self.currentDirPath);
 	_self.explodeServerDir(_self.currentDirPath, function() {
@@ -241,6 +298,7 @@ FTPPage.prototype.changeCurrentDir = function() {
 		console.log(msg);
 	});
 };
+
 FTPPage.prototype.renderDirs = function(dirs) {
 	var _self = this;
 	var dirItems = '';
@@ -272,18 +330,18 @@ FTPPage.prototype.renderFiles = function(files) {
 						if (findResult.length > 0) {
 							fileData = _self.app.image64
 						}
-						var line = '<li id="'
-								+ _self.line_id
-								+ '" data-id="'
-								+ $("#sel_ftpservers").val()
-								+ _self.currentDirPath
+						var dataid = $("#sel_ftpservers").val()
+								+ _self.currentDirPath + value
+						var line = '<li data-name="'
 								+ value
+								+ '"data-id="'
+								+ dataid
 								+ '" class="file-placeholder"><a href="#">'
 								+ '<img class="ui-li-thumb" src="'
 								+ fileData
 								+ '" /><h2>'
 								+ value.substr(0, (value.lastIndexOf('.')))
-								+ '</h2><p class="ui-li-aside"><a class="ui-btn ui-corner-all ui-icon-arrow-d ui-btn-icon-notext ui-btn-inline"></a></p></a></li>';
+								+ '</h2><p class="ui-li-aside"><a class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-d ui-btn-icon-notext ui-btn-b ui-btn-inline"></a></p></a></li>';
 						fileItems = fileItems + line;
 					});
 
@@ -304,23 +362,18 @@ FTPPage.prototype.explodeServerDir = function(dirName, success, error) {
 	var ftpUrl = ftpServerInfo.url
 	ftpUrl += dirName;
 
+	var ftpServerInfo = '';
+	jQuery.grep(_self.app.appCache.ftpServers, function(item, index) {
+		if (item.url == selected_ftpserver) {
+			selIndex = index;
+			ftpServerInfo = item;
+		}
+		return (item.url == selected_ftpserver);
+	});
+
 	var updateFTPCache = function(files, dirs) {
 		var selIndex = 0
-		var ftpServerInfo = '';
-		jQuery.grep(_self.app.appCache.ftpServers, function(item, index) {
-			if (item.url == selected_ftpserver) {
-				selIndex = index;
-				ftpServerInfo = item;
-			}
-			return (item.url == selected_ftpserver);
-		});
-
 		ftpServerInfo.data = {};
-		// var dirPath = _self.currentDirPath;
-		// if (dirName != '/') {
-		// dirPath = dirPath+dirName+'/';
-		// }
-
 		var resultline = {};
 		resultline['files'] = files;
 		resultline['dirs'] = dirs;
@@ -338,20 +391,27 @@ FTPPage.prototype.explodeServerDir = function(dirName, success, error) {
 		updateFTPCache(files, dirs);
 	};
 	console.log(ftpUrl);
-	// _self.app.ftpClient.filelist(ftpUrl, successCB, error);
-	var randomNum = Math.floor(Math.random() * (30 - 0 + 1)) + 0;
-	var extensionList = [ "jpg", "pdf", "png", "txt" ];
-	var tempFiles = [], tempDir = [];
-	for ( var i = 0; i < randomNum; i++) {
-		tempFiles.push('file.'
-				+ extensionList[Math.floor(Math.random()
-						* (extensionList.length))]);
+	if (!ftpServerInfo.data || !ftpServerInfo.data[_self.currentDirPath]) {
+		//TODO - open below actual data filler.
+		 _self.app.ftpClient.filelist(ftpUrl, successCB, error);
+		
+		//TODO - Remove below dummy data filler.
+//		var randomNum = Math.floor(Math.random() * (30 - 0 + 1)) + 0;
+//		var extensionList = [ "jpg", "pdf", "png", "txt" ];
+//		var tempFiles = [], tempDir = [];
+//		for (var i = 0; i < randomNum; i++) {
+//			tempFiles.push('file'
+//					+ i
+//					+ '.'
+//					+ extensionList[Math.floor(Math.random()
+//							* (extensionList.length))]);
+//		}
+//		randomNum = Math.floor(Math.random() * (30 - 0 + 1)) + 0;
+//		var dirList = [ "subfolder", "textf" ];
+//		for (var i = 0; i < randomNum; i++) {
+//			tempDir.push(dirList[Math.floor(Math.random() * (dirList.length))]
+//					+ "_" + i);
+//		}
+//		updateFTPCache(tempFiles, tempDir);
 	}
-	randomNum = Math.floor(Math.random() * (30 - 0 + 1)) + 0;
-	var dirList = [ "subfolder", "textf" ];
-	for ( var i = 0; i < randomNum; i++) {
-		tempDir.push(dirList[Math.floor(Math.random() * (dirList.length))]
-				+ "_" + i);
-	}
-	updateFTPCache(tempFiles, tempDir);
 }
