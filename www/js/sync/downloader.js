@@ -1,6 +1,7 @@
 self.addEventListener('message', function(event) {
-	self.importScripts('../db/db.js', '../db/file-storage.js', 'cordova.js',
-			'../../ftpclient.js');
+//	'../db/db.js', '../db/file-storage.js',
+//	self.importScripts( '../../cordova.js',
+//			'../../ftpclient.js');
 	console.log('Donwload worker called' + event.data);
 	var isFTP = event.data.isFTP;
 	if (isFTP) {

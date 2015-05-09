@@ -20,6 +20,7 @@ LoginPage.prototype.onLogin = function() {
 				app.appCache.loginInfo['username'] = $("#txt_user");
 				app.appCache.loginInfo['password'] = $("#txt_password");
 				app.appCache.loginInfo['userid'] = result.loginInfo.ad_user_id;
+				app.appCache.settingInfo['is_login'] = true;
 
 				var visSettingsDAO = new Tbl_VISSetting(this);
 				visSettingsDAO.login("Y", function(data) {

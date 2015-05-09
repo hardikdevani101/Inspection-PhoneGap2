@@ -38,8 +38,7 @@ FS.prototype.init = function() {
 	var _self = this;
 	if (window.requestFileSystem) {
 		console.log("Found File-Storage:Debug - ");
-		window.requestFileSystem(window.PERSISTENT, 0, function(
-				filesystem) {
+		window.requestFileSystem(window.PERSISTENT, 0, function(filesystem) {
 			_self.fileSystem = filesystem;
 			filesystem.root.getDirectory('VIS_Inspection', {
 				create : true
@@ -73,7 +72,7 @@ FS.prototype.getExtention = function(Fname) {
 	return tmpArray.pop();
 }
 
-FS.prototype.saveVISFile = function(fileData) {
+FS.prototype.saveVISFile = function(fileData, oldFileURI) {
 	var _self = this;
 	var date = new Date;
 	var sec = date.getSeconds();
@@ -83,49 +82,55 @@ FS.prototype.saveVISFile = function(fileData) {
 	var mm = date.getMonth() + 1;
 	var dd = date.getDate();
 	var fileName = mm + dd + yy + "_" + hh + mi + sec + ".jpg";
-	_self.vis_dir
-			.getFile(
-					fileName,
-					{
-						create : true,
-						exclusive : false
-					},
-					function(fileEntry) {
-						var fileFullPath = _self.getSDPath(fileEntry.fullPath)
-								.substring(1);
-						fileEntry
-								.createWriter(
-										function(writer) {
-											writer.onwrite = function(evt) {
-												var M_InOutLine_ID = _self.app.appCache.session.m_inoutline_id;
-												var X_INSTRUCTIONLINE_ID = _self.app.appCache.session.x_instructionline_id;
-												var M_INOUT_ID = _self.app.appCache.session.M_INOUT_ID;
-												_self.app.appDB
-														.addGalleryEntry(
-																M_InOutLine_ID,
-																X_INSTRUCTIONLINE_ID,
-																M_INOUT_ID,
-																fileName,
-																fileFullPath);
-												var item = {};
-												item['filePath'] = fileEntry.fullPath;
-												item['data'] = evt.target.result;
+	_self.vis_dir.getFile(fileName, {
+		create : true,
+		exclusive : false
+	}, function(fileEntry) {
+		fileEntry.createWriter(function(writer) {
+			writer.onwrite = function(evt) {
+				var fileFullPath = fileEntry.toURL();
+				console.log(fileFullPath);
+				console.log("New File Created");
+				var mrLineID1 = _self.app.appCache.session.m_inoutline_id;
+				var inspID1 = _self.app.appCache.session.x_instructionline_id;
+				var mrID1 = _self.app.appCache.session.M_INOUT_ID;
 
-												_self.app.appCache.inspFiles[X_INSTRUCTIONLINE_ID]
-														.push(item);
+				_self.app.appDB.updateGalleryURIEntry(mrLineID1, inspID1,
+						mrID1, fileEntry.name, fileFullPath, oldFileURI);
 
-												$.mobile
-														.changePage("#pg_gallery");
-												_self.app.appFTPUtil
-														.uploadFile(
-																fileEntry,
-																M_InOutLine_ID,
-																X_INSTRUCTIONLINE_ID,
-																M_INOUT_ID);
-											};
-											writer.write(fileData);
-										}, _self.errorHandler);
-					}, _self.errorHandler);
+				_self.getFileByURL({
+					oldURI : oldFileURI,
+					fileURI : fileFullPath,
+					inspID : inspID1
+				}, function(param) {
+					_self.onUpdateCacheImageData(param);
+				})
+
+				// $.each(_self.app.appCache.inspFiles[inspID], function() {
+				// if (this.filePath == oldFileURI) {
+				// this.filePath == fileFullPath;
+				// this['name'] == fileEntry.name;
+				// this.data = evt.target.result;
+				// $.mobile.changePage("#pg_gallery");
+				// }
+				// });
+
+			};
+			writer.write(fileData);
+		}, _self.errorHandler);
+	}, _self.errorHandler);
+}
+
+FS.prototype.onUpdateCacheImageData = function(param) {
+	var _self = this;
+	$.each(_self.app.appCache.inspFiles[param.inspID], function() {
+		if (this.filePath == param.oldURI) {
+			this.filePath == param.fileURI;
+			this['name'] == param.name;
+			this.data = param.data;
+			$.mobile.changePage("#pg_gallery");
+		}
+	});
 }
 
 FS.prototype.getSDPath = function(Fname) {
@@ -146,34 +151,40 @@ FS.prototype.uploadFile = function(file, mr_line, insp_line, in_out_id) {
 	}, _self.errorHandler);
 }
 
-FS.prototype.getVISFile = function(Fpath, inspID, callBack) {
+FS.prototype.getVISFile = function(param, callBack) {
 	var _self = this;
-	_self.fileSystem.root.getFile(Fpath, null, function(fileSystem) {
+
+	_self.fileSystem.root.getFile(param.filePath.substring(1,
+			param.filePath.length), null, function(fileSystem) {
 		fileSystem.file(function(file) {
 			var reader = new FileReader();
 			reader.onloadend = function(evt) {
 				console.log("Read as data URL");
-				callBack(Fpath, inspID, evt.target.result);
+				param['fileURI'] = fileSystem.toURL();
+				console.log(fileSystem.toURL());
+				param['data'] = evt.target.result;
+				param['fileName'] = file.name;
+
+				callBack(param);
 			};
 			reader.readAsDataURL(file);
 		}, _self.errorHandler);
 	}, _self.errorHandler);
 }
 
-FS.prototype.getFileByURL = function(url, callback) {
-	window.resolveLocalFileSystemURL(url, function(fileEntry) {
+FS.prototype.getFileByURL = function(param, callback) {
+	var _self = this;
+	window.resolveLocalFileSystemURL(param.fileURI, function(fileEntry) {
 		fileEntry.file(function(file) {
 			var reader = new FileReader();
 			reader.onloadend = function(e) {
-				callback(this.result)
+				param['fileName'] = file.name;
+				param['data'] = e.target.result;
+				callback(param);
 			};
-			reader.readAsText(file);
-		}, function(e) {
-			callback(this.errorHandler(e));
-		});
-	}, function(e) {
-		callback(this.errorHandler(e));
-	});
+			reader.readAsDataURL(file);
+		}, _self.errorHandler);
+	}, _self.errorHandler);
 }
 
 // rename(fs.root, 'me.png', 'you.png');

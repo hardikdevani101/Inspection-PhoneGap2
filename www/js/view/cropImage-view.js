@@ -1,6 +1,7 @@
-var CropImagePage = function(app, image64) {
+var CropImagePage = function(app, image64, fileURI) {
 	this.app = app;
 	this.image64 = image64;
+	this.fileURI = fileURI;
 }
 CropImagePage.prototype.rederBreadCrumb = function() {
 	var _self = this;
@@ -16,7 +17,29 @@ CropImagePage.prototype.init = function(width, height) {
 					"#pg_cropView",
 					function() {
 						_self.rederBreadCrumb();
-						_self.initCropper()
+						$('.img-container').html(
+								[ '<img src="', _self.image64, '" />' ]
+										.join(''));
+
+						_self.initCropper();
+						
+						$('#cropage_cpNsave').on('click', function(event) {
+
+						});
+
+						$('#cropage_save').on('click', function(event) {
+							_self.saveImage($('.img-container > img')[0]);
+						});
+
+						$('#cropage_edit').on('click', function(event) {
+
+						});
+
+						$('#cropage_cpNedit').on('click', function(event) {
+							_self.cropperCropImage(_self.onEditPage);
+						});
+
+						
 						if (_self.app.appCache.waterMarkImgs.length > 0) {
 							$('select[name="select-crop-waterMark"]').empty();
 							$
@@ -108,6 +131,28 @@ CropImagePage.prototype.onEditPage = function(_self, imageObj) {
 	$.mobile.changePage("#pg_editView");
 }
 
+CropImagePage.prototype.cropperCropImage = function(callBack){
+	var _self = this;
+	var $image = $('.img-container > img');
+	result = $image.cropper("getCroppedCanvas");
+	var origImg = new Image();
+	origImg.src = result.toDataURL();
+	origImg.onload = function() {
+		var randerHeight = window.innerHeight * 0.70;
+		if (this.height < this.width && !((this.height / this.width) > .70)) {
+			_self.cropImageW = (randerHeight * 4) / 3;
+			_self.cropImageH = (_self.cropImageW / this.width)
+					* this.height;
+		} else {
+			_self.cropImageH = randerHeight;
+			_self.cropImageW = (_self.cropImageH / this.height)
+					* this.width;
+		}
+		console.log(_self.cropImageW + " >>>>>>>>> " + _self.cropImageH);
+		callBack(_self, origImg);
+	};
+}
+
 CropImagePage.prototype.cropImage = function(callBack) {
 	var _self = this;
 	var origImg = new Image();
@@ -154,10 +199,12 @@ CropImagePage.prototype.saveImage = function(originalImage) {
 	var sel_url = $('select[name="select-crop-waterMark"] :selected').val();
 	$.each(_self.app.appCache.waterMarkImgs, function() {
 		if ($.trim(this.url) === $.trim(sel_url)) {
+			console.log("On Croping image");
 			var srcData = this.data;
+			console.log(srcData);
 			var watermark = new Image();
-			watermark.src = srcData;
 			watermark.onload = function() {
+				console.log("WaterMark loaded");
 				var canvas = document.createElement("canvas");
 				canvas.width = 1024;
 				canvas.height = 768;
@@ -165,6 +212,7 @@ CropImagePage.prototype.saveImage = function(originalImage) {
 				var ctx = canvas.getContext("2d");
 				ctx.drawImage(originalImage, 0, 0, originalImage.width,
 						originalImage.height, 0, 0, 1024, 768);
+				console.log("Originakl Image loaded");
 				x = (canvas.width - 20) - (watermark.width);
 				y = (canvas.height - 20) - (watermark.height);
 				ctx.drawImage(watermark, x, y);
@@ -172,9 +220,10 @@ CropImagePage.prototype.saveImage = function(originalImage) {
 				var img64 = encoder.encode(ctx.getImageData(0, 0, 1024, 768),
 						_self.app.appCache.settingInfo.img_quality).replace(
 						/data:image\/(png|jpg|jpeg);base64,/, '');
-				var imageURI = Base64Binary.decodeArrayBuffer(img64);
-				app.appFS.saveVISFile(imageURI);
+				img64 = Base64Binary.decodeArrayBuffer(img64);
+				app.appFS.saveVISFile(img64, _self.fileURI);
 			}
+			watermark.src = srcData;
 		}
 	});
 

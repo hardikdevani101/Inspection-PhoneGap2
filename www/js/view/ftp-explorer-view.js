@@ -28,8 +28,10 @@ FTPPage.prototype.init = function() {
 		});
 
 		$("#btn-finish-ftp-file-selection").on('click', function() {
-			// Push Selected File information to Gallery
+			// TODO: Push Selected File information to Gallery
 			// Page.
+			_self.app.galleryview.pushFileData(selFiles);
+			
 			$.mobile.changePage("#pg_gallery");
 		});
 
@@ -241,6 +243,7 @@ FTPPage.prototype.onFileTap = function(event) {
 			id : selected,
 			dataSource : dataSrc,
 			name : file_name
+
 		});
 		$('li[data-id="' + selected + '"] .ui-icon-arrow-d').show();
 	} else {
@@ -336,7 +339,10 @@ FTPPage.prototype.renderFiles = function(files) {
 							fileData = _self.app.image64
 						}
 						var dataid = $("#sel_ftpservers").val()
-								+ _self.currentDirPath + value
+								+ _self.currentDirPath + value;
+						
+						// TODO: Get Images from FTP;
+
 						var line = '<li data-name="'
 								+ value
 								+ '"data-id="'

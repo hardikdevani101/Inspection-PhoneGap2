@@ -19,7 +19,7 @@ DB.prototype.init = function(success, error) {
 	_self.dbstore
 			.transaction(
 					function(tx) {
-						// tx.executeSql('DROP TABLE IF EXISTS vis_gallery');
+						//tx.executeSql('DROP TABLE IF EXISTS vis_gallery');
 						tx
 								.executeSql('CREATE TABLE IF NOT EXISTS '
 										+ ' vis_setting'
@@ -27,9 +27,28 @@ DB.prototype.init = function(success, error) {
 						tx
 								.executeSql('CREATE TABLE IF NOT EXISTS '
 										+ ' vis_gallery '
-										+ ' (mr_line,insp_line DEFAULT "0",in_out_id DEFAULT "0",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F")');
+										+ ' (mr_line,insp_line DEFAULT "0",in_out_id DEFAULT "0",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F", dataSource DEFAULT "CMR")');
 
 					}, _self.errorCallback, _self.successCallback);
+}
+
+DB.prototype.updateGalleryURIEntry = function(M_InOutLine_ID,
+		X_INSTRUCTIONLINE_ID, M_INOUT_ID, fileName, fileFullPath, oldURI) {
+	var _self = this;
+	_self.dbstore.transaction(function(tx) {
+		var sqlQuery;
+		if (X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null) {
+			sqlQuery = 'UPDATE vis_gallery SET name="' + fileName + '",file="'
+					+ fileFullPath + '" WHERE file="' + oldURI
+					+ '" and in_out_id="' + M_INOUT_ID + '"';
+		} else {
+			sqlQuery = 'UPDATE vis_gallery SET name="' + fileName + '",file="'
+					+ fileFullPath + '" WHERE file="' + oldURI
+					+ '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"';
+		}
+		console.log(sqlQuery);
+		tx.executeSql(sqlQuery);
+	}, _self.errorCB, _self.success);
 }
 
 DB.prototype.addGalleryEntry = function(M_InOutLine_ID, X_INSTRUCTIONLINE_ID,

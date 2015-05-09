@@ -103,12 +103,17 @@ App.prototype.register = function() {
 		// Check if already login
 		_self.isLogin = false;
 		$("#btn_start").on('tap', function() {
+			if (_self.appCache.settingInfo.is_login) {
+				_self.isLogin = _self.appCache.settingInfo.is_login;
+			}
 			if (!_self.isLogin) {
 				$.mobile.changePage("#pg_login")
 			} else {
-				_self.settingnview = new SettingsPage(_self);
-				_self.settingnview.init();
-				$.mobile.changePage("#pg_inspection")
+				if (!_self.settingnview) {
+					_self.settingnview = new SettingsPage(_self);
+					_self.settingnview.init();
+				}
+				$.mobile.changePage("#pg_inspection");
 			}
 		})
 	});
@@ -161,7 +166,7 @@ App.prototype.register = function() {
 
 	$(document).on("pagecreate", "#pg_gallery", function(event) {
 		_self.galleryview = new GalleryPage(_self);
-		_self.galleryview.init(_self.appCache.session.x_instructionline_id);
+		_self.galleryview.init();
 		_self.appCache.addPage('pg_gallery', _self.galleryview);
 	});
 
@@ -192,10 +197,6 @@ App.prototype.logout = function() {
 		console.log("DB-Logout Failed!")
 	});
 
-	// _self.uploadWorker.terminate();
-	// _self.uploadWorker = undefined;
-	// _self.downloadWorker.terminate();
-	// _self.downloadWorker = undefined;
 	$.mobile.changePage("#pg_login");
 	$.mobile.loadPage("index.html", {
 		reloadPage : true
@@ -218,6 +219,13 @@ $(document).ready(function() {
 		document.addEventListener("deviceready", function() {
 			app.appFS = new FS(app);
 			app.appFS.init();
+
+			app.ftpClient = '';
+
+			if (vision) {
+				app.ftpClient = vision.ftpclient;
+			}
+
 		}, false);
 	} else {
 		console.log('Explicitly called onDeviceReady!!')

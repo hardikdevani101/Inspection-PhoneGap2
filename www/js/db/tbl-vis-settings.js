@@ -37,6 +37,7 @@ Tbl_VISSetting.prototype.find = function(filter, success, error) {
 				setting['warehouse_id'] = results.rows.item(0).vis_whouse_id;
 				setting['org_id'] = results.rows.item(0).vis_ord_id;
 				setting['img_quality'] = results.rows.item(0).vis_img_qulty;
+				setting['is_login'] = false;
 			}
 			successCallback(setting);
 		});
