@@ -488,8 +488,8 @@ Start of Crop page
 					<li><a id="btn_img_filter" href="#pnl_image_filters"
 						data-shadow="false" data-icon="grid" data-theme="c" title="filter">Filters</a></li>
 				</ul>
-				
-				
+
+
 				<div class="ui-nodisc-icon" id="crop-toolbar" data-theme="a">
 					<!-- Class added to the wrapper -->
 					<a id="btn_crop_finished" href="#" data-icon="check"
@@ -542,7 +542,8 @@ Start of Crop page
 
 		<div data-role="main" class="ui-content">
 			<div class="ui-grid-solo cropper-container">
-				<div class="ui-block-a img-container"></div>
+				<div id="crop-image-container" class="ui-block-a img-container"></div>
+				<canvas id="edit-canvase"></canvas>
 			</div>
 		</div>
 		<!-- 	<div data-role="footer" data-position="fixed" data-theme="c">

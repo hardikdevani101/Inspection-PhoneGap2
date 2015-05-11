@@ -6,7 +6,9 @@ var CropImagePage = function(app) {
 	this.canHeight = '';
 	this.isCropEnable = false;
 	this.isEditEnable = true;
-	this.currentImgSrc=this.image64;
+	this.currentImgSrc = this.image64;
+	this.gcanvas = $('#edit-canvase');
+	this.editCtx = '';
 }
 
 CropImagePage.prototype.rederBreadCrumb = function() {
@@ -19,6 +21,61 @@ CropImagePage.prototype.setup = function(options) {
 	this.canWidth = options.width;
 	this.canHeight = options.height;
 	this.image64 = options.img64;
+}
+
+CropImagePage.prototype.drowRect = function(x, y, w, h) {
+	var _self = this;
+	_self.editCtx.beginPath();
+	_self.editCtx.fillStyle = "#ffffff";
+	_self.editCtx.fillRect(x, y, w, h);
+	_self.editCtx.closePath();
+	_self.editCtx.stroke();
+}
+
+CropImagePage.prototype.saveEditedImage = function() {
+	var _self = this;
+	var img = new Image();
+	img.src = _self.gcanvas.toDataURL();
+	img.onload = function() {
+		applyWatermark(origImg);
+	}
+}
+
+CropImagePage.prototype.enableEditMode = function() {
+	$("#crop-image-container").hide();
+	$("#edit-canvase").show();
+	
+	var _self = this;
+	_self.gcanvas = $("#edit-canvase")[0];
+	_self.bValue = 50, _self.cValue = 50;
+	if (_self.gcanvas && _self.gcanvas.getContext) {
+		_self.editCtx = _self.gcanvas.getContext("2d");
+		var img = $('.img-container img')[0];
+		_self.gcanvas.height = img.height;
+		_self.gcanvas.width = img.width;
+		_self.editCtx.drawImage(img, 0, 0, img.width,
+				img.height);
+		_self.gcanvas.addEventListener("touchmove", function(e) {
+			_self.canX1 = e.targetTouches[0].pageX - 10;//- _self.gcanvas.offsetLeft;
+			_self.canY1 = e.targetTouches[0].pageY - 50;_self.gcanvas.offsetTop;
+			_self.editCtx.clearRect(0, 0, img.width,
+					img.hight);
+			_self.editCtx.putImageData(_self.editedCanvase, 0, 0);
+			_self.drowRect(_self.canX, _self.canY, _self.canX1 - _self.canX,
+					_self.canY1 - _self.canY);
+		}, true);
+		_self.gcanvas.addEventListener("touchstart", function(e) {
+			_self.canX = e.targetTouches[0].pageX - _self.gcanvas.offsetLeft;
+			_self.canY = e.targetTouches[0].pageY - _self.gcanvas.offsetTop;
+			_self.editedCanvase = _self.editCtx.getImageData(0, 0,
+					_self.gcanvas.width, _self.gcanvas.height);
+		}, false);
+		_self.gcanvas.addEventListener("touchend", function(e) {
+			_self.editedCanvase = _self.editCtx.getImageData(0, 0,
+					_self.gcanvas.width, _self.gcanvas.height);
+		}, false);
+
+	}
 }
 
 // CropImagePage.prototype.onPhotoEdit = function(param) {
@@ -54,23 +111,8 @@ CropImagePage.prototype.init = function(width, height, img64) {
 						_self.rederBreadCrumb();
 						// Load Image
 						// initialize Cropper
-						_self.initCropper();
-
-						$('#cropage_cpNsave').on('click', function(event) {
-
-						});
-
-						$('#cropage_save').on('click', function(event) {
-							_self.saveImage($('.img-container > img')[0]);
-						});
-
-						$('#cropage_edit').on('click', function(event) {
-
-						});
-
-						$('#cropage_cpNedit').on('click', function(event) {
-							_self.cropperCropImage(_self.onEditPage);
-						});
+						$('.img-container').html([ '<img src="', _self.image64, '" />' ].join(''));
+						_self.enableEditMode();
 
 						if (_self.app.appCache.waterMarkImgs.length > 0) {
 							$('select[name="select-crop-waterMark"]').empty();
@@ -94,9 +136,10 @@ CropImagePage.prototype.init = function(width, height, img64) {
 					});
 };
 
-CropImagePage.prototype.initCropper = function() {
+CropImagePage.prototype.enableCropMode = function() {
 	var _self = this;
-	$('.img-container').html([ '<img src="', _self.image64, '" />' ].join(''));
+	$("#crop-image-container").show();
+	$("#edit-canvase").hide();
 
 	var $image = $('.img-container > img'), $dataX = $('#dataX'), $dataY = $('#dataY'), $dataHeight = $('#dataHeight'), $dataWidth = $('#dataWidth'), $dataRotate = $('#dataRotate'), options = {
 		highlight : true,
@@ -149,19 +192,19 @@ CropImagePage.prototype.initCropper = function() {
 			console.log(e.type);
 		}
 	}).cropper(options);
-	
-	_self.corpperImage=	$image;
-	
+
+	_self.corpperImage = $image;
+
 	$image.cropper("destroy");
 	$("#crop-toolbar").hide();
 	$("#btn_reset").on("tap", function() {
 		_self.corpperImage.cropper("reset");
 	});
-	
+
 	$("#btn_zoom_plus").on("tap", function() {
 		_self.corpperImage.cropper("zoom", 0.1);
 	});
-	
+
 	$("#btn_zoom_minus").on("tap", function() {
 		_self.corpperImage.cropper("zoom", -0.1);
 	});
@@ -169,7 +212,7 @@ CropImagePage.prototype.initCropper = function() {
 	$("#btn_rotate_left").on("tap", function() {
 		_self.corpperImage.cropper("rotate", -45);
 	});
-	
+
 	$("#btn_rotate_right").on("tap", function() {
 		_self.corpperImage.cropper("rotate", 45);
 	});
@@ -178,27 +221,30 @@ CropImagePage.prototype.initCropper = function() {
 		_self.corpperImage.cropper("setDragMode", "move");
 	});
 
-	$("#btn_crop_finished").on("tap", function() {
-		_self.croppedCanvas = _self.corpperImage.cropper("getCroppedCanvas");
-		_self.isCropEnable = false;
-		_self.isEditEnable = true;
-		$("#crop-toolbar").hide();
-		_self.currentImgSrc = _self.croppedCanvas.toDataURL();
-		URL = window.URL || window.webkitURL
-		//blobURL = URL.createObjectURL(_self.currentImgSrc);
-		_self.corpperImage.one('built.cropper', function () {
-            URL.revokeObjectURL(_self.croppedCanvas.toDataURL()); 
-            _self.corpperImage.cropper("destroy");
-          }).cropper('reset').cropper('replace', _self.croppedCanvas.toDataURL());
-		_self.corpperImage.cropper("destroy");
-	});
-	
-	
+	$("#btn_crop_finished").on(
+			"tap",
+			function() {
+				_self.croppedCanvas = _self.corpperImage
+						.cropper("getCroppedCanvas");
+				_self.isCropEnable = false;
+				_self.isEditEnable = true;
+				$("#crop-toolbar").hide();
+				_self.currentImgSrc = _self.croppedCanvas.toDataURL();
+				URL = window.URL || window.webkitURL
+				// blobURL = URL.createObjectURL(_self.currentImgSrc);
+				_self.corpperImage.one('built.cropper', function() {
+					URL.revokeObjectURL(_self.croppedCanvas.toDataURL());
+					_self.corpperImage.cropper("destroy");
+				}).cropper('reset').cropper('replace',
+						_self.croppedCanvas.toDataURL());
+				_self.corpperImage.cropper("destroy");
+			});
+
 	$("#btn_edit_finished").on("tap", function() {
-		_self.corpperImage.cropper("reset");		
+		_self.corpperImage.cropper("reset");
 	});
 	$("#crop-toolbar").hide();
-	
+
 	$("#btn_crop").on("tap", function() {
 		console.log("btn_crop >>> Taped");
 		if (_self.isCropEnable) {
@@ -210,18 +256,19 @@ CropImagePage.prototype.initCropper = function() {
 			_self.isCropEnable = true;
 			_self.isEditEnable = false;
 			$("#crop-toolbar").show();
+			_self.enableCropMode();
 			_self.corpperImage.cropper("setDragMode", "crop");
 		}
 	});
 }
 
 CropImagePage.prototype.applyWatermark = function() {
-	
+
 	var gctx;
 	var watermark = new Image();
-    var selectedWM = $('select[name="select-crop-waterMark"]').val();
-	//TODO: getWatermark image data from appCache.
-    watermark.onload = function(){
+	var selectedWM = $('select[name="select-crop-waterMark"]').val();
+	// TODO: getWatermark image data from appCache.
+	watermark.onload = function() {
 		gcanvas = document.createElement('canvas');
 		if (!gcanvas) {
 			alert('Error: I cannot create a new canvas element!');
@@ -230,14 +277,17 @@ CropImagePage.prototype.applyWatermark = function() {
 		gctx = gcanvas.getContext("2d");
 		gcanvas.width = 1024;
 		gcanvas.height = 768;
-		gctx.drawImage(_self.currentImg, 0, 0, _self.canWidth, _self.canHeight, 0, 0, 1024, 768);
+		gctx.drawImage(_self.currentImg, 0, 0, _self.canWidth, _self.canHeight,
+				0, 0, 1024, 768);
 		x = (gcanvas.width - 20) - (watermark.width);
 		y = (gcanvas.height - 20) - (watermark.height);
 		gctx.drawImage(watermark, x, y);
 		var encoder = new JPEGEncoder();
-		var img64 = encoder.encode(gctx.getImageData(0,0,1024,768), parseInt(vis_img_qulty)).replace(/data:image\/jpeg;base64,/,'');
-		var imageURI=Base64Binary.decodeArrayBuffer(img64);
-		if(!isEditableImage)
+		var img64 = encoder.encode(gctx.getImageData(0, 0, 1024, 768),
+				parseInt(vis_img_qulty))
+				.replace(/data:image\/jpeg;base64,/, '');
+		var imageURI = Base64Binary.decodeArrayBuffer(img64);
+		if (!isEditableImage)
 			imgUploadCount = 1;
 	}
 }

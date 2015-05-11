@@ -11,7 +11,37 @@ GalleryPage.prototype.rederBreadCrumb = function() {
 };
 
 GalleryPage.prototype.onFileData = function(selFiles) {
+	_self=this;
 	console.log('Gallery View - pushFileData');
+	$.each(selFiles,function(index,file){
+		item={};
+		item['filePath'] = file.filePath;
+		item['name'] = file.name;
+		item['uploded'] = file.imgUpload;
+		item['dataSource'] = file.dataSource;
+		_self.inspFiles[_self.line_id].push(item);
+	});
+	
+	//TODO make DB Entiries.
+	
+	// TODO Remove dummy data Runner in production.
+//	_self.inspFiles[152452] = [];
+//	for (var i = 0; i < 15; i++) {
+//		var item = {};
+//		item['filePath'] = '/file/path/file' + i + '.jpg';
+//		item['name'] = "file" + i + ".txt";
+//		item['dataSource'] = "LS";
+//		item['uploded'] = "Y";
+//		if (i % 2 == 0) {
+//			item['filePath'] = '/file/path/file' + i + '.jpg';
+//			item['name'] = "file" + i;
+//			item['dataSource'] = "CMR";
+//		}
+//		_self.inspFiles[152452].push(item);
+//	}
+	// Dummy Data Runner End.
+	_self.renderInspFiles();
+	_self.loadActualImage(_self.line_id);
 }
 
 GalleryPage.prototype.init = function() {
@@ -22,7 +52,7 @@ GalleryPage.prototype.init = function() {
 		// TODO remove below hard coded.
 		_self.line_id = 152452;
 
-		// _self.line_id = _self.app.appCache.session.x_instructionline_id;
+	//	_self.line_id = _self.app.appCache.session.x_instructionline_id;
 		_self.visGallery = new Tbl_VISGallery(_self.app);
 		_self.loadInspFile();
 
@@ -208,60 +238,16 @@ GalleryPage.prototype.renderInspFiles = function() {
 	var _self = this;
 	var items = '';
 	if (!(typeof _self.inspFiles[_self.line_id] === 'undefined')) {
-		$.each(_self.inspFiles[_self.line_id], function() {
+		$.each(_self.inspFiles[_self.line_id], function(index, value) {
 			line = _self.getFileViewHtml(this);
-			//							
-			// var fileName = _self.app.appFS.getFileName(this.filePath);
-			//						
-			// var line = '<li data-storage="'
-			// + this.dataStorage
-			// + '" data-name="'
-			// + this.name
-			// + '"data-id="'
-			// + this.filePath
-			// + '" class="file-placeholder"><a href="#">'
-			// + '<img class="ui-li-thumb" src="'
-			// + this.data
-			// + '" /><h2>'
-			// + value.substr(0, (value.lastIndexOf('.')))
-			// + '</h2><p class="ui-li-aside"><a class="ui-btn ui-shadow
-			// ui-corner-all ui-icon-arrow-u ui-btn-icon-notext ui-btn-b
-			// ui-btn-inline"></a></p></a></li>';
-			//							
-			//							
-			// var line ='<li" datdata-id="' + fileName
-			// + '" class="file-placeholder"><a href="#">'
-			// + '<img class="ui-li-thumb" src="'
-			// + this.data + '" /><h2>' + this.name
-			// + '</h2>';
-			//							
-			// if (this.uploded == 'T') {
-			// line += '<p class="ui-li-aside"><a class="ui-btn ui-corner-all
-			// ui-icon-arrow-u ui-btn-icon-notext ui-btn-inline"></a></p>';
-			// }
-			// line += '</a></li>';
 			items = items + line;
 		});
+		$('#ls_inspFiles').html(items);
+		$("#ls_inspFiles .image-data-source").bind("tap", function(event) {
+			_self.onFileTap(event);
+		});
+		$('#ls_inspFiles').listview("refresh");
 	}
-
-	$('#ls_inspFiles').html(items);
-
-	$("#ls_inspFiles .image-data-source").bind("tap", function(event) {
-		_self.onFileTap(event);
-		
-	});
-
-//	$("#ls_inspFiles .file-placeholder").bind("taphold", function(event) {
-//		_self.onFileTaphold(event);
-//	});
-//	
-//	$("#ls_inspFiles .image-data-source").bind("taphold", function(event) {
-//		_self.onFileTaphold(event);
-//	});
-	
-
-	// $('#ls_inspFiles').enhanceWithin();
-	$('#ls_inspFiles').listview("refresh");
 }
 
 GalleryPage.prototype.getCameraImage = function() {

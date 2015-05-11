@@ -219,7 +219,7 @@ FileExplorerPage.prototype.renderContent = function(dirPath) {
 						.show();
 			});
 
-			$("#ls_files .dir-placeholder").bind("tap", function(event) {
+			$("#ls_dirs .dir-placeholder").bind("tap", function(event) {
 				_self.onDirTap(event)
 			});
 
@@ -252,8 +252,7 @@ FileExplorerPage.prototype.onFileTap = function(event) {
 			filePath : selected,
 			dataSource : dataSrc,
 			name : file_name,
-			uploaded : 'N',
-			dataSource : dataSrc
+			uploaded : 'N'
 		});
 		$('li[data-id="' + selected + '"] .ui-icon-arrow-d').show();
 	} else {
@@ -354,28 +353,25 @@ FileExplorerPage.prototype.loadActualImage = function(dataid, isLocalStrg) {
 
 		if (isLocalStrg) {
 			// TODO get data from local storage;
+//			_self.app.appFS.getFile(dataid, function(result) {
+//				var img64 = result.data
+//				_self.app.appCache.imgCache[dataid] = img64;
+//				$('li[data-id="' + dataid + '"] img').attr('src', img64);
+//			}, function(msg) {
+//				console.log('Error Getting File >>> ' + dataid);
+//			});
 		} else {
 
 			// TODO get data from FTP storage; Open below code in production.
-			// _self.app.ftpClient
-			// .getFile(
-			// dataid,
-			// function(result) {
-			// var img64 = result.data
-			// _self.app.appCache.imgCache[dataid] = img64;
-			// $(
-			// 'li[data-id="' + dataid
-			// + '"] img')
-			// .attr('src', img64);
-			// },
-			// function(msg) {
-			// console
-			// .log('Error Getting File >>> '
-			// + dataid);
-			// });
+//			_self.app.ftpClient.getFile(dataid, function(result) {
+//				var img64 = result.data
+//				_self.app.appCache.imgCache[dataid] = img64;
+//				$('li[data-id="' + dataid + '"] img').attr('src', img64);
+//			}, function(msg) {
+//				console.log('Error Getting File >>> ' + dataid);
+//			});
 		}
 	}
-
 }
 
 FileExplorerPage.prototype.renderFiles = function(files) {
@@ -463,12 +459,14 @@ FileExplorerPage.prototype.explodeDirectory = function(dirName, callback, error)
 
 	if (!dataStorageInfo.data || !dataStorageInfo.data[_self.currentDirPath]) {
 		// TODO - open below actual data filler.
-		if (!_self.isLocalStorage) {
-			// _self.app.ftpClient.filelist(ftpUrl, successCB, error);
-		} else {
-			// _self.app.fileStorage.filelist(ftpUrl, successCB,
-			// error);
-		}
+//		if (!_self.isLocalStorage) {
+//			 _self.app.appFS.filelist(ftpUrl,
+//			 function(results){successCB(results)}, error);
+//		} else {
+//			 _self.app.fileStorage.filelist(ftpUrl,
+//			 function(results){successCB(results)},
+//			 error);
+//		}
 
 		// TODO - Remove below dummy data filler.
 		var randomNum = Math.floor(Math.random() * (30 - 0 + 1)) + 0;
@@ -487,7 +485,11 @@ FileExplorerPage.prototype.explodeDirectory = function(dirName, callback, error)
 			tempDir.push(dirList[Math.floor(Math.random() * (dirList.length))]
 					+ "_" + i);
 		}
-		successCB({fileNames:tempFiles,directory:tempDir});
+		successCB([ {
+			fileNames : tempFiles,
+			directory : tempDir
+		} ]);
+		// TODO - End
 	} else {
 		callback();
 	}
