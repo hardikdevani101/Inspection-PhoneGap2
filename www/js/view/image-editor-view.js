@@ -5,6 +5,8 @@ var ImageEditorPage = function(app) {
 	this.canWidth = '';
 	this.canHeight = '';
 	this.sourceInfo = '';
+	this.contrast = '';
+	this.brightness = '';
 	this.isCropEnable = false;
 	this.isEditEnable = true;
 	this.curentImage = this.image64;
@@ -101,7 +103,18 @@ ImageEditorPage.prototype.init = function(width, height, img64) {
 					"#pg_img_editor",
 					function() {
 						_self.rederBreadCrumb();
-
+						_self.brightness = $("#slider-brightness").val();
+						console.log("Init Brightness>>>  " + _self.brightness);
+						$("#slider-brightness").on("change", function(event) {
+							_self.brightness = event.target.value;
+							console.log("Brightness>>>  " + _self.brightness);
+						});
+						_self.contrast = $("#slider-contrast").val();
+						console.log("Init Contrast>>>>>  " + _self.contrast);
+						$("#slider-contrast").on("change", function(event) {
+							_self.contrast = event.target.value;
+							console.log("Contrast>>>>>  " + _self.contrast);
+						});
 						$('.img-container').html(
 								[ '<img id="img_editable" src="',
 										_self.image64, '" />' ].join(''));
