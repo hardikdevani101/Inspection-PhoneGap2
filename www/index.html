@@ -66,12 +66,15 @@
 
 	<!-------------- Home page ----------->
 	<div data-role="page" id="pg_home" data-theme="c">
-		<div data-role="main" class="ui-content">
+		<div data-role="main" class="ui-content" data-theme="c">
 			<div class="logoimage">
 				<img src="icon.png">
 			</div>
-			<a href="#" id="btn_start"
-				class="ui-btn  ui-icon-check ui-btn-icon-right">Start Inspection</a>
+			<button href="#" id="btn_start" data-corners="true"
+				title="Start Inspection" data-mini="true" data-theme="a">Start
+				Inspection</button>
+			<!-- 			<a href="#" id="btn_start" class="ui-btn" data-mini="true" -->
+			<!-- 				data-inline="true" data-theme="c">Start Inspection</a> -->
 		</div>
 	</div>
 	<!-------------------------------------------------------------
@@ -86,17 +89,17 @@ End of Home page
 				<ul>
 					<li><a href="#pg_home" data-icon="home" data-iconpos="notext"
 						data-mini="true" data-corners="false" data-shadow="false"
-						data-theme="c" data-mini="true" data-iconshadow="false"
+						data-theme="a" data-mini="true" data-iconshadow="false"
 						data-wrapperels="span" title="Home">Home</a></li>
 					<li><a href="#pg_settings" data-icon="gear"
 						data-iconpos="notext" data-mini="true" data-corners="false"
-						data-shadow="false" data-theme="c" data-mini="true"
+						data-shadow="false" data-theme="a" data-mini="true"
 						data-iconshadow="false" data-wrapperels="span" title="Preference">Settings</a>
 					</li>
 					<li><a href="#pnl_aboutus" data-icon="info"
 						data-corners="false" data-shadow="false" data-iconshadow="false"
 						data-wrapperels="span" data-mini="true" title="About Us"
-						data-rel="popup" data-theme="c" data-transition="flip">About</a></li>
+						data-rel="popup" data-theme="a" data-transition="flip">About</a></li>
 				</ul>
 			</div>
 		</div>
@@ -118,7 +121,7 @@ End of Home page
 						value="password" placeholder="Enter Password!" data-mini="true" />
 				</div>
 				<input id="loginbtn" type="submit" data-mini="true"
-					data-inline="true" value="Login" data-theme="c">
+					data-inline="true" value="Login" data-theme="a">
 			</form>
 		</div>
 		<div data-role="panel" data-position="left" data-theme="c"
@@ -127,7 +130,7 @@ End of Home page
 				<ul data-role="listview" data-autodividers="false" data-mini="true"
 					data-theme="c" data-inset="false">
 					<li data-icon="delete" data-shadow="false" data-iconshadow="false"
-						data-wrapperels="div" data-iconpos="right" data-theme="c"><a
+						data-wrapperels="div" data-iconpos="right" data-theme="a"><a
 						href="#" data-rel="close">Settings</a></li>
 
 					<li class="ui-field-contain" data-shadow="false"
@@ -203,7 +206,7 @@ End of Home page
 					<li data-shadow="false" data-iconshadow="false"
 						data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
 						data-theme="c"><input id="btn_setting_save" type="submit"
-						data-inline="true" value="Save" data-theme="c" data-mini="true"></li>
+						data-inline="true" value="Save" data-theme="a" data-mini="true"></li>
 				</ul>
 			</form>
 		</div>
@@ -269,7 +272,7 @@ End of MR line page
 	<!-------------- Indpection page ----------->
 	<div data-role="page" id="pg_inspection_detail" data-theme="c">
 		<div data-role="header" data-position="fixed" data-theme="c">
-			<a href="#pnl_inspModify" id="inspMRDetail" data-corners="false"
+			<a href="#pnl_inspModify" id="inspMRDetail" data-corners="true"
 				data-shadow="false" data-iconshadow="false" data-wrapperels="span"
 				title="Inspection Line" data-rel="popup" data-rel="popup"
 				data-transition="flip"></a>
@@ -315,8 +318,8 @@ End of Inspection page
 		<div data-role="header" data-position="fixed" data-theme="c">
 			<a id="prefixInpectLine" href="#prefixModify" data-rel="popup"
 				data-position-to="window"
-				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-check ui-btn-icon-left ui-btn-a"
-				data-transition="pop"></a>
+				class="ui-btn ui-corner-all ui-btn-inline ui-icon-check ui-btn-icon-left"
+				data-transition="pop" data-theme="c"></a>
 			<div data-role="popup" id="prefixModify" data-theme="c"
 				class="ui-corner-all">
 				<form id="_prefix_modify" action="#">
@@ -324,9 +327,9 @@ End of Inspection page
 						<h3>Modify Prefix</h3>
 						<label for="prefixInpect" class="ui-hidden-accessible">Prefix:</label>
 						<input type="text" name="prefixInpect" id="prefixInpect" value=""
-							placeholder="prefix" data-theme="a"> <input
+							placeholder="prefix" data-theme="a" data-mini="true"> <input
 							id="prefixbtn" type="submit" data-inline="true" value="Update"
-							data-theme="b">
+							data-theme="c" data-mini="true">
 					</div>
 				</form>
 			</div>
@@ -347,11 +350,13 @@ End of Inspection page
 			<ul data-role="listview" id="ls_inspFiles">
 			</ul>
 		</div>
-		<div data-role="popup" id="pop_img_action" data-corners="true"
+		<div data-role="popup" id="pop_file_actions" data-corners="true"
 			data-theme="c" data-shadow="false">
 			<div class="ui-nodisc-icon">
-				    <a href="#pg_img_editor" data-theme="c"
+				    <a href="#" id="btn_edit_file" data-theme="c"
 					class="ui-btn ui-corner-all ui-icon-edit ui-btn-icon-notext ui-btn-c ui-btn-inline">Edit</a>
+				    <a href="#" data-theme="c" id="btn_delete_file"
+					class="ui-btn ui-corner-all ui-icon-delete ui-btn-icon-notext ui-btn-c ui-btn-inline">Delete</a>
 			</div>
 		</div>
 		<!-- <a href="#pop_img_action" data-rel="popup" data-transition="slide" data-position-to="window" data-role="button">Open panel</a> -->

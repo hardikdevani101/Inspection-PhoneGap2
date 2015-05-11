@@ -257,7 +257,7 @@ FileExplorerPage.prototype.onFileTap = function(event) {
 		$('li[data-id="' + selected + '"] .ui-icon-arrow-d').show();
 	} else {
 		_self.selFiles = jQuery.grep(_self.selFiles, function(item, index) {
-			return item.id != selected;
+			return item.filePath != selected;
 		});
 		$('li[data-id="' + selected + '"] .ui-icon-arrow-d').hide();
 	}

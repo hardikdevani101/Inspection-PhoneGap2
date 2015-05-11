@@ -21,8 +21,6 @@ var AppCache = function(app) {
 }
 
 AppCache.prototype.reset = function() {
-	var _self = this
-	this.app = app;
 	this.session = {
 		m_inoutline_id : '',
 		x_instructionline_id : ''

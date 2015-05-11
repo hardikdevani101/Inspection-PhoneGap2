@@ -4,9 +4,8 @@
 	preventFocusZoom: true;
 }
 
-.ui-page-theme-a .ui-focus, html .ui-bar-a .ui-focus, html .ui-body-a .ui-focus,
-	html body .ui-group-theme-a .ui-focus, html head+body .ui-btn-a.ui-focus,
-	html head+body .ui-body-a.ui-focus {
+.ui-page-theme-a .ui-focus,html .ui-bar-a .ui-focus,html .ui-body-a .ui-focus,html body .ui-group-theme-a .ui-focus,html head+body .ui-btn-a.ui-focus,html head+body .ui-body-a.ui-focus
+	{
 	-webkit-box-shadow: 0 0 0px #3388cc /*{c-active-background-color}*/;
 	-moz-box-shadow: 0 0 0px #3388cc /*{c-active-background-color}*/;
 	box-shadow: 0 0 0px #3388cc /*{c-active-background-color}*/;
@@ -41,7 +40,7 @@
 	margin: 0 auto;
 }
 
-.ui-mobile [data-role=header], .ui-mobile [data-role=footer] {
+.ui-mobile [data-role=header],.ui-mobile [data-role=footer] {
 	text-shadow: 0px 0px 0px #000 !important;
 }
 
@@ -61,8 +60,8 @@ p {
 	color: red;
 } */
 body {
-	width: 100% overflow-x:      hidden position:      absolute top:      0
-		left:  
+	width: 100% overflow-x:       hidden position:       absolute top:
+		      0 left:   
 		   0
 }
 
@@ -104,7 +103,7 @@ body {
 	xbackground: url(../img/plus.png) no-repeat !important;
 }
 
-.img-gallery .ui-listview>.ui-li-has-thumb>.ui-btn, .ui-listview>.ui-li-static.ui-li-has-thumb
+.img-gallery .ui-listview>.ui-li-has-thumb>.ui-btn,.ui-listview>.ui-li-static.ui-li-has-thumb
 	{
 	min-height: 6.625em;
 }
@@ -122,21 +121,18 @@ body {
 	padding: 0px !important;
 	margin: 0px !important;
 } */
-
 .cropper-point .point-se {
 	background-image: url("../img/crop.png") !important;
 }
 
 /* First breakpoint is 48em (768px). 3 column layout. Tiles 250x250 pixels incl. margin at the breakpoint. */
-@media ( min-width : 400px ) {
-/* 	.cropper-container {
+@media ( min-width : 400px ) { /* 	.cropper-container {
 		min-height: 205px;
 	}
 	.img-container {
 		min-height: 205px;
 	} */
-	#pnl_selected_files .ui-listview li {
-		/* float: left; */
+	#pnl_selected_files .ui-listview li { /* float: left; */
 		/* width: 25% !important; */
 		float: left;
 		width: 30% !important;
@@ -149,7 +145,7 @@ body {
 		padding: 1em 0 1em 0px !important;
 		margin-top: 0px;
 	}
-	#pnl_selected_files  .ui-content .ui-listview, .ui-panel-inner>.ui-listview
+	#pnl_selected_files  .ui-content .ui-listview,.ui-panel-inner>.ui-listview
 		{
 		margin: 0em;
 	}
@@ -163,7 +159,7 @@ body {
 	.logoimage {
 		width: 80%;
 	}
-	.img-gallery  .ui-listview>.ui-li-has-thumb>.ui-btn, .ui-listview>.ui-li-static.ui-li-has-thumb
+	.img-gallery  .ui-listview>.ui-li-has-thumb>.ui-btn,.ui-listview>.ui-li-static.ui-li-has-thumb
 		{
 		padding-left: 1.25em !important;
 	}
@@ -191,8 +187,8 @@ body {
 		padding: 1px !important;
 	}
 	/* Make all list items and anchors inherit the border-radius from the UL. */
-	.img-gallery .ui-listview li, .img-gallery .ui-listview li .ui-btn,
-		.img-gallery .ui-listview .ui-li-thumb {
+	.img-gallery .ui-listview li,.img-gallery .ui-listview li .ui-btn,.img-gallery .ui-listview .ui-li-thumb
+		{
 		-webkit-border-radius: 0;
 		border-radius: inherit;
 	}
@@ -201,7 +197,7 @@ body {
 		display: none;
 	}
 	/* Make text wrap. */
-	.img-gallery .ui-listview h2, .img-gallery .ui-listview p {
+	.img-gallery .ui-listview h2,.img-gallery .ui-listview p {
 		white-space: normal;
 		overflow: visible;
 		position: absolute;
@@ -231,7 +227,7 @@ body {
 	}
 
 	/* Semi transparent background and different position if there is a thumb. The button has overflow hidden so we don't need to set border-radius. */
-	.ui-listview .ui-li-has-thumb h2, .ui-listview .ui-li-has-thumb p {
+	.ui-listview .ui-li-has-thumb h2,.ui-listview .ui-li-has-thumb p {
 		background: #111;
 		background: rgba(232, 214, 218, 1);
 		color: #BB133E;
@@ -276,7 +272,7 @@ body {
 		xbox-shadow: 0px 0px 2px #33ccff;
 	}
 	/* Animate focus and hover style, and resizing. */
-	.img-gallery .ui-listview li, .img-gallery .ui-listview .ui-btn {
+	.img-gallery .ui-listview li,.img-gallery .ui-listview .ui-btn {
 		x-webkit-transition: all 500ms ease;
 		x-moz-transition: all 500ms ease;
 		x-o-transition: all 500ms ease;
@@ -285,8 +281,7 @@ body {
 	}
 }
 
-@media ( min-width : 600px) {
-	/* .cropper-container {
+@media ( min-width : 600px) { /* .cropper-container {
 		min-height: 400px;
 	}
 	.img-container {
@@ -302,8 +297,7 @@ body {
 }
 
 /* Second breakpoint is 63.75em (1020px). 4 column layout. Tiles will be 250x250 pixels incl. margin again at the breakpoint. */
-@media ( min-width : 63.75em ) {
-	/* .cropper-container {
+@media ( min-width : 63.75em ) { /* .cropper-container {
 		min-height: 480px;
 	}
 	.img-container {
@@ -384,7 +378,7 @@ body {
 	color: #FFFFFF;
 }
 
-body .ui-body-c, body .ui-overlay-c {
+body .ui-body-c,body .ui-overlay-c {
 	text-shadow: 0 0 0;
 }
 
@@ -408,8 +402,7 @@ body .ui-body-c, body .ui-overlay-c {
 	text-align: center;
 }
 
-.ui-controlgroup-horizontal .ui-controlgroup-controls .ui-btn-icon-notext,
-	.ui-controlgroup-horizontal .ui-controlgroup-controls button.ui-btn-icon-notext
+.ui-controlgroup-horizontal .ui-controlgroup-controls .ui-btn-icon-notext,.ui-controlgroup-horizontal .ui-controlgroup-controls button.ui-btn-icon-notext
 	{
 	width: 2.5em !important;
 	height: 2.7em !important;
@@ -436,14 +429,12 @@ body .ui-body-c, body .ui-overlay-c {
 	text-rendering: auto !important;
 }
 
-.ui-bar-a, .ui-page-theme-a .ui-bar-inherit, html .ui-bar-a .ui-bar-inherit,
-	html .ui-body-a .ui-bar-inherit, html body .ui-group-theme-a .ui-bar-inherit
+.ui-bar-a,.ui-page-theme-a .ui-bar-inherit,html .ui-bar-a .ui-bar-inherit,html .ui-body-a .ui-bar-inherit,html body .ui-group-theme-a .ui-bar-inherit
 	{
 	border: #202C3C !important;
 }
 
-.ui-bar-a, .ui-page-theme-a .ui-bar-inherit, html .ui-bar-a .ui-bar-inherit,
-	html .ui-body-a .ui-bar-inherit, html body .ui-group-theme-a .ui-bar-inherit
+.ui-bar-a,.ui-page-theme-a .ui-bar-inherit,html .ui-bar-a .ui-bar-inherit,html .ui-body-a .ui-bar-inherit,html body .ui-group-theme-a .ui-bar-inherit
 	{
 	background-color: #202C3C !important;;
 	border-color: #202C3C !important;;
@@ -457,4 +448,9 @@ body .ui-body-c, body .ui-overlay-c {
 .ui-icon-crop:after {
 	background-image: url("../img/crop.png");
 	background-size: 18px 18px;
+}
+
+#pop_file_actions {
+	background: transparent !important;
+	border: 0 !important;
 }
