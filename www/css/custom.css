@@ -108,53 +108,52 @@ body {
 	{
 	min-height: 6.625em;
 }
-
-.cropper-container{
+/* 
+.cropper-container {
 	min-width: 100%;
 	min-height: 100%;
-	padding:0px !important;
-	margin:0px !important;
-	
+	padding: 0px !important;
+	margin: 0px !important;
 }
 
-
-.img-container{
+.img-container {
 	min-width: 100%;
 	min-height: 100%;
-	padding:0px !important;
-	margin:0px !important;
-	
-}
+	padding: 0px !important;
+	margin: 0px !important;
+} */
 
 .cropper-point .point-se {
-	background-image: url("assets/img/icons.png") !important;
+	background-image: url("../img/crop.png") !important;
 }
 
 /* First breakpoint is 48em (768px). 3 column layout. Tiles 250x250 pixels incl. margin at the breakpoint. */
 @media ( min-width : 400px ) {
-	.cropper-container {
+/* 	.cropper-container {
 		min-height: 205px;
 	}
-	
 	.img-container {
 		min-height: 205px;
-	}
-	#pnl_selected_ftp_files .ui-listview li {
+	} */
+	#pnl_selected_files .ui-listview li {
+		/* float: left; */
+		/* width: 25% !important; */
 		float: left;
-		width: 25% !important;
+		width: 30% !important;
+		margin: .1em !important;
 	}
-	#pnl_selected_ftp_files .ui-panel-inner {
+	#pnl_selected_files .ui-panel-inner {
 		padding: 0em !important;
 	}
-	#pnl_selected_ftp_files .ui-content {
+	#pnl_selected_files .ui-content {
 		padding: 1em 0 1em 0px !important;
 		margin-top: 0px;
 	}
-	#pnl_selected_ftp_files  .ui-content .ui-listview, .ui-panel-inner>.ui-listview
+	#pnl_selected_files  .ui-content .ui-listview, .ui-panel-inner>.ui-listview
 		{
 		margin: 0em;
 	}
-	#pnl_selected_ftp_files .ui-bar {
+	#pnl_selected_files .ui-bar {
 		margin-top: 0px;
 		text-align: center;
 	}
@@ -287,12 +286,12 @@ body {
 }
 
 @media ( min-width : 600px) {
-	.cropper-container {
+	/* .cropper-container {
 		min-height: 400px;
 	}
 	.img-container {
 		min-height: 400px;
-	}
+	} */
 	.img-gallery .ui-listview li {
 		float: left;
 		width: 12%;
@@ -304,12 +303,12 @@ body {
 
 /* Second breakpoint is 63.75em (1020px). 4 column layout. Tiles will be 250x250 pixels incl. margin again at the breakpoint. */
 @media ( min-width : 63.75em ) {
-	.cropper-container {
+	/* .cropper-container {
 		min-height: 480px;
 	}
 	.img-container {
 		min-height: 480px;
-	}
+	} */
 	.logoimage {
 		width: 100%;
 	}
@@ -341,10 +340,10 @@ body {
 	padding: 0px 5px !important;
 }
 
-.ftp-explorer-content .ui-block-a {
+/* .ftp-explorer-content .ui-block-a {
 	padding: 0px 5px !important;
 }
-
+ */
 .file-explorer .ui-collapsible-set {
 	margin: 0 0;
 }
@@ -365,19 +364,19 @@ body {
 	color: #FFFFFF;
 }
 
-.ftp-explorer .ui-collapsible-set {
+.file-explorer .ui-collapsible-set {
 	margin: 0 0;
 }
 
-.ftp-explorer .ui-collapsible-content {
+.file-explorer .ui-collapsible-content {
 	padding: 0em 1em;
 }
 
-.ftp-explorer  .ui-collapsible-content>.ui-listview {
+.file-explorer  .ui-collapsible-content>.ui-listview {
 	margin: -0em -1em;
 }
 
-.ftp-explorer   a.ui-btn {
+.file-explorer   a.ui-btn {
 	border-top-width: 0;
 	font-weight: nornal;
 	font-size: 12px !important;
@@ -453,4 +452,9 @@ body .ui-body-c, body .ui-overlay-c {
 .ui-footer-fixed {
 	bottom: 0px !important;
 	padding-bottom: 0px !important;
+}
+
+.ui-icon-crop:after {
+	background-image: url("../img/crop.png");
+	background-size: 18px 18px;
 }

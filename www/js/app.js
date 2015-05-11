@@ -166,8 +166,16 @@ App.prototype.register = function() {
 
 	$(document).on("pagecreate", "#pg_gallery", function(event) {
 		_self.galleryview = new GalleryPage(_self);
-		_self.galleryview.init();
+		_self.galleryview.init();		
 		_self.appCache.addPage('pg_gallery', _self.galleryview);
+		
+		_self.imageEditPage = new EditImagePage(_self);
+		_self.imageEditPage.init();
+		_self.appCache.addPage('pg_img_editor', _self.imageEditPage);
+		
+		_self.imageCropper = new CropImagePage(_self);
+		_self.imageCropper.init();
+		_self.appCache.addPage('pg_img_cropper', _self.imageCropper);
 	});
 
 	$(document).on("pagecreate", "#pg_file_explorer", function(event) {
@@ -175,12 +183,12 @@ App.prototype.register = function() {
 		_self.fileExplorer.init();
 		_self.appCache.addPage('pg_file_explorer', _self.fileExplorer);
 	});
-
-	$(document).on("pagecreate", "#pg_ftp_explorer", function(event) {
-		_self.ftpExplorer = new FTPPage(_self);
-		_self.ftpExplorer.init();
-		_self.appCache.addPage('pg_ftp_explorer', _self.ftpExplorer);
-	});
+		
+//	$(document).on("pagecreate", "#pg_ftp_explorer", function(event) {
+//		_self.ftpExplorer = new FTPPage(_self);
+//		_self.ftpExplorer.init();
+//		_self.appCache.addPage('pg_ftp_explorer', _self.ftpExplorer);
+//	});
 
 	$(document).on("click", "#btn_logout", function(event) {
 		_self.logout();

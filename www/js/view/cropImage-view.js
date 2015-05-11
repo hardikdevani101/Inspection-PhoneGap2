@@ -1,28 +1,61 @@
-var CropImagePage = function(app, image64, fileURI) {
+var CropImagePage = function(app) {
 	this.app = app;
-	this.image64 = image64;
-	this.fileURI = fileURI;
+	this.image64 = app.image64;
+	this.fileURI = '';
+	this.canWidth = '';
+	this.canHeight = '';
+	this.isCropEnable = false;
+	this.isEditEnable = true;
+	this.currentImgSrc=this.image64;
 }
+
 CropImagePage.prototype.rederBreadCrumb = function() {
 	var _self = this;
 	$('#pg_cropView #btn_user').html(
 			$(_self.app.appCache.loginInfo.username).val());
 };
-CropImagePage.prototype.init = function(width, height) {
+
+CropImagePage.prototype.setup = function(options) {
+	this.canWidth = options.width;
+	this.canHeight = options.height;
+	this.image64 = options.img64;
+}
+
+// CropImagePage.prototype.onPhotoEdit = function(param) {
+// var _self = this;
+// var image64 = param.data;
+// var tmpImg = new Image();
+// tmpImg.onload = function() {
+// var randerHeight = window.innerHeight * 0.70;
+// var cropImageW, cropImageH;
+// if (this.height < this.width && !((this.height / this.width) > .70)) {
+// cropImageW = (randerHeight * 4) / 3;
+// cropImageH = (cropImageW / this.width) * this.height;
+// } else {
+// cropImageH = randerHeight;
+// cropImageW = (cropImageH / this.height) * this.width;
+// }
+// var cropImage = new CropImagePage(_self.app, image64, param.fileURI);
+// cropImage.init(cropImageW, cropImageH);
+// $.mobile.changePage("#pg_cropView");
+// tmpImg = null;
+// }
+// tmpImg.src = image64;
+// }
+
+CropImagePage.prototype.init = function(width, height, img64) {
 	var _self = this;
 
 	$(document)
 			.on(
 					"pagebeforeshow",
-					"#pg_cropView",
+					"#pg_img_cropper",
 					function() {
 						_self.rederBreadCrumb();
-						$('.img-container').html(
-								[ '<img src="', _self.image64, '" />' ]
-										.join(''));
-
+						// Load Image
+						// initialize Cropper
 						_self.initCropper();
-						
+
 						$('#cropage_cpNsave').on('click', function(event) {
 
 						});
@@ -39,7 +72,6 @@ CropImagePage.prototype.init = function(width, height) {
 							_self.cropperCropImage(_self.onEditPage);
 						});
 
-						
 						if (_self.app.appCache.waterMarkImgs.length > 0) {
 							$('select[name="select-crop-waterMark"]').empty();
 							$
@@ -63,17 +95,20 @@ CropImagePage.prototype.init = function(width, height) {
 };
 
 CropImagePage.prototype.initCropper = function() {
+	var _self = this;
+	$('.img-container').html([ '<img src="', _self.image64, '" />' ].join(''));
+
 	var $image = $('.img-container > img'), $dataX = $('#dataX'), $dataY = $('#dataY'), $dataHeight = $('#dataHeight'), $dataWidth = $('#dataWidth'), $dataRotate = $('#dataRotate'), options = {
 		highlight : true,
 		rotatable : true,
 		zoomable : true,
 		touchDragZoom : true,
-		// minCanvasWidth: window.innerWidth,
-		// minCanvasHeight:window.innerHeight,
+		minCanvasWidth : _self.canWidth,
+		minCanvasHeight : _self.canHeight,
 		// minCropBoxWidth: '160',
 		// minCropBoxHeight: '90',
-		// minContainerWidth: $('.img-container').width(),
-		// minContainerHeight: $('.img-container').height(),
+		minContainerWidth : _self.canWidth,
+		minContainerHeight : _self.canHeight,
 		// build: null,
 		// built: null,
 		// dragstart: null,
@@ -114,6 +149,97 @@ CropImagePage.prototype.initCropper = function() {
 			console.log(e.type);
 		}
 	}).cropper(options);
+	
+	_self.corpperImage=	$image;
+	
+	$image.cropper("destroy");
+	$("#crop-toolbar").hide();
+	$("#btn_reset").on("tap", function() {
+		_self.corpperImage.cropper("reset");
+	});
+	
+	$("#btn_zoom_plus").on("tap", function() {
+		_self.corpperImage.cropper("zoom", 0.1);
+	});
+	
+	$("#btn_zoom_minus").on("tap", function() {
+		_self.corpperImage.cropper("zoom", -0.1);
+	});
+
+	$("#btn_rotate_left").on("tap", function() {
+		_self.corpperImage.cropper("rotate", -45);
+	});
+	
+	$("#btn_rotate_right").on("tap", function() {
+		_self.corpperImage.cropper("rotate", 45);
+	});
+
+	$("#btn_crop_move").on("tap", function() {
+		_self.corpperImage.cropper("setDragMode", "move");
+	});
+
+	$("#btn_crop_finished").on("tap", function() {
+		_self.croppedCanvas = _self.corpperImage.cropper("getCroppedCanvas");
+		_self.isCropEnable = false;
+		_self.isEditEnable = true;
+		$("#crop-toolbar").hide();
+		_self.currentImgSrc = _self.croppedCanvas.toDataURL();
+		URL = window.URL || window.webkitURL
+		//blobURL = URL.createObjectURL(_self.currentImgSrc);
+		_self.corpperImage.one('built.cropper', function () {
+            URL.revokeObjectURL(_self.croppedCanvas.toDataURL()); 
+            _self.corpperImage.cropper("destroy");
+          }).cropper('reset').cropper('replace', _self.croppedCanvas.toDataURL());
+		_self.corpperImage.cropper("destroy");
+	});
+	
+	
+	$("#btn_edit_finished").on("tap", function() {
+		_self.corpperImage.cropper("reset");		
+	});
+	$("#crop-toolbar").hide();
+	
+	$("#btn_crop").on("tap", function() {
+		console.log("btn_crop >>> Taped");
+		if (_self.isCropEnable) {
+			_self.isCropEnable = false;
+			_self.isEditEnable = true;
+			_self.corpperImage.cropper("destroy");
+			$("#crop-toolbar").hide();
+		} else {
+			_self.isCropEnable = true;
+			_self.isEditEnable = false;
+			$("#crop-toolbar").show();
+			_self.corpperImage.cropper("setDragMode", "crop");
+		}
+	});
+}
+
+CropImagePage.prototype.applyWatermark = function() {
+	
+	var gctx;
+	var watermark = new Image();
+    var selectedWM = $('select[name="select-crop-waterMark"]').val();
+	//TODO: getWatermark image data from appCache.
+    watermark.onload = function(){
+		gcanvas = document.createElement('canvas');
+		if (!gcanvas) {
+			alert('Error: I cannot create a new canvas element!');
+			return;
+		}
+		gctx = gcanvas.getContext("2d");
+		gcanvas.width = 1024;
+		gcanvas.height = 768;
+		gctx.drawImage(_self.currentImg, 0, 0, _self.canWidth, _self.canHeight, 0, 0, 1024, 768);
+		x = (gcanvas.width - 20) - (watermark.width);
+		y = (gcanvas.height - 20) - (watermark.height);
+		gctx.drawImage(watermark, x, y);
+		var encoder = new JPEGEncoder();
+		var img64 = encoder.encode(gctx.getImageData(0,0,1024,768), parseInt(vis_img_qulty)).replace(/data:image\/jpeg;base64,/,'');
+		var imageURI=Base64Binary.decodeArrayBuffer(img64);
+		if(!isEditableImage)
+			imgUploadCount = 1;
+	}
 }
 
 CropImagePage.prototype.cropAreaChanged = function(selection) {
@@ -131,7 +257,7 @@ CropImagePage.prototype.onEditPage = function(_self, imageObj) {
 	$.mobile.changePage("#pg_editView");
 }
 
-CropImagePage.prototype.cropperCropImage = function(callBack){
+CropImagePage.prototype.cropperCropImage = function(callBack) {
 	var _self = this;
 	var $image = $('.img-container > img');
 	result = $image.cropper("getCroppedCanvas");
@@ -141,12 +267,10 @@ CropImagePage.prototype.cropperCropImage = function(callBack){
 		var randerHeight = window.innerHeight * 0.70;
 		if (this.height < this.width && !((this.height / this.width) > .70)) {
 			_self.cropImageW = (randerHeight * 4) / 3;
-			_self.cropImageH = (_self.cropImageW / this.width)
-					* this.height;
+			_self.cropImageH = (_self.cropImageW / this.width) * this.height;
 		} else {
 			_self.cropImageH = randerHeight;
-			_self.cropImageW = (_self.cropImageH / this.height)
-					* this.width;
+			_self.cropImageW = (_self.cropImageH / this.height) * this.width;
 		}
 		console.log(_self.cropImageW + " >>>>>>>>> " + _self.cropImageH);
 		callBack(_self, origImg);

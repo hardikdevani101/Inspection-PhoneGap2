@@ -1,16 +1,25 @@
-var EditImagePage = function(app, imageObj) {
+var EditImagePage = function(app, image64) {
 	this.app = app;
-	this.imageObj = imageObj;
+	this.image64 = app.img64;
+	this.fileURI = '';
+	this.canWidth = '';
+	this.canHeight = '';
 }
+
+EditImagePage.prototype.setup = function(width, height, img64) {
+	_self.canWidth = width;
+	_self.canHeight = height;
+	_self.canimage64 = img64;
+}
+
 EditImagePage.prototype.rederBreadCrumb = function() {
 	var _self = this;
 	$('#pg_editView #btn_user').html(
 			$(_self.app.appCache.loginInfo.username).val());
 };
-EditImagePage.prototype.init = function(width, height) {
+
+EditImagePage.prototype.init = function() {
 	var _self = this;
-	_self.imageObj.height = height;
-	_self.imageObj.width = width;
 	$(document)
 			.on(
 					"pagebeforeshow",
@@ -85,18 +94,18 @@ EditImagePage.prototype.renderEditImage = function() {
 	_self.actArray = new Array();
 	_self.gcanvas = $('#editCanvas')[0];
 	_self.editCtx = _self.gcanvas.getContext("2d");
-	_self.gcanvas.height = _self.imageObj.height;
-	_self.gcanvas.width = _self.imageObj.width;
-	_self.editCtx.drawImage(_self.imageObj, 0, 0, _self.imageObj.width,
-			_self.imageObj.height);
+	_self.gcanvas.height = _self.image64.height;
+	_self.gcanvas.width = _self.image64.width;
+	_self.editCtx.drawImage(_self.image64, 0, 0, _self.image64.width,
+			_self.image64.height);
 	_self.gcanvas.addEventListener("touchmove", function(e) {
 		if (!e)
 			var e = event;
 		e.preventDefault();
 		_self.canX1 = e.targetTouches[0].pageX - _self.gcanvas.offsetLeft;
 		_self.canY1 = e.targetTouches[0].pageY - _self.gcanvas.offsetTop;
-		_self.editCtx.clearRect(0, 0, _self.imageObj.width,
-				_self.imageObj.hight);
+		_self.editCtx.clearRect(0, 0, _self.image64.width,
+				_self.image64.hight);
 		_self.editCtx.putImageData(_self.tmpEditData, 0, 0);
 		_self.drowRect(_self.canX, _self.canY, _self.canX1 - _self.canX,
 				_self.canY1 - _self.canY);
