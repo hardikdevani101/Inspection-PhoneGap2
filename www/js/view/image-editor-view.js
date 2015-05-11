@@ -58,27 +58,50 @@ ImageEditorPage.prototype.enableEditMode = function() {
 		_self.gcanvas.height = img.height;
 		_self.gcanvas.width = img.width;
 		_self.editCtx.drawImage(img, 0, 0, img.width, img.height);
-		_self.gcanvas.addEventListener("touchmove", function(e) {
-			_self.canX1 = e.targetTouches[0].pageX - 10;
-			_self.canY1 = e.targetTouches[0].pageY - 50;
-			_self.gcanvas.offsetTop;
-			_self.editCtx.clearRect(0, 0, img.width, img.height);
-			_self.editCtx.putImageData(_self.editedCanvase, 0, 0);
-			_self.drowRect(_self.canX, _self.canY, _self.canX1 - _self.canX,
-					_self.canY1 - _self.canY);
-		}, true);
-		_self.gcanvas.addEventListener("touchstart", function(e) {
-			_self.canX = e.targetTouches[0].pageX - _self.gcanvas.offsetLeft;
-			_self.canY = e.targetTouches[0].pageY - _self.gcanvas.offsetTop;
-			_self.editedCanvase = _self.editCtx.getImageData(0, 0,
-					_self.gcanvas.width, _self.gcanvas.height);
-		}, false);
-		_self.gcanvas.addEventListener("touchend", function(e) {
-			_self.editedCanvase = _self.editCtx.getImageData(0, 0,
-					_self.gcanvas.width, _self.gcanvas.height);
-			$('#img_editable').attr('src', _self.gcanvas.toDataURL());
 
-		}, false);
+		var distanceBetween = function(point1, point2) {
+			return Math.sqrt(Math.pow(point2.x - point1.x, 2)
+					+ Math.pow(point2.y - point1.y, 2));
+		}
+		var angleBetween = function(point1, point2) {
+			return Math.atan2(point2.x - point1.x, point2.y - point1.y);
+		}
+		var ctx = _self.editCtx;
+		ctx.lineJoin = ctx.lineCap = 'round';
+		var isDrawing, lastPoint;
+		$(document).on("vmousemove", "#edit-canvase", function(e) {
+			if (!isDrawing)
+				return;
+			var currentPoint = {
+				x : e.clientX,
+				y : e.clientY
+			};
+			var dist = distanceBetween(lastPoint, currentPoint);
+			var angle = angleBetween(lastPoint, currentPoint);
+			for (var i = 0; i < dist; i += 5) {
+				x = lastPoint.x + (Math.sin(angle) * i);
+				y = lastPoint.y + (Math.cos(angle) * i);
+				var radgrad = ctx.createRadialGradient(x, y, 10, x, y, 20);
+				radgrad.addColorStop(0, '#FFF');
+				radgrad.addColorStop(0.5, '#FFF');
+				radgrad.addColorStop(1, '#FFF');
+
+				_self.editCtx.fillStyle = radgrad;
+				_self.editCtx.fillRect(x - 20, y - 20, 40, 40);
+			}
+			lastPoint = currentPoint;
+		});
+		$(document).on("vmousedown", "#edit-canvase", function(e) {
+			isDrawing = true;
+			lastPoint = {
+				x : e.clientX,
+				y : e.clientY
+			};
+		});
+		$(document).on("vmouseup", "#edit-canvase", function(e) {
+			isDrawing = false;
+			$('#img_editable').attr('src', _self.gcanvas.toDataURL());
+		})
 	}
 }
 
@@ -136,6 +159,9 @@ ImageEditorPage.prototype.init = function(width, height, img64) {
 									var img = $('#img_editable').attr('src',
 											_self.image64);
 									_self.enableEditMode();
+									_self.isCropEnable = false;
+									_self.isEditEnable = true;
+									_self.corpperImage.cropper("destroy");
 								});
 
 						$("#btn_edit_finished").on(

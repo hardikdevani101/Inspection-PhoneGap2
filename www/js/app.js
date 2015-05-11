@@ -180,32 +180,21 @@ App.prototype.register = function() {
 		_self.appCache.addPage('pg_file_explorer', _self.fileExplorer);
 	});
 
-	// $(document).on("pagecreate", "#pg_ftp_explorer", function(event) {
-	// _self.ftpExplorer = new FTPPage(_self);
-	// _self.ftpExplorer.init();
-	// _self.appCache.addPage('pg_ftp_explorer', _self.ftpExplorer);
-	// });
-
 	$(document).on("click", "#btn_logout", function(event) {
 		_self.logout();
 	});
 }
 
 App.prototype.logout = function() {
-	// var _self = this;
-	// _self.appCache.reset();
-	$.mobile.loadPage("index.html", {
-		reloadPage : true
+	var _self = this;
+	_self.appCache.reset();
+	var visSettingsDAO = new Tbl_VISSetting(this);
+	visSettingsDAO.login("N", function(data) {
+		console.log("DB-Logout Success!")
+	}, function(msg) {
+		console.log("DB-Logout Failed!")
 	});
 	$.mobile.changePage("#pg_login");
-	//	
-	// var visSettingsDAO = new Tbl_VISSetting(this);
-	// visSettingsDAO.login("N", function(data) {
-	// console.log("DB-Logout Success!")
-	// }, function(msg) {
-	// console.log("DB-Logout Failed!")
-	// });
-
 }
 
 // Initialize application.

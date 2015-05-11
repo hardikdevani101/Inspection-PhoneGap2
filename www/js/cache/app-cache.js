@@ -9,6 +9,7 @@ var AppCache = function(app) {
 	this.organizationList = [];
 	this.roleList = [];
 	this.settingInfo = {};
+	this.loginInfo = {};
 	this.appInfo = {};
 	this.pages = [];
 	this.ftpServers= [];
@@ -26,8 +27,9 @@ AppCache.prototype.reset = function() {
 		x_instructionline_id : ''
 	}
 	this.warehouseList = [];
-	this.settingInfo = {};
+	this.settingInfo.is_login = false;
 	this.appInfo = {};
+	this.loginInfo = {};
 	this.pages = [];
 	this.localStorage= [{data:{},url:'/'}];
 	this.ftpServers= [];

@@ -19,17 +19,36 @@ DB.prototype.init = function(success, error) {
 	_self.dbstore
 			.transaction(
 					function(tx) {
-						//tx.executeSql('DROP TABLE IF EXISTS vis_gallery');
 						tx
 								.executeSql('CREATE TABLE IF NOT EXISTS '
 										+ ' vis_setting'
-										+ ' (vis_url, vis_lang, vis_client_id, vis_role, vis_whouse_id, vis_ord_id, username, vis_img_qulty, is_login)');
+										+ ' (vis_url, vis_lang, vis_client_id, vis_role, vis_whouse_id, vis_ord_id, username, vis_img_qulty, is_login, app_version)');
 						tx
 								.executeSql('CREATE TABLE IF NOT EXISTS '
 										+ ' vis_gallery '
 										+ ' (mr_line,insp_line DEFAULT "0",in_out_id DEFAULT "0",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F", dataSource DEFAULT "CMR")');
 
 					}, _self.errorCallback, _self.successCallback);
+}
+
+DB.prototype.reloadDB = function() {
+	var _self = this;
+	_self.dbstore
+			.transaction(
+					function(tx) {
+						tx.executeSql('DROP TABLE IF EXISTS vis_setting');
+						tx
+								.executeSql('CREATE TABLE IF NOT EXISTS '
+										+ ' vis_setting'
+										+ ' (vis_url, vis_lang, vis_client_id, vis_role, vis_whouse_id, vis_ord_id, username, vis_img_qulty, is_login, app_version)');
+						tx.executeSql('DROP TABLE IF EXISTS vis_gallery');
+						tx
+								.executeSql('CREATE TABLE IF NOT EXISTS '
+										+ ' vis_gallery '
+										+ ' (mr_line,insp_line DEFAULT "0",in_out_id DEFAULT "0",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F", dataSource DEFAULT "CMR")');
+
+					}, _self.errorCallback, _self.successCallback);
+
 }
 
 DB.prototype.updateGalleryURIEntry = function(M_InOutLine_ID,
