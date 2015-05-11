@@ -54,8 +54,7 @@
 <script src="js/view/inspection-view.js"></script>
 <script src="js/view/gallery-view.js"></script>
 <script src="js/view/file-explorer-view.js"></script>
-<script src="js/view/cropImage-view.js"></script>
-<script src="js/view/editImage-view.js"></script>
+<script src="js/view/image-editor-view.js"></script>
 
 <script src="js/app.js"></script>
 <script src="js/sync/uploader.js"></script>
@@ -351,8 +350,6 @@ End of Inspection page
 		<div data-role="popup" id="pop_img_action" data-corners="true"
 			data-theme="c" data-shadow="false">
 			<div class="ui-nodisc-icon">
-				    <a href="#pg_img_cropper" data-theme="c"
-					class="ui-btn  ui-corner-all ui-icon-crop ui-btn-icon-notext ui-btn-c ui-btn-inline">Crop</a>
 				    <a href="#pg_img_editor" data-theme="c"
 					class="ui-btn ui-corner-all ui-icon-edit ui-btn-icon-notext ui-btn-c ui-btn-inline">Edit</a>
 			</div>
@@ -472,21 +469,18 @@ END of File Explorer page
 Start of Crop page
 -------------------------------------------------------------->
 
-	<div id="pg_img_cropper" data-role="page" data-theme="c">
+	<div id="pg_img_editor" data-role="page" data-theme="c">
 		<div data-role="header" data-position="fixed">
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
-					<li><a id="btn_edit_finished" href="#" data-icon=""
-						xdata-iconpos="notext" data-shadow="false" data-wrapperels="span"
-						data-theme="c" title="save">Save</a></li>
 					<li><a data-method="enable" data-icon="crop" id="btn_crop"
 						data-iconpos="notext" href="#" data-shadow="false" data-theme="c"
 						title="crop">Crop</a></li>
 					<li><a id="btn_reset" href="#" data-shadow="false"
 						data-icon="refresh" id="btn_reset" data-iconpos="notext"
 						data-theme="c" title="Reset">Reset</a></li>
-					<li><a id="btn_img_filter" href="#pnl_image_filters"
-						data-shadow="false" data-icon="grid" data-theme="c" title="filter">Filters</a></li>
+					<li><a id="btn_add_watermark" href="#" data-shadow="false"
+						data-icon="plus" data-theme="c" title="watermark">Watermark</a></li>
 				</ul>
 
 
@@ -546,84 +540,24 @@ Start of Crop page
 				<canvas id="edit-canvase"></canvas>
 			</div>
 		</div>
-		<!-- 	<div data-role="footer" data-position="fixed" data-theme="c">
+		<div data-role="footer" data-position="fixed" data-theme="c">
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
-					<li><a data-method="setDragMode" data-option="move"
-						id="cropage_cpNsave" href="#" data-shadow="false"
-						data-wrapperels="span" data-theme="c" title="crop&Save">Crop &
-							Save</a></li>
-					<li><a id="cropage_save" href="#" data-icon="delete"
-						data-shadow="false" data-wrapperels="span" data-theme="c"
-						title="save">Save</a></li>
-					<li><a id="cropage_edit" href="#" data-shadow="false"
-						data-wrapperels="span" data-theme="c" title="Edit">Edit</a></li>
-					<li><a id="cropage_cpNedit" href="#" data-shadow="false"
-						data-wrapperels="span" data-theme="c" title="crop&Edit">Crop &
-							Edit</a></li>
+					<li><a id="btn_skip_edit" href="#" data-shadow="false"
+						data-icon="back" data-theme="c" title="Skip Edit">Skip</a></li>
+					<li><a id="btn_edit_finished" href="#" data-icon=""
+						xdata-iconpos="notext" data-shadow="false" data-wrapperels="span"
+						data-theme="c" title="save">Save</a></li>
+					<li><a id="btn_img_filter" href="#pnl_image_filters"
+						data-shadow="false" data-icon="grid" data-theme="c" title="filter">Filters</a></li>
 				</ul>
 			</div>
 		</div>
- -->
+
 	</div>
 
 	<!-------------------------------------------------------------
 End of Crop page
--------------------------------------------------------------->
-
-	<!-------------------------------------------------------------
-Start of Edit page
--------------------------------------------------------------->
-
-	<div id="pg_img_editor" data-role="page" data-theme="b">
-		<div data-role="header" data-position="fixed">
-			<h2 data-role="heading">Edit</h2>
-			<a href="#_main" data-icon="back" data-iconpos="notext"
-				class="ui-btn-left" data-shadow="true" data-wrapperels="span"
-				title="Back" data-rel="back">Back</a>
-			<div data-role="controlgroup" data-type="horizontal"
-				class="ui-mini ui-btn-right">
-				<select name="select-edit-waterMark" data-wrapperels="span"
-					data-native-menu="false">
-				</select>
-			</div>
-		</div>
-		<div role="main" class="ui-content" style="margin: 0; padding: 0;">
-			<div class="ui-grid-a" id="photo-set-panel">
-				<div class="ui-block-a" style="width: 60%">
-					<canvas id="editCanvas"></canvas>
-				</div>
-				<div class="ui-block-b" style="width: 35%">
-					<div class="ui-grid-a">
-						<div class="ui-block-a" data-role="controlgroup"
-							style="width: 10%;">
-							<img src="img/brightness.png" height="25" width="25"
-								alt="brightness" />
-							<div id="slider-brightness"></div>
-						</div>
-						<div class="ui-block-b" data-role="controlgroup"
-							style="width: 10%;">
-							<img src="img/contrast.png" height="25" width="25" alt="contrast" />
-							<div id="slider-contrast"></div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div data-role="footer" data-position="fixed">
-			<div data-role="navbar" data-iconpos="left">
-				<ul>
-					<li><a href="#" data-icon="action" id="btn_editSave"
-						data-wrapperels="span" data-theme="b" title="Back">Save</a></li>
-					<li><a href="#" id="btn_editUndo" data-icon="plus"
-						data-wrapperels="span" data-theme="b" title="Add">Undo</a></li>
-				</ul>
-			</div>
-		</div>
-	</div>
-
-	<!-------------------------------------------------------------
-End of Edit page
 -------------------------------------------------------------->
 </body>
 </html>

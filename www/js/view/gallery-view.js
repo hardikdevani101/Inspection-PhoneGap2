@@ -10,35 +10,44 @@ GalleryPage.prototype.rederBreadCrumb = function() {
 			$(_self.app.appCache.loginInfo.username).val());
 };
 
+GalleryPage.prototype.onEditFinish = function(sourceInfo, editedImgData) {
+	console.log("Image Edit Done for " + sourceInfo);
+}
+
 GalleryPage.prototype.onFileData = function(selFiles) {
-	_self=this;
+	_self = this;
 	console.log('Gallery View - pushFileData');
-	$.each(selFiles,function(index,file){
-		item={};
-		item['filePath'] = file.filePath;
-		item['name'] = file.name;
-		item['uploded'] = file.imgUpload;
-		item['dataSource'] = file.dataSource;
-		_self.inspFiles[_self.line_id].push(item);
+	$.each(selFiles, function(index, file) {
+		jQuery.grep(_self.inspFiles[_self.line_id], function(item, index) {
+			if (item.filePath == file.filePath) {
+				item = {};
+				item['filePath'] = file.filePath;
+				item['name'] = file.name;
+				item['uploded'] = file.uploded;
+				item['dataSource'] = file.dataSource;
+				_self.inspFiles[_self.line_id].push(item);
+			}
+			return item.filePath == file.filePath;
+		});
 	});
-	
-	//TODO make DB Entiries.
-	
+
+	// TODO make DB Entiries.
+
 	// TODO Remove dummy data Runner in production.
-//	_self.inspFiles[152452] = [];
-//	for (var i = 0; i < 15; i++) {
-//		var item = {};
-//		item['filePath'] = '/file/path/file' + i + '.jpg';
-//		item['name'] = "file" + i + ".txt";
-//		item['dataSource'] = "LS";
-//		item['uploded'] = "Y";
-//		if (i % 2 == 0) {
-//			item['filePath'] = '/file/path/file' + i + '.jpg';
-//			item['name'] = "file" + i;
-//			item['dataSource'] = "CMR";
-//		}
-//		_self.inspFiles[152452].push(item);
-//	}
+	// _self.inspFiles[152452] = [];
+	// for (var i = 0; i < 15; i++) {
+	// var item = {};
+	// item['filePath'] = '/file/path/file' + i + '.jpg';
+	// item['name'] = "file" + i + ".txt";
+	// item['dataSource'] = "LS";
+	// item['uploded'] = "Y";
+	// if (i % 2 == 0) {
+	// item['filePath'] = '/file/path/file' + i + '.jpg';
+	// item['name'] = "file" + i;
+	// item['dataSource'] = "CMR";
+	// }
+	// _self.inspFiles[152452].push(item);
+	// }
 	// Dummy Data Runner End.
 	_self.renderInspFiles();
 	_self.loadActualImage(_self.line_id);
@@ -52,7 +61,7 @@ GalleryPage.prototype.init = function() {
 		// TODO remove below hard coded.
 		_self.line_id = 152452;
 
-	//	_self.line_id = _self.app.appCache.session.x_instructionline_id;
+		// _self.line_id = _self.app.appCache.session.x_instructionline_id;
 		_self.visGallery = new Tbl_VISGallery(_self.app);
 		_self.loadInspFile();
 
@@ -122,70 +131,97 @@ GalleryPage.prototype.loadInspFile = function() {
 GalleryPage.prototype.loadActualImage = function(inspID) {
 	var _self = this;
 	if (!(typeof _self.inspFiles[inspID] === 'undefined')) {
-		$.each(_self.inspFiles[inspID], function() {
-			var extension = this.filePath
-			.substr((this.filePath.lastIndexOf('.') + 1));
-//			var extension = _self.app.appFS.getExtention(this.filePath
-//					.toUpperCase());
-			
-			var findResult = jQuery.grep(_self.app.dataTypes,
-					function(item, index) {
-						return item == extension.toUpperCase();
-					});
-			console.log('File Extension>>>>>>> '+extension)
-			if (this.dataSource == 'CMR'
-					|| findResult.length > 0) {
-				
-				var dataid=this.filePath;
-				if (_self.app.appCache.imgCache[dataid]) {
-					console.log('Found image in cache' + dataid);
-					$('li[data-id="' + dataid + '"] img').attr('src',
-							_self.app.appCache.imgCache[dataid]);
-				} else {
-					// TODO remove below dummy data runner in production.
-					// Start of dummy data filler.
-					var img = "data:image/jpg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAd Hx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3 Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAFoAWgMBIgACEQED EQH/xAAbAAADAQEBAQEAAAAAAAAAAAAAAQcEBQYCA//EAEAQAAECBAEGCwQHCQAAAAAAAAEAAgME BRGxBgchMTV0EhYXNlFVdZOy0eITImGBc5GSocHS8BUyQUJDRHGCg//EABkBAQADAQEAAAAAAAAA AAAAAAQAAwUBAv/EACQRAAEDAgYDAQEAAAAAAAAAAAABAgMEERQhMTIzcRITUUJB/9oADAMBAAIR AxEAPwC4oQkToUIC5eUFalqNJmNMOu86IcMHS8+XxX1XaxLUeSdHmHXcdEOGNbz0KS1apTFVnXzM y67joa0amjoCTTU6yLddA08/hkmp91CfnK3UPaR3F8WI7gw4YPut6AFs4pVwaqe4/wC7PNc6kbVk /pmYq3DUmVEzoLNYGgiSa7nEi4pV3q4/bZ5o4pV3q4/bZ5qvIRsdKX4NhIHZK12G0v8A2c/3dPuu aT9xW3JnKicpk2yVqEV8SVLuA72xPChfM6fkqipXnDgMgZRFzGge1gNe4DpuR+CtimxC+D0K5IvS nkxSpMIIBbaxF9C+1hojnOpEk55u4wGEnp0Lcs9UsqoORbpcS5tcrMrR5N0eYddx0Q4Y1vPwXSUf ymmJmoZRzMJ7i8tjGDCbewAvawV9ND7X2XQpnl9bctTHV6nM1acdMzTru1NaNTB0BYl3OJ9f6vJ/ 6s80cUK91e7vWfmWqksTUsioZqskVbqhzqOCatJ2H9dmKtw1Ke5LZHzsGow5uqMbBZBcHNh8MOLn fw1agqENSzq2Rr3p4qOpGK1q3GhCEMWCl+crbzN1bi5VBS/OVt5m6txclUfKGq+MoNC2NI7uzALe sFC2NI7uzALejv3KXs2oIKPznPGJ2gPGFYAo/O88X9oDxhKo9XdBqr89lfQgJhCFoFkDUmhdICEI UICl+crbzN1bi5VBS/OVt5m6txclUfKGq+MoNC2NI7uzALesFC2NI7uzALejv3KXs2oIKPzvPF/a A8YVgCj87zxf2gPGEui1d0Gqvz2V8JhIJhB/ov8Ag0IQukBCEKEBS/OVt5m6txcqgpfnK28zdW4u SqPlDVfGUGhbGkd3ZgFvWChbGkd3ZgFvR37lL2bUEo/O88X9oDxhWAqPzujLCJc/348YSqLV3Qaq 0b2V8JpAp3QxaaDQlcIuFCDQlcIuFCDUvzk7eZurfE5U+6l+chwdX2gHSJZoP1uSqPlC1fGUKhbG kd3ZgFvWCg7GkfoGYBb0d25RDNqCKmWXdGiydSdUYTSYEYgucP5Hfq3zVNOpfnGY18NzXtDmkaQR cFe4ZFjddDxNGj25k7p+X83LyzIc1KMmHgW9oH8G4+IsVp5RYnVje/8ASvMZRwocCrRWQYbIbL/u saAFzFqJTROzsZvvkblc91yixOrG9/6UcosTqxvf+leFQu4SH4dxMn091yixOrG9/wClHKLE6sb3 /pXhUKYSH4TEyfT3D84kYscGU1gdbQTG0X+pefkZWeyorTjFJe6I4GNEA91jfw/wuTCAMRgIuC4K zUSXgS8hDbAgw4YIvZjQMFVKjKdt2Jmp7jV0y2cptl4bYUJkNgs1rQAPgv1SCayjSRLH/9k="
-						setInterval(function() {
-							_self.app.appCache.imgCache[dataid] = img;
-							$('li[data-id="' + dataid + '"] img').attr('src', img);
-						}, 1000);
-						// End of dummy data filler.
-//					_self.app.appFS.getFileByURL({
-//					fileURI : this.filePath
-//				}, function(param) {
-					 //img=param.data
-//					self.app.appCache.imgCache[dataid] = img;
-					//$('li[data-id="' + dataid + '"] img').attr('src', img);
-//				});
-			}
-		}
+		$
+				.each(
+						_self.inspFiles[inspID],
+						function() {
+							var extension = this.filePath.substr((this.filePath
+									.lastIndexOf('.') + 1));
+							// var extension =
+							// _self.app.appFS.getExtention(this.filePath
+							// .toUpperCase());
 
-		});
+							var findResult = jQuery.grep(_self.app.dataTypes,
+									function(item, index) {
+										return item == extension.toUpperCase();
+									});
+							console.log('File Extension>>>>>>> ' + extension)
+							if (this.dataSource == 'CMR'
+									|| findResult.length > 0) {
+
+								var dataid = this.filePath;
+								if (_self.app.appCache.imgCache[dataid]) {
+									console
+											.log('Found image in cache'
+													+ dataid);
+									$('li[data-id="' + dataid + '"] img')
+											.attr(
+													'src',
+													_self.app.appCache.imgCache[dataid]);
+								} else {
+									// TODO remove below dummy data runner in
+									// production.
+									// Start of dummy data filler.
+									var img = "data:image/jpg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAd Hx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3 Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAFoAWgMBIgACEQED EQH/xAAbAAADAQEBAQEAAAAAAAAAAAAAAQcEBQYCA//EAEAQAAECBAEGCwQHCQAAAAAAAAEAAgME BRGxBgchMTV0EhYXNlFVdZOy0eITImGBc5GSocHS8BUyQUJDRHGCg//EABkBAQADAQEAAAAAAAAA AAAAAAQAAwUBAv/EACQRAAEDAgYDAQEAAAAAAAAAAAABAgMEERQhMTIzcRITUUJB/9oADAMBAAIR AxEAPwC4oQkToUIC5eUFalqNJmNMOu86IcMHS8+XxX1XaxLUeSdHmHXcdEOGNbz0KS1apTFVnXzM y67joa0amjoCTTU6yLddA08/hkmp91CfnK3UPaR3F8WI7gw4YPut6AFs4pVwaqe4/wC7PNc6kbVk /pmYq3DUmVEzoLNYGgiSa7nEi4pV3q4/bZ5o4pV3q4/bZ5qvIRsdKX4NhIHZK12G0v8A2c/3dPuu aT9xW3JnKicpk2yVqEV8SVLuA72xPChfM6fkqipXnDgMgZRFzGge1gNe4DpuR+CtimxC+D0K5IvS nkxSpMIIBbaxF9C+1hojnOpEk55u4wGEnp0Lcs9UsqoORbpcS5tcrMrR5N0eYddx0Q4Y1vPwXSUf ymmJmoZRzMJ7i8tjGDCbewAvawV9ND7X2XQpnl9bctTHV6nM1acdMzTru1NaNTB0BYl3OJ9f6vJ/ 6s80cUK91e7vWfmWqksTUsioZqskVbqhzqOCatJ2H9dmKtw1Ke5LZHzsGow5uqMbBZBcHNh8MOLn fw1agqENSzq2Rr3p4qOpGK1q3GhCEMWCl+crbzN1bi5VBS/OVt5m6txclUfKGq+MoNC2NI7uzALe sFC2NI7uzALejv3KXs2oIKPznPGJ2gPGFYAo/O88X9oDxhKo9XdBqr89lfQgJhCFoFkDUmhdICEI UICl+crbzN1bi5VBS/OVt5m6txclUfKGq+MoNC2NI7uzALesFC2NI7uzALejv3KXs2oIKPzvPF/a A8YVgCj87zxf2gPGEui1d0Gqvz2V8JhIJhB/ov8Ag0IQukBCEKEBS/OVt5m6txcqgpfnK28zdW4u SqPlDVfGUGhbGkd3ZgFvWChbGkd3ZgFvR37lL2bUEo/O88X9oDxhWAqPzujLCJc/348YSqLV3Qaq 0b2V8JpAp3QxaaDQlcIuFCDQlcIuFCDUvzk7eZurfE5U+6l+chwdX2gHSJZoP1uSqPlC1fGUKhbG kd3ZgFvWCg7GkfoGYBb0d25RDNqCKmWXdGiydSdUYTSYEYgucP5Hfq3zVNOpfnGY18NzXtDmkaQR cFe4ZFjddDxNGj25k7p+X83LyzIc1KMmHgW9oH8G4+IsVp5RYnVje/8ASvMZRwocCrRWQYbIbL/u saAFzFqJTROzsZvvkblc91yixOrG9/6UcosTqxvf+leFQu4SH4dxMn091yixOrG9/wClHKLE6sb3 /pXhUKYSH4TEyfT3D84kYscGU1gdbQTG0X+pefkZWeyorTjFJe6I4GNEA91jfw/wuTCAMRgIuC4K zUSXgS8hDbAgw4YIvZjQMFVKjKdt2Jmp7jV0y2cptl4bYUJkNgs1rQAPgv1SCayjSRLH/9k="
+									setInterval(
+											function() {
+												_self.app.appCache.imgCache[dataid] = img;
+												$(
+														'li[data-id="' + dataid
+																+ '"] img')
+														.attr('src', img);
+											}, 1000);
+									// End of dummy data filler.
+									// _self.app.appFS.getFileByURL({
+									// fileURI : this.filePath
+									// }, function(param) {
+									// img=param.data
+									// self.app.appCache.imgCache[dataid] = img;
+									// $('li[data-id="' + dataid + '"]
+									// img').attr('src', img);
+									// });
+								}
+							}
+
+						});
 	}
 }
 
 //
-//GalleryPage.prototype.updateInspFileThumb = function(param) {
-//	var _self = this;
-//	$.each(_self.inspFiles[_self.line_id], function() {
-//		if (this.filePath == param.fileURI) {
-//			this.data = param.data;
-//		}
-//	});
+// GalleryPage.prototype.updateInspFileThumb = function(param) {
+// var _self = this;
+// $.each(_self.inspFiles[_self.line_id], function() {
+// if (this.filePath == param.fileURI) {
+// this.data = param.data;
+// }
+// });
 //
-//	$('#ls_inspFiles li[data-id="' + param.fileURI + '"] img')
-//			.removeAttr("src").attr('src', param.data);
-//}
+// $('#ls_inspFiles li[data-id="' + param.fileURI + '"] img')
+// .removeAttr("src").attr('src', param.data);
+// }
 
 GalleryPage.prototype.onFileTap = function(event) {
-	var _self = this;	
+	var _self = this;
 	var dataid = $(event.delegateTarget).data('id');
 	var imgData = _self.tempImage;
-	//var imgData = _self.app.appCache.imgCache[dataid];
+	// var imgData = _self.app.appCache.imgCache[dataid];
 	console.log('Tap >> ' + dataid);
-	if(_self.app.appCache.imgCache[dataid]){
+	if (_self.app.appCache.imgCache[dataid]) {
+		var sourceInfo = jQuery.grep(_self.inspFiles[_self.line_id], function(
+				value, index) {
+			return value.filePath == dataid;
+		});
 		console.log('Tap >> from cache' + dataid);
-		_self.app.imageCropper.setup({width:$(".ui-panel-wrapper").width()-40,height:$(".ui-panel-wrapper").height()-40,img64:imgData});
+		if (sourceInfo.length > 0) {
+			_self.app.imageEditor.setup({
+				'sourceInfo' : sourceInfo[0],
+				width : $(".ui-panel-wrapper").width() - 40,
+				height : $(".ui-panel-wrapper").height() - 40,
+				img64 : imgData
+			});
+		}
+	} else {
+		return false;
 	}
 }
 
@@ -193,14 +229,14 @@ GalleryPage.prototype.onFileTaphold = function(event) {
 	var _self = this;
 	var selected = $(event.delegateTarget).data('id');
 	console.log('Taphold >> ' + selected);
-	
-//	_self.app.appFS.getFileByURL({
-//		fileURI : selected
-//	}, function(fileData) {
-//		_self.onPhotoEdit(fileData)
-//	});
 
-	//_self.onPhotoEdit({data:_self.tempImage,name})
+	// _self.app.appFS.getFileByURL({
+	// fileURI : selected
+	// }, function(fileData) {
+	// _self.onPhotoEdit(fileData)
+	// });
+
+	// _self.onPhotoEdit({data:_self.tempImage,name})
 }
 
 GalleryPage.prototype.getFileViewHtml = function(file) {
@@ -219,12 +255,13 @@ GalleryPage.prototype.getFileViewHtml = function(file) {
 		fileData = _self.app.image64;
 	}
 	var classname = ''
-	if(isImage){
+	if (isImage) {
 		classname = 'image-data-source';
-	}	
+	}
 	var line = '<li data-storage="' + file.dataStorage + '"  data-name="'
 			+ file.name + '"data-id="' + file.filePath
-			+ '" class="file-placeholder '+classname+'"><a data-rel="popup" href="#pop_img_action">'
+			+ '" class="file-placeholder ' + classname
+			+ '"><a data-rel="popup" href="#pop_img_action">'
 			+ '<img class="ui-li-thumb" src="' + fileData + '" /><h2>'
 			+ file.name + '</h2>';
 	if (file.uploded == 'T') {
