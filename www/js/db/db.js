@@ -19,6 +19,7 @@ DB.prototype.init = function(success, error) {
 	_self.dbstore
 			.transaction(
 					function(tx) {
+						// tx.executeSql('DROP TABLE IF EXISTS vis_gallery');
 						tx
 								.executeSql('CREATE TABLE IF NOT EXISTS '
 										+ ' vis_setting'
@@ -67,6 +68,41 @@ DB.prototype.updateGalleryURIEntry = function(M_InOutLine_ID,
 		}
 		console.log(sqlQuery);
 		tx.executeSql(sqlQuery);
+	}, _self.errorCB, _self.success);
+}
+
+DB.prototype.doGalleryEntry = function(fileInfo) {
+	var _self = this;
+	_self.dbstore.transaction(function(tx) {
+		var param = [];
+		var sqlQuery = " select * from vis_gallery ";
+		var whereSQL = " where file=?";
+		param.push(fileInfo.oldURI);
+		if (fileInfo.inspID == null || fileInfo.inspID == 0) {
+			whereSQL += " and insp_line=?";
+			param.push(fileInfo.inspID);
+		} else {
+			whereSQL += " and in_out_id=?";
+			param.push(fileInfo.mrID);
+		}
+		console.log(sqlQuery + whereSQL);
+		tx.executeSql(sqlQuery + whereSQL, param, function(tx, results) {
+			if (results.rows.length > 0) {
+				sqlQuery = 'UPDATE vis_gallery SET name="' + fileInfo.fileName
+						+ '",file="' + fileInfo.fileFullPath + '" ';
+				console.log(sqlQuery + whereSQL);
+				tx.executeSql(sqlQuery + whereSQL, param);
+			} else {
+				sqlQuery = 'INSERT INTO vis_gallery '
+						+ ' (mr_line,in_out_id,insp_line,name,file)'
+						+ ' VALUES ("' + fileInfo.mrLineID + '","'
+						+ fileInfo.mrID + '","' + fileInfo.inspID + '","'
+						+ fileInfo.fileName + '","' + fileInfo.fileFullPath
+						+ '")';
+				console.log(sqlQuery);
+				tx.executeSql(sqlQuery);
+			}
+		}, _self.errorCB);
 	}, _self.errorCB, _self.success);
 }
 

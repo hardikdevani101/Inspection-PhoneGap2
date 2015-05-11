@@ -185,6 +185,16 @@ App.prototype.register = function() {
 	});
 }
 
+String.prototype.endsWith = function(s) {
+	return this.length >= s.length && this.substr(this.length - s.length) == s;
+}
+
+if (typeof String.prototype.startsWith != 'function') {
+	String.prototype.startsWith = function(str) {
+		return this.slice(0, str.length) == str;
+	};
+}
+
 App.prototype.logout = function() {
 	var _self = this;
 	_self.appCache.reset();

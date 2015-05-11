@@ -29,7 +29,15 @@ FileExplorerPage.prototype.init = function() {
 		$("#btn_finish_file_selection").on('click', function() {
 			// TODO: Push Selected File information to Gallery
 			// Page.
-			_self.app.galleryview.pushFileData(selFiles);
+			var mrLineID1 = _self.app.appCache.session.m_inoutline_id;
+			var inspID1 = _self.app.appCache.session.x_instructionline_id;
+			var mrID1 = _self.app.appCache.session.M_INOUT_ID;
+			_self.app.galleryview.pushFileData({
+				filesData : selFiles,
+				mrLineID : mrLineID1,
+				inspID : inspID1,
+				mrID : mrID1
+			});
 			$.mobile.changePage("#pg_gallery");
 		});
 
@@ -259,7 +267,6 @@ FileExplorerPage.prototype.onFileTap = function(event) {
 			id : selected,
 			dataSource : dataSrc,
 			name : file_name
-
 		});
 		$('li[data-id="' + selected + '"] .ui-icon-arrow-d').show();
 	} else {

@@ -52,10 +52,10 @@ Tbl_VISGallery.prototype.getFilesByMRInfo = function(fileInfo, sucsses, error) {
 		errorCallback = error;
 	}
 	var sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
-		+ fileinfo.M_InOutLine_ID + '" and insp_line="'
-		+ fileinfo.X_INSTRUCTIONLINE_ID + '"';
+			+ fileinfo.M_InOutLine_ID + '" and insp_line="'
+			+ fileinfo.X_INSTRUCTIONLINE_ID + '"';
 	console.log("DB query " + sqlQuery);
-	
+
 	this.appDB.dbstore.transaction(function(tx) {
 		tx.executeSql(sqlQuery, [], successCallback, errorCallback);
 	}, errorCallback);
@@ -87,30 +87,18 @@ Tbl_VISGallery.prototype.addFileInfo = function(fileInfo, success, error) {
 	if (typeof (error) === "function") {
 		errorCallback = error;
 	}
-	this.appDB.dbstore
-			.transaction(function(tx) {
-				var sqlQuery;
-				if (fileInfo.X_INSTRUCTIONLINE_ID == 0
-						|| fileInfo.X_INSTRUCTIONLINE_ID == null)
-					sqlQuery = 'INSERT INTO vis_gallery(mr_line,in_out_id,name,file) VALUES ("'
-							+ fileInfo.M_InOutLine_ID
-							+ '","'
-							+ fileInfo.M_INOUT_ID
-							+ '","'
-							+ fileInfo.fileName
-							+ '","' + fileInfo.fileFullPath + '")';
-				else
-					sqlQuery = 'INSERT INTO vis_gallery(mr_line,insp_line,name,file) VALUES ("'
-							+ fileInfo.M_InOutLine_ID
-							+ '","'
-							+ fileInfo.X_INSTRUCTIONLINE_ID
-							+ '","'
-							+ fileInfo.fileName
-							+ '","'
-							+ fileInfo.fileFullPath
-							+ '")';
-				tx.executeSql(sqlQuery, [], successCallback, errorCallback);
-			});
+	if (!fileInfo.dataSource) {
+		fileInfo.dataSource = "CMR";
+	}
+	this.appDB.dbstore.transaction(function(tx) {
+		var sqlQuery = 'INSERT INTO vis_gallery'
+				+ ' (mr_line,in_out_id,insp_line,name,file,dataSource)'
+				+ ' VALUES ("' + fileInfo.mrLineID + '","' + fileInfo.mrID
+				+ '","' + fileInfo.inspID + '","' + fileInfo.fileName + '","'
+				+ fileInfo.fileFullPath + '","' + fileInfo.dataSource + '")';
+		console.log(sqlQuery);
+		tx.executeSql(sqlQuery, [], successCallback, errorCallback);
+	});
 }
 
 Tbl_VISGallery.prototype.getFilesToBeDeleted = function(fileInfo, success,

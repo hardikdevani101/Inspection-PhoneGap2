@@ -33,6 +33,83 @@ FS.prototype.errorHandler = function(e) {
 	return msg;
 }
 
+FS.prototype.filelist = function(path, success) {
+	var _self = this;
+	console.log(path);
+	window.resolveLocalFileSystemURL(path, function(dirEntry) {
+		var DirReader = dirEntry.createReader();
+		DirReader.readEntries(function(entries) {
+			var dirArr = [];
+			var fileArr = [];
+			for (var i = 0; i < entries.length; i++) { // sort entries
+				var entry = entries[i];
+				if (entry.isDirectory) {
+					dirArr.push(entry.name);
+				} else if (entry.isFile) {
+					fileArr.push(entry.name);
+				}
+			}
+			success([ {
+				fileNames : fileArr,
+				directory : dirArr
+			} ]);
+		}, _self.errorHandler);
+	}, _self.errorHandler);
+}
+
+FS.prototype.getFile = function(path, success) {
+	var _self = this;
+	window.resolveLocalFileSystemURL(path, function(fileEntry) {
+		fileEntry.file(function(file) {
+			var reader = new FileReader();
+			reader.onloadend = function(evt) {
+				success({
+					data : evt.target.result
+				});
+			};
+			reader.readAsDataURL(file);
+		}, _self.errorHandler);
+	}, _self.errorHandler);
+}
+
+FS.prototype.createVISFile = function(param) {
+	var _self = this;
+	var fileBase64 = param.fileData.replace(/data:image\/jpeg;base64,/, '');
+	var binaryData = Base64Binary.decodeArrayBuffer(fileBase64);
+	var date = new Date;
+	var sec = date.getSeconds();
+	var mi = date.getMinutes();
+	var hh = date.getHours();
+	var yy = date.getFullYear();
+	var mm = date.getMonth() + 1;
+	var dd = date.getDate();
+	var fileName = mm + dd + yy + "_" + hh + mi + sec + "." + param.fileExt;
+	_self.vis_dir.getFile(fileName, {
+		create : true,
+		exclusive : false
+	}, function(fileEntry) {
+		fileEntry.createWriter(function(writer) {
+			writer.onwrite = function(evt) {
+				var fileFullPath = fileEntry.toURL();
+				console.log(fileFullPath);
+				console.log("New File Created");
+				param['oldURI'] = param.fileFullPath;
+				param.fileFullPath = fileFullPath;
+				param['fileName'] = fileEntry.name;
+				_self.app.appDB.doGalleryEntry(param);
+
+				$.each(_self.app.appCache.inspFiles[param.inspID], function() {
+					if (this.filePath == param['oldURI']) {
+						this.filePath == param.fileFullPath;
+						this['name'] == fileName;
+					}
+				});
+			};
+			writer.write(binaryData);
+		}, _self.errorHandler);
+	}, _self.errorHandler);
+}
+
 FS.prototype.init = function() {
 	this.fileSystem = "";
 	var _self = this;
