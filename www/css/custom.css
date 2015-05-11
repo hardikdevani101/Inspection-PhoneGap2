@@ -60,8 +60,9 @@ p {
 	color: red;
 } */
 body {
-	width: 100% overflow-x:       hidden position:       absolute top:
-		      0 left:   
+	width: 100% overflow-x:          hidden position:          absolute top:
+		  
+		      0 left:      
 		   0
 }
 
@@ -408,8 +409,8 @@ body .ui-body-c,body .ui-overlay-c {
 	height: 2.7em !important;
 }
 
-#inspMRDetGallery {
-	margin: 0 0 1em !important;
+#prefixInpectLine {
+	max-width: 30px !important;
 }
 
 .current_dir_location {

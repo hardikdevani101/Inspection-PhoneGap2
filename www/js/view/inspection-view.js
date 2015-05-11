@@ -121,9 +121,6 @@ InspLinesPage.prototype.renderInspLines = function() {
 				function() {
 					_self.app.appCache.session.x_instructionline_id = $(this)
 							.data("id");
-					$('#inspMRDetGallery').html(
-							$("#inspMRDetail").html() + " (" + $(this).html()
-									+ ") ");
 					$.mobile.changePage("#pg_gallery");
 				});
 	}
