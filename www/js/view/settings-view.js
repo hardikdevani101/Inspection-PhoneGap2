@@ -4,13 +4,30 @@ var SettingsPage = function(app) {
 	// this.event = event
 }
 
+SettingsPage.prototype.reloadServerDetail = function() {
+	if (_self.app.appCache.ftpServers.length > 0) {
+		$.each(_self.app.appCache.ftpServers, function(key, data) {
+			if (data.isFTP != 'Y') {
+				$("#txt_url").append(new Option(data.name, data.url));
+			}
+		});
+		$('#txt_url').selectmenu();
+		$('#txt_url').selectmenu('refresh', true);
+	}
+}
+
 SettingsPage.prototype.init = function() {
 	// Initialize components.
 	console.log("Inittialize Settings View.");
 	var _self = this;
 
 	// Register Event listeners
-	$("#txt_organization").on("change", _self.onOrgChange);
+	$("#txt_organization").on("change", function() {
+		_self.onOrgChange();
+	});
+	$("#txt_url").on("change", function() {
+		_self.onServerChange()
+	});
 	$('#_form_settings').validate({
 		rules : {
 			txt_url : {
@@ -123,7 +140,7 @@ SettingsPage.prototype.onOrgChange = function() {
 	$("#txt_warehouse").empty();
 	var org_id = $("#txt_organization").val();
 	if (org_id == null || org_id == 0) {
-		for ( var i = 0; i < app.appCache.warehouseList.length; i++) {
+		for (var i = 0; i < app.appCache.warehouseList.length; i++) {
 			$("#txt_warehouse").append(
 					new Option(app.appCache.warehouseList[i].name,
 							app.appCache.warehouseList[i].warehouseid));
@@ -132,7 +149,7 @@ SettingsPage.prototype.onOrgChange = function() {
 		var result = $.grep(app.appCache.warehouseList, function(e) {
 			return e.orgid == org_id;
 		});
-		for ( var i = 0; i < result.length; i++) {
+		for (var i = 0; i < result.length; i++) {
 			$("#txt_warehouse").append(
 					new Option(result[i].name, result[i].warehouseid));
 		}
@@ -140,14 +157,41 @@ SettingsPage.prototype.onOrgChange = function() {
 	$('#txt_warehouse').selectmenu('refresh', true);
 }
 
+SettingsPage.prototype.onServerChange = function() {
+	console.log("Server Change");
+	var _self = this;
+
+	$("#txt_warehouse").empty();
+	var org_id = $("#txt_organization").val();
+	if (org_id == null || org_id == 0) {
+		for (var i = 0; i < app.appCache.warehouseList.length; i++) {
+			$("#txt_warehouse").append(
+					new Option(app.appCache.warehouseList[i].name,
+							app.appCache.warehouseList[i].warehouseid));
+		}
+	} else {
+		var result = $.grep(app.appCache.warehouseList, function(e) {
+			return e.orgid == org_id;
+		});
+		for (var i = 0; i < result.length; i++) {
+			$("#txt_warehouse").append(
+					new Option(result[i].name, result[i].warehouseid));
+		}
+	}
+	$('#txt_warehouse').selectmenu('refresh', true);
+	
+	//_self.app.logout();
+}
+
 SettingsPage.prototype.onSettingFind = function(setting) {
 	if (!setting.service_url || setting.service_url == '') {
-		if(_self.app.isLogin){
+		if (_self.app.isLogin) {
 			_self.app.logout();
 		}
 		$("#pg_settings").panel("open", {});
 	} else {
 		$("#pg_settings").panel("close");
+
 		$("#txt_url").val(setting.service_url).attr('selected', true).siblings(
 				'option').removeAttr('selected');
 		$("#txt_url").selectmenu("refresh", true);

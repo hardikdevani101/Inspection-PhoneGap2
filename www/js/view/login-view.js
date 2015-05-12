@@ -34,6 +34,9 @@ LoginPage.prototype.onLogin = function() {
 							reload : false
 						});
 			}
+			//Load More Server details.
+			_self.app.settingnview.reloadServerDetails()
+
 		}, function() {
 			console.log("Login failed");
 		});
