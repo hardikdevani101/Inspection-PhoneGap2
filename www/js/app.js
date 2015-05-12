@@ -9,6 +9,7 @@ var App = function() {
 };
 
 App.prototype.onDeviceReady = function() {
+
 	$.mobile.allowCrossDomainPages = true;
 	$.support.cors = true;
 	$.mobile.loadingMessage = "Loading..";
@@ -123,9 +124,14 @@ App.prototype.register = function() {
 				_self.settingnview = new SettingsPage(_self);
 				_self.settingnview.init();
 				_self.appCache.addPage('pg_settings', _self.settingnview);
-				// Height for content area is - 225
-				$('#pg_home .ui-content').css('margin-top',
-						($('#pg_home').height() - 225) / 2);
+				var pageHeight = $('#pg_home').height();
+				if ((pageHeight / 2) + 225 > pageHeight) {
+					$('#pg_home .ui-content').css('margin-top',
+							((pageHeight - 225) / 2));
+				} else {
+					$('#pg_home .ui-content').css('margin-top',
+							(pageHeight / 2));
+				}
 				$("#btn_start").on('tap', function() {
 					if (_self.appCache.settingInfo.is_login) {
 						_self.isLogin = _self.appCache.settingInfo.is_login;
@@ -145,8 +151,14 @@ App.prototype.register = function() {
 				_self.registerErrorPopup('pg_login');
 				console.log("Login Called");
 				// Height for content area is - 294
-				$('#pg_login .ui-content').css('margin-top',
-						($('#pg_login').height() - 294) / 2);
+				var pageHeight = $('#pg_login').height();
+				if ((pageHeight / 2) + 294 > pageHeight) {
+					$('#pg_login .ui-content').css('margin-top',
+							((pageHeight - 294) / 2));
+				} else {
+					$('#pg_login .ui-content').css('margin-top',
+							(pageHeight / 2));
+				}
 				_self.loginview = new LoginPage(_self);
 				_self.loginview.init();
 			});
