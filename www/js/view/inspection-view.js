@@ -13,23 +13,23 @@ InspLinesPage.prototype.init = function() {
 	// $('#pg_inspection div h2').text(
 	// String(_self.app.appCache.loginInfo.username));
 	// _self.loadMRLines();
+
 	$(document).on("pagebeforeshow", "#pg_inspection", function() {
 		_self.rederBreadCrumb();
 		_self.loadMRLines();
-		$('#btn_refresh_mrlines').on("click", function() {
-			_self.app.appCache.mrLines = [];
-			_self.loadMRLines();
-		});
 	});
-
+	$('#btn_refresh_mrlines').on("click", function() {
+		_self.app.appCache.mrLines = [];
+		_self.loadMRLines();
+	});
 	$(document).on("pagebeforeshow", "#pg_inspection_detail", function() {
 		_self.loadInspLines({
 			'selected_mrline' : _self.app.appCache.session.m_inoutline_id
 		});
-		$('#btn_sync_insp').on("click", function() {
-			_self.app.appCache.inspLines = [];
-			_self.syncInspLines();
-		});
+	});
+	$('#btn_sync_insp').on("click", function() {
+		_self.app.appCache.inspLines = [];
+		_self.syncInspLines();
 	});
 }
 
@@ -138,7 +138,7 @@ InspLinesPage.prototype.onSyncCalled = function() {
 	var _self = this;
 	var success = function(tx, results) {
 		if (results.rows.length > 0) {
-			for (var i = 0; i < results.rows.length; i++) {
+			for ( var i = 0; i < results.rows.length; i++) {
 				_self.app.appFS.uploadFile(results.rows.item(i).file,
 						results.rows.item(i).mr_line,
 						results.rows.item(i).insp_line,
@@ -156,7 +156,7 @@ InspLinesPage.prototype.onFinishedCalled = function() {
 	var onUploadedEntrySucess = function(tx, results) {
 		if (results.rows.length > 0) {
 			var attachmentList = [];
-			for (var i = 0; i < results.rows.length; i++) {
+			for ( var i = 0; i < results.rows.length; i++) {
 				var item = {};
 				if (results.rows.item(i).insp_line == null
 						|| results.rows.item(i).insp_line == 0) {

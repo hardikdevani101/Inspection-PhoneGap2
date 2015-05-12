@@ -5,6 +5,7 @@ var SettingsPage = function(app) {
 }
 
 SettingsPage.prototype.reloadServerDetail = function() {
+	var _self = this;
 	if (_self.app.appCache.ftpServers.length > 0) {
 		$.each(_self.app.appCache.ftpServers, function(key, data) {
 			if (data.isFTP != 'Y') {
@@ -140,7 +141,7 @@ SettingsPage.prototype.onOrgChange = function() {
 	$("#txt_warehouse").empty();
 	var org_id = $("#txt_organization").val();
 	if (org_id == null || org_id == 0) {
-		for (var i = 0; i < app.appCache.warehouseList.length; i++) {
+		for ( var i = 0; i < app.appCache.warehouseList.length; i++) {
 			$("#txt_warehouse").append(
 					new Option(app.appCache.warehouseList[i].name,
 							app.appCache.warehouseList[i].warehouseid));
@@ -149,7 +150,7 @@ SettingsPage.prototype.onOrgChange = function() {
 		var result = $.grep(app.appCache.warehouseList, function(e) {
 			return e.orgid == org_id;
 		});
-		for (var i = 0; i < result.length; i++) {
+		for ( var i = 0; i < result.length; i++) {
 			$("#txt_warehouse").append(
 					new Option(result[i].name, result[i].warehouseid));
 		}
@@ -164,7 +165,7 @@ SettingsPage.prototype.onServerChange = function() {
 	$("#txt_warehouse").empty();
 	var org_id = $("#txt_organization").val();
 	if (org_id == null || org_id == 0) {
-		for (var i = 0; i < app.appCache.warehouseList.length; i++) {
+		for ( var i = 0; i < app.appCache.warehouseList.length; i++) {
 			$("#txt_warehouse").append(
 					new Option(app.appCache.warehouseList[i].name,
 							app.appCache.warehouseList[i].warehouseid));
@@ -173,14 +174,14 @@ SettingsPage.prototype.onServerChange = function() {
 		var result = $.grep(app.appCache.warehouseList, function(e) {
 			return e.orgid == org_id;
 		});
-		for (var i = 0; i < result.length; i++) {
+		for ( var i = 0; i < result.length; i++) {
 			$("#txt_warehouse").append(
 					new Option(result[i].name, result[i].warehouseid));
 		}
 	}
 	$('#txt_warehouse').selectmenu('refresh', true);
-	
-	//_self.app.logout();
+
+	// _self.app.logout();
 }
 
 SettingsPage.prototype.onSettingFind = function(setting) {

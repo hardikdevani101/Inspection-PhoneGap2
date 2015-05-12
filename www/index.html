@@ -70,17 +70,23 @@
 			<div class="logoimage">
 				<img src="icon.png">
 			</div>
-			<div data-role="controlgroup" data-type="horizontal"
-				class="ui-start-option ui-strat-option-center">
-				<a href="#pg_settings" id="btn_settings"
-					class="ui-btn ui-btn-a ui-icon-gear ui-btn-icon-left"
-					data-iconpos="notext" data-mini="true" data-corners="false"
-					data-shadow="false" data-theme="a" data-mini="true"
-					data-wrapperels="span" data-iconshadow="false" title="Preference">Settings</a>
-				<a href="#" id="btn_start" class="ui-btn ui-btn-a"
-					data-corners="true" title="Start Inspection" data-mini="true"
-					data-theme="a">Start Inspection</a>
+			<div class="ui-grid-a">
+				<div class="ui-block-a">
+					<a href="#pg_settings" id="btn_settings"
+						class="ui-btn ui-btn-a ui-icon-gear ui-btn-icon-left ui-corner-all "
+						xdata-iconpos="notext" data-mini="true" data-corners="true"
+						data-shadow="false" data-theme="a" xdata-mini="true"
+						data-wrapperels="span" data-iconshadow="false" title="Preference">Settings</a>
+				</div>
+				<div class="ui-block-b">
+					<a href="#" id="btn_start"
+						class="ui-btn ui-btn-a ui-icon-arrow-r ui-btn-icon-right ui-corner-all"
+						data-iconpos="left" title="Start Inspection" xdata-mini="true"
+						data-theme="a">Start Inspection</a>
+				</div>
 			</div>
+
+
 		</div>
 		<div data-role="panel" data-position="left" data-theme="c"
 			id="pg_settings" data-content-theme="c">

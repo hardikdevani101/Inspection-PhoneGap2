@@ -108,15 +108,8 @@ App.prototype.register = function() {
 				_self.settingnview = new SettingsPage(_self);
 				_self.settingnview.init();
 				_self.appCache.addPage('pg_settings', _self.settingnview);
-				$(document).on(
-						"pagebeforeshow",
-						"#pg_home",
-						function() {
-							$('#pg_home .ui-content').css('margin-top',
-									$('#pg_home').height() / 2);
-
-						});
-
+				$('#pg_home .ui-content').css('margin-top',
+						$('#pg_home').height() / 2);
 				$("#btn_start").on('tap', function() {
 					if (_self.appCache.settingInfo.is_login) {
 						_self.isLogin = _self.appCache.settingInfo.is_login;
@@ -129,11 +122,16 @@ App.prototype.register = function() {
 				})
 			});
 
-	$(document).on("pagecreate", "#pg_login", function(event) {
-		console.log("Login Called");
-		_self.loginview = new LoginPage(_self);
-		_self.loginview.init();
-	});
+	$(document).on(
+			"pagecreate",
+			"#pg_login",
+			function(event) {
+				console.log("Login Called");
+				$('#pg_login .ui-content').css('margin-top',
+						$('#pg_login').height() / 2);
+				_self.loginview = new LoginPage(_self);
+				_self.loginview.init();
+			});
 
 	$(document).on("pagecreate", "#pg_inspection", function(event) {
 		_self.inspLinePage = new InspLinesPage(_self);
@@ -166,7 +164,7 @@ App.prototype.register = function() {
 		_self.appCache.addPage('pg_aboutus', _self.aboutusview);
 	});
 
-	$(document).on("pagecreate", "#pg_inspectionDetail", function(event) {
+	$(document).on("pagecreate", "#pg_inspection_detail", function(event) {
 		_self.inspLinePage.loadInspLines({
 			m_inoutline_id : _self.appCache.session.m_inoutline_id
 		});

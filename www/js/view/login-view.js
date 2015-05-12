@@ -35,7 +35,7 @@ LoginPage.prototype.onLogin = function() {
 						});
 			}
 			// Load More Server details.
-			_self.app.settingnview.reloadServerDetails()
+			_self.app.settingnview.reloadServerDetail();
 
 		}, function() {
 			console.log("Login failed");
@@ -48,9 +48,6 @@ LoginPage.prototype.onLogin = function() {
 
 LoginPage.prototype.init = function() {
 	var _self = this;
-	$(document).on("pagebeforeshow", "#pg_login", function() {
-		$('#pg_login .ui-content').css('margin-top', $('#pg_login').height() / 2);
-	});
 
 	var visionapi = new VisionApi(this.app);
 	$('#_form_login').validate({
