@@ -108,8 +108,9 @@ App.prototype.register = function() {
 				_self.settingnview = new SettingsPage(_self);
 				_self.settingnview.init();
 				_self.appCache.addPage('pg_settings', _self.settingnview);
+				//Height for content area is - 225
 				$('#pg_home .ui-content').css('margin-top',
-						$('#pg_home').height() / 2);
+						($('#pg_home').height()-225) / 2);
 				$("#btn_start").on('tap', function() {
 					if (_self.appCache.settingInfo.is_login) {
 						_self.isLogin = _self.appCache.settingInfo.is_login;
@@ -127,8 +128,9 @@ App.prototype.register = function() {
 			"#pg_login",
 			function(event) {
 				console.log("Login Called");
+				//Height for content area is - 294
 				$('#pg_login .ui-content').css('margin-top',
-						$('#pg_login').height() / 2);
+						($('#pg_login').height()-294) / 2);
 				_self.loginview = new LoginPage(_self);
 				_self.loginview.init();
 			});
