@@ -78,7 +78,7 @@ ImageEditorPage.prototype.enableEditMode = function() {
 			};
 			var dist = distanceBetween(lastPoint, currentPoint);
 			var angle = angleBetween(lastPoint, currentPoint);
-			for (var i = 0; i < dist; i += 5) {
+			for ( var i = 0; i < dist; i += 5) {
 				x = lastPoint.x + (Math.sin(angle) * i);
 				y = lastPoint.y + (Math.cos(angle) * i);
 				var radgrad = ctx.createRadialGradient(x, y, 10, x, y, 20);
@@ -126,22 +126,23 @@ ImageEditorPage.prototype.init = function(width, height, img64) {
 					"#pg_img_editor",
 					function() {
 						_self.rederBreadCrumb();
-						_self.brightness = $("#slider-brightness").val();
+
 						console.log("Init Brightness>>>  " + _self.brightness);
 						$("#slider-brightness").on("change", function(event) {
 							_self.brightness = event.target.value;
-							console.log("Brightness>>>  " + _self.brightness);
+							_self.onBrightnessChange(event);
 						});
+
 						_self.contrast = $("#slider-contrast").val();
 						console.log("Init Contrast>>>>>  " + _self.contrast);
 						$("#slider-contrast").on("change", function(event) {
 							_self.contrast = event.target.value;
-							console.log("Contrast>>>>>  " + _self.contrast);
+							_self.onContrastChange(event);
 						});
 						$('.img-container').html(
 								[ '<img id="img_editable" src="',
 										_self.image64, '" />' ].join(''));
-						_self.initCropMode()
+						_self.initCropMode();
 						_self.enableEditMode();
 
 						$("#crop-toolbar").hide();
@@ -231,6 +232,63 @@ ImageEditorPage.prototype.enableCropMode = function() {
 			URL.revokeObjectURL(_self.gcanvas.toDataURL());
 		}).cropper('reset').cropper('replace', _self.gcanvas.toDataURL());
 	}
+}
+
+ImageEditorPage.prototype.onContrastChange = function(event) {
+	var _self = this;
+	var contraValue = event.target.value - _self.cValue;
+	var contraImageData = _self.editCtx.getImageData(0, 0, _self.gcanvas.width,
+			_self.gcanvas.height);
+	var data = contraImageData.data;
+	var factor = (259 * (contraValue + 255)) / (255 * (259 - contraValue));
+	for ( var i = 0; i < data.length; i += 4) {
+		data[i] = factor * (data[i] - 128) + 128;
+		data[i + 1] = factor * (data[i + 1] - 128) + 128;
+		data[i + 2] = factor * (data[i + 2] - 128) + 128;
+	}
+	_self.editCtx.putImageData(contraImageData, 0, 0);
+
+	_self.cValue = event.target.value;
+	if (_self.flag == 0) {
+		if (_self.aNo > -1 ? (_self.actArray[_self.aNo][0] != _self.bValue || _self.actArray[_self.aNo][1] != _self.cValue)
+				: true) {
+			_self.actArray[++_self.aNo] = new Array();
+			_self.actArray[_self.aNo][0] = _self.bValue;
+			_self.actArray[_self.aNo][1] = _self.cValue;
+			_self.actArray[_self.aNo][2] = _self.canX + "*" + _self.canY + "*"
+					+ (_self.canX1 - _self.canX) + "*"
+					+ (_self.canY1 - _self.canY);
+		}
+	}
+	return contraImageData;
+}
+
+ImageEditorPage.prototype.onBrightnessChange = function(event) {
+	var _self = this;
+	var brightValue = event.target.value - _self.bValue;
+	var brightImageData = _self.editCtx.getImageData(0, 0, _self.gcanvas.width,
+			_self.gcanvas.height);
+	var pixels = brightImageData.data;
+	for ( var i = 0; i < pixels.length; i += 4) {
+		pixels[i] += brightValue;
+		pixels[i + 1] += brightValue;
+		pixels[i + 2] += brightValue;
+	}
+	_self.editCtx.putImageData(brightImageData, 0, 0);
+
+	_self.bValue = event.target.value;
+	if (_self.flag == 0) {
+		if (_self.aNo > -1 ? (_self.actArray[_self.aNo][0] != _self.bValue || _self.actArray[_self.aNo][1] != _self.cValue)
+				: true) {
+			_self.actArray[++_self.aNo] = new Array();
+			_self.actArray[_self.aNo][0] = _self.bValue;
+			_self.actArray[_self.aNo][1] = _self.cValue;
+			_self.actArray[_self.aNo][2] = _self.canX + "*" + _self.canY + "*"
+					+ (_self.canX1 - _self.canX) + "*"
+					+ (_self.canY1 - _self.canY);
+		}
+	}
+	return brightImageData;
 }
 
 ImageEditorPage.prototype.initCropMode = function() {

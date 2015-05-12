@@ -70,59 +70,17 @@
 			<div class="logoimage">
 				<img src="icon.png">
 			</div>
-			<button href="#" id="btn_start" data-corners="true"
-				title="Start Inspection" data-mini="true" data-theme="a">Start
-				Inspection</button>
-			<!-- 			<a href="#" id="btn_start" class="ui-btn" data-mini="true" -->
-			<!-- 				data-inline="true" data-theme="c">Start Inspection</a> -->
-		</div>
-	</div>
-	<!-------------------------------------------------------------
-End of Home page
--------------------------------------------------------------->
-
-	<!-------------- Login Page ----------->
-	<div data-role="page" id="pg_login" data-theme="c">
-		<!-------------- Login page header ----------->
-		<div data-role="header" data-position="fixed" data-theme="a">
-			<div data-role="navbar" data-iconpos="left">
-				<ul>
-					<li><a href="#pg_home" data-icon="home" data-iconpos="notext"
-						data-mini="true" data-corners="false" data-shadow="false"
-						data-theme="a" data-mini="true" data-iconshadow="false"
-						data-wrapperels="span" title="Home">Home</a></li>
-					<li><a href="#pg_settings" data-icon="gear"
-						data-iconpos="notext" data-mini="true" data-corners="false"
-						data-shadow="false" data-theme="a" data-mini="true"
-						data-iconshadow="false" data-wrapperels="span" title="Preference">Settings</a>
-					</li>
-					<li><a href="#pnl_aboutus" data-icon="info"
-						data-corners="false" data-shadow="false" data-iconshadow="false"
-						data-wrapperels="span" data-mini="true" title="About Us"
-						data-rel="popup" data-theme="a" data-transition="flip">About</a></li>
-				</ul>
+			<div data-role="controlgroup" data-type="horizontal"
+				class="ui-start-option ui-strat-option-center">
+				<a href="#pg_settings" id="btn_settings"
+					class="ui-btn ui-btn-a ui-icon-gear ui-btn-icon-left"
+					data-iconpos="notext" data-mini="true" data-corners="false"
+					data-shadow="false" data-theme="a" data-mini="true"
+					data-wrapperels="span" data-iconshadow="false" title="Preference">Settings</a>
+				<a href="#" id="btn_start" class="ui-btn ui-btn-a"
+					data-corners="true" title="Start Inspection" data-mini="true"
+					data-theme="a">Start Inspection</a>
 			</div>
-		</div>
-		<!-------------- Login page main content ----------->
-		<div data-role="main" class="ui-content" data-theme="c"
-			data-mini="true">
-			<form id="_form_login" action="#">
-				<div class="logoimage">
-					<img src="icon.png">
-				</div>
-				<div id="login-error-box" data-role="popup" data-theme="a"
-					class="ui-content"></div>
-				<div data-role="fieldcontainer">
-					<input id="txt_user" name="txt_user" type="text" value="alex.perez"
-						placeholder="Enter Username!" data-mini="true" />
-				</div>
-				<div data-role="fieldcontainer">
-					<input id="txt_password" name="txt_password" type="password"
-						value="password" placeholder="Enter Password!" data-mini="true" />
-				</div>
-				<input id="loginbtn" type="submit" data-mini="true"
-					data-inline="true" value="Login" data-theme="a">
-			</form>
 		</div>
 		<div data-role="panel" data-position="left" data-theme="c"
 			id="pg_settings" data-content-theme="c">
@@ -215,6 +173,51 @@ End of Home page
 				</ul>
 			</form>
 		</div>
+	</div>
+
+	<!-------------------------------------------------------------
+End of Home page
+-------------------------------------------------------------->
+
+	<!-------------- Login Page ----------->
+	<div data-role="page" id="pg_login" data-theme="c">
+		<!-------------- Login page header ----------->
+		<div data-role="header" data-position="fixed" data-theme="a">
+			<div data-role="navbar" data-iconpos="left">
+				<ul>
+					<li><a href="#pg_home" data-icon="home" data-iconpos="notext"
+						data-mini="true" data-corners="false" data-shadow="false"
+						data-theme="a" data-mini="true" data-iconshadow="false"
+						data-wrapperels="span" title="Home">Home</a></li>
+					<li><a href="#pnl_aboutus" data-icon="info"
+						data-corners="false" data-shadow="false" data-iconshadow="false"
+						data-wrapperels="span" data-mini="true" title="About Us"
+						data-rel="popup" data-theme="a" data-transition="flip">About</a></li>
+				</ul>
+			</div>
+		</div>
+		<!-------------- Login page main content ----------->
+		<div data-role="main" class="ui-content" data-theme="c"
+			data-mini="true">
+			<form id="_form_login" action="#">
+				<div class="logoimage">
+					<img src="icon.png">
+				</div>
+				<div id="login-error-box" data-role="popup" data-theme="a"
+					class="ui-content"></div>
+				<div data-role="fieldcontainer">
+					<input id="txt_user" name="txt_user" type="text" value="alex.perez"
+						placeholder="Enter Username!" data-mini="true" />
+				</div>
+				<div data-role="fieldcontainer">
+					<input id="txt_password" name="txt_password" type="password"
+						value="password" placeholder="Enter Password!" data-mini="true" />
+				</div>
+				<input id="loginbtn" type="submit" data-mini="true"
+					data-inline="true" value="Login" data-theme="a">
+			</form>
+		</div>
+
 
 		<div data-role="popup" id="pnl_aboutus">
 			<ul data-role="listview" data-theme="c" data-inset="false">
@@ -239,13 +242,12 @@ End of Login Page
 			<h1 data-role="heading">MRLines</h1>
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-right">
-				<button id="btn_user" href="#pnl_aboutus" data-icon="user"
-					data-corners="false" data-shadow="false" data-iconshadow="false"
-					data-wrapperels="span" title="User" data-rel="popup"
-					data-transition="flip"></button>
-				<button href="#" id="btn_logout" data-icon="power"
-					data-corners="false" data-iconpos="notext" data-shadow="false"
-					data-iconshadow="false" data-wrapperels="span" title="Logout">SignOut</button>
+				<button id="btn_user" data-icon="user" data-corners="false"
+					data-shadow="false" data-iconshadow="false" data-wrapperels="span"
+					title="User" data-transition="flip"></button>
+				<button id="btn_logout" data-icon="power" data-corners="false"
+					data-iconpos="notext" data-shadow="false" data-iconshadow="false"
+					data-wrapperels="span" title="Logout">SignOut</button>
 			</div>
 		</div>
 		<!-------------- Second page main content ----------->
@@ -483,34 +485,34 @@ Start of Crop page
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
 					<li><a data-method="enable" data-icon="crop" id="btn_crop"
-						data-iconpos="notext" href="#" data-shadow="false" data-theme="c"
+						data-iconpos="notext" href="#" data-shadow="false" data-theme="a"
 						title="crop">Crop</a></li>
 					<li><a id="btn_reset" href="#" data-shadow="false"
 						data-icon="refresh" id="btn_reset" data-iconpos="notext"
-						data-theme="c" title="Reset">Reset</a></li>
+						data-theme="a" title="Reset">Reset</a></li>
 					<!-- 					<li><a id="btn_add_watermark" href="#" data-shadow="false"
 						data-icon="plus" data-theme="c" title="watermark">Watermark</a></li>
  -->
 					<li><a id="btn_img_filter" href="#pnl_image_filters"
-						data-shadow="false" data-icon="grid" data-theme="c" title="filter">Filters</a></li>
+						data-shadow="false" data-icon="grid" data-theme="a" title="filter">Filters</a></li>
 				</ul>
 
 
-				<div class="ui-nodisc-icon" id="crop-toolbar" data-theme="a">
+				<div class="ui-nodisc-icon ui" id="crop-toolbar" data-theme="c">
 					<!-- Class added to the wrapper -->
 					<a id="btn_crop_finished" href="#" data-icon="check"
-						data-shadow="false" data-theme="a" title="filter"></a><a
+						data-shadow="false" data-theme="c" title="filter"></a><a
 						id="btn_zoom_plus" href="#" data-icon="plus" data-iconpos="notext"
-						data-shadow="false" data-wrapperels="span" data-theme="a"
+						data-shadow="false" data-wrapperels="span" data-theme="c"
 						title="save"></a><a id="btn_zoom_minus" data-method="enable"
 						data-icon="minus" data-iconpos="notext" href="#"
-						data-shadow="false" data-theme="a" title="crop"></a><a href="#"
+						data-shadow="false" data-theme="c" title="crop"></a><a href="#"
 						data-shadow="false" data-icon="forward" id="btn_rotate_right"
-						data-iconpos="notext" data-theme="a" title="Reset"></a><a href="#"
+						data-iconpos="notext" data-theme="c" title="Reset"></a><a href="#"
 						data-shadow="false" data-icon="back" id="btn_rotate_left"
-						data-iconpos="notext" data-theme="a" title="Reset"></a><a
+						data-iconpos="notext" data-theme="c" title="Reset"></a><a
 						id="btn_move" href="#" data-shadow="false" data-icon="action"
-						data-theme="a" data-iconpos="notext" title="move"></a>
+						data-theme="c" data-iconpos="notext" title="move"></a>
 				</div>
 			</div>
 
@@ -523,17 +525,15 @@ Start of Crop page
 					data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
 					data-iconpos="right" data-theme="c"><label
 					for="slider-brightness">Brightness</label> <input
-					class="ui-rangeslider" data-highlight="true" data-theme="a"
-					data-track-theme="a" data-mini="true" type="range"
-					name="slider-brightness" id="slider-brightness" value="50"
-					data-highlight="false" min="0" max="100"
-					class="ui-hidden-accessible" /></li>
+					data-highlight="true" data-theme="a" data-track-theme="a"
+					data-mini="true" type="range" name="slider-brightness"
+					id="slider-brightness" value="50" data-highlight="false" min="0"
+					max="100" class="ui-hidden-accessible" /></li>
 				<li class="ui-rangeslider" data-shadow="false"
 					data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
 					data-iconpos="right" data-theme="c"><label
-					for="slider-contrast">Contrast</label> <input
-					class="ui-rangeslider" data-highlight="true" data-theme="a"
-					data-track-theme="a" data-mini="true" type="range"
+					for="slider-contrast">Contrast</label> <input data-highlight="true"
+					data-theme="a" data-track-theme="a" data-mini="true" type="range"
 					name="slider-contrast" id="slider-contrast" value="50"
 					data-highlight="false" min="0" max="100"
 					class="ui-hidden-accessible" /></li>
@@ -565,14 +565,14 @@ Start of Crop page
 				<canvas id="edit-canvase"></canvas>
 			</div>
 		</div>
-		<div data-role="footer" data-position="fixed" data-theme="c">
+		<div data-role="footer" data-position="fixed" data-theme="a">
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
 					<li><a id="btn_skip_edit" href="#" data-shadow="false"
-						data-icon="back" data-theme="c" title="Skip Edit">Skip</a></li>
+						data-icon="back" data-theme="a" title="Skip Edit">Skip</a></li>
 					<li><a id="btn_edit_finished" href="#" data-icon=""
 						xdata-iconpos="notext" data-shadow="false" data-wrapperels="span"
-						data-theme="c" title="save">Save</a></li>
+						data-theme="a" title="save">Save</a></li>
 				</ul>
 			</div>
 		</div>

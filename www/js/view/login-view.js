@@ -3,8 +3,8 @@ var LoginPage = function(app) {
 };
 LoginPage.prototype.rederBreadCrumb = function() {
 	var _self = this;
-	$('#pg_home #btn_user').html(
-			$(_self.app.appCache.loginInfo.username).val());
+	$('#pg_home #btn_user')
+			.html($(_self.app.appCache.loginInfo.username).val());
 };
 LoginPage.prototype.onLogin = function() {
 	var _self = this;
@@ -29,12 +29,12 @@ LoginPage.prototype.onLogin = function() {
 					console.log("DB-Login Failed!")
 				});
 				_self.rederBreadCrumb();
-				$(':mobile-pagecontainer').pagecontainer('change', '#pg_inspection',
-						{
+				$(':mobile-pagecontainer').pagecontainer('change',
+						'#pg_inspection', {
 							reload : false
 						});
 			}
-			//Load More Server details.
+			// Load More Server details.
 			_self.app.settingnview.reloadServerDetails()
 
 		}, function() {
@@ -48,6 +48,10 @@ LoginPage.prototype.onLogin = function() {
 
 LoginPage.prototype.init = function() {
 	var _self = this;
+	$(document).on("pagebeforeshow", "#pg_login", function() {
+		$('#pg_login .ui-content').css('margin-top', $('#pg_login').height() / 2);
+	});
+
 	var visionapi = new VisionApi(this.app);
 	$('#_form_login').validate({
 		rules : {
@@ -69,12 +73,15 @@ LoginPage.prototype.init = function() {
 		errorPlacement : function(error, element) {
 			// error.appendTo(element.parent().prev());
 			$("#login-error-box").html(error);
-//			
-//			element.attr("placeholder", error);
-//			element.attr("style", "border:1px solid red;");
+			//			
+			// element.attr("placeholder", error);
+			// element.attr("style", "border:1px solid red;");
 		},
 		invalidHandler : function() {
-			$("#login-error-box").popup("open",{ overlayTheme: "a" , positionTo:"#txt_user"});
+			$("#login-error-box").popup("open", {
+				overlayTheme : "a",
+				positionTo : "#txt_user"
+			});
 		},
 		submitHandler : function(form) {
 			_self.onLogin();

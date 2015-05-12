@@ -99,32 +99,40 @@ App.prototype.hideDialog = function() {
 App.prototype.register = function() {
 	var _self = this;
 
-	$(document).on("pagecreate", "#pg_home", function(event) {
-		// Check if already login
-		_self.isLogin = false;
-		$("#btn_start").on('tap', function() {
-			if (_self.appCache.settingInfo.is_login) {
-				_self.isLogin = _self.appCache.settingInfo.is_login;
-			}
-			if (!_self.isLogin) {
-				$.mobile.changePage("#pg_login")
-			} else {
-				if (!_self.settingnview) {
-					_self.settingnview = new SettingsPage(_self);
-					_self.settingnview.init();
-				}
-				$.mobile.changePage("#pg_inspection");
-			}
-		})
-	});
+	$(document).on(
+			"pagecreate",
+			"#pg_home",
+			function(event) {
+				// Check if already login
+				_self.isLogin = false;
+				_self.settingnview = new SettingsPage(_self);
+				_self.settingnview.init();
+				_self.appCache.addPage('pg_settings', _self.settingnview);
+				$(document).on(
+						"pagebeforeshow",
+						"#pg_home",
+						function() {
+							$('#pg_home .ui-content').css('margin-top',
+									$('#pg_home').height() / 2);
+
+						});
+
+				$("#btn_start").on('tap', function() {
+					if (_self.appCache.settingInfo.is_login) {
+						_self.isLogin = _self.appCache.settingInfo.is_login;
+					}
+					if (!_self.isLogin) {
+						$.mobile.changePage("#pg_login")
+					} else {
+						$.mobile.changePage("#pg_inspection");
+					}
+				})
+			});
 
 	$(document).on("pagecreate", "#pg_login", function(event) {
 		console.log("Login Called");
 		_self.loginview = new LoginPage(_self);
 		_self.loginview.init();
-		_self.appCache.addPage('pg_login', _self.loginview);
-		_self.settingnview = new SettingsPage(_self);
-		_self.settingnview.init();
 	});
 
 	$(document).on("pagecreate", "#pg_inspection", function(event) {

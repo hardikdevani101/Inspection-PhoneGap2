@@ -60,9 +60,10 @@ p {
 	color: red;
 } */
 body {
-	width: 100% overflow-x:          hidden position:          absolute top:
+	width: 100% overflow-x:                     hidden position:    
+		                absolute top:           
 		  
-		      0 left:      
+		      0 left:                 
 		   0
 }
 
@@ -158,6 +159,9 @@ body {
 		padding: .5625em; /* 9px */
 	}
 	.logoimage {
+		width: 80%;
+	}
+	.ui-start-option {
 		width: 80%;
 	}
 	.img-gallery  .ui-listview>.ui-li-has-thumb>.ui-btn,.ui-listview>.ui-li-static.ui-li-has-thumb
@@ -307,6 +311,9 @@ body {
 	.logoimage {
 		width: 100%;
 	}
+	.ui-start-option {
+		width: 100%;
+	}
 	.img-gallery .ui-content {
 		padding: .625em; /* 10px */
 	}
@@ -403,6 +410,12 @@ body .ui-body-c,body .ui-overlay-c {
 	text-align: center;
 }
 
+.ui-start-option {
+	margin-left: auto !important;
+	margin-right: auto !important;
+	text-align: center !important;
+}
+
 .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-btn-icon-notext,.ui-controlgroup-horizontal .ui-controlgroup-controls button.ui-btn-icon-notext
 	{
 	width: 2.5em !important;
@@ -454,4 +467,8 @@ body .ui-body-c,body .ui-overlay-c {
 #pop_file_actions {
 	background: transparent !important;
 	border: 0 !important;
+}
+
+#crop-toolbar {
+	background-color: #4f4b5a;
 }

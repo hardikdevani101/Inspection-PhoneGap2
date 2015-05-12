@@ -105,6 +105,7 @@ InspLinesPage.prototype.renderInspLines = function() {
 	if (mr_lines.length > 0) {
 		$('#inspMRDetail').html(mr_lines[0].label);
 		$('#prefixInpectLine').html(mr_lines[0].desc);
+		$('#txt_prefix').val(mr_lines[0].desc);
 	}
 	if (!(typeof _self.app.appCache.inspLines[sel_inoutline_id] === 'undefined')
 			&& _self.app.appCache.inspLines[sel_inoutline_id].length > 0) {
