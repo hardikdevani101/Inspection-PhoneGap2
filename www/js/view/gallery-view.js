@@ -9,22 +9,57 @@ var GalleryPage = function(app) {
 GalleryPage.prototype.rederBreadCrumb = function() {
 	var _self = this;
 	$('#pg_gallery #btn_user').html(
-			$(_self.app.appCache.loginInfo.username).val());
+			_self.app.appCache.settingInfo.username);
 };
 
 GalleryPage.prototype.onEditFinish = function(sourceInfo, editedImgData) {
 	console.log("Image Edit Done for " + sourceInfo);
+	var _self = this;
+	sourceInfo['mrLineID'] = _self.app.appCache.session.m_inoutline_id;
+	sourceInfo['inspID'] = _self.app.appCache.session.x_instructionline_id;
+	sourceInfo['mrID'] = _self.app.appCache.session.M_INOUT_ID;
+	$
+			.each(
+					_self.inspFiles[sourceInfo['inspID']],
+					function() {
+						if (this.filePath == sourceInfo.filePath) {
+							if (_self.app.appCache.imgCache[sourceInfo.filePath]) {
+								_self.app.appCache.imgCache[sourceInfo.filePath] = editedImgData;
+							}
+						}
+					});
+	sourceInfo['fileFullPath'] = sourceInfo.filePath;
+	sourceInfo['fileData'] = editedImgData;
+	sourceInfo['fileExt'] = "jpg";
+
+	if (editedImgData) {
+		if (sourceInfo.filePath
+				.startsWith("file:///storage/sdcard0/VIS_Inspection/")) {
+			_self.app.appFS.updateVISFile(sourceInfo);
+		} else {
+			_self.app.appFS.createVISFile(sourceInfo);
+		}
+	}
 }
 
 GalleryPage.prototype.onDeleteFile = function(event) {
-	event.preventDefault();
 	var _self = this;
+	event.preventDefault();
 	_self.app.galleryview.inspFiles[_self.line_id] = jQuery.grep(
 			_self.app.galleryview.inspFiles[_self.line_id], function(item,
 					index) {
 				return item.filePath != _self.app.galleryview.selectedFile;
 			});
 	_self.app.galleryview.renderInspFiles();
+	var selected = _self.app.galleryview.selectedFile;
+	var param = {};
+	param['mrLineID'] = _self.app.appCache.session.m_inoutline_id;
+	param['inspID'] = _self.app.appCache.session.x_instructionline_id;
+	param['mrID'] = _self.app.appCache.session.M_INOUT_ID;
+	param['fileFullPath'] = selected;
+	_self.visGallery.deleteFileInfo(param, function() {
+		console.log("File deleted >>> " + selected);
+	}, null);
 	$("#pop_file_actions").popup('close');
 
 }
@@ -36,9 +71,7 @@ GalleryPage.prototype.onEditFile = function(event) {
 
 GalleryPage.prototype.onFileData = function(selFiles) {
 	var _self = this;
-	console.log('Gallery View - pushFileData');
 	$.each(selFiles, function(index, file) {
-		console.log(file.filePath);
 		param = {};
 		param['mrLineID'] = _self.app.appCache.session.m_inoutline_id;
 		param['inspID'] = _self.app.appCache.session.x_instructionline_id;
@@ -57,62 +90,47 @@ GalleryPage.prototype.onFileData = function(selFiles) {
 			return item.filePath == file.filePath;
 		});
 		if (!result.length > 0) {
-			item = {};
-			item['filePath'] = file.filePath;
-			item['name'] = file.name;
-			item['uploded'] = file.uploded;
-			item['dataSource'] = file.dataSource;
-			_self.inspFiles[_self.line_id].push(item);
-
-			// Add DB Entry or Create File from FTP Data
-			if (file.dataSource == "FTP") {
-				var extension = file.name
-						.substr((file.name.lastIndexOf('.') + 1));
-				var findResult = jQuery.grep(_self.app.dataTypes, function(
-						item, index) {
-					return item == extension.toUpperCase();
-				});
-				if (findResult.length > 0) {
-					var base64 = _self.app.appCache.imgCache[file.filePath];
-					param['fileData'] = base64;
-					param['fileExt'] = extension;
-					if (base64) {
-						_self.app.appFS.createVISFile(param);
-					}
-				} else {
-					_self.visGallery.addFileInfo(param, function() {
-						console.log("Entry Done");
-					}, null);
-				}
-			} else {
-				_self.visGallery.addFileInfo(param, function() {
-					console.log("Entry Done");
-				}, null);
-			}
+			_self.onCreateNewEntry(file, param);
 		}
 
 	});
-
-	// TODO make DB Entiries.
-
-	// TODO Remove dummy data Runner in production.
-	// _self.inspFiles[152452] = [];
-	// for (var i = 0; i < 15; i++) {
-	// var item = {};
-	// item['filePath'] = '/file/path/file' + i + '.jpg';
-	// item['name'] = "file" + i + ".txt";
-	// item['dataSource'] = "LS";
-	// item['uploded'] = "Y";
-	// if (i % 2 == 0) {
-	// item['filePath'] = '/file/path/file' + i + '.jpg';
-	// item['name'] = "file" + i;
-	// item['dataSource'] = "CMR";
-	// }
-	// _self.inspFiles[152452].push(item);
-	// }
-	// Dummy Data Runner End.
 	_self.renderInspFiles();
 	_self.loadActualImage(_self.line_id);
+}
+
+GalleryPage.prototype.onCreateNewEntry = function(file, param) {
+	var _self = this;
+	item = {};
+	item['filePath'] = file.filePath;
+	item['name'] = file.name;
+	item['uploded'] = file.uploded;
+	item['dataSource'] = file.dataSource;
+	_self.inspFiles[_self.line_id].push(item);
+
+	// Add DB Entry or Create File from FTP Data
+	if (file.dataSource == "FTP") {
+		var extension = file.name.substr((file.name.lastIndexOf('.') + 1));
+		var findResult = jQuery.grep(_self.app.dataTypes,
+				function(item, index) {
+					return item == extension.toUpperCase();
+				});
+		if (findResult.length > 0) {
+			var base64 = _self.app.appCache.imgCache[file.filePath];
+			param['fileData'] = base64;
+			param['fileExt'] = extension;
+			if (base64) {
+				_self.app.appFS.createVISFile(param);
+			}
+		} else {
+			_self.visGallery.addFileInfo(param, function() {
+				console.log("Entry Done");
+			}, null);
+		}
+	} else {
+		_self.visGallery.addFileInfo(param, function() {
+			console.log("Entry Done");
+		}, null);
+	}
 }
 
 GalleryPage.prototype.init = function() {
@@ -167,11 +185,9 @@ GalleryPage.prototype.loadInspFile = function() {
 		_self.renderInspFiles();
 	} else {
 		var success = function(tx, result) {
-			console.log(result.rows.length);
 			_self.inspFiles[_self.line_id] = [];
-			for ( var i = 0; i < result.rows.length; i++) {
+			for (var i = 0; i < result.rows.length; i++) {
 				var item = {};
-				console.log(result.rows.item(i).file);
 				item['filePath'] = result.rows.item(i).file;
 				item['name'] = result.rows.item(i).name;
 				item['uploded'] = result.rows.item(i).imgUpload;
@@ -179,22 +195,6 @@ GalleryPage.prototype.loadInspFile = function() {
 				_self.inspFiles[_self.line_id].push(item);
 			}
 
-			// TODO Remove dummy data Runner in production.
-			// _self.inspFiles[152452] = [];
-			// for (var i = 0; i < 15; i++) {
-			// var item = {};
-			// item['filePath'] = '/file/path/file' + i + '.jpg';
-			// item['name'] = "file" + i + ".txt";
-			// item['dataSource'] = "LS";
-			// item['uploded'] = "Y";
-			// if (i % 2 == 0) {
-			// item['filePath'] = '/file/path/file' + i + '.jpg';
-			// item['name'] = "file" + i;
-			// item['dataSource'] = "CMR";
-			// }
-			// _self.inspFiles[152452].push(item);
-			// }
-			// Dummy Data Runner End.
 
 			_self.renderInspFiles();
 			_self.loadActualImage(_self.line_id);
@@ -222,12 +222,10 @@ GalleryPage.prototype.loadActualImage = function(inspID) {
 					index) {
 				return item == extension.toUpperCase();
 			});
-			console.log('File Extension>>>>>>> ' + extension)
 			if (this.dataSource == 'CMR' || findResult.length > 0) {
 
 				var dataid = this.filePath;
 				if (_self.app.appCache.imgCache[dataid]) {
-					console.log('Found image in cache' + dataid);
 					$('li[data-id="' + dataid + '"] img').attr('src',
 							_self.app.appCache.imgCache[dataid]);
 				} else {
@@ -260,13 +258,11 @@ GalleryPage.prototype.onFileTap = function(event) {
 		$("#btn_edit_file").hide();
 	}
 
-	console.log('Tap >> ' + dataid);
 	if (_self.app.appCache.imgCache[dataid]) {
 		var sourceInfo = jQuery.grep(_self.inspFiles[_self.line_id], function(
 				value, index) {
 			return value.filePath == dataid;
 		});
-		console.log('Tap >> from cache' + dataid);
 		if (sourceInfo.length > 0) {
 			_self.app.imageEditor.setup({
 				'sourceInfo' : sourceInfo[0],
@@ -356,13 +352,18 @@ GalleryPage.prototype.getGalleryImage = function() {
 
 GalleryPage.prototype.onImageSelection = function(param) {
 	var _self = this;
-	_self.app.appDB.addGalleryEntry(param.mrLineID, param.inspID, param.mrID,
-			param.fileName, param.fileURI);
+	// _self.app.appDB.addGalleryEntry(param.mrLineID, param.inspID, param.mrID,
+	// param.fileName, param.fileURI);
+	param['fileFullPath'] = param.fileURI;
+	_self.visGallery.addFileInfo(param, function() {
+		console.log("Image Entry Done");
+	}, null);
 
 	var item = {};
 	item['filePath'] = param.fileURI;
 	item['data'] = param.data;
 	item['uploded'] = 'F';
+	_self.app.appCache.imgCache[param.fileURI] = param.data;
 	if (!_self.app.appCache.inspFiles[param.inspID]) {
 		_self.app.appCache.inspFiles[param.inspID] = [];
 	}
@@ -372,10 +373,6 @@ GalleryPage.prototype.onImageSelection = function(param) {
 
 GalleryPage.prototype.onPhotoDataSuccess = function(imageURI) {
 	var _self = this;
-	// _self.app.appFS.getFileByURL(imageURI,function(){
-	//		
-	// });
-	console.log(imageURI);
 	_self.app.appFS.getFileByURL({
 		fileURI : imageURI
 	}, function(param) {

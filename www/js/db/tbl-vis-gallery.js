@@ -88,7 +88,7 @@ Tbl_VISGallery.prototype.addFileInfo = function(fileInfo, success, error) {
 		errorCallback = error;
 	}
 	if (!fileInfo.dataSource) {
-		fileInfo.dataSource = "CMR";
+		fileInfo['dataSource'] = "CMR";
 	}
 	this.appDB.dbstore.transaction(function(tx) {
 		var sqlQuery = 'INSERT INTO vis_gallery'
@@ -96,6 +96,32 @@ Tbl_VISGallery.prototype.addFileInfo = function(fileInfo, success, error) {
 				+ ' VALUES ("' + fileInfo.mrLineID + '","' + fileInfo.mrID
 				+ '","' + fileInfo.inspID + '","' + fileInfo.fileName + '","'
 				+ fileInfo.fileFullPath + '","' + fileInfo.dataSource + '")';
+		console.log(sqlQuery);
+		tx.executeSql(sqlQuery, [], successCallback, errorCallback);
+	});
+}
+
+Tbl_VISGallery.prototype.deleteFileInfo = function(fileInfo, success, error) {
+	var successCallback = this.appDB.success;
+	if (typeof (success) === "function") {
+		successCallback = success;
+	}
+	var errorCallback = this.appDB.errorCB;
+	if (typeof (error) === "function") {
+		errorCallback = error;
+	}
+	if (!fileInfo.dataSource) {
+		fileInfo.dataSource = "CMR";
+	}
+	this.appDB.dbstore.transaction(function(tx) {
+		var sqlQuery = 'Delete From vis_gallery where file="'
+				+ fileInfo.fileFullPath + '"';
+		console.log(fileInfo.inspID);
+		if (fileInfo.inspID == null || fileInfo.inspID == 0) {
+			sqlQuery += ' and in_out_id="' + fileInfo.mrID + '"';
+		} else {
+			sqlQuery += ' and insp_line="' + fileInfo.inspID + '"';
+		}
 		console.log(sqlQuery);
 		tx.executeSql(sqlQuery, [], successCallback, errorCallback);
 	});

@@ -20,10 +20,11 @@ DB.prototype.init = function(success, error) {
 			.transaction(
 					function(tx) {
 						// tx.executeSql('DROP TABLE IF EXISTS vis_gallery');
+//						 tx.executeSql('DROP TABLE IF EXISTS vis_setting');
 						tx
 								.executeSql('CREATE TABLE IF NOT EXISTS '
 										+ ' vis_setting'
-										+ ' (vis_url, vis_lang, vis_client_id, vis_role, vis_whouse_id, vis_ord_id, username, vis_img_qulty, is_login, app_version)');
+										+ ' (vis_url, vis_lang, vis_client_id, vis_role, vis_whouse_id, vis_ord_id, username,userid,userpwd, vis_img_qulty, is_login, app_version)');
 						tx
 								.executeSql('CREATE TABLE IF NOT EXISTS '
 										+ ' vis_gallery '
@@ -48,8 +49,30 @@ DB.prototype.reloadDB = function() {
 										+ ' vis_gallery '
 										+ ' (mr_line,insp_line DEFAULT "0",in_out_id DEFAULT "0",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F", dataSource DEFAULT "CMR")');
 
-					}, _self.errorCallback, _self.successCallback);
+					}, _self.errorCB, _self.success);
 
+}
+
+DB.prototype.getTotalInspEntries = function(param, callBack) {
+	var _self = this;
+	_self.dbstore.transaction(function(tx) {
+		var sql = 'select count(*) from vis_gallery where insp_line="'
+				+ param.x_instructionline_id + '"';
+		tx.executeSql(sql, [], function(tx, results) {
+			callBack(param, results.rows.item(0)['count(*)']);
+		}, _self.errorCB);
+	}, _self.errorCB, _self.success);
+}
+
+DB.prototype.getUploadedInspEntries = function(param, callBack) {
+	var _self = this;
+	_self.dbstore.transaction(function(tx) {
+		var sql = 'select count(*) from vis_gallery where insp_line="'
+				+ param.x_instructionline_id + '" and imgUpload="T"';
+		tx.executeSql(sql, [], function(tx, results) {
+			callBack(param, results.rows.item(0)['count(*)']);
+		}, _self.errorCB);
+	}, _self.errorCB, _self.success);
 }
 
 DB.prototype.updateGalleryURIEntry = function(M_InOutLine_ID,
@@ -66,7 +89,6 @@ DB.prototype.updateGalleryURIEntry = function(M_InOutLine_ID,
 					+ fileFullPath + '" WHERE file="' + oldURI
 					+ '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"';
 		}
-		console.log(sqlQuery);
 		tx.executeSql(sqlQuery);
 	}, _self.errorCB, _self.success);
 }
@@ -85,12 +107,10 @@ DB.prototype.doGalleryEntry = function(fileInfo) {
 			whereSQL += " and in_out_id=?";
 			param.push(fileInfo.mrID);
 		}
-		console.log(sqlQuery + whereSQL);
 		tx.executeSql(sqlQuery + whereSQL, param, function(tx, results) {
 			if (results.rows.length > 0) {
 				sqlQuery = 'UPDATE vis_gallery SET name="' + fileInfo.fileName
 						+ '",file="' + fileInfo.fileFullPath + '" ';
-				console.log(sqlQuery + whereSQL);
 				tx.executeSql(sqlQuery + whereSQL, param);
 			} else {
 				sqlQuery = 'INSERT INTO vis_gallery '
@@ -99,7 +119,6 @@ DB.prototype.doGalleryEntry = function(fileInfo) {
 						+ fileInfo.mrID + '","' + fileInfo.inspID + '","'
 						+ fileInfo.fileName + '","' + fileInfo.fileFullPath
 						+ '")';
-				console.log(sqlQuery);
 				tx.executeSql(sqlQuery);
 			}
 		}, _self.errorCB);
@@ -109,7 +128,6 @@ DB.prototype.doGalleryEntry = function(fileInfo) {
 DB.prototype.addGalleryEntry = function(M_InOutLine_ID, X_INSTRUCTIONLINE_ID,
 		M_INOUT_ID, fileName, fileFullPath) {
 	var _self = this;
-	console.log(fileFullPath);
 
 	_self.dbstore
 			.transaction(
@@ -185,7 +203,7 @@ DB.prototype.onAttachSucess = function(param) {
 	});
 }
 
-DB.prototype.updateFileNameGalleryEntry = function(M_InOutLine_ID,
+DB.prototype.onChangeUplaodStatus = function(M_InOutLine_ID,
 		X_INSTRUCTIONLINE_ID, M_INOUT_ID, fileName, fileFullPath) {
 	var _self = this;
 	_self.dbstore.transaction(function(tx) {

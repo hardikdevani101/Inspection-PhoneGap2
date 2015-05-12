@@ -74,21 +74,28 @@ FS.prototype.getFile = function(path, success) {
 
 FS.prototype.createVISFile = function(param) {
 	var _self = this;
-	var fileBase64 = param.fileData.replace(/data:image\/jpeg;base64,/, '');
-	var binaryData = Base64Binary.decodeArrayBuffer(fileBase64);
+	var prefix = "PS";
+	if (_self.app.appCache.prefixCache[param.mrLineID]) {
+		prefix = _self.app.appCache.prefixCache[param.mrLineID];
+	}
 	var date = new Date;
+	var milSec = Math.floor(Math.random() * date.getMilliseconds());
 	var sec = date.getSeconds();
 	var mi = date.getMinutes();
 	var hh = date.getHours();
 	var yy = date.getFullYear();
 	var mm = date.getMonth() + 1;
 	var dd = date.getDate();
-	var fileName = mm + dd + yy + "_" + hh + mi + sec + "." + param.fileExt;
+	var fileName = prefix + "_" + mm + dd + yy + "_" + hh + mi + sec + milSec
+			+ "." + param.fileExt;
 	_self.vis_dir.getFile(fileName, {
 		create : true,
 		exclusive : false
 	}, function(fileEntry) {
 		fileEntry.createWriter(function(writer) {
+			var fileBase64 = param.fileData.replace(
+					/data:image\/(png|jpg|jpeg);base64,/, '');
+			var binaryData = Base64Binary.decodeArrayBuffer(fileBase64);
 			writer.onwrite = function(evt) {
 				var fileFullPath = fileEntry.toURL();
 				console.log(fileFullPath);
@@ -98,12 +105,30 @@ FS.prototype.createVISFile = function(param) {
 				param['fileName'] = fileEntry.name;
 				_self.app.appDB.doGalleryEntry(param);
 
-				$.each(_self.app.appCache.inspFiles[param.inspID], function() {
-					if (this.filePath == param['oldURI']) {
-						this.filePath == param.fileFullPath;
-						this['name'] == fileName;
-					}
-				});
+				if (_self.app.galleryview.inspFiles[param.inspID]) {
+					$.each(_self.app.galleryview.inspFiles[param.inspID],
+							function() {
+								if (this.filePath == param['oldURI']) {
+									this.filePath == param.fileFullPath;
+									this['name'] == fileName;
+								}
+							});
+				}
+			};
+			writer.write(binaryData);
+		}, _self.errorHandler);
+	}, _self.errorHandler);
+}
+
+FS.prototype.updateVISFile = function(param) {
+	var _self = this;
+	var fileBase64 = param.fileData.replace(
+			/data:image\/(png|jpg|jpeg);base64,/, '');
+	var binaryData = Base64Binary.decodeArrayBuffer(fileBase64);
+	window.resolveLocalFileSystemURL(param.fileFullPath, function(fileEntry) {
+		fileEntry.createWriter(function(writer) {
+			writer.onwrite = function(evt) {
+				console.log("FileData Updated");
 			};
 			writer.write(binaryData);
 		}, _self.errorHandler);

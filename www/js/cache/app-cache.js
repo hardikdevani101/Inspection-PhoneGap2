@@ -18,6 +18,7 @@ var AppCache = function(app) {
 	this.inspLines = {};
 	this.prefixCache = {};
 	this.imgCache = {};
+	this.prefixCache = {};
 	this.inspFiles = {};
 	this.waterMarkImgs = [];
 }

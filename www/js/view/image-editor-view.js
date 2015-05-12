@@ -18,7 +18,7 @@ var ImageEditorPage = function(app) {
 ImageEditorPage.prototype.rederBreadCrumb = function() {
 	var _self = this;
 	$('#pg_cropView #btn_user').html(
-			$(_self.app.appCache.loginInfo.username).val());
+			_self.app.appCache.settingInfo.username);
 };
 
 ImageEditorPage.prototype.setup = function(options) {
@@ -107,15 +107,20 @@ ImageEditorPage.prototype.enableEditMode = function() {
 
 ImageEditorPage.prototype.cropFinished = function() {
 	var _self = this;
-	_self.croppedCanvas = _self.corpperImage.cropper("getCroppedCanvas");
+	_self.croppedCanvas = _self.corpperImage.cropper("getCroppedCanvas", {
+		width : 1024,
+		height : 769
+	});
 	_self.currentImage = _self.croppedCanvas.toDataURL();
 	_self.isEditEnable = true;
 	_self.isCropEnable = false;
 	$("#crop-toolbar").hide();
 	// _self.corpperImage
 	$('#img_editable').attr('src', _self.currentImage);
+	$('#img_editable').load(function() {
+		_self.enableEditMode();
+	});
 	// .cropper("destroy");
-	_self.enableEditMode();
 }
 
 ImageEditorPage.prototype.init = function(width, height, img64) {
@@ -127,14 +132,12 @@ ImageEditorPage.prototype.init = function(width, height, img64) {
 					function() {
 						_self.rederBreadCrumb();
 
-						console.log("Init Brightness>>>  " + _self.brightness);
 						$("#slider-brightness").on("change", function(event) {
 							_self.brightness = event.target.value;
 							_self.onBrightnessChange(event);
 						});
 
 						_self.contrast = $("#slider-contrast").val();
-						console.log("Init Contrast>>>>>  " + _self.contrast);
 						$("#slider-contrast").on("change", function(event) {
 							_self.contrast = event.target.value;
 							_self.onContrastChange(event);
@@ -177,7 +180,6 @@ ImageEditorPage.prototype.init = function(width, height, img64) {
 						$("#btn_crop").on(
 								"tap",
 								function() {
-									console.log("btn_crop >>> Taped");
 									if (_self.isCropEnable) {
 										$("#crop-image-container").hide();
 										$("#edit-canvase").show();

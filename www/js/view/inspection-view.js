@@ -5,7 +5,7 @@ var InspLinesPage = function(app) {
 InspLinesPage.prototype.rederBreadCrumb = function() {
 	var _self = this;
 	$('#pg_inspection #btn_user').html(
-			$(_self.app.appCache.loginInfo.username).val());
+			_self.app.appCache.settingInfo.username);
 };
 
 InspLinesPage.prototype.init = function() {
@@ -31,10 +31,27 @@ InspLinesPage.prototype.init = function() {
 		_self.app.appCache.inspLines = [];
 		_self.syncInspLines();
 	});
+
+	$('#btn_finish_mr').on('click', function() {
+		_self.onFinishedCalled();
+	});
 }
 
 InspLinesPage.prototype.syncInspLines = function() {
-
+	var _self = this;
+	var success = function(tx, results) {
+		if (results.rows.length > 0) {
+			for (var i = 0; i < results.rows.length; i++) {
+				_self.app.appFTPUtil.uploadFile(results.rows.item(i).file,
+						results.rows.item(i).mr_line,
+						results.rows.item(i).insp_line,
+						results.rows.item(i).in_out_id);
+			}
+		} else {
+			alert("Completed");
+		}
+	};
+	_self.app.appDB.getUploadFailedEntry(success);
 }
 
 InspLinesPage.prototype.renderMRLines = function() {
@@ -54,13 +71,6 @@ InspLinesPage.prototype.renderMRLines = function() {
 		console.log($(this).data("id"));
 		_self.app.appCache.session.m_inoutline_id = $(this).data("id");
 		$.mobile.changePage("#pg_inspection_detail");
-	});
-
-	$('#btn_finish_mr').on('click', function() {
-		_self.onFinishedCalled();
-	});
-	$('#btn_sync_insp').on('click', function() {
-		_self.onSyncCalled();
 	});
 
 	$.mobile.loading('hide');
@@ -83,7 +93,7 @@ InspLinesPage.prototype.loadMRLines = function() {
 		};
 
 		visionApi.getMRLines({
-			userid : app.appCache.loginInfo.userid
+			userid : app.appCache.settingInfo.userid
 		}, success, function() {
 			// popup Errorbox.
 			console.log("Load MR-lines failed");
@@ -115,7 +125,8 @@ InspLinesPage.prototype.renderInspLines = function() {
 		$.each(_self.app.appCache.inspLines[sel_inoutline_id], function() {
 			var line = '<li><a id="inspline_' + this.x_instructionline_id
 					+ '" data-id="' + this.x_instructionline_id + '">'
-					+ this.name + '</a></li>';
+					+ this.name
+					+ '<span class="ui-li-count">0/0</span></a></li>';
 			items = items + line;
 		});
 		$('#_list_insp').html(items);
@@ -131,35 +142,42 @@ InspLinesPage.prototype.renderInspLines = function() {
 	_self.app.hideDialog();
 };
 
+InspLinesPage.prototype.renderCounts = function() {
+	var _self = this;
+	var mrLineID = _self.app.appCache.session.m_inoutline_id;
+	_self.inspCount = {};
+
+	if (_self.app.appCache.inspLines[mrLineID]) {
+		$.each(_self.app.appCache.inspLines[mrLineID], function() {
+			_self.app.appDB.getTotalInspEntries(this, function(param, results) {
+				var elm = $('a#inspline_' + param.x_instructionline_id
+						+ ' span');
+				elm.html(results + "/" + elm.html().split("/").pop());
+				$('#_list_insp').listview("refresh");
+			});
+			_self.app.appDB.getUploadedInspEntries(this, function(param,
+					results) {
+				var elm = $('a#inspline_' + param.x_instructionline_id
+						+ ' span');
+				elm.html(elm.html().split("/").shift() + "/" + results);
+				$('#_list_insp').listview("refresh");
+			});
+		});
+	}
+}
+
 InspLinesPage.prototype.rederInspLinesDetailsBreadCrumb = function() {
 	var _self = this;
 	$('#pg_inspection_detail #btn_user').html(
-			$(_self.app.appCache.loginInfo.username).val());
+			_self.app.appCache.settingInfo.username);
 };
-
-InspLinesPage.prototype.onSyncCalled = function() {
-	var _self = this;
-	var success = function(tx, results) {
-		if (results.rows.length > 0) {
-			for ( var i = 0; i < results.rows.length; i++) {
-				_self.app.appFS.uploadFile(results.rows.item(i).file,
-						results.rows.item(i).mr_line,
-						results.rows.item(i).insp_line,
-						results.rows.item(i).in_out_id);
-			}
-		} else {
-			alert("Completed");
-		}
-	};
-	_self.app.appDB.getUploadFailedEntry(success);
-}
 
 InspLinesPage.prototype.onFinishedCalled = function() {
 	var _self = this;
 	var onUploadedEntrySucess = function(tx, results) {
 		if (results.rows.length > 0) {
 			var attachmentList = [];
-			for ( var i = 0; i < results.rows.length; i++) {
+			for (var i = 0; i < results.rows.length; i++) {
 				var item = {};
 				if (results.rows.item(i).insp_line == null
 						|| results.rows.item(i).insp_line == 0) {
@@ -235,8 +253,12 @@ InspLinesPage.prototype.loadInspLines = function(params) {
 		var visionApi = new VisionApi(_self.app);
 		var success = function(result) {
 			var items = '';
-			_self.app.appCache.inspLines[sel_inoutline_id] = result.insplines
+			_self.app.appCache.inspLines[sel_inoutline_id] = result.insplines;
+			// _self.renderCounts();
 			_self.renderInspLines();
+			_self.renderCounts();
+			// setTimeout(function() {
+			// }, 3000);
 		}
 
 		visionApi.getInspLines({

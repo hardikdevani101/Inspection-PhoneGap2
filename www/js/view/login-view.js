@@ -4,44 +4,47 @@ var LoginPage = function(app) {
 LoginPage.prototype.rederBreadCrumb = function() {
 	var _self = this;
 	$('#pg_home #btn_user')
-			.html($(_self.app.appCache.loginInfo.username).val());
+			.html(_self.app.appCache.settingInfo.username);
 };
 LoginPage.prototype.onLogin = function() {
 	var _self = this;
 	try {
 		this.visionApi = new VisionApi(this.app);
-		this.visionApi.login({
-			username : $("#txt_user").val(),
-			password : $("#txt_password").val()
-		}, function(result) {
-			if (result.loginInfo.error) {
-				// alert(result.loginInfo.error);
+		this.visionApi
+				.login(
+						{
+							username : $("#txt_user").val(),
+							password : $("#txt_password").val()
+						},
+						function(result) {
+							if (result.loginInfo.error) {
+								alert(result.loginInfo.error);
 				_self.app.showError("pg_login", result.loginInfo.error);
-			} else {
-				app.appCache.loginInfo['username'] = $("#txt_user");
-				app.appCache.loginInfo['password'] = $("#txt_password");
-				app.appCache.loginInfo['userid'] = result.loginInfo.ad_user_id;
-				app.appCache.settingInfo['is_login'] = true;
+							} else {
+								_self.app.isLogin = true;
+								_self.app.appCache.settingInfo['userid'] = result.loginInfo.ad_user_id;
+								_self.app.appCache.settingInfo['is_login'] = true;
 
-				var visSettingsDAO = new Tbl_VISSetting(this);
-				visSettingsDAO.login("Y", function(data) {
-					console.log("DB-Login Success!")
-				}, function(msg) {
-					console.log("DB-Login Failed!")
-				});
-				_self.rederBreadCrumb();
-				$(':mobile-pagecontainer').pagecontainer('change',
-						'#pg_inspection', {
-							reload : false
-						});
-			}
-			// Load More Server details.
-			_self.app.settingnview.reloadServerDetail();
+								var visSettingsDAO = new Tbl_VISSetting(
+										_self.app);
+								visSettingsDAO.login("Y", function(data) {
+									console.log("DB-Login Success!")
+								}, function(msg) {
+									console.log("DB-Login Failed!")
+								});
+								_self.rederBreadCrumb();
+								$(':mobile-pagecontainer').pagecontainer(
+										'change', '#pg_inspection', {
+											reload : false
+										});
+							}
+							// Load More Server details.
+							_self.app.settingnview.reloadServerDetail();
 
-		}, function() {
+						}, function() {
 			_self.app.showError("pg_login", "Login failed");
-			console.log("Login failed");
-		});
+							console.log("Login failed");
+						});
 
 	} catch (error) {
 		_self.app.showError("pg_login", "Login failed" + error);

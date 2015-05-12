@@ -42,8 +42,8 @@ VisionApi.prototype.resetADLoginRequest = function(params, success, error) {
 
 VisionApi.prototype.login = function(params, success, error) {
 	var _self = this;
-	app.appCache.settingInfo['username'] = params.username;
-	app.appCache.settingInfo['password'] = params.password;
+	_self.app.appCache.settingInfo['username'] = params.username;
+	_self.app.appCache.settingInfo['password'] = params.password;
 	this.resetADLoginRequest();
 	var reqBody = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
 			+ '<soapenv:Header/>'
