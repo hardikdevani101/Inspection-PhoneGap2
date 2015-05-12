@@ -16,6 +16,7 @@ var AppCache = function(app) {
 	this.localStorage= [{data:{},url:'/'}];
 	this.mrLines = [];
 	this.inspLines = {};
+	this.prefixCache = {};
 	this.imgCache = {};
 	this.inspFiles = {};
 	this.waterMarkImgs = [];

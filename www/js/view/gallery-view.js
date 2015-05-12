@@ -119,37 +119,45 @@ GalleryPage.prototype.init = function() {
 	var _self = this;
 	$(document).on("pagebeforeshow", "#pg_gallery", function() {
 		_self.rederBreadCrumb();
-
 		// TODO remove below hard coded.
 		// _self.line_id = 152452;
-
 		_self.line_id = _self.app.appCache.session.x_instructionline_id;
 		// _self.app.appCache.session.x_instructionline_id;
 		_self.visGallery = new Tbl_VISGallery(_self.app);
 		_self.loadInspFile();
-
-		$('#btn_pic_camera').on('click', function() {
-			_self.getCameraImage();
-			// _self.onPhotoEdit({
-			// data : _self.tempImage
-			// });
-		});
-
-		$('#btn_pic_gallery').on('click', function() {
-			_self.getGalleryImage();
-		});
-
-		$('#btn_delete_file').on('click', function(event) {
-			_self.onDeleteFile(event);
-
-		});
-
-		$('#btn_edit_file').on('click', function(event) {
-			_self.onEditFile(event);
-
-		});
+	});
+	$('#prefixInpectLine').on('click', function() {
+		$("#prefixInpect").val($('#prefixInpectLine').html());
+	});
+	$('#btn_update_prefix').on(
+			'click',
+			function() {
+				$("#prefixInpectLine").html($('#prefixInpect').val());
+				$("#prefixModify").popup("close");
+				if ($("#prefixInpectLine").data('id'))
+					_self.app.appCache.prefixCache[$("#prefixInpectLine").data(
+							'id').toString()] = $('#prefixInpect').val();
+			});
+	$('#btn_pic_camera').on('click', function() {
+		_self.getCameraImage();
+		// _self.onPhotoEdit({
+		// data : _self.tempImage
+		// });
 	});
 
+	$('#btn_pic_gallery').on('click', function() {
+		_self.getGalleryImage();
+	});
+
+	$('#btn_delete_file').on('click', function(event) {
+		_self.onDeleteFile(event);
+
+	});
+
+	$('#btn_edit_file').on('click', function(event) {
+		_self.onEditFile(event);
+
+	});
 }
 
 GalleryPage.prototype.loadInspFile = function() {

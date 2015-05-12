@@ -241,7 +241,7 @@ $(document).ready(function() {
 		}, false);
 	} else {
 		console.log('Explicitly called onDeviceReady!!')
-		app.onDeviceReady();
+		// app.onDeviceReady();
 	}
 
 });

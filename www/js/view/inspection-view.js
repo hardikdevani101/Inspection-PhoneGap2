@@ -102,11 +102,14 @@ InspLinesPage.prototype.renderInspLines = function() {
 		return (element.m_inoutline_id == sel_inoutline_id);
 	}
 	var mr_lines = _self.app.inspLinePage.mrLines.filter(mrLine);
-	if (mr_lines.length > 0) {
-		$('#inspMRDetail').html(mr_lines[0].label);
-		$('#prefixInpectLine').html(mr_lines[0].desc);
-		$('#txt_prefix').val(mr_lines[0].desc);
+	if (!_self.app.appCache.prefixCache[sel_inoutline_id]) {
+		_self.app.appCache.prefixCache[sel_inoutline_id] = mr_lines[0].desc;
 	}
+	$('#inspMRDetail').html(mr_lines[0].label);
+	$('#prefixInpectLine').attr("data-id", sel_inoutline_id);
+	$('#prefixInpectLine').html(
+			_self.app.appCache.prefixCache[sel_inoutline_id]);
+
 	if (!(typeof _self.app.appCache.inspLines[sel_inoutline_id] === 'undefined')
 			&& _self.app.appCache.inspLines[sel_inoutline_id].length > 0) {
 		$.each(_self.app.appCache.inspLines[sel_inoutline_id], function() {

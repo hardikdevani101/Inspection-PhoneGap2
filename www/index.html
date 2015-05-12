@@ -74,19 +74,17 @@
 				<div class="ui-block-a">
 					<a href="#pg_settings" id="btn_settings"
 						class="ui-btn ui-btn-a ui-icon-gear ui-btn-icon-left ui-corner-all "
-						xdata-iconpos="notext" data-mini="true" data-corners="true"
-						data-shadow="false" data-theme="a" xdata-mini="true"
-						data-wrapperels="span" data-iconshadow="false" title="Preference">Settings</a>
+						data-mini="true" data-corners="true" data-shadow="false"
+						data-theme="a" data-mini="true" data-wrapperels="span"
+						data-iconshadow="false" title="Preference">Settings</a>
 				</div>
 				<div class="ui-block-b">
 					<a href="#" id="btn_start"
 						class="ui-btn ui-btn-a ui-icon-arrow-r ui-btn-icon-right ui-corner-all"
-						data-iconpos="left" title="Start Inspection" xdata-mini="true"
+						data-iconpos="left" title="Start Inspection" data-mini="true"
 						data-theme="a">Start Inspection</a>
 				</div>
 			</div>
-
-
 		</div>
 		<div data-role="panel" data-position="left" data-theme="c"
 			id="pg_settings" data-content-theme="c">
@@ -329,22 +327,20 @@ End of Inspection page
 	<!-------------- Gallery page ----------->
 	<div data-role="page" id="pg_gallery" data-theme="c">
 		<div data-role="header" data-position="fixed" data-theme="c">
-			<a id="" href="#prefixModify" data-rel="popup"
-				class="ui-btn ui-corner-all ui-icon-check ui-btn-icon-left"
-				data-transition="pop" data-theme="c" aria-expanded="true"><div
-					id="prefixInpectLine"></div></a>
+			<a href="#prefixModify" id="prefixInpectLine" data-rel="popup"
+				class="ui-btn ui-btn-c ui-icon-check ui-btn-icon-right ui-corner-all"
+				title="prefix" data-mini="true" data-theme="c"></a>
 			<div data-role="popup" id="prefixModify" data-theme="c"
 				class="ui-corner-all">
-				<form id="_prefix_modify" action="#">
-					<div style="padding: 10px 20px;">
-						<h3>Modify Prefix</h3>
-						<label for="prefixInpect" class="ui-hidden-accessible">Prefix:</label>
-						<input type="text" name="prefixInpect" id="prefixInpect" value=""
-							placeholder="prefix" data-theme="a" data-mini="true"> <input
-							id="prefixbtn" type="submit" data-inline="true" value="Update"
-							data-theme="c" data-mini="true">
-					</div>
-				</form>
+				<div>
+					<h3>Modify Prefix</h3>
+					<label for="prefixInpect" class="ui-hidden-accessible">Prefix:</label>
+					<input type="text" name="prefixInpect" id="prefixInpect" value=""
+						placeholder="prefix" data-theme="a" data-mini="true"> <a
+						href="#" id="btn_update_prefix"
+						class="ui-btn ui-btn-a ui-corner-all" data-iconpos="left"
+						title="Update" data-mini="true" data-theme="c">Update</a>
+				</div>
 			</div>
 			<h2 data-role="heading">Gallery</h2>
 			<div data-role="controlgroup" data-type="horizontal"
