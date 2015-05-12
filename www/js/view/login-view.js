@@ -15,7 +15,8 @@ LoginPage.prototype.onLogin = function() {
 			password : $("#txt_password").val()
 		}, function(result) {
 			if (result.loginInfo.error) {
-				alert(result.loginInfo.error);
+				// alert(result.loginInfo.error);
+				_self.app.showError("pg_login", result.loginInfo.error);
 			} else {
 				app.appCache.loginInfo['username'] = $("#txt_user");
 				app.appCache.loginInfo['password'] = $("#txt_password");
@@ -38,10 +39,12 @@ LoginPage.prototype.onLogin = function() {
 			_self.app.settingnview.reloadServerDetail();
 
 		}, function() {
+			_self.app.showError("pg_login", "Login failed");
 			console.log("Login failed");
 		});
 
 	} catch (error) {
+		_self.app.showError("pg_login", "Login failed" + error);
 		console.log("Login failed" + error);
 	}
 };

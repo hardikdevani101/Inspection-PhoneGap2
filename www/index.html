@@ -182,7 +182,6 @@
 	<!-------------------------------------------------------------
 End of Home page
 -------------------------------------------------------------->
-
 	<!-------------- Login Page ----------->
 	<div data-role="page" id="pg_login" data-theme="c">
 		<!-------------- Login page header ----------->
@@ -239,7 +238,6 @@ End of Home page
 	<!-------------------------------------------------------------
 End of Login Page
 -------------------------------------------------------------->
-
 	<!-------------- MR line page ----------->
 	<div data-role="page" id="pg_inspection" data-theme="c">
 		<div data-role="header" data-position="fixed" data-theme="c">
@@ -279,7 +277,6 @@ End of Login Page
 	<!-------------------------------------------------------------
 End of MR line page
 -------------------------------------------------------------->
-
 	<!-------------- Indpection page ----------->
 	<div data-role="page" id="pg_inspection_detail" data-theme="c">
 		<div data-role="header" data-position="fixed" data-theme="c">
@@ -333,13 +330,14 @@ End of Inspection page
 			<div data-role="popup" id="prefixModify" data-theme="c"
 				class="ui-corner-all">
 				<div>
-					<h3>Modify Prefix</h3>
-					<label for="prefixInpect" class="ui-hidden-accessible">Prefix:</label>
+					<div data-role="header" class="ui-header ui-bar-a" data-theme="b">
+						<h1 class="ui-title">Prefix</h1>
+						<a href="#" id="btn_update_prefix"
+							class="ui-btn-right ui-btn ui-btn-c ui-icon-edit ui-btn-icon-right ui-corner-all ui-btn-icon-notext"
+							data-rel="back"></a>
+					</div>
 					<input type="text" name="prefixInpect" id="prefixInpect" value=""
-						placeholder="prefix" data-theme="a" data-mini="true"> <a
-						href="#" id="btn_update_prefix"
-						class="ui-btn ui-btn-a ui-corner-all" data-iconpos="left"
-						title="Update" data-mini="true" data-theme="c">Update</a>
+						placeholder="prefix" data-theme="a" data-mini="true">
 				</div>
 			</div>
 			<h2 data-role="heading">Gallery</h2>
@@ -412,7 +410,6 @@ End of Inspection page
 	<!-------------------------------------------------------------
 End of Inspection page
 -------------------------------------------------------------->
-
 	<!-------------------------------------------------------------
 Start of File Explorer page
 -------------------------------------------------------------->
@@ -476,8 +473,6 @@ Start of File Explorer page
 	<!-------------------------------------------------------------
 END of File Explorer page
 -------------------------------------------------------------->
-
-
 	<!-------------------------------------------------------------
 Start of Crop page
 -------------------------------------------------------------->
