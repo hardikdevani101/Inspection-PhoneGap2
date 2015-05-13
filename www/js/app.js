@@ -139,7 +139,11 @@ App.prototype.register = function() {
 					if (!_self.isLogin) {
 						$.mobile.changePage("#pg_login")
 					} else {
-						$.mobile.changePage("#pg_inspection");
+//						$.mobile.changePage("#pg_inspection");
+						$(':mobile-pagecontainer').pagecontainer(
+								'change', '#pg_inspection', {
+									reload : false
+								});
 					}
 				})
 			});

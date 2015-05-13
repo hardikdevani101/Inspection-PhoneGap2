@@ -1,8 +1,8 @@
 var DB = function(app) {
 	console.log("DB constructor");
 	this.app = app;
-	this.dbstore = window.openDatabase("vis_inspection", "1.0",
-			"vis_inspection", 2 * 1024 * 1024);
+	this.dbstore = window.openDatabase("vision_db", "1.0", "vision_db",
+			2 * 1024 * 1024);
 }
 
 DB.prototype.init = function(success, error) {
@@ -20,7 +20,7 @@ DB.prototype.init = function(success, error) {
 			.transaction(
 					function(tx) {
 						// tx.executeSql('DROP TABLE IF EXISTS vis_gallery');
-//						 tx.executeSql('DROP TABLE IF EXISTS vis_setting');
+						// tx.executeSql('DROP TABLE IF EXISTS vis_setting');
 						tx
 								.executeSql('CREATE TABLE IF NOT EXISTS '
 										+ ' vis_setting'

@@ -17,11 +17,34 @@ SettingsPage.prototype.reloadServerDetail = function() {
 	}
 }
 
+SettingsPage.prototype.renderOrgs = function() {
+	$("#txt_organization").empty();
+	for (var i = 0; i < app.appCache.orgList.length; i++) {
+		$("#txt_organization").append(
+				new Option(app.appCache.orgList[i].name,
+						app.appCache.orgList[i].orgid));
+	}
+	$('#txt_organization').selectmenu('refresh', true);
+}
+
+SettingsPage.prototype.renderRoles = function() {
+	$("#txt_role").empty();
+	for (var i = 0; i < app.appCache.roleList.length; i++) {
+		$("#txt_role").append(
+				new Option(app.appCache.roleList[i].name,
+						app.appCache.roleList[i].roleid));
+	}
+	$('#txt_role').selectmenu('refresh', true);
+}
+
 SettingsPage.prototype.init = function() {
 	// Initialize components.
 	console.log("Inittialize Settings View.");
 	var _self = this;
 
+	_self.renderOrgs();
+	_self.renderRoles();
+	
 	// Register Event listeners
 	$("#txt_organization").on("change", function() {
 		_self.onOrgChange();

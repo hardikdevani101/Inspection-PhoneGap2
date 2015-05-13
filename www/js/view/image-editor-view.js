@@ -17,8 +17,7 @@ var ImageEditorPage = function(app) {
 
 ImageEditorPage.prototype.rederBreadCrumb = function() {
 	var _self = this;
-	$('#pg_cropView #btn_user').html(
-			_self.app.appCache.settingInfo.username);
+	$('#pg_cropView #btn_user').html(_self.app.appCache.settingInfo.username);
 };
 
 ImageEditorPage.prototype.setup = function(options) {
@@ -51,13 +50,24 @@ ImageEditorPage.prototype.enableEditMode = function() {
 	$("#edit-canvase").show();
 	var _self = this;
 	_self.gcanvas = $("#edit-canvase")[0];
-	_self.bValue = 50, _self.cValue = 50;
+	_self.bValue = 50;
+	_self.cValue = 50;
 	if (_self.gcanvas && _self.gcanvas.getContext) {
 		_self.editCtx = _self.gcanvas.getContext("2d");
 		var img = $('#img_editable').get(0);
-		_self.gcanvas.height = img.height;
-		_self.gcanvas.width = img.width;
-		_self.editCtx.drawImage(img, 0, 0, img.width, img.height);
+
+		if (img.height < img.width && !((img.height / img.width) > .70)) {
+			_self.cropImageW = (_self.canHeight * 4) / 3;
+			_self.cropImageH = (_self.cropImageW / img.width) * img.height;
+		} else {
+			_self.cropImageH = _self.canHeight;
+			_self.cropImageW = (_self.cropImageH / img.height) * img.width;
+		}
+
+		_self.gcanvas.height = _self.canHeight;
+		_self.gcanvas.width = _self.canWidth;
+		_self.editCtx.drawImage(img, 0, 0, img.width, img.height, 0, 0,
+				_self.cropImageW, _self.cropImageH);
 
 		var distanceBetween = function(point1, point2) {
 			return Math.sqrt(Math.pow(point2.x - point1.x, 2)
@@ -74,11 +84,11 @@ ImageEditorPage.prototype.enableEditMode = function() {
 				return;
 			var currentPoint = {
 				x : e.clientX,
-				y : e.clientY
+				y : e.clientY - 20
 			};
 			var dist = distanceBetween(lastPoint, currentPoint);
 			var angle = angleBetween(lastPoint, currentPoint);
-			for ( var i = 0; i < dist; i += 5) {
+			for (var i = 0; i < dist; i += 5) {
 				x = lastPoint.x + (Math.sin(angle) * i);
 				y = lastPoint.y + (Math.cos(angle) * i);
 				var radgrad = ctx.createRadialGradient(x, y, 10, x, y, 20);
@@ -95,7 +105,7 @@ ImageEditorPage.prototype.enableEditMode = function() {
 			isDrawing = true;
 			lastPoint = {
 				x : e.clientX,
-				y : e.clientY
+				y : e.clientY - 20
 			};
 		});
 		$(document).on("vmouseup", "#edit-canvase", function(e) {
@@ -123,7 +133,7 @@ ImageEditorPage.prototype.cropFinished = function() {
 	// .cropper("destroy");
 }
 
-ImageEditorPage.prototype.init = function(width, height, img64) {
+ImageEditorPage.prototype.init = function() {
 	var _self = this;
 	$(document)
 			.on(
@@ -132,19 +142,32 @@ ImageEditorPage.prototype.init = function(width, height, img64) {
 					function() {
 						_self.rederBreadCrumb();
 
+						$("#txt_prefix").val($('#prefixInpectLine').html());
+						$('#btn_filter_ok').on(
+								'click',
+								function() {
+									$("#prefixInpectLine").html(
+											$('#txt_prefix').val());
+									if ($("#prefixInpectLine").data('id'))
+										_self.app.appCache.prefixCache[$(
+												"#prefixInpectLine").data('id')
+												.toString()] = $('#txt_prefix')
+												.val();
+								});
+
 						$("#slider-brightness").on("change", function(event) {
 							_self.brightness = event.target.value;
 							_self.onBrightnessChange(event);
 						});
 
-						_self.contrast = $("#slider-contrast").val();
 						$("#slider-contrast").on("change", function(event) {
 							_self.contrast = event.target.value;
 							_self.onContrastChange(event);
 						});
+
 						$('.img-container').html(
-								[ '<img id="img_editable" src="',
-										_self.image64, '" />' ].join(''));
+								[ '<img id="img_editable" src="'
+										+ _self.image64 + '" />' ].join(''));
 						_self.initCropMode();
 						_self.enableEditMode();
 
@@ -162,21 +185,17 @@ ImageEditorPage.prototype.init = function(width, height, img64) {
 								function() {
 									var img = $('#img_editable').attr('src',
 											_self.image64);
-									_self.enableEditMode();
-									_self.isCropEnable = false;
-									_self.isEditEnable = true;
-									_self.corpperImage.cropper("destroy");
+									img.load(function() {
+										_self.enableEditMode();
+										_self.isCropEnable = false;
+										_self.isEditEnable = true;
+										_self.corpperImage.cropper("destroy");
+									});
 								});
 
-						$("#btn_edit_finished").on(
-								"tap",
-								function() {
-									_self.applyWatermark()
-									_self.app.galleryview.onEditFinish(
-											_self.sourceInfo, _self.gcanvas
-													.toDataURL());
-									$.mobile.changePage("#pg_gallery");
-								});
+						$("#btn_edit_finished").on("tap", function() {
+							_self.onEditFinish();
+						});
 						$("#btn_crop").on(
 								"tap",
 								function() {
@@ -229,7 +248,7 @@ ImageEditorPage.prototype.enableCropMode = function() {
 		_self.initCropMode();
 	}
 	if (_self.gcanvas) {
-		URL = window.URL || window.webkitURL
+		URL = window.URL || window.webkitURL;
 		_self.corpperImage.one('built.cropper', function() {
 			URL.revokeObjectURL(_self.gcanvas.toDataURL());
 		}).cropper('reset').cropper('replace', _self.gcanvas.toDataURL());
@@ -243,7 +262,7 @@ ImageEditorPage.prototype.onContrastChange = function(event) {
 			_self.gcanvas.height);
 	var data = contraImageData.data;
 	var factor = (259 * (contraValue + 255)) / (255 * (259 - contraValue));
-	for ( var i = 0; i < data.length; i += 4) {
+	for (var i = 0; i < data.length; i += 4) {
 		data[i] = factor * (data[i] - 128) + 128;
 		data[i + 1] = factor * (data[i + 1] - 128) + 128;
 		data[i + 2] = factor * (data[i + 2] - 128) + 128;
@@ -271,7 +290,7 @@ ImageEditorPage.prototype.onBrightnessChange = function(event) {
 	var brightImageData = _self.editCtx.getImageData(0, 0, _self.gcanvas.width,
 			_self.gcanvas.height);
 	var pixels = brightImageData.data;
-	for ( var i = 0; i < pixels.length; i += 4) {
+	for (var i = 0; i < pixels.length; i += 4) {
 		pixels[i] += brightValue;
 		pixels[i + 1] += brightValue;
 		pixels[i + 2] += brightValue;
@@ -295,17 +314,18 @@ ImageEditorPage.prototype.onBrightnessChange = function(event) {
 
 ImageEditorPage.prototype.initCropMode = function() {
 	var _self = this;
-	var $image = $('#img_editable'), $dataX = $('#dataX'), $dataY = $('#dataY'), $dataHeight = $('#dataHeight'), $dataWidth = $('#dataWidth'), $dataRotate = $('#dataRotate'), options = {
+	var $image = $('#img_editable'), $dataX = $('#dataX'), $dataY = $('#dataY'), $dataHeight = $('#dataHeight'), $dataWidth = $('#dataWidth'), $dataRotate = $('#dataRotate');
+	var options = {
 		highlight : true,
 		rotatable : true,
 		zoomable : true,
 		touchDragZoom : true,
-		minCanvasWidth : _self.canWidth,
-		minCanvasHeight : _self.canHeight,
+		// minCanvasWidth : _self.canWidth,
+		// minCanvasHeight : _self.canHeight,
 		// minCropBoxWidth: '160',
 		// minCropBoxHeight: '90',
-		minContainerWidth : _self.canWidth,
-		minContainerHeight : _self.canHeight,
+		maxContainerWidth : _self.cropImageW,
+		maxContainerHeight : _self.cropImageH,
 		// build: null,
 		// built: null,
 		// dragstart: null,
@@ -313,7 +333,7 @@ ImageEditorPage.prototype.initCropMode = function() {
 		// dragend: null,
 		// zoomin: null,
 		// zoomout: null,
-		aspectRatio : 16 / 9,
+		aspectRatio : 4 / 3,
 		crop : function(data) {
 			$dataX.val(Math.round(data.x));
 			$dataY.val(Math.round(data.y));
@@ -376,7 +396,7 @@ ImageEditorPage.prototype.initCropMode = function() {
 	_self.isCropperOn = true;
 }
 
-ImageEditorPage.prototype.applyWatermark = function() {
+ImageEditorPage.prototype.onEditFinish = function() {
 	var _self = this;
 	var selectedWM = $('select[name="select-crop-waterMark"]').val();
 	// TODO: getWatermark image data from appCache.
@@ -393,20 +413,39 @@ ImageEditorPage.prototype.applyWatermark = function() {
 
 	var watermark = new Image();
 	watermark.src = watermarkImage;
-	var sourceImage = $('#img_editable').get(0);
+	// var sourceImage = $('#img_editable').get(0);
 	watermark.onload = function() {
-		_self.gcanvas = document.createElement('canvas');
-		x = (_self.gcanvas.width - 20);
-		y = (_self.gcanvas.height - 20);
-		_self.editCtx.drawImage(watermark, x, y);
-		var encoder = new JPEGEncoder();
-		// var img64 = encoder.encode(_self.editCtx.getImageData(0, 0, 1024,
-		// 768),
-		// parseInt(80)).replace(/data:image\/jpeg;base64,/, '');
-		// _self.curentImage = Base64Binary.decodeArrayBuffer(img64);
-		// $('#img_editable').attr('src', _self.gcanvas.);
-		// _self.editedCanvase = _self.editCtx.getImageData(0, 0,
-		// _self.gcanvas.width, _self.gcanvas.height);
-		$('#img_editable').attr('src', _self.gcanvas.toDataURL());
+		// _self.gcanvas = document.createElement('canvas');
+
+		var origImg = new Image();
+		origImg.src = _self.gcanvas.toDataURL();
+		origImg.onload = function() {
+
+			nGcanvas = document.createElement('canvas');
+			nGctx = nGcanvas.getContext("2d");
+			nGcanvas.width = 1024;
+			nGcanvas.height = 768;
+			nGctx.drawImage(origImg, 0, 0, origImg.width, origImg.height, 0, 0,
+					1024, 768);
+
+			x = (nGcanvas.width - 20) - (watermark.width);
+			y = (nGcanvas.height - 20) - (watermark.height);
+			nGctx.drawImage(watermark, x, y);
+			// var encoder = new JPEGEncoder();
+			// var img64 = encoder.encode(_self.editCtx.getImageData(0, 0, 1024,
+			// 768),
+			// parseInt(80)).replace(/data:image\/jpeg;base64,/, '');
+			// _self.curentImage = Base64Binary.decodeArrayBuffer(img64);
+			// $('#img_editable').attr('src', _self.gcanvas.);
+			// _self.editedCanvase = _self.editCtx.getImageData(0, 0,
+			// _self.gcanvas.width, _self.gcanvas.height);
+			// $('#img_editable').attr('src', _self.nGcanvas.toDataURL());
+			// $('#img_editable').load(
+			// function() {
+			_self.app.galleryview.onEditFinish(_self.sourceInfo, nGcanvas
+					.toDataURL());
+			$.mobile.changePage("#pg_gallery");
+			// });
+		}
 	}
 }

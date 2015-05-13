@@ -140,6 +140,7 @@ InspLinesPage.prototype.renderInspLines = function() {
 				});
 	}
 	_self.app.hideDialog();
+	_self.renderCounts();
 };
 
 InspLinesPage.prototype.renderCounts = function() {
@@ -254,11 +255,7 @@ InspLinesPage.prototype.loadInspLines = function(params) {
 		var success = function(result) {
 			var items = '';
 			_self.app.appCache.inspLines[sel_inoutline_id] = result.insplines;
-			// _self.renderCounts();
 			_self.renderInspLines();
-			_self.renderCounts();
-			// setTimeout(function() {
-			// }, 3000);
 		}
 
 		visionApi.getInspLines({

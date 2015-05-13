@@ -6,14 +6,17 @@ var AppCache = function(app) {
 		x_instructionline_id : ''
 	}
 	this.warehouseList = [];
-	this.organizationList = [];
+	this.orgList = [];
 	this.roleList = [];
 	this.settingInfo = {};
 	this.loginInfo = {};
 	this.appInfo = {};
 	this.pages = [];
-	this.ftpServers= [];
-	this.localStorage= [{data:{},url:'/'}];
+	this.ftpServers = [];
+	this.localStorage = [ {
+		data : {},
+		url : '/'
+	} ];
 	this.mrLines = [];
 	this.inspLines = {};
 	this.prefixCache = {};
@@ -29,18 +32,21 @@ AppCache.prototype.reset = function() {
 		x_instructionline_id : ''
 	}
 	this.warehouseList = [];
+	this.orgList = [];
+	this.roleList = [];
 	this.settingInfo.is_login = false;
 	this.appInfo = {};
 	this.loginInfo = {};
 	this.pages = [];
-	this.localStorage= [{data:{},url:'/'}];
-	this.ftpServers= [];
+	this.localStorage = [ {
+		data : {},
+		url : '/'
+	} ];
+	this.ftpServers = [];
 	this.mrLines = [];
 	this.inspLines = {};
 	this.inspFiles = {};
 	this.waterMarkImgs = [];
-	this.organizationList = [];
-	this.roleList = [];
 }
 
 AppCache.prototype.addPage = function(pageid, page) {
@@ -142,6 +148,70 @@ AppCache.prototype.init = function() {
 		orgid : "1000020",
 		warehouseid : "1000055",
 		name : "Japan Stock in Japan"
+	}, {
+		orgid : "1000025",
+		warehouseid : "1000057",
+		name : "FE-MADC"
+	}, {
+		orgid : "1000026",
+		warehouseid : "1000058",
+		name : "FE-EMEADC"
+	}, {
+		orgid : "1000027",
+		warehouseid : "1000059",
+		name : "FE-APDC"
+	});
+
+	this.orgList.push({
+		orgid : "1000019",
+		name : "Amsterdam"
+	}, {
+		orgid : "1000003",
+		name : "Austin"
+	}, {
+		orgid : "1000020",
+		name : "Japan"
+	}, {
+		orgid : "1000001",
+		name : "Singapore"
+	}, {
+		orgid : "1000024",
+		name : "FE Global"
+	}, {
+		orgid : "1000025",
+		name : "FE MADC"
+	}, {
+		orgid : "1000026",
+		name : "FE EMEADC"
+	}, {
+		orgid : "1000027",
+		name : "FE APDC"
+	});
+
+	this.roleList.push({
+		roleid : "1000138",
+		name : "FE QA Manager"
+	}, {
+		roleid : "1000139",
+		name : "FE QA Team"
+	}, {
+		roleid : "1000043",
+		name : "Warehouse QA Team"
+	}, {
+		roleid : "1000055",
+		name : "Warehouse QA Manager"
+	}, {
+		roleid : "1000044",
+		name : "Warehouse Manager"
+	}, {
+		roleid : "1000052",
+		name : "Warehouse IC Team"
+	}, {
+		roleid : "1000054",
+		name : "Warehouse IC Manager"
+	}, {
+		roleid : "1000000",
+		name : "Velocity Admin"
 	});
 
 	this.settingInfo = {

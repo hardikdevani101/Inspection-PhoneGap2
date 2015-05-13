@@ -59,13 +59,7 @@ Tbl_VISSetting.prototype.find = function(filter, success, error) {
 												setting['userid'] = results.rows
 														.item(0).userid;
 												setting['password'] = results.rows
-														.item(0).password;
-												_self.app.appCache.settingInfo['username'] = results.rows
-														.item(0).username;
-												_self.app.appCache.settingInfo['password'] = results.rows
 														.item(0).userpwd;
-												_self.app.appCache.settingInfo['userid'] = results.rows
-														.item(0).userid;
 											}
 											successCallback(setting);
 										});
