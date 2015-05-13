@@ -158,6 +158,31 @@ GalleryPage.prototype.init = function() {
 		_self.onEditFile(event);
 
 	});
+	$("#btn_doc_view_mode")
+			.on(
+					'click',
+					function() {
+						$(this).removeClass("ui-btn-active");
+						if ($(this).attr('class').indexOf('ui-icon-grid') >= 0) {
+							$(this).removeClass('ui-icon-grid');
+							$(this).html('List View');
+							$(this).addClass('ui-icon-bars');
+							$('#pg_gallery #pg_gal_main').removeClass(
+									'img-gallery');
+							$(
+									'#pg_gallery #pg_gal_main .ui-listview .ui-li-has-thumb h2')
+									.attr('style', 'color:white !important');
+						} else {
+							$(this).removeClass('ui-icon-bars');
+							$(this).html('Grid View');
+							$(this).addClass('ui-icon-grid');
+							$('#pg_gallery #pg_gal_main').addClass(
+									'img-gallery');
+							$(
+									'#pg_gallery #pg_gal_main .ui-listview .ui-li-has-thumb h2')
+									.attr('style', '');
+						}
+					});
 }
 
 GalleryPage.prototype.loadInspFile = function() {
