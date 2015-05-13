@@ -60,6 +60,31 @@ FileExplorerPage.prototype.init = function() {
 			_self.renderSelectedFiles(event);
 		});
 	});
+	$("#btn_file_view_mode")
+			.on(
+					'click',
+					function() {
+						$(this).removeClass("ui-btn-active");
+						if ($(this).attr('class').indexOf('ui-icon-grid') >= 0) {
+							$(this).removeClass('ui-icon-grid');
+							$(this).html('List View');
+							$(this).addClass('ui-icon-bars');
+							$('#pg_file_explorer #pg_file_main').removeClass(
+									'img-gallery');
+							$(
+									'#pg_file_explorer #pg_file_main .ui-listview .ui-li-has-thumb h2')
+									.attr('style', 'color:white !important');
+						} else {
+							$(this).removeClass('ui-icon-bars');
+							$(this).html('Grid View');
+							$(this).addClass('ui-icon-grid');
+							$('#pg_file_explorer #pg_file_main').addClass(
+									'img-gallery');
+							$(
+									'#pg_file_explorer #pg_file_main .ui-listview .ui-li-has-thumb h2')
+									.attr('style', '');
+						}
+					});
 }
 
 FileExplorerPage.prototype.renderSelectedFiles = function() {
@@ -449,3 +474,4 @@ FileExplorerPage.prototype.explodeDirectory = function(dirName, callback, error)
 		callback();
 	}
 }
+

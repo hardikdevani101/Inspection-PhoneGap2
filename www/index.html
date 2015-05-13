@@ -60,7 +60,7 @@
 </head>
 
 <body>
-	<div class="ui-loader-background"> </div>	 
+	<div class="ui-loader-background"></div>
 	<!-------------- Home page ----------->
 	<div data-role="page" id="pg_home" data-theme="c">
 		<div data-role="main" class="ui-content" data-theme="c">
@@ -304,7 +304,7 @@ End of MR line page
 		<div data-role="footer" data-position="fixed" data-theme="a">
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
-					<li><a href="#pg_inspection" data-icon="bullets"
+					<li><a href="#pg_inspection" data-icon="arrow-l"
 						data-shadow="false" data-wrapperels="span" data-theme="a"
 						title="Back">MRLines</a></li>
 					<li><a href="#" id="btn_finish_mr" data-icon="check"
@@ -340,7 +340,7 @@ End of Inspection page
 						placeholder="prefix" data-theme="a" data-mini="true">
 				</div>
 			</div>
-			<h2 data-role="heading">Gallery</h2>
+			<h2 data-role="heading">Documents</h2>
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-right">
 				<button id="btn_user" href="#pnl_aboutus" data-icon="user"
@@ -353,7 +353,8 @@ End of Inspection page
 			</div>
 		</div>
 		<!-------------- Second page main content ----------->
-		<div data-role="main" class="ui-content img-gallery" data-theme="c">
+		<div data-role="main" class="ui-content img-gallery" data-theme="c"
+			id="pg_gal_main">
 			<ul data-role="listview" id="ls_inspFiles">
 			</ul>
 		</div>
@@ -385,12 +386,15 @@ End of Inspection page
 		<div data-role="footer" data-position="fixed" data-theme="a">
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
-					<li><a href="#pg_inspection_detail" data-icon="bullets"
+					<li><a href="#pg_inspection_detail" data-icon="arrow-l"
 						data-shadow="false" data-wrapperels="span" data-theme="a"
 						title="Back">Inspection Lines</a></li>
 					<li><a href="#pnl_file_sources" id="btn-add" data-icon="plus"
 						data-shadow="false" data-wrapperels="span" data-theme="a"
 						title="Add">Add File</a></li>
+					<li><a href="#" id="btn_doc_view_mode"
+						class="ui-icon-grid ui-btn-icon-left" data-shadow="false"
+						data-wrapperels="span" title="Back">Grid View</a></li>
 				</ul>
 			</div>
 		</div>
@@ -441,9 +445,9 @@ Start of File Explorer page
 					data-iconshadow="false" data-wrapperels="span" title="Logout">SignOut</button>
 			</div>
 		</div>
-		<div role="main" class="ui-content img-gallery" data-theme="c">
+		<div role="main" class="ui-content img-gallery" data-theme="c"
+			id="pg_file_main">
 			<div id="current-dir-path" class="current_dir_location"></div>
-
 			<ul data-role="listview" id="ls_dirs" data-inset="false">
 			</ul>
 			<ul data-role="listview" id="ls_files" data-inset="false">
@@ -466,6 +470,9 @@ Start of File Explorer page
 						data-wrapperels="span" id="btn_finish_file_selection" title="Back">Done</a></li>
 					<li><a href="#" id="btn_reload_files" data-icon="refresh"
 						data-shadow="false" data-wrapperels="span" title="Clear Selected">Reload</a></li>
+					<li><a href="#" id="btn_file_view_mode"
+						class="ui-icon-grid ui-btn-icon-left" data-shadow="false"
+						data-wrapperels="span" title="Back">Grid View</a></li>
 				</ul>
 			</div>
 		</div>
