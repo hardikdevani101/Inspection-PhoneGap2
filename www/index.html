@@ -125,7 +125,7 @@
 						data-iconpos="right" data-theme="c"><label for="select-role">Role</label>
 						<select name="txt_role" id="txt_role" data-native-menu="false"
 						data-mini="true">
-						<!-- 	<option value="1000138">FE QA Manager</option>
+							<!-- 	<option value="1000138">FE QA Manager</option>
 							<option value="1000139">FE QA Team</option>
 							<option value="1000043">Warehouse QA Team</option>
 							<option value="1000055">Warehouse QA Manager</option>
@@ -299,7 +299,8 @@ End of MR line page
 		<!-------------- Second page main content ----------->
 		<div data-role="main" class="ui-content" data-theme="c">
 			<ul data-role="listview" data-filter="true" data-inset="false"
-				data-filter-placeholder="Search Inspection Lines" id="_list_insp" data-count-theme="b"></ul>
+				data-filter-placeholder="Search Inspection Lines" id="_list_insp"
+				data-count-theme="b"></ul>
 		</div>
 		<div data-role="footer" data-position="fixed" data-theme="a">
 			<div data-role="navbar" data-iconpos="left">
@@ -355,7 +356,8 @@ End of Inspection page
 		<!-------------- Second page main content ----------->
 		<div data-role="main" class="ui-content img-gallery" data-theme="c"
 			id="pg_gal_main">
-			<ul data-role="listview" id="ls_inspFiles">
+			<ul data-role="listview" id="ls_inspFiles" data-inset="true"
+				data-theme="c">
 			</ul>
 		</div>
 		<div data-role="popup" id="pop_file_actions" data-corners="true"
@@ -448,9 +450,11 @@ Start of File Explorer page
 		<div role="main" class="ui-content img-gallery" data-theme="c"
 			id="pg_file_main">
 			<div id="current-dir-path" class="current_dir_location"></div>
-			<ul data-role="listview" id="ls_dirs" data-inset="false">
+			<ul data-role="listview" id="ls_dirs" data-inset="true"
+				data-theme="c">
 			</ul>
-			<ul data-role="listview" id="ls_files" data-inset="false">
+			<ul data-role="listview" id="ls_files" data-inset="true"
+				data-theme="c">
 			</ul>
 		</div>
 
