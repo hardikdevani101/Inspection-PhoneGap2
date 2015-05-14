@@ -2,6 +2,7 @@ var FileExplorerPage = function(app) {
 	this.app = app;
 	this.currentDirPath = '/';
 	this.isLocalStorage = true;
+	this.isGridView = true;
 	this.selFiles = [];
 }
 
@@ -23,11 +24,6 @@ FileExplorerPage.prototype.init = function() {
 		_self.rederBreadCrumb();
 		_self.fillDataProviders();
 		_self.loadData();
-
-		// $('#btn_reload_files').on("click", function() {
-		// _self.app.appCache.ftpServers = {};
-		// _self.loadData();
-		// });
 
 		$("#btn_finish_file_selection").on('click', function() {
 			// TODO: Push Selected File information to Gallery
@@ -60,20 +56,50 @@ FileExplorerPage.prototype.init = function() {
 			_self.renderSelectedFiles(event);
 		});
 	});
-	$("#btn_file_view_mode").on('click', function() {
-		$(this).removeClass("ui-btn-active");
-		if ($(this).attr('class').indexOf('ui-icon-grid') >= 0) {
-			$(this).removeClass('ui-icon-grid');
-			$(this).html('List View');
-			$(this).addClass('ui-icon-bars');
-			$('#pg_file_explorer #pg_file_main').removeClass('img-gallery');
-		} else {
-			$(this).removeClass('ui-icon-bars');
-			$(this).html('Grid View');
-			$(this).addClass('ui-icon-grid');
-			$('#pg_file_explorer #pg_file_main').addClass('img-gallery');
-		}
-	});
+	$("#btn_file_view_mode")
+			.on(
+					'click',
+					function() {
+						$(this).removeClass("ui-btn-active");
+						if ($(this).attr('class').indexOf('ui-icon-grid') >= 0) {
+							$(this).removeClass('ui-icon-grid');
+							$(this).html('List View');
+							$(this).addClass('ui-icon-bars');
+							$('#pg_file_explorer #pg_file_main').removeClass(
+									'img-gallery');
+							$(
+									'#pg_file_explorer #pg_file_main .ui-listview .ui-li-has-thumb h2')
+									.attr('style', 'color:white !important');
+							_self.isGridView = false;
+							$('#ls_files li a').removeClass("ui-icon-carat-r");
+							$("#ls_files p a.ui-icon-arrow-d").hide();
+							$.each(_self.selFiles, function(index, file) {
+								$(
+										'#ls_files li[data-id="'
+												+ file.filePath + '"] a')
+										.addClass("ui-icon-arrow-d");
+							});
+
+						} else {
+							_self.isGridView = true;
+							$(this).removeClass('ui-icon-bars');
+							$(this).html('Grid View');
+							$(this).addClass('ui-icon-grid');
+							$('#pg_file_explorer #pg_file_main').addClass(
+									'img-gallery');
+							$(
+									'#pg_file_explorer #pg_file_main .ui-listview .ui-li-has-thumb h2')
+									.attr('style', '');
+							$("#ls_files p a.ui-icon-arrow-d").hide();
+							$.each(_self.selFiles, function(index, file) {
+								$(
+										'#ls_files li[data-id="'
+												+ file.filePath
+												+ '"] p a.ui-icon-arrow-d')
+										.show();
+							});
+						}
+					});
 }
 
 FileExplorerPage.prototype.renderSelectedFiles = function() {
@@ -168,8 +194,30 @@ FileExplorerPage.prototype.fillDataProviders = function() {
 		_self.visionApi.getFTPServerList({
 			orgid : app.appCache.settingInfo.org_id
 		}, success, function(msg) {
-			_self.app.showDialog("Loading..");
-			_self.app.hideDialog();
+			// _self.app.showDialog("Loading..");
+			// // TODO close below dummy data runner.
+			// resultline = {};
+			// resultline['record-id'] = '2323';
+			// resultline['url'] = 'ftp://343.343.343.34';
+			// resultline['isFTP'] = 'Y';
+			// resultline['name'] = 'Ftp Server';
+			// resultline['password'] = 'username';
+			// resultline['user'] = 'username';
+			// _self.app.appCache.ftpServers.push(resultline);
+			// var result = {
+			// 'ftpservers' : [ resultline, resultline, resultline ],
+			// 'total' : 1
+			// };
+			//
+			// var items = '';
+			// _self.app.appCache.ftpServers = [];
+			// $.each(result.ftpservers, function(index, data) {
+			// _self.app.appCache.ftpServers.push(data);
+			// });
+			// reloadDataProviders();
+			// // popup Errorbox.
+			// console.log("Load FTP Servers failed" + msg);
+			// _self.app.hideDialog();
 		});
 	}
 }
@@ -199,6 +247,7 @@ FileExplorerPage.prototype.renderContent = function(dirPath) {
 	}
 
 	var serverData = dataStorageInfo.data;
+	console.log(serverData);
 	if (serverData) {
 		if (serverData[_self.currentDirPath]) {
 			var files = serverData[_self.currentDirPath].files;
@@ -210,12 +259,18 @@ FileExplorerPage.prototype.renderContent = function(dirPath) {
 			$('#ls_files').listview("refresh");
 			$('#ls_dirs').html(dirItems);
 			$('#ls_dirs').listview("refresh");
-
-			$("#ls_files .ui-icon-arrow-d").hide();
+			$("#ls_files p a.ui-icon-arrow-d").hide();
+			$('#ls_files li a').removeClass("ui-icon-carat-r");
 
 			$.each(_self.selFiles, function(index, file) {
-				$('li[data-id="' + file.filePath + '"] .ui-icon-arrow-d')
-						.show();
+				if (_self.isGridView) {
+					$('li[data-id="' + file.filePath + '"] .ui-icon-arrow-d')
+							.show();
+				} else {
+					$('#ls_files li[data-id="' + file.filePath + '"] a')
+							.removeClass("ui-icon-arrow-d");
+				}
+
 			});
 
 			$("#ls_dirs .dir-placeholder").bind("tap", function(event) {
@@ -234,6 +289,7 @@ FileExplorerPage.prototype.onFileTap = function(event) {
 	var _self = this;
 	var selected = $(event.delegateTarget).data('id');
 	var file_name = $(event.delegateTarget).data('name');
+	// console.log('Tap >> ' + selected);
 	var findResult = [];
 	if (_self.selFiles.length > 0) {
 		findResult = jQuery.grep(_self.selFiles, function(item, index) {
@@ -252,12 +308,25 @@ FileExplorerPage.prototype.onFileTap = function(event) {
 			name : file_name,
 			uploaded : 'N'
 		});
-		$('li[data-id="' + selected + '"] .ui-icon-arrow-d').show();
+		// console.log(selected);
+		// console.log(file_name);
+		if (_self.isGridView) {
+			$('li[data-id="' + selected + '"] p a.ui-icon-arrow-d').show();
+		} else {
+			// $('li[data-id="' + selected + '"] p a.ui-icon-arrow-d').show();
+			$('#ls_files li[data-id="' + selected + '"] a').addClass(
+					"ui-icon-arrow-d");
+		}
 	} else {
 		_self.selFiles = jQuery.grep(_self.selFiles, function(item, index) {
 			return item.filePath != selected;
 		});
-		$('li[data-id="' + selected + '"] .ui-icon-arrow-d').hide();
+		if (_self.isGridView) {
+			$('li[data-id="' + selected + '"] p a.ui-icon-arrow-d').hide();
+		} else {
+			$('#ls_files li[data-id="' + selected + '"] a').removeClass(
+					"ui-icon-arrow-d");
+		}
 	}
 	$('#selected-files-count').html(_self.selFiles.length);
 }
@@ -307,6 +376,7 @@ FileExplorerPage.prototype.renderDirPath = function() {
 
 FileExplorerPage.prototype.changeDir = function() {
 	var _self = this;
+	// console.log('Tap _self.currentDirPath>> ' + _self.currentDirPath);
 	_self.explodeDirectory(_self.currentDirPath, function() {
 		_self.renderContent(_self.currentDirPath);
 	}, function(msg) {
@@ -335,6 +405,41 @@ FileExplorerPage.prototype.loadActualImage = function(dataid, isLocalStrg) {
 	if (!_self.app.appCache.imgCache[dataid]) {
 		var storage = _self.isLocalStorage ? 'LS' : 'FTP';
 
+		// console.log('Get image from ' + storage + ' >> ' + dataid);
+		// // TODO remove below dummy data runner in production.
+		// // Start of dummy data filler.
+		// var img =
+		// "data:image/jpg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAd
+		// Hx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3
+		// Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAFoAWgMBIgACEQED
+		// EQH/xAAbAAADAQEBAQEAAAAAAAAAAAAAAQcEBQYCA//EAEAQAAECBAEGCwQHCQAAAAAAAAEAAgME
+		// BRGxBgchMTV0EhYXNlFVdZOy0eITImGBc5GSocHS8BUyQUJDRHGCg//EABkBAQADAQEAAAAAAAAA
+		// AAAAAAQAAwUBAv/EACQRAAEDAgYDAQEAAAAAAAAAAAABAgMEERQhMTIzcRITUUJB/9oADAMBAAIR
+		// AxEAPwC4oQkToUIC5eUFalqNJmNMOu86IcMHS8+XxX1XaxLUeSdHmHXcdEOGNbz0KS1apTFVnXzM
+		// y67joa0amjoCTTU6yLddA08/hkmp91CfnK3UPaR3F8WI7gw4YPut6AFs4pVwaqe4/wC7PNc6kbVk
+		// /pmYq3DUmVEzoLNYGgiSa7nEi4pV3q4/bZ5o4pV3q4/bZ5qvIRsdKX4NhIHZK12G0v8A2c/3dPuu
+		// aT9xW3JnKicpk2yVqEV8SVLuA72xPChfM6fkqipXnDgMgZRFzGge1gNe4DpuR+CtimxC+D0K5IvS
+		// nkxSpMIIBbaxF9C+1hojnOpEk55u4wGEnp0Lcs9UsqoORbpcS5tcrMrR5N0eYddx0Q4Y1vPwXSUf
+		// ymmJmoZRzMJ7i8tjGDCbewAvawV9ND7X2XQpnl9bctTHV6nM1acdMzTru1NaNTB0BYl3OJ9f6vJ/
+		// 6s80cUK91e7vWfmWqksTUsioZqskVbqhzqOCatJ2H9dmKtw1Ke5LZHzsGow5uqMbBZBcHNh8MOLn
+		// fw1agqENSzq2Rr3p4qOpGK1q3GhCEMWCl+crbzN1bi5VBS/OVt5m6txclUfKGq+MoNC2NI7uzALe
+		// sFC2NI7uzALejv3KXs2oIKPznPGJ2gPGFYAo/O88X9oDxhKo9XdBqr89lfQgJhCFoFkDUmhdICEI
+		// UICl+crbzN1bi5VBS/OVt5m6txclUfKGq+MoNC2NI7uzALesFC2NI7uzALejv3KXs2oIKPzvPF/a
+		// A8YVgCj87zxf2gPGEui1d0Gqvz2V8JhIJhB/ov8Ag0IQukBCEKEBS/OVt5m6txcqgpfnK28zdW4u
+		// SqPlDVfGUGhbGkd3ZgFvWChbGkd3ZgFvR37lL2bUEo/O88X9oDxhWAqPzujLCJc/348YSqLV3Qaq
+		// 0b2V8JpAp3QxaaDQlcIuFCDQlcIuFCDUvzk7eZurfE5U+6l+chwdX2gHSJZoP1uSqPlC1fGUKhbG
+		// kd3ZgFvWCg7GkfoGYBb0d25RDNqCKmWXdGiydSdUYTSYEYgucP5Hfq3zVNOpfnGY18NzXtDmkaQR
+		// cFe4ZFjddDxNGj25k7p+X83LyzIc1KMmHgW9oH8G4+IsVp5RYnVje/8ASvMZRwocCrRWQYbIbL/u
+		// saAFzFqJTROzsZvvkblc91yixOrG9/6UcosTqxvf+leFQu4SH4dxMn091yixOrG9/wClHKLE6sb3
+		// /pXhUKYSH4TEyfT3D84kYscGU1gdbQTG0X+pefkZWeyorTjFJe6I4GNEA91jfw/wuTCAMRgIuC4K
+		// zUSXgS8hDbAgw4YIvZjQMFVKjKdt2Jmp7jV0y2cptl4bYUJkNgs1rQAPgv1SCayjSRLH/9k="
+		// setInterval(function() {
+		// _self.app.appCache.imgCache[dataid] = img;
+		// $('li[data-id="' + dataid + '"] img').attr('src', img);
+		// }, 1000);
+
+		// End of dummy data filler.
+
 		if (isLocalStrg) {
 			// TODO get data from local storage;
 			_self.app.appFS.getFile(dataid, function(result) {
@@ -346,6 +451,7 @@ FileExplorerPage.prototype.loadActualImage = function(dataid, isLocalStrg) {
 			});
 		} else {
 
+			// TODO get data from FTP storage; Open below code in production.
 			_self.app.ftpClient.get("", dataid, {}, function(result) {
 				var img64 = "data:image/jpeg;base64," + result[0].base64;
 				_self.app.appCache.imgCache[dataid] = img64;
@@ -353,8 +459,10 @@ FileExplorerPage.prototype.loadActualImage = function(dataid, isLocalStrg) {
 			}, function(msg) {
 				console.log('Error Getting File >>> ' + dataid);
 			});
+
 		}
 	}
+
 }
 
 FileExplorerPage.prototype.renderFiles = function(files) {
@@ -430,6 +538,8 @@ FileExplorerPage.prototype.explodeDirectory = function(dirName, callback, error)
 		var files = results[0]["fileNames"];
 		var dirs = results[0]["directory"];
 		// / dataStorageInfo.data[] = {};
+		// console.log(files.length);
+		// console.log(dirs.length);
 		var resultline = {};
 		resultline['files'] = files;
 		resultline['dirs'] = dirs;
@@ -445,6 +555,8 @@ FileExplorerPage.prototype.explodeDirectory = function(dirName, callback, error)
 		callback();
 	}
 
+	//console.log(ftpUrl);
+
 	if (!dataStorageInfo.data || !dataStorageInfo.data[_self.currentDirPath]) {
 		// TODO - open below actual data filler.
 		if (!_self.isLocalStorage) {
@@ -459,6 +571,28 @@ FileExplorerPage.prototype.explodeDirectory = function(dirName, callback, error)
 			}, error);
 		}
 
+		// TODO - Remove below dummy data filler.
+		// var randomNum = Math.floor(Math.random() * 31);
+		// var extensionList = [ "jpg", "pdf", "png", "txt" ];
+		// var tempFiles = [], tempDir = [];
+		// for (var i = 0; i < randomNum; i++) {
+		// tempFiles.push('file'
+		// + i
+		// + '.'
+		// + extensionList[Math.floor(Math.random()
+		// * (extensionList.length))]);
+		// }
+		// randomNum = Math.floor(Math.random() * 31);
+		// var dirList = [ "subfolder", "textf" ];
+		// for (var i = 0; i < randomNum; i++) {
+		// tempDir.push(dirList[Math.floor(Math.random() * (dirList.length))]
+		// + "_" + i);
+		// }
+		// successCB([ {
+		// fileNames : tempFiles,
+		// directory : tempDir
+		// } ]);
+		// TODO - End
 	} else {
 		callback();
 	}
