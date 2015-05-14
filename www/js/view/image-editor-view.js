@@ -57,6 +57,7 @@ ImageEditorPage.prototype.enableEditMode = function() {
 		var img = $('#img_editable').get(0);
 
 		if (img.height < img.width && !((img.height / img.width) > .70)) {
+//			if (img.height < img.width ) {
 			_self.cropImageW = (_self.canHeight * 4) / 3;
 			_self.cropImageH = (_self.cropImageW / img.width) * img.height;
 		} else {
@@ -64,8 +65,10 @@ ImageEditorPage.prototype.enableEditMode = function() {
 			_self.cropImageW = (_self.cropImageH / img.height) * img.width;
 		}
 
-		_self.gcanvas.height = _self.canHeight;
-		_self.gcanvas.width = _self.canWidth;
+//		_self.gcanvas.height = _self.canHeight;
+//		_self.gcanvas.width = _self.canWidth;
+		_self.gcanvas.height = _self.cropImageH;
+		_self.gcanvas.width = _self.cropImageW;
 		_self.editCtx.drawImage(img, 0, 0, img.width, img.height, 0, 0,
 				_self.cropImageW, _self.cropImageH);
 
@@ -141,7 +144,8 @@ ImageEditorPage.prototype.init = function() {
 					"#pg_img_editor",
 					function() {
 						_self.rederBreadCrumb();
-
+						_self.cValue = 0;
+						_self.bValue = 0;
 						$("#txt_prefix").val($('#prefixInpectLine').html());
 						$('#btn_filter_ok').on(
 								'click',
@@ -155,12 +159,13 @@ ImageEditorPage.prototype.init = function() {
 												.val();
 								});
 
-						$("#slider-brightness").on("change", function(event) {
-							_self.brightness = event.target.value;
-							_self.onBrightnessChange(event);
-						});
+						$("#slider-brightness").on("slidestop",
+								function(event) {
+									_self.brightness = event.target.value;
+									_self.onBrightnessChange(event);
+								});
 
-						$("#slider-contrast").on("change", function(event) {
+						$("#slider-contrast").on("slidestop", function(event) {
 							_self.contrast = event.target.value;
 							_self.onContrastChange(event);
 						});
@@ -183,14 +188,18 @@ ImageEditorPage.prototype.init = function() {
 						$("#btn_reset").on(
 								"tap",
 								function() {
+									$("#slider-brightness").val(0).slider(
+											"refresh");
+									$("#slider-contrast").val(0).slider(
+											"refresh");
+									_self.cValue = 0;
+									_self.bValue = 0;
 									var img = $('#img_editable').attr('src',
 											_self.image64);
-									img.load(function() {
-										_self.enableEditMode();
-										_self.isCropEnable = false;
-										_self.isEditEnable = true;
-										_self.corpperImage.cropper("destroy");
-									});
+									_self.enableEditMode();
+									_self.isCropEnable = false;
+									_self.isEditEnable = true;
+									_self.corpperImage.cropper("destroy");
 								});
 
 						$("#btn_edit_finished").on("tap", function() {
@@ -257,6 +266,8 @@ ImageEditorPage.prototype.enableCropMode = function() {
 
 ImageEditorPage.prototype.onContrastChange = function(event) {
 	var _self = this;
+
+	var _self = this;
 	var contraValue = event.target.value - _self.cValue;
 	var contraImageData = _self.editCtx.getImageData(0, 0, _self.gcanvas.width,
 			_self.gcanvas.height);
@@ -268,24 +279,12 @@ ImageEditorPage.prototype.onContrastChange = function(event) {
 		data[i + 2] = factor * (data[i + 2] - 128) + 128;
 	}
 	_self.editCtx.putImageData(contraImageData, 0, 0);
-
 	_self.cValue = event.target.value;
-	if (_self.flag == 0) {
-		if (_self.aNo > -1 ? (_self.actArray[_self.aNo][0] != _self.bValue || _self.actArray[_self.aNo][1] != _self.cValue)
-				: true) {
-			_self.actArray[++_self.aNo] = new Array();
-			_self.actArray[_self.aNo][0] = _self.bValue;
-			_self.actArray[_self.aNo][1] = _self.cValue;
-			_self.actArray[_self.aNo][2] = _self.canX + "*" + _self.canY + "*"
-					+ (_self.canX1 - _self.canX) + "*"
-					+ (_self.canY1 - _self.canY);
-		}
-	}
-	return contraImageData;
 }
 
 ImageEditorPage.prototype.onBrightnessChange = function(event) {
 	var _self = this;
+
 	var brightValue = event.target.value - _self.bValue;
 	var brightImageData = _self.editCtx.getImageData(0, 0, _self.gcanvas.width,
 			_self.gcanvas.height);
@@ -296,20 +295,7 @@ ImageEditorPage.prototype.onBrightnessChange = function(event) {
 		pixels[i + 2] += brightValue;
 	}
 	_self.editCtx.putImageData(brightImageData, 0, 0);
-
 	_self.bValue = event.target.value;
-	if (_self.flag == 0) {
-		if (_self.aNo > -1 ? (_self.actArray[_self.aNo][0] != _self.bValue || _self.actArray[_self.aNo][1] != _self.cValue)
-				: true) {
-			_self.actArray[++_self.aNo] = new Array();
-			_self.actArray[_self.aNo][0] = _self.bValue;
-			_self.actArray[_self.aNo][1] = _self.cValue;
-			_self.actArray[_self.aNo][2] = _self.canX + "*" + _self.canY + "*"
-					+ (_self.canX1 - _self.canX) + "*"
-					+ (_self.canY1 - _self.canY);
-		}
-	}
-	return brightImageData;
 }
 
 ImageEditorPage.prototype.initCropMode = function() {

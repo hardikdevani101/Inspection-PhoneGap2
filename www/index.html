@@ -33,6 +33,9 @@
 <script src="js/lib/base64-binary.js"></script>
 <script src="js/lib/cropper.min.js"></script>
 
+<!-- Caman -->
+<script src="js/lib/caman.min.js"></script>
+
 <!--Cordova JS-->
 <script src="cordova.js"></script>
 
@@ -394,9 +397,9 @@ End of Inspection page
 					<li><a href="#pnl_file_sources" id="btn-add" data-icon="plus"
 						data-shadow="false" data-wrapperels="span" data-theme="a"
 						title="Add">Add File</a></li>
-					<li><a href="#" id="btn_doc_view_mode"
+					<!-- <li><a href="#" id="btn_doc_view_mode"
 						class="ui-icon-grid ui-btn-icon-left" data-shadow="false"
-						data-wrapperels="span" title="Back">Grid View</a></li>
+						data-wrapperels="span" title="Back">List View</a></li> -->
 				</ul>
 			</div>
 		</div>
@@ -450,10 +453,10 @@ Start of File Explorer page
 		<div role="main" class="ui-content img-gallery" data-theme="c"
 			id="pg_file_main">
 			<div id="current-dir-path" class="current_dir_location"></div>
-			<ul data-role="listview" id="ls_dirs" data-inset="true"
+			<ul data-role="listview" id="ls_dirs" 
 				data-theme="c">
 			</ul>
-			<ul data-role="listview" id="ls_files" data-inset="true"
+			<ul data-role="listview" id="ls_files"
 				data-theme="c">
 			</ul>
 		</div>
@@ -476,7 +479,7 @@ Start of File Explorer page
 						data-shadow="false" data-wrapperels="span" title="Clear Selected">Reload</a></li>
 					<li><a href="#" id="btn_file_view_mode"
 						class="ui-icon-grid ui-btn-icon-left" data-shadow="false"
-						data-wrapperels="span" title="Back">Grid View</a></li>
+						data-wrapperels="span" title="Back">List View</a></li>
 				</ul>
 			</div>
 		</div>
@@ -535,15 +538,15 @@ Start of Crop page
 					for="slider-brightness">Brightness</label> <input
 					data-highlight="true" data-theme="a" data-track-theme="a"
 					data-mini="true" type="range" name="slider-brightness"
-					id="slider-brightness" value="50" data-highlight="false" min="0"
-					max="100" class="ui-hidden-accessible" /></li>
+					id="slider-brightness" value="0" data-highlight="false" min="-50"
+					max="50" class="ui-hidden-accessible" /></li>
 				<li class="ui-rangeslider" data-shadow="false"
 					data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
 					data-iconpos="right" data-theme="c"><label
 					for="slider-contrast">Contrast</label> <input data-highlight="true"
 					data-theme="a" data-track-theme="a" data-mini="true" type="range"
-					name="slider-contrast" id="slider-contrast" value="50"
-					data-highlight="false" min="0" max="100"
+					name="slider-contrast" id="slider-contrast" value="0"
+					data-highlight="false" min="-50" max="50"
 					class="ui-hidden-accessible" /></li>
 				<li class="ui-rangeslider" data-shadow="false"
 					data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"

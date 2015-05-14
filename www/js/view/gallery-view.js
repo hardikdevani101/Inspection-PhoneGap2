@@ -291,13 +291,13 @@ GalleryPage.prototype.loadActualImage = function(inspID) {
 					// }, 1000);
 					// End of dummy data filler.
 
-					_self.app.appFS.getFileByURL({
-						fileURI : this.filePath
-					}, function(param) {
-						img = param.data
-						self.app.appCache.imgCache[dataid] = img;
-						$('li[data-id="' + dataid + '"] img').attr('src', img);
-					});
+//					_self.app.appFS.getFileByURL({
+//						fileURI : this.filePath
+//					}, function(param) {
+//						img = param.data
+//						self.app.appCache.imgCache[dataid] = img;
+//						$('li[data-id="' + dataid + '"] img').attr('src', img);
+//					});
 				}
 			}
 
@@ -327,8 +327,8 @@ GalleryPage.prototype.onFileTap = function(event) {
 		if (sourceInfo.length > 0) {
 			_self.app.imageEditor.setup({
 				'sourceInfo' : sourceInfo[0],
-				width : $("#pg_gallery .ui-panel-wrapper").width() - 40,
-				height : $("#pg_gallery .ui-panel-wrapper").height() - 40,
+				width : $("#pg_gallery .ui-panel-wrapper").width() ,
+				height : $("#pg_gallery .ui-panel-wrapper").height(),
 				img64 : imgData
 			});
 		}
