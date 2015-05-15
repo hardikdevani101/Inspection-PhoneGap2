@@ -74,7 +74,7 @@ FileExplorerPage.prototype.init = function() {
 						$('#ls_files li[data-id="' + file.filePath + '"] a')
 								.addClass("ui-icon-arrow-d");
 					});
-
+					$("#ls_files  .ui-listview .ui-li-has-thumb h2").css("color", "#FFF");
 				} else {
 					$(this).removeClass('ui-icon-grid');
 					$(this).html('List View');
@@ -88,6 +88,7 @@ FileExplorerPage.prototype.init = function() {
 								'#ls_files li[data-id="' + file.filePath
 										+ '"] p a.ui-icon-arrow-d').show();
 					});
+					$("#ls_files  .ui-listview .ui-li-has-thumb h2").css("color", "#202C3C");
 				}
 			});
 }
@@ -155,8 +156,10 @@ FileExplorerPage.prototype.fillDataProviders = function() {
 	var _self = this;
 	var reloadDataProviders = function() {
 		$('#sel_dataproviders').html("");
+		// root URI = "file:///storage/sdcard0";
+		console.log(">>>>>>>>>"+_self.app.appFS.rootURI);
 		$("#sel_dataproviders").append(
-				new Option("LocalStorage", "file:///storage/sdcard0"));
+				new Option("LocalStorage", _self.app.appFS.rootURI));
 		if (_self.app.appCache.ftpServers.length > 0) {
 			$.each(_self.app.appCache.ftpServers, function(key, data) {
 				if (data.isFTP == 'Y') {

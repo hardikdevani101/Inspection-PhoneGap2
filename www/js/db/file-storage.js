@@ -3,6 +3,7 @@ var FS = function(app) {
 	this.fileSystem = null;
 	this.vis_dir = null;
 	this.vis_ftp_dir = null;
+	this.rootURI = "";
 }
 
 FS.prototype.errorHandler = function(e) {
@@ -36,7 +37,7 @@ FS.prototype.errorHandler = function(e) {
 FS.prototype.filelist = function(path, success) {
 	var _self = this;
 	console.log(path);
-	window.resolveLocalFileSystemURL(path, function(dirEntry) {
+	window.webkitResolveLocalFileSystemURL(path, function(dirEntry) {
 		var DirReader = dirEntry.createReader();
 		DirReader.readEntries(function(entries) {
 			var dirArr = [];
@@ -88,36 +89,73 @@ FS.prototype.createVISFile = function(param) {
 	var dd = date.getDate();
 	var fileName = prefix + "_" + mm + dd + yy + "_" + hh + mi + sec + milSec
 			+ "." + param.fileExt;
-	_self.vis_dir.getFile(fileName, {
-		create : true,
-		exclusive : false
-	}, function(fileEntry) {
-		fileEntry.createWriter(function(writer) {
-			var fileBase64 = param.fileData.replace(
-					/data:image\/(png|jpg|jpeg);base64,/, '');
-			var binaryData = Base64Binary.decodeArrayBuffer(fileBase64);
-			writer.onwrite = function(evt) {
-				var fileFullPath = fileEntry.toURL();
-				console.log(fileFullPath);
-				console.log("New File Created");
-				param['oldURI'] = param.fileFullPath;
-				param.fileFullPath = fileFullPath;
-				param['fileName'] = fileEntry.name;
-				_self.app.appDB.doGalleryEntry(param);
+	_self.vis_dir
+			.getFile(
+					fileName,
+					{
+						create : true,
+						exclusive : false
+					},
+					function(fileEntry) {
+						fileEntry
+								.createWriter(
+										function(writer) {
+											var fileBase64 = param.fileData
+													.replace(
+															/data:image\/(png|jpg|jpeg);base64,/,
+															'');
+											var binaryData = Base64Binary
+													.decodeArrayBuffer(fileBase64);
+											writer.onwrite = function(evt) {
+												var fileFullPath = fileEntry
+														.toURL();
+												console.log(fileFullPath);
+												console.log("New File Created");
+												param['oldURI'] = param.filePath;
+												param.filePath = fileFullPath;
+												param['fileName'] = fileEntry.name;
+												_self.app.appDB
+														.doGalleryEntry(param);
+												console.log("Added Entry ===="
+														+ param.filePath);
+												if (_self.app.galleryview.inspFiles[param.inspID]) {
 
-				if (_self.app.galleryview.inspFiles[param.inspID]) {
-					$.each(_self.app.galleryview.inspFiles[param.inspID],
-							function() {
-								if (this.filePath == param['oldURI']) {
-									this.filePath == param.fileFullPath;
-									this['name'] == fileName;
-								}
-							});
-				}
-			};
-			writer.write(binaryData);
-		}, _self.errorHandler);
-	}, _self.errorHandler);
+													findResult = jQuery
+															.grep(
+																	_self.app.galleryview.inspFiles[param.inspID],
+																	function(
+																			item,
+																			index) {
+																		return item.filePath == param['oldURI'];
+																	});
+													if (findResult.length > 0) {
+														$
+																.each(
+																		_self.app.galleryview.inspFiles[param.inspID],
+																		function() {
+																			if (this.filePath == param['oldURI']) {
+																				this.filePath == param.filePath;
+																				this['name'] == fileName;
+																			}
+																		});
+													} else {
+														item = {};
+														item['filePath'] = param.filePath;
+														item['name'] = param.fileName;
+														item['uploded'] = "N";
+														item['dataSource'] = "LS";
+														item['data'] = "LS";
+														_self.app.galleryview.inspFiles[param.inspID]
+																.push(item);
+														_self.app.appCache.imgCache[param.filePath] = param.fileData;
+														_self.app.galleryview
+																.renderInspFiles();
+													}
+												}
+											};
+											writer.write(binaryData);
+										}, _self.errorHandler);
+					}, _self.errorHandler);
 }
 
 FS.prototype.updateVISFile = function(param) {
@@ -142,6 +180,8 @@ FS.prototype.init = function() {
 		console.log("Found File-Storage:Debug - ");
 		window.requestFileSystem(window.PERSISTENT, 0, function(filesystem) {
 			_self.fileSystem = filesystem;
+			_self.rootURI = _self.fileSystem.root.toURL();
+			console.log(">>>>>>>>>>>>>>>>>>>" + _self.fileSystem.root.toURL());
 			filesystem.root.getDirectory('VIS_Inspection', {
 				create : true
 			}, function(filesystem) {
@@ -158,14 +198,30 @@ FS.prototype.init = function() {
 	} else if (window.webkitRequestFileSystem) {
 		console.log('Found >> ' + window.webkitRequestFileSystem);
 		window.requestFileSystem = window.webkitRequestFileSystem;
-		//
-		// window.webkitPersistentStorage.requestQuota(window.PERSISTENT,
-		// 5 * 1024 * 1024 /* 5MB */, function(grantedBytes) {
-		// window.webkitRequestFileSystem(window.PERSISTENT,
-		// grantedBytes, onInitFs, errorHandler);
-		// }, function(e) {
-		// console.log('Error', e);
-		// });
+
+		window.webkitStorageInfo.requestQuota(window.PERSISTENT,
+				50 * 1024 * 1024, function(grantedBytes) {
+					window.requestFileSystem(window.PERSISTENT, 0, function(
+							filesystem) {
+						_self.fileSystem = filesystem;
+						_self.rootURI = _self.fileSystem.root.toURL();
+						filesystem.root.getDirectory('VIS_Inspection', {
+							create : true
+						}, function(filesystem) {
+							console.log('VIS Directory');
+							_self.vis_dir = filesystem;
+							filesystem.getDirectory('VIS_FTP', {
+								create : true
+							}, function(filesystem) {
+								console.log('VIS FTP');
+								_self.vis_ftp_dir = filesystem;
+							}, _self.errorHandler);
+						}, _self.errorHandler);
+					}, _self.errorHandler);
+
+				}, function(e) {
+					console.log('Error', e);
+				});
 	}
 }
 

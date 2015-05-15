@@ -95,7 +95,7 @@ Tbl_VISGallery.prototype.addFileInfo = function(fileInfo, success, error) {
 				+ ' (mr_line,in_out_id,insp_line,name,file,dataSource)'
 				+ ' VALUES ("' + fileInfo.mrLineID + '","' + fileInfo.mrID
 				+ '","' + fileInfo.inspID + '","' + fileInfo.fileName + '","'
-				+ fileInfo.fileFullPath + '","' + fileInfo.dataSource + '")';
+				+ fileInfo.filePath + '","' + fileInfo.dataSource + '")';
 		console.log(sqlQuery);
 		tx.executeSql(sqlQuery, [], successCallback, errorCallback);
 	});

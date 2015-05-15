@@ -19,7 +19,7 @@ DB.prototype.init = function(success, error) {
 	_self.dbstore
 			.transaction(
 					function(tx) {
-						// tx.executeSql('DROP TABLE IF EXISTS vis_gallery');
+//						 tx.executeSql('DROP TABLE IF EXISTS vis_gallery');
 						// tx.executeSql('DROP TABLE IF EXISTS vis_setting');
 						tx
 								.executeSql('CREATE TABLE IF NOT EXISTS '
@@ -110,14 +110,14 @@ DB.prototype.doGalleryEntry = function(fileInfo) {
 		tx.executeSql(sqlQuery + whereSQL, param, function(tx, results) {
 			if (results.rows.length > 0) {
 				sqlQuery = 'UPDATE vis_gallery SET name="' + fileInfo.fileName
-						+ '",file="' + fileInfo.fileFullPath + '" ';
+						+ '",file="' + fileInfo.filePath + '" ';
 				tx.executeSql(sqlQuery + whereSQL, param);
 			} else {
 				sqlQuery = 'INSERT INTO vis_gallery '
 						+ ' (mr_line,in_out_id,insp_line,name,file)'
 						+ ' VALUES ("' + fileInfo.mrLineID + '","'
 						+ fileInfo.mrID + '","' + fileInfo.inspID + '","'
-						+ fileInfo.fileName + '","' + fileInfo.fileFullPath
+						+ fileInfo.fileName + '","' + fileInfo.filePath
 						+ '")';
 				tx.executeSql(sqlQuery);
 			}

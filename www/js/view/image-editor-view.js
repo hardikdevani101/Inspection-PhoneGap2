@@ -57,7 +57,7 @@ ImageEditorPage.prototype.enableEditMode = function() {
 		var img = $('#img_editable').get(0);
 
 		if (img.height < img.width && !((img.height / img.width) > .70)) {
-//			if (img.height < img.width ) {
+			// if (img.height < img.width ) {
 			_self.cropImageW = (_self.canHeight * 4) / 3;
 			_self.cropImageH = (_self.cropImageW / img.width) * img.height;
 		} else {
@@ -65,8 +65,8 @@ ImageEditorPage.prototype.enableEditMode = function() {
 			_self.cropImageW = (_self.cropImageH / img.height) * img.width;
 		}
 
-//		_self.gcanvas.height = _self.canHeight;
-//		_self.gcanvas.width = _self.canWidth;
+		// _self.gcanvas.height = _self.canHeight;
+		// _self.gcanvas.width = _self.canWidth;
 		_self.gcanvas.height = _self.cropImageH;
 		_self.gcanvas.width = _self.cropImageW;
 		_self.editCtx.drawImage(img, 0, 0, img.width, img.height, 0, 0,
@@ -173,8 +173,11 @@ ImageEditorPage.prototype.init = function() {
 						$('.img-container').html(
 								[ '<img id="img_editable" src="'
 										+ _self.image64 + '" />' ].join(''));
-						_self.initCropMode();
-						_self.enableEditMode();
+						$("#img_editable").load(function() {
+							console.log(">>>>>>>>>>img_editable ");
+							_self.initCropMode();
+							_self.enableEditMode();
+						});
 
 						$("#crop-toolbar").hide();
 						$("#btn_skip_edit").on("tap", function() {

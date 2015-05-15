@@ -278,6 +278,14 @@ $(document).ready(function() {
 	} else {
 		console.log('Explicitly called onDeviceReady!!')
 		// app.onDeviceReady();
+		app.appFS = new FS(app);
+			app.appFS.init();
+
+			app.ftpClient = '';
+
+			if (vision) {
+				app.ftpClient = vision.ftpclient;
+			}
 	}
 
 });
