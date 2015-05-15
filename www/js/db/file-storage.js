@@ -37,7 +37,10 @@ FS.prototype.errorHandler = function(e) {
 FS.prototype.filelist = function(path, success) {
 	var _self = this;
 	console.log(path);
-	window.webkitResolveLocalFileSystemURL(path, function(dirEntry) {
+//	if (path.endsWith('/')) {
+//		path = path.substring(0, path.length - 1);
+//	}
+	window.resolveLocalFileSystemURL(path, function(dirEntry) {
 		var DirReader = dirEntry.createReader();
 		DirReader.readEntries(function(entries) {
 			var dirArr = [];
@@ -181,6 +184,10 @@ FS.prototype.init = function() {
 		window.requestFileSystem(window.PERSISTENT, 0, function(filesystem) {
 			_self.fileSystem = filesystem;
 			_self.rootURI = _self.fileSystem.root.toURL();
+			if (_self.rootURI.endsWith('/')) {
+				_self.rootURI = _self.rootURI.substring(0,
+						_self.rootURI.length - 1);
+			}
 			console.log(">>>>>>>>>>>>>>>>>>>" + _self.fileSystem.root.toURL());
 			filesystem.root.getDirectory('VIS_Inspection', {
 				create : true
@@ -198,13 +205,16 @@ FS.prototype.init = function() {
 	} else if (window.webkitRequestFileSystem) {
 		console.log('Found >> ' + window.webkitRequestFileSystem);
 		window.requestFileSystem = window.webkitRequestFileSystem;
-
 		window.webkitStorageInfo.requestQuota(window.PERSISTENT,
 				50 * 1024 * 1024, function(grantedBytes) {
 					window.requestFileSystem(window.PERSISTENT, 0, function(
 							filesystem) {
 						_self.fileSystem = filesystem;
 						_self.rootURI = _self.fileSystem.root.toURL();
+						if (_self.rootURI.endsWith('/')) {
+							_self.rootURI = _self.rootURI.substring(0,
+									_self.rootURI.length - 1);
+						}
 						filesystem.root.getDirectory('VIS_Inspection', {
 							create : true
 						}, function(filesystem) {

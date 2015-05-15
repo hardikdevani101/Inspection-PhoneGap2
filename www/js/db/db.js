@@ -107,6 +107,7 @@ DB.prototype.doGalleryEntry = function(fileInfo) {
 			whereSQL += " and in_out_id=?";
 			param.push(fileInfo.mrID);
 		}
+		console.log(fileInfo.fileName);
 		tx.executeSql(sqlQuery + whereSQL, param, function(tx, results) {
 			if (results.rows.length > 0) {
 				sqlQuery = 'UPDATE vis_gallery SET name="' + fileInfo.fileName

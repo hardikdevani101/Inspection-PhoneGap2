@@ -67,8 +67,14 @@ GalleryPage.prototype.onDeleteFile = function(event) {
 }
 
 GalleryPage.prototype.onEditFile = function(event) {
-	event.preventDefault();
-	$.mobile.changePage("#pg_img_editor");
+//	event.preventDefault();
+//	$.mobile.changePage("#pg_img_editor");
+	var _self = this;
+	_self.app.aviaryEdit.edit(function(param) {
+		_self.app.appFS.getFileByURL(param, function(param) {
+			_self.onEditFinish(param, param.data);
+		});
+	});
 }
 
 GalleryPage.prototype.onFileData = function(selFiles) {
@@ -131,6 +137,7 @@ GalleryPage.prototype.onCreateNewEntry = function(file, param) {
 	// Add DB Entry or Create File from FTP Data
 	if (file.dataSource == "FTP") {
 		var extension = file.name.substr((file.name.lastIndexOf('.') + 1));
+		console.log(extension);
 		var findResult = jQuery.grep(_self.app.dataTypes,
 				function(item, index) {
 					return item == extension.toUpperCase();
@@ -255,6 +262,7 @@ GalleryPage.prototype.loadInspFile = function() {
 				var item = {};
 				item['filePath'] = result.rows.item(i).file;
 				item['name'] = result.rows.item(i).name;
+				console.log(result.rows.item(i).name);
 				item['uploded'] = result.rows.item(i).imgUpload;
 				item['dataSource'] = result.rows.item(i).dataSource;
 				_self.inspFiles[_self.line_id].push(item);
@@ -359,12 +367,18 @@ GalleryPage.prototype.onFileTap = function(event) {
 			return value.filePath == dataid;
 		});
 		if (sourceInfo.length > 0) {
-			_self.app.imageEditor.setup({
-				'sourceInfo' : sourceInfo[0],
-				width : $("#pg_gallery .ui-panel-wrapper").width(),
-				height : $("#pg_gallery .ui-panel-wrapper").height(),
-				img64 : imgData
-			});
+			// _self.app.imageEditor.setup({
+			// 'sourceInfo' : sourceInfo[0],
+			// width : $("#pg_gallery .ui-panel-wrapper").width(),
+			// height : $("#pg_gallery .ui-panel-wrapper").height(),
+			// img64 : imgData
+			// });
+			_self.app.aviaryEdit.setup(sourceInfo[0], sourceInfo[0].filePath);
+//			_self.app.aviaryEdit.edit(function(param) {
+//				_self.app.appFS.getFileByURL(param, function(param) {
+//					_self.onEditFinish(param, param.data);
+//				});
+//			});
 		}
 	}
 }
@@ -375,11 +389,14 @@ GalleryPage.prototype.getFileViewHtml = function(file) {
 	// var fileName = _self.app.appFS.getFileName(file.filePath);
 
 	var extension = fileName.substr((fileName.lastIndexOf('.') + 1));
+	console.log(extension);
 	var findResult = jQuery.grep(_self.app.dataTypes, function(item, index) {
 		return item == extension.toUpperCase();
 	});
 	var fileData = _self.app.file64;
 	var isImage = false;
+	console.log(file.dataSource);
+	console.log(findResult.length);
 	if (file.dataSource == 'CMR' || findResult.length > 0) {
 		isImage = true;
 		fileData = _self.app.image64;
@@ -500,34 +517,41 @@ GalleryPage.prototype.onPhotoDataSuccess = function(imageURI) {
 	// });
 	// $.mobile.changePage("#pg_img_editor");
 
-	var tools = cordova.plugins.Aviary.Tools;
-
-	cordova.plugins.Aviary.show({
-		imageURI : imageURI,
-		outputFormat : cordova.plugins.Aviary.OutputFormat.JPEG,
-		quality : 90,
-		toolList : [ tools.SHARPNESS, tools.BRIGHTNESS, tools.CONTRAST,
-				tools.SATURATION, tools.EFFECTS, tools.RED_EYE, tools.CROP,
-				tools.WHITEN, tools.DRAWING, tools.STICKERS, tools.TEXT,
-				tools.BLEMISH, tools.MEME, tools.ADJUST, tools.ENHANCE,
-				tools.COLORTEMP, tools.BORDERS, tools.COLOR_SPLASH,
-				tools.TILT_SHIFT, tools.ORIENTATION, tools.FRAMES ],
-		hideExitUnsaveConfirmation : false,
-		enableEffectsPacks : true,
-		enableFramesPacks : true,
-		enableStickersPacks : true,
-		disableVibration : false,
-		folderName : "MyApp",
-		success : function(result) {
-			var editedImageFileName = result.name;
-			var editedImageURI = result.src;
-			console.log("File name: " + editedImageFileName + ", Image URI: "
-					+ editedImageURI);
-		},
-		error : function(message) {
-			console.log(message);
-		}
+	_self.app.aviaryEdit.setup({}, imageURI);
+	_self.app.aviaryEdit.edit(function(param) {
+		_self.app.appFS.getFileByURL(param, function(param) {
+			_self.onEditFinish(param, param.data);
+		});
 	});
+
+	// var tools = cordova.plugins.Aviary.Tools;
+	//
+	// cordova.plugins.Aviary.show({
+	// imageURI : imageURI,
+	// outputFormat : cordova.plugins.Aviary.OutputFormat.JPEG,
+	// quality : 90,
+	// toolList : [ tools.SHARPNESS, tools.BRIGHTNESS, tools.CONTRAST,
+	// tools.SATURATION, tools.EFFECTS, tools.RED_EYE, tools.CROP,
+	// tools.WHITEN, tools.DRAWING, tools.STICKERS, tools.TEXT,
+	// tools.BLEMISH, tools.MEME, tools.ADJUST, tools.ENHANCE,
+	// tools.COLORTEMP, tools.BORDERS, tools.COLOR_SPLASH,
+	// tools.TILT_SHIFT, tools.ORIENTATION, tools.FRAMES ],
+	// hideExitUnsaveConfirmation : false,
+	// enableEffectsPacks : true,
+	// enableFramesPacks : true,
+	// enableStickersPacks : true,
+	// disableVibration : false,
+	// folderName : "MyApp",
+	// success : function(result) {
+	// var editedImageFileName = result.name;
+	// var editedImageURI = result.src;
+	// console.log("File name: " + editedImageFileName + ", Image URI: "
+	// + editedImageURI);
+	// },
+	// error : function(message) {
+	// console.log(message);
+	// }
+	// });
 }
 
 GalleryPage.prototype.onFail = function(message) {
