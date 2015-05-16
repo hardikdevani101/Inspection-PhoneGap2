@@ -26,44 +26,27 @@ Tbl_VISSetting.prototype.find = function(filter, success, error) {
 		}
 	}
 	var setting = {};
-	this.appDB.dbstore
-			.transaction(
-					function(tx) {
-						tx
-								.executeSql(
-										sql,
-										[],
-										function(tx, results) {
-											var len = results.rows.length;
-											if (len > 0) {
-												console
-														.log('setting Record Exist');
-												setting['service_url'] = results.rows
-														.item(0).vis_url;
-												setting['role'] = results.rows
-														.item(0).vis_role;
-												setting['lang'] = results.rows
-														.item(0).vis_lang;
-												setting['client_id'] = results.rows
-														.item(0).vis_client_id;
-												setting['warehouse_id'] = results.rows
-														.item(0).vis_whouse_id;
-												setting['org_id'] = results.rows
-														.item(0).vis_ord_id;
-												setting['img_quality'] = results.rows
-														.item(0).vis_img_qulty;
-												setting['is_login'] = results.rows
-														.item(0).is_login == "Y";
-												setting['username'] = results.rows
-														.item(0).username;
-												setting['userid'] = results.rows
-														.item(0).userid;
-												setting['password'] = results.rows
-														.item(0).userpwd;
-											}
-											successCallback(setting);
-										});
-					}, errorCallback, this.appDB.success);
+	this.appDB.dbstore.transaction(function(tx) {
+		tx.executeSql(sql, [], function(tx, results) {
+			var len = results.rows.length;
+			if (len > 0) {
+				console.log('setting Record Exist');
+				setting['service_url'] = results.rows.item(0).vis_url;
+				setting['role'] = results.rows.item(0).vis_role;
+				setting['lang'] = results.rows.item(0).vis_lang;
+				setting['client_id'] = results.rows.item(0).vis_client_id;
+				setting['warehouse_id'] = results.rows.item(0).vis_whouse_id;
+				setting['org_id'] = results.rows.item(0).vis_ord_id;
+				setting['img_quality'] = results.rows.item(0).vis_img_qulty;
+				setting['is_login'] = results.rows.item(0).is_login == "Y";
+				setting['username'] = results.rows.item(0).username;
+				setting['userid'] = results.rows.item(0).userid;
+				setting['password'] = results.rows.item(0).userpwd;
+				setting['editApp'] = results.rows.item(0).editApp;
+			}
+			successCallback(setting);
+		});
+	}, errorCallback, this.appDB.success);
 }
 
 Tbl_VISSetting.prototype.add = function(settingInfo, success, error) {
@@ -80,7 +63,7 @@ Tbl_VISSetting.prototype.add = function(settingInfo, success, error) {
 					function(tx) {
 						tx
 								.executeSql('INSERT INTO vis_setting '
-										+ ' (vis_url, vis_lang, vis_client_id, vis_role, vis_whouse_id, vis_ord_id, vis_img_qulty)'
+										+ ' (vis_url, vis_lang, vis_client_id, vis_role, vis_whouse_id, vis_ord_id,editApp, vis_img_qulty)'
 										+ ' VALUES ("'
 										+ settingInfo['service_url'] + '","'
 										+ settingInfo['lang'] + '","'
@@ -88,6 +71,7 @@ Tbl_VISSetting.prototype.add = function(settingInfo, success, error) {
 										+ settingInfo['role'] + '","'
 										+ settingInfo['warehouse_id'] + '","'
 										+ settingInfo['org_id'] + '","'
+										+ settingInfo['editApp'] + '","'
 										+ settingInfo['img_quality'] + '")');
 					}, function(err) {
 						console.log("SettingInfo insert failed." + tx.message);
@@ -112,7 +96,8 @@ Tbl_VISSetting.prototype.update = function(setting, success, error) {
 			+ '" ,vis_lang ="' + setting.lang + '",vis_client_id ="'
 			+ setting.client_id + '",vis_role ="' + setting.role
 			+ '",vis_whouse_id ="' + setting.warehouse_id + '",vis_ord_id ="'
-			+ setting.org_id + '",vis_img_qulty ="' + setting.img_quality + '"';
+			+ setting.org_id + '",vis_img_qulty ="' + setting.img_quality
+			+ '",editApp ="' + setting.editApp + '"';
 	this.appDB.dbstore.transaction(function(tx) {
 		tx.executeSql(sql, [], function(tx, results) {
 			successCallback(results)

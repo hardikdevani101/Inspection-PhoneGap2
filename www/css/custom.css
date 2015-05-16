@@ -571,7 +571,7 @@ body .ui-body-c, body .ui-overlay-c {
 }
 
 #prefixInpectLine {
-	max-width: 30px !important;
+	max-width: 75% !important;
 }
 
 .current_dir_location {
@@ -581,7 +581,7 @@ body .ui-body-c, body .ui-overlay-c {
 }
 
 .current_dir_location  .ui-bar {
-	padding: 0.3em .5em !important;
+	padding: 0em .5em !important;
 	margin-top: 0px !important;
 	font-size: 1em !important;
 }

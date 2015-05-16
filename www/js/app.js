@@ -284,7 +284,7 @@ $(document).ready(function() {
 			if (vision) {
 				app.ftpClient = vision.ftpclient;
 			}
-			
+
 			app.aviaryEdit = new AviaryEditor(app);
 			app.aviaryEdit.init();
 

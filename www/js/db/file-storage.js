@@ -37,9 +37,9 @@ FS.prototype.errorHandler = function(e) {
 FS.prototype.filelist = function(path, success) {
 	var _self = this;
 	console.log(path);
-//	if (path.endsWith('/')) {
-//		path = path.substring(0, path.length - 1);
-//	}
+	// if (path.endsWith('/')) {
+	// path = path.substring(0, path.length - 1);
+	// }
 	window.resolveLocalFileSystemURL(path, function(dirEntry) {
 		var DirReader = dirEntry.createReader();
 		DirReader.readEntries(function(entries) {
@@ -110,27 +110,18 @@ FS.prototype.createVISFile = function(param) {
 											var binaryData = Base64Binary
 													.decodeArrayBuffer(fileBase64);
 											writer.onwrite = function(evt) {
-												var fileFullPath = fileEntry
-														.toURL();
-												console.log(fileFullPath);
-												console.log("New File Created");
-												param['oldURI'] = param.filePath;
-												param.filePath = fileFullPath;
-												param['fileName'] = fileEntry.name;
-												_self.app.appDB
-														.doGalleryEntry(param);
-												console.log("Added Entry ===="
-														+ param.filePath);
+
 												if (_self.app.galleryview.inspFiles[param.inspID]) {
 
-													findResult = jQuery
-															.grep(
-																	_self.app.galleryview.inspFiles[param.inspID],
-																	function(
-																			item,
-																			index) {
-																		return item.filePath == param['oldURI'];
-																	});
+													findResult = [];
+													for (var i = 0; i < _self.app.galleryview.inspFiles[param.inspID].length; i++) {
+														item = _self.app.galleryview.inspFiles[param.inspID][i];
+														if (item.filePath == param['oldURI']) {
+															findResult
+																	.push(item);
+														}
+													}
+
 													if (findResult.length > 0) {
 														$
 																.each(
@@ -147,14 +138,21 @@ FS.prototype.createVISFile = function(param) {
 														item['name'] = param.fileName;
 														item['uploded'] = "N";
 														item['dataSource'] = "LS";
-														item['data'] = "LS";
 														_self.app.galleryview.inspFiles[param.inspID]
 																.push(item);
-														_self.app.appCache.imgCache[param.filePath] = param.fileData;
-														_self.app.galleryview
-																.renderInspFiles();
+
 													}
+													_self.app.appCache.imgCache[param.filePath] = param.fileData;
+													_self.app.galleryview
+															.renderInspFiles();
 												}
+												var fileFullPath = fileEntry
+														.toURL();
+												param['oldURI'] = param.filePath;
+												param.filePath = fileFullPath;
+												param['fileName'] = fileEntry.name;
+												_self.app.appDB
+														.doGalleryEntry(param);
 											};
 											writer.write(binaryData);
 										}, _self.errorHandler);
@@ -166,7 +164,7 @@ FS.prototype.updateVISFile = function(param) {
 	var fileBase64 = param.fileData.replace(
 			/data:image\/(png|jpg|jpeg);base64,/, '');
 	var binaryData = Base64Binary.decodeArrayBuffer(fileBase64);
-	window.resolveLocalFileSystemURL(param.fileFullPath, function(fileEntry) {
+	window.resolveLocalFileSystemURL(param.filePath, function(fileEntry) {
 		fileEntry.createWriter(function(writer) {
 			writer.onwrite = function(evt) {
 				console.log("FileData Updated");

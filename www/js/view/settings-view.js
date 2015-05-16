@@ -42,9 +42,6 @@ SettingsPage.prototype.init = function() {
 	console.log("Inittialize Settings View.");
 	var _self = this;
 
-	_self.renderOrgs();
-	_self.renderRoles();
-	
 	// Register Event listeners
 	$("#txt_organization").on("change", function() {
 		_self.onOrgChange();
@@ -52,6 +49,10 @@ SettingsPage.prototype.init = function() {
 	$("#txt_url").on("change", function() {
 		_self.onServerChange()
 	});
+
+	_self.renderOrgs();
+	_self.renderRoles();
+
 	$('#_form_settings').validate({
 		rules : {
 			txt_url : {
@@ -120,8 +121,7 @@ SettingsPage.prototype.init = function() {
 		if (settingInfo.service_url) {
 			_self.app.appCache.settingInfo = settingInfo;
 			_self.onSettingFind(settingInfo);
-		}
-		else{
+		} else {
 			$("#pg_settings").panel("open", {});
 		}
 	}, function(msg) {
@@ -140,6 +140,7 @@ SettingsPage.prototype.onUpdate = function() {
 	settingInfo['warehouse_id'] = $("#txt_warehouse option:selected").val();
 	settingInfo['img_quality'] = $("#txt_imgQua option:selected").val();
 	settingInfo['role'] = $("#txt_role option:selected").val();
+	settingInfo['editApp'] = $("#txt_editApp option:selected").val();
 
 	var error = function(msg) {
 		console.log("Setting Info Updates Fails." + msg);
@@ -213,7 +214,8 @@ SettingsPage.prototype.onServerChange = function() {
 SettingsPage.prototype.onSettingFind = function(setting) {
 	var _self = this;
 	_self.app.isLogin = setting.is_login;
-	
+	_self.app.editApp = setting.editApp;
+
 	if (!setting.service_url || setting.service_url == '') {
 		if (_self.app.isLogin) {
 			_self.app.logout();
@@ -243,6 +245,9 @@ SettingsPage.prototype.onSettingFind = function(setting) {
 				.siblings('option').removeAttr('selected');
 		$("#txt_organization").selectmenu("refresh", true);
 		$("#txt_organization").trigger("change");
+		$("#txt_editApp").val(setting.editApp).attr('selected', true).siblings(
+				'option').removeAttr('selected');
+		$("#txt_editApp").selectmenu("refresh", true);
 
 		// Enhance new select element
 		// $('#txt_organization').selectmenu();

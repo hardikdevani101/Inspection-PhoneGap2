@@ -18,18 +18,6 @@ GalleryPage.prototype.onEditFinish = function(sourceInfo, editedImgData) {
 	sourceInfo['mrLineID'] = _self.app.appCache.session.m_inoutline_id;
 	sourceInfo['inspID'] = _self.app.appCache.session.x_instructionline_id;
 	sourceInfo['mrID'] = _self.app.appCache.session.M_INOUT_ID;
-	if (sourceInfo.filePath) {
-		$
-				.each(
-						_self.inspFiles[sourceInfo['inspID']],
-						function() {
-							if (this.filePath == sourceInfo.filePath) {
-								if (_self.app.appCache.imgCache[sourceInfo.filePath]) {
-									_self.app.appCache.imgCache[sourceInfo.filePath] = editedImgData;
-								}
-							}
-						});
-	}
 	sourceInfo['fileData'] = editedImgData;
 	sourceInfo['fileExt'] = "jpg";
 
@@ -37,8 +25,26 @@ GalleryPage.prototype.onEditFinish = function(sourceInfo, editedImgData) {
 		if (sourceInfo.filePath
 				&& sourceInfo.filePath.startsWith(_self.app.appFS.rootURI
 						+ "/VIS_Inspection/")) {
+			console.log("On Update File");
+			$
+					.each(
+							_self.inspFiles[sourceInfo['inspID']],
+							function() {
+								if (this.filePath == sourceInfo.filePath) {
+									console.log("Found filePath");
+									if (_self.app.appCache.imgCache[sourceInfo.filePath]) {
+										console.log("Edit image cache");
+										_self.app.appCache.imgCache[sourceInfo.filePath] = editedImgData;
+									}
+								}
+							});
 			_self.app.appFS.updateVISFile(sourceInfo);
+			// _self.app.appCache.imgCache[sourceInfo.filePath] =
+			// sourceInfo.fileData;
+			_self.app.galleryview.renderInspFiles();
+
 		} else {
+			console.log("On create new File");
 			_self.app.appFS.createVISFile(sourceInfo);
 		}
 	}
@@ -67,14 +73,17 @@ GalleryPage.prototype.onDeleteFile = function(event) {
 }
 
 GalleryPage.prototype.onEditFile = function(event) {
-//	event.preventDefault();
-//	$.mobile.changePage("#pg_img_editor");
 	var _self = this;
-	_self.app.aviaryEdit.edit(function(param) {
-		_self.app.appFS.getFileByURL(param, function(param) {
-			_self.onEditFinish(param, param.data);
+	if (_self.app.appCache.settingInfo.editApp == 'Vision') {
+		event.preventDefault();
+		$.mobile.changePage("#pg_img_editor");
+	} else {
+		_self.app.aviaryEdit.edit(function(param) {
+			_self.app.appFS.getFileByURL(param, function(param) {
+				_self.onEditFinish(param, param.data);
+			});
 		});
-	});
+	}
 }
 
 GalleryPage.prototype.onFileData = function(selFiles) {
@@ -132,7 +141,6 @@ GalleryPage.prototype.onCreateNewEntry = function(file, param) {
 	item['name'] = file.name;
 	item['uploded'] = file.uploded;
 	item['dataSource'] = file.dataSource;
-	_self.inspFiles[_self.line_id].push(item);
 
 	// Add DB Entry or Create File from FTP Data
 	if (file.dataSource == "FTP") {
@@ -153,25 +161,52 @@ GalleryPage.prototype.onCreateNewEntry = function(file, param) {
 			_self.visGallery.addFileInfo(param, function() {
 				console.log("Entry Done");
 			}, null);
+			_self.inspFiles[_self.line_id].push(item);
 		}
 	} else {
 		_self.visGallery.addFileInfo(param, function() {
 			console.log("Entry Done");
 		}, null);
+		_self.inspFiles[_self.line_id].push(item);
 	}
 }
 
 GalleryPage.prototype.init = function() {
 	var _self = this;
-	$(document).on("pagebeforeshow", "#pg_gallery", function() {
-		_self.rederBreadCrumb();
-		// TODO remove below hard coded.
-		// _self.line_id = 152452;
-		_self.line_id = _self.app.appCache.session.x_instructionline_id;
-		// _self.app.appCache.session.x_instructionline_id;
-		_self.visGallery = new Tbl_VISGallery(_self.app);
-		_self.loadInspFile();
-	});
+	$(document)
+			.on(
+					"pagebeforeshow",
+					"#pg_gallery",
+					function() {
+						_self.rederBreadCrumb();
+						// TODO remove below hard coded.
+						// _self.line_id = 152452;
+						_self.line_id = _self.app.appCache.session.x_instructionline_id;
+						// _self.app.appCache.session.x_instructionline_id;
+						_self.visGallery = new Tbl_VISGallery(_self.app);
+						_self.loadInspFile();
+
+						if (_self.app.appCache.waterMarkImgs.length > 0) {
+							$('select[name="select-gallery-waterMark"]')
+									.empty();
+							$
+									.each(
+											_self.app.appCache.waterMarkImgs,
+											function() {
+												$(
+														'select[name="select-gallery-waterMark"]')
+														.append(
+																$(
+																		"<option></option>")
+																		.val(
+																				this.url)
+																		.html(
+																				this.name));
+											});
+						}
+						$('select[name="select-gallery-waterMark"]')
+								.selectmenu('refresh');
+					});
 	$('#prefixInpectLine').on('click', function() {
 		$("#prefixInpect").val($('#prefixInpectLine').html());
 	});
@@ -204,50 +239,59 @@ GalleryPage.prototype.init = function() {
 		_self.onEditFile(event);
 
 	});
-	$("#btn_doc_view_mode").on(
-			'click',
-			function() {
-				$(this).removeClass("ui-btn-active");
-				if ($(this).attr('class').indexOf('ui-icon-grid') >= 0) {
-					_self.isGridView = true;
-					$(this).removeClass('ui-icon-grid');
-					$(this).html('List View');
-					$(this).addClass('ui-icon-bars');
-					$('#pg_gallery #pg_gal_main').addClass('img-gallery');
-					$("#ls_inspFiles p a.ui-icon-arrow-u").hide();
-					$.each(_self.inspFiles[_self.line_id],
-							function(index, file) {
+	$("#btn_doc_view_mode")
+			.on(
+					'click',
+					function() {
+						$(this).removeClass("ui-btn-active");
+						if ($(this).attr('class').indexOf('ui-icon-grid') >= 0) {
+							_self.isGridView = true;
+							$(this).removeClass('ui-icon-grid');
+							$(this).html('List View');
+							$(this).addClass('ui-icon-bars ui-btn-icon-notext');
+							$('#pg_gallery #pg_gal_main').addClass(
+									'img-gallery');
+							$("#ls_inspFiles p button.ui-icon-arrow-u").hide();
+							$
+									.each(
+											_self.inspFiles[_self.line_id],
+											function(index, file) {
+												if (file.uploded == 'T') {
+													$(
+															'#ls_inspFiles li[data-id="'
+																	+ file.filePath
+																	+ '"] p button.ui-icon-arrow-u')
+															.show();
+												}
+											});
+							$("#ls_inspFiles li button h2").css("color",
+									"white");
+
+						} else {
+							_self.isGridView = false;
+							$(this).removeClass('ui-icon-bars');
+							$(this).html('Grid View');
+							$(this).addClass('ui-icon-grid ui-btn-icon-notext');
+							$('#pg_gallery #pg_gal_main').removeClass(
+									'img-gallery');
+							$('#ls_inspFiles li a').removeClass(
+									"ui-icon-carat-r");
+							$("#ls_inspFiles p button.ui-icon-arrow-u").hide();
+							$.each(_self.inspFiles[_self.line_id], function(
+									index, file) {
 								if (file.uploded == 'T') {
+
 									$(
 											'#ls_inspFiles li[data-id="'
 													+ file.filePath
-													+ '"] p a.ui-icon-arrow-u')
-											.show();
+													+ '"] button').addClass(
+											"ui-icon-arrow-u");
 								}
 							});
-					$("#ls_inspFiles li a h2").css("color", "white");
-
-				} else {
-					_self.isGridView = false;
-					$(this).removeClass('ui-icon-bars');
-					$(this).html('Grid View');
-					$(this).addClass('ui-icon-grid');
-					$('#pg_gallery #pg_gal_main').removeClass('img-gallery');
-					$('#ls_inspFiles li a').removeClass("ui-icon-carat-r");
-					$("#ls_inspFiles p a.ui-icon-arrow-u").hide();
-					$.each(_self.inspFiles[_self.line_id],
-							function(index, file) {
-								if (file.uploded == 'T') {
-
-									$(
-											'#ls_inspFiles li[data-id="'
-													+ file.filePath + '"] a')
-											.addClass("ui-icon-arrow-u");
-								}
-							});
-					$("#ls_inspFiles li a h2").css("color", "#202C3C");
-				}
-			});
+							$("#ls_inspFiles li button h2").css("color",
+									"#202C3C");
+						}
+					});
 }
 
 GalleryPage.prototype.loadInspFile = function() {
@@ -367,18 +411,25 @@ GalleryPage.prototype.onFileTap = function(event) {
 			return value.filePath == dataid;
 		});
 		if (sourceInfo.length > 0) {
-			// _self.app.imageEditor.setup({
-			// 'sourceInfo' : sourceInfo[0],
-			// width : $("#pg_gallery .ui-panel-wrapper").width(),
-			// height : $("#pg_gallery .ui-panel-wrapper").height(),
-			// img64 : imgData
-			// });
-			_self.app.aviaryEdit.setup(sourceInfo[0], sourceInfo[0].filePath);
-//			_self.app.aviaryEdit.edit(function(param) {
-//				_self.app.appFS.getFileByURL(param, function(param) {
-//					_self.onEditFinish(param, param.data);
-//				});
-//			});
+
+			if (_self.app.appCache.settingInfo.editApp == 'Vision') {
+				_self.app.imageEditor.setup({
+					'sourceInfo' : sourceInfo[0],
+					width : $("#pg_gallery .ui-panel-wrapper").width(),
+					height : $("#pg_gallery .ui-panel-wrapper").height(),
+					img64 : imgData,
+					watermark : $('select[name="select-gallery-waterMark"]')
+							.val()
+				});
+			} else {
+				console.log(sourceInfo[0].filePath);
+				_self.app.aviaryEdit.setup({
+					'sourceInfo' : sourceInfo[0],
+					imageURI : sourceInfo[0].filePath,
+					watermark : $('select[name="select-gallery-waterMark"]')
+							.val()
+				});
+			}
 		}
 	}
 }
@@ -518,40 +569,8 @@ GalleryPage.prototype.onPhotoDataSuccess = function(imageURI) {
 	// $.mobile.changePage("#pg_img_editor");
 
 	_self.app.aviaryEdit.setup({}, imageURI);
-	_self.app.aviaryEdit.edit(function(param) {
-		_self.app.appFS.getFileByURL(param, function(param) {
-			_self.onEditFinish(param, param.data);
-		});
-	});
+	_self.app.aviaryEdit.edit();
 
-	// var tools = cordova.plugins.Aviary.Tools;
-	//
-	// cordova.plugins.Aviary.show({
-	// imageURI : imageURI,
-	// outputFormat : cordova.plugins.Aviary.OutputFormat.JPEG,
-	// quality : 90,
-	// toolList : [ tools.SHARPNESS, tools.BRIGHTNESS, tools.CONTRAST,
-	// tools.SATURATION, tools.EFFECTS, tools.RED_EYE, tools.CROP,
-	// tools.WHITEN, tools.DRAWING, tools.STICKERS, tools.TEXT,
-	// tools.BLEMISH, tools.MEME, tools.ADJUST, tools.ENHANCE,
-	// tools.COLORTEMP, tools.BORDERS, tools.COLOR_SPLASH,
-	// tools.TILT_SHIFT, tools.ORIENTATION, tools.FRAMES ],
-	// hideExitUnsaveConfirmation : false,
-	// enableEffectsPacks : true,
-	// enableFramesPacks : true,
-	// enableStickersPacks : true,
-	// disableVibration : false,
-	// folderName : "MyApp",
-	// success : function(result) {
-	// var editedImageFileName = result.name;
-	// var editedImageURI = result.src;
-	// console.log("File name: " + editedImageFileName + ", Image URI: "
-	// + editedImageURI);
-	// },
-	// error : function(message) {
-	// console.log(message);
-	// }
-	// });
 }
 
 GalleryPage.prototype.onFail = function(message) {

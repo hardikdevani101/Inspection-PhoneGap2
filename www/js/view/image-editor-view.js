@@ -25,6 +25,7 @@ ImageEditorPage.prototype.setup = function(options) {
 	this.canHeight = options.height;
 	this.image64 = options.img64;
 	this.sourceInfo = options.sourceInfo;
+	this.selectedWM = options.watermark;
 }
 
 ImageEditorPage.prototype.drowRect = function(x, y, w, h) {
@@ -138,16 +139,16 @@ ImageEditorPage.prototype.cropFinished = function() {
 
 ImageEditorPage.prototype.init = function() {
 	var _self = this;
-	$(document)
-			.on(
-					"pagebeforeshow",
-					"#pg_img_editor",
-					function() {
-						_self.rederBreadCrumb();
-						_self.cValue = 0;
-						_self.bValue = 0;
-						$("#txt_prefix").val($('#prefixInpectLine').html());
-						$('#btn_filter_ok').on(
+	$(document).on(
+			"pagebeforeshow",
+			"#pg_img_editor",
+			function() {
+				_self.rederBreadCrumb();
+				_self.cValue = 0;
+				_self.bValue = 0;
+				$("#txt_prefix").val($('#prefixInpectLine').html());
+				$('#btn_filter_ok')
+						.on(
 								'click',
 								function() {
 									$("#prefixInpectLine").html(
@@ -159,99 +160,70 @@ ImageEditorPage.prototype.init = function() {
 												.val();
 								});
 
-						$("#slider-brightness").on("slidestop",
-								function(event) {
-									_self.brightness = event.target.value;
-									_self.onBrightnessChange(event);
-								});
+				$("#slider-brightness").on("slidestop", function(event) {
+					_self.brightness = event.target.value;
+					_self.onBrightnessChange(event);
+				});
 
-						$("#slider-contrast").on("slidestop", function(event) {
-							_self.contrast = event.target.value;
-							_self.onContrastChange(event);
-						});
+				$("#slider-contrast").on("slidestop", function(event) {
+					_self.contrast = event.target.value;
+					_self.onContrastChange(event);
+				});
 
-						$('.img-container').html(
-								[ '<img id="img_editable" src="'
-										+ _self.image64 + '" />' ].join(''));
-						$("#img_editable").load(function() {
-							console.log(">>>>>>>>>>img_editable ");
-							_self.initCropMode();
-							_self.enableEditMode();
-						});
+				$('.img-container').html(
+						[ '<img id="img_editable" src="' + _self.image64
+								+ '" />' ].join(''));
+				$("#img_editable").load(function() {
+					console.log(">>>>>>>>>>img_editable ");
+					_self.initCropMode();
+					_self.enableEditMode();
+				});
 
+				$("#crop-toolbar").hide();
+				$("#btn_skip_edit").on("tap", function() {
+					$.mobile.changePage("#pg_gallery");
+				});
+
+				$("#btn_add_watermark").on("tap", function() {
+					_self.applyWatermark();
+				});
+
+				$("#btn_reset").on("tap", function() {
+					$("#slider-brightness").val(0).slider("refresh");
+					$("#slider-contrast").val(0).slider("refresh");
+					_self.cValue = 0;
+					_self.bValue = 0;
+					var img = $('#img_editable').attr('src', _self.image64);
+					_self.enableEditMode();
+					_self.isCropEnable = false;
+					_self.isEditEnable = true;
+					_self.corpperImage.cropper("destroy");
+				});
+
+				$("#btn_edit_finished").on("tap", function() {
+					_self.onEditFinish();
+				});
+				$("#btn_crop").on("tap", function() {
+					if (_self.isCropEnable) {
+						$("#crop-image-container").hide();
+						$("#edit-canvase").show();
 						$("#crop-toolbar").hide();
-						$("#btn_skip_edit").on("tap", function() {
-							$.mobile.changePage("#pg_gallery");
-						});
+						_self.isCropEnable = false;
+						_self.isEditEnable = true;
+						// _self.corpperImage.cropper("destroy");
+						_self.enableEditMode();
+					} else {
+						_self.isCropEnable = true;
+						_self.isEditEnable = false;
+						$("#crop-image-container").show();
+						$("#edit-canvase").hide();
+						$("#crop-toolbar").show();
+						_self.enableCropMode();
+						_self.corpperImage.cropper("setDragMode", "crop");
 
-						$("#btn_add_watermark").on("tap", function() {
-							_self.applyWatermark();
-						});
-
-						$("#btn_reset").on(
-								"tap",
-								function() {
-									$("#slider-brightness").val(0).slider(
-											"refresh");
-									$("#slider-contrast").val(0).slider(
-											"refresh");
-									_self.cValue = 0;
-									_self.bValue = 0;
-									var img = $('#img_editable').attr('src',
-											_self.image64);
-									_self.enableEditMode();
-									_self.isCropEnable = false;
-									_self.isEditEnable = true;
-									_self.corpperImage.cropper("destroy");
-								});
-
-						$("#btn_edit_finished").on("tap", function() {
-							_self.onEditFinish();
-						});
-						$("#btn_crop").on(
-								"tap",
-								function() {
-									if (_self.isCropEnable) {
-										$("#crop-image-container").hide();
-										$("#edit-canvase").show();
-										$("#crop-toolbar").hide();
-										_self.isCropEnable = false;
-										_self.isEditEnable = true;
-										// _self.corpperImage.cropper("destroy");
-										_self.enableEditMode();
-									} else {
-										_self.isCropEnable = true;
-										_self.isEditEnable = false;
-										$("#crop-image-container").show();
-										$("#edit-canvase").hide();
-										$("#crop-toolbar").show();
-										_self.enableCropMode();
-										_self.corpperImage.cropper(
-												"setDragMode", "crop");
-
-									}
-								});
-
-						if (_self.app.appCache.waterMarkImgs.length > 0) {
-							$('select[name="select-crop-waterMark"]').empty();
-							$
-									.each(
-											_self.app.appCache.waterMarkImgs,
-											function() {
-												$(
-														'select[name="select-crop-waterMark"]')
-														.append(
-																$(
-																		"<option></option>")
-																		.val(
-																				this.url)
-																		.html(
-																				this.name));
-											});
-						}
-						$('select[name="select-crop-waterMark"]').selectmenu(
-								'refresh');
-					});
+					}
+				});
+			});
 };
 
 ImageEditorPage.prototype.enableCropMode = function() {
@@ -387,13 +359,13 @@ ImageEditorPage.prototype.initCropMode = function() {
 
 ImageEditorPage.prototype.onEditFinish = function() {
 	var _self = this;
-	var selectedWM = $('select[name="select-crop-waterMark"]').val();
+	// this selectedWM = $('select[name="select-crop-waterMark"]').val();
 	// TODO: getWatermark image data from appCache.
 	var watermarkImage = _self.app.watermark64;
-	if (selectedWM) {
+	if (_self.selectedWM) {
 		var findResult = jQuery.grep(_self.app.appCache.waterMarkImgs,
 				function(item, index) {
-					return item.url == selectedWM;
+					return item.url == _self.selectedWM;
 				});
 		if (findResult.length > 0) {
 			watermarkImage = findResult[0].data;
@@ -420,21 +392,9 @@ ImageEditorPage.prototype.onEditFinish = function() {
 			x = (nGcanvas.width - 20) - (watermark.width);
 			y = (nGcanvas.height - 20) - (watermark.height);
 			nGctx.drawImage(watermark, x, y);
-			// var encoder = new JPEGEncoder();
-			// var img64 = encoder.encode(_self.editCtx.getImageData(0, 0, 1024,
-			// 768),
-			// parseInt(80)).replace(/data:image\/jpeg;base64,/, '');
-			// _self.curentImage = Base64Binary.decodeArrayBuffer(img64);
-			// $('#img_editable').attr('src', _self.gcanvas.);
-			// _self.editedCanvase = _self.editCtx.getImageData(0, 0,
-			// _self.gcanvas.width, _self.gcanvas.height);
-			// $('#img_editable').attr('src', _self.nGcanvas.toDataURL());
-			// $('#img_editable').load(
-			// function() {
 			_self.app.galleryview.onEditFinish(_self.sourceInfo, nGcanvas
 					.toDataURL());
 			$.mobile.changePage("#pg_gallery");
-			// });
 		}
 	}
 }
