@@ -378,7 +378,6 @@ body {
 		height: 40px !important;
 		background-size: 80% !important;
 	}
-
 	.ui-input-search.ui-input-has-clear .ui-btn.ui-input-clear,
 		.ui-input-text.ui-input-has-clear .ui-btn.ui-input-clear {
 		top: 32% !important;
@@ -482,6 +481,11 @@ body {
 	.img-gallery .ui-listview>.ui-li-has-thumb>.ui-btn, .ui-listview>.ui-li-static.ui-li-has-thumb
 		{
 		min-height: 11.7em !important;
+	}
+	#crop-toolbar .ui-btn {
+		font-size: 32px !important;
+		padding: 1em 1em !important;
+		margin: 0.1em .3em !important;
 	}
 }
 /* For this demo we used images with a size of 310x310 pixels. Just before the second breakpoint the images reach their max width: 1019px - 2 x 9px padding = 1001px x 30.9333% = ~310px */

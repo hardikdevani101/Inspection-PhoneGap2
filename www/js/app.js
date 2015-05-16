@@ -13,8 +13,12 @@ App.prototype.onDeviceReady = function() {
 	$.mobile.allowCrossDomainPages = true;
 	$.support.cors = true;
 	$.mobile.loadingMessage = "Loading..";
-	$("[data-role=header]").toolbar({ tapToggle: false });
-	$("[data-role=footer]").toolbar({ tapToggle: false });
+	$("[data-role=header]").toolbar({
+		tapToggle : false
+	});
+	$("[data-role=footer]").toolbar({
+		tapToggle : false
+	});
 
 	this.isOnline = navigator.onLine ? true : false;
 	if (navigator.network) {
@@ -289,6 +293,11 @@ $(document).ready(function() {
 			app.aviaryEdit.init();
 
 		}, false);
+
+		if (!window.resolveLocalFileSystemURL) {
+			app.appFS = new FS(app);
+			app.appFS.init();
+		}
 	} else {
 		console.log('Explicitly called onDeviceReady!!')
 		// app.onDeviceReady();

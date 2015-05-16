@@ -114,6 +114,7 @@ ImageEditorPage.prototype.enableEditMode = function() {
 		});
 		$(document).on("vmouseup", "#edit-canvase", function(e) {
 			isDrawing = false;
+			console.log(">>>>>>>>>>>>>vmouseup");
 			$('#img_editable').attr('src', _self.gcanvas.toDataURL());
 		})
 	}
@@ -338,6 +339,40 @@ ImageEditorPage.prototype.initCropMode = function() {
 		_self.corpperImage.cropper("zoom", -0.1);
 	});
 
+	$(document).on("vmouseup", "#btn_crop_zoom_plus", function(e) {
+		_self.cropResize = false;
+	});
+
+	$(document).on("taphold", "#btn_crop_zoom_plus", function(e) {
+		_self.cropResize = true;
+		_self.setCropBoxData(10);
+	});
+
+	$(document).on("vmouseup", "#btn_crop_zoom_minus", function(e) {
+		_self.cropResize = false;
+		console.log("vmouseup>>>>>>>>>>>>>>")
+	});
+
+	$(document).on("taphold", "#btn_crop_zoom_minus", function(e) {
+		_self.cropResize = true;
+		//_self.setCropBoxData(-10);
+		console.log("taphold>>>>>>>>>>>>>>")
+	});
+
+	/*
+	 * $("#btn_crop_zoom_plus").on("touchstart", function() { _self.cropResize =
+	 * true; _self.setCropBoxData(10); });
+	 * 
+	 * $("#btn_crop_zoom_minus").on("touchstart", function() { _self.cropResize =
+	 * true; _self.setCropBoxData(-10); });
+	 * 
+	 * $("#btn_crop_zoom_plus").on("touchstop", function() { _self.cropResize =
+	 * false; });
+	 * 
+	 * $("#btn_crop_zoom_minus").on("touchstop", function() { _self.cropResize =
+	 * false; });
+	 */
+
 	$("#btn_rotate_left").on("tap", function() {
 		_self.corpperImage.cropper("rotate", -45);
 	});
@@ -355,6 +390,19 @@ ImageEditorPage.prototype.initCropMode = function() {
 	});
 
 	_self.isCropperOn = true;
+}
+
+ImageEditorPage.prototype.setCropBoxData = function(param) {
+	var _self = this;
+	while (true) {
+		if (!_self.cropResize) {
+			break;
+		} else {
+			var data = _self.corpperImage.cropper("getCropBoxData");
+			data.width = data.width + param;
+			_self.corpperImage.cropper("setCropBoxData", data);
+		}
+	}
 }
 
 ImageEditorPage.prototype.onEditFinish = function() {
