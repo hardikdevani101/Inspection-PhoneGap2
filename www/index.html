@@ -348,16 +348,16 @@ End of Inspection page
 			<h2 data-role="heading">Documents</h2>
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-right">
-				<button id="btn_user" href="#pnl_aboutus" data-icon="user"
-					data-corners="false" data-shadow="false" data-iconshadow="false"
-					data-wrapperels="span" title="User" data-rel="popup"
-					data-transition="flip"></button>
-				<button href="#" id="btn_logout" data-icon="power"
-					data-corners="false" data-iconpos="notext" data-shadow="false"
-					data-iconshadow="false" data-wrapperels="span" title="Logout">SignOut</button>
-				<button href="#" id="btn_doc_view_mode"
-					class="ui-icon-bars ui-btn-icon-left ui-btn-icon-notext"
-					data-shadow="false" data-wrapperels="span" title="Back">List
+				<button id="btn_user" data-icon="user" data-corners="false"
+					data-shadow="false" data-iconshadow="false" data-wrapperels="span"
+					title="User" data-rel="popup" data-transition="flip"></button>
+				<button id="btn_logout" data-icon="power" data-corners="false"
+					data-iconpos="notext" data-shadow="false" data-iconshadow="false"
+					data-wrapperels="span" title="Logout">SignOut</button>
+				<button id="btn_doc_view_mode" data-icon="bars" data-corners="false"
+					data-iconpos="notext" data-shadow="false" data-iconshadow="false"
+					data-wrapperels="span" title="view"
+					class="ui-btn ui-icon-bars ui-btn-icon-notext ui-last-child">List
 					View</button>
 			</div>
 		</div>
@@ -369,35 +369,16 @@ End of Inspection page
 		</div>
 
 
-		<div data-role="popup" id="pop_file_actions" data-theme="b">
-			        
+		<div data-role="popup" id="pop_file_actions" data-corners="true"
+			data-shadow="false" data-theme="b">
 			<ul data-role="listview" data-inset="true">
-				            
 				<li data-role="list-divider">Choose an action</li>
 				<li><a href="#" data-theme="b" class="ui-icon-edit"
 					id="btn_edit_file">Edit</a></li>
 				<li><a href="#" data-theme="b" class="ui-icon-delete"
-					id="btn_delete_file">Delete</a></li>         
+					id="btn_delete_file">Delete</a></li>
 			</ul>
 		</div>
-		<!-- 
-		<div data-role="popup" id="pop_file_actions" data-corners="true"
-			data-theme="c" data-shadow="false">
-			<ul data-role="listview" data-inset="true" >
-				<li data-role="list-divider">Choose an action</li>             
-				<li><a href="#" id="btn_edit_file" data-theme="c">Edit</a></li>
-				<li><a href="#" data-theme="c" id="btn_delete_file">Delete</a></li>
-			</ul>
-
-						<div class="ui-nodisc-icon">
-				<a href="#" id="btn_edit_file" data-theme="c"
-					class="ui-btn ui-corner-all ui-icon-edit ui-btn-icon-notext ui-btn-c ui-btn-inline">Edit</a>
-				<a href="#" data-theme="c" id="btn_delete_file"
-					class="ui-btn ui-corner-all ui-icon-delete ui-btn-icon-notext ui-btn-c ui-btn-inline">Delete</a>
-			</div>
-
-		</div>
- -->
 		<div data-role="panel" data-theme="c" id="pnl_file_sources"
 			data-position="right">
 			<ul data-role="listview" data-theme="c">
@@ -414,43 +395,60 @@ End of Inspection page
 		</div>
 
 		<div data-role="footer" data-position="fixed" data-theme="c">
-			<div data-role="navbar" data-iconpos="left">
-				<ul>
-					<li style="width: 35%">
-						<div class="ui-field-contain">
-							<a href="#prefixModify" id="prefixInpectLine" data-rel="popup"
-								class="ui-btn ui-icon-check ui-btn-icon-right ui-corner-all"
-								title="prefix" data-mini="true"></a>
-						</div>
-					</li>
-					<li style="width: 50%">
-						<div class="ui-field-contain">
-							<label for="select-gallery-waterMark">WM</label> <select
-								data-mini="true" id="sel_gwaterMark"
-								name="select-gallery-waterMark" data-native-menu="false"></select>
-						</div>
-					</li>
-					<li style="width: 15%"><div class="ui-field-contain">
-							<a href="#pnl_file_sources" id="btn-add" data-shadow="false"
-								class="ui-btn-center ui-btn ui-icon-plus ui-btn-icon-center ui-btn-icon-notext"
-								data-wrapperels="span" title="Add">Add</a>
-						</div></li>
-				</ul>
+			<div data-role="navbar">
+				<div class="ui-grid-a">
+					<div class="ui-block-a">
+						<ul>
+							<li class="ui-field-contain" data-shadow="false"
+								data-iconshadow="false" data-wrapperels="div"
+								data-icon="arrow-r" data-iconpos="right" data-theme="c"
+								xstyle="width: 50%"><select data-mini="true"
+								id="sel_gwaterMark" name="select-gallery-waterMark"
+								data-native-menu="false"><option val="">Select
+										Watermark</option></select></li>
+							<li xstyle="width: 15%"></li>
+						</ul>
+					</div>
+					<div xclass="ui-block-b" data-role="controlgroup"
+						data-type="horizontal" class="ui-mini ui-btn-right">
+						<button id="prefixInpectLine" href="#prefixModify" data-icon=""
+							data-corners="true" data-shadow="false" data-iconshadow="false"
+							data-wrapperels="span" title="InspLine" data-rel="popup"
+							data-transition="flip">text</button>
+						<button href="#pnl_file_sources" id="btn-add" data-icon="plus"
+							data-corners="true" data-iconpos="notext" data-shadow="false"
+							data-iconshadow="false" data-wrapperels="span" title="Logout"
+							class="ui-btn ui-icon-plus ui-btn-icon-notext ui-last-child">>Add</button>
+					</div>
+				</div>
 			</div>
 		</div>
+
+		<div data-role="popup" id="prefixModify" id="pop_file_actions"
+			data-corners="false" data-shadow="false" data-theme="b">
+			<ul data-role="listview" data-inset="true">
+				<li><a href="#" data-theme="b" id="btn_update_prefix"
+					class="ui-icon-edit" id="btn_edit_file">Edit</a></li>
+				<li><label for="prefixInpect">Prefix</label> <input type="text"
+					name="prefixInpect" id="prefixInpect" value=""
+					placeholder="Enter Prefix Here!" data-theme="a" data-mini="true"
+					data-inset="fasle"></li>
+			</ul>
+		</div>
+		<!-- 
 		<div data-role="popup" id="prefixModify" data-theme="c"
 			class="ui-corner-all">
 			<div>
-				<div data-role="header" class="ui-header ui-bar-a" data-theme="b">
+				<div data-role="header" class="ui-header " data-theme="b">
 					<h1 class="ui-title">Prefix</h1>
-					<a href="#" id="btn_update_prefix"
+					<a href="#" data-shadow="false" id="btn_update_prefix"
 						class="ui-btn-right ui-btn ui-btn-c ui-icon-edit ui-btn-icon-right ui-corner-all ui-btn-icon-notext"
 						data-rel="back"></a>
 				</div>
-				<input type="text" name="prefixInpect" id="prefixInpect" value=""
-					placeholder="prefix" data-theme="a" data-mini="true">
+				
+				
 			</div>
-		</div>
+		</div> -->
 	</div>
 	<!-------------------------------------------------------------
 End of Gallery page

@@ -399,7 +399,7 @@ body {
 	.ui-mini .ui-input-text input, .ui-mini .ui-input-search input,
 		.ui-input-text.ui-mini input, .ui-input-search.ui-mini input, .ui-mini textarea.ui-input-text,
 		textarea.ui-mini {
-		xfont-size: 32px !important;
+		font-size: 32px !important;
 	}
 	.xui-alt-icon.ui-icon-search:after, .ui-alt-icon .ui-icon-search:after,
 		.ui-input-search:after {

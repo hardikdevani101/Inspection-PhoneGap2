@@ -208,7 +208,12 @@ GalleryPage.prototype.init = function() {
 								.selectmenu('refresh');
 					});
 	$('#prefixInpectLine').on('click', function() {
+		$("#prefixModify").popup("open");
 		$("#prefixInpect").val($('#prefixInpectLine').html());
+	});
+
+	$('#btn-add').on('click', function() {
+		$("#pnl_file_sources").panel("open");
 	});
 	$('#btn_update_prefix').on(
 			'click',
@@ -251,6 +256,8 @@ GalleryPage.prototype.init = function() {
 							$(this).addClass('ui-icon-bars ui-btn-icon-notext');
 							$('#pg_gallery #pg_gal_main').addClass(
 									'img-gallery');
+							$('#pg_gallery #pg_gal_main img').removeClass(
+									'ui-listview-mode');
 							$("#ls_inspFiles p button.ui-icon-arrow-u").hide();
 							$
 									.each(
@@ -272,8 +279,11 @@ GalleryPage.prototype.init = function() {
 							$(this).removeClass('ui-icon-bars');
 							$(this).html('Grid View');
 							$(this).addClass('ui-icon-grid ui-btn-icon-notext');
+							$('#pg_gallery #pg_gal_main img').addClass(
+									'ui-listview-mode');
 							$('#pg_gallery #pg_gal_main').removeClass(
 									'img-gallery');
+
 							$('#ls_inspFiles li a').removeClass(
 									"ui-icon-carat-r");
 							$("#ls_inspFiles p button.ui-icon-arrow-u").hide();
