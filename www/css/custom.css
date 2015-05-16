@@ -4,8 +4,9 @@
 	preventFocusZoom: true;
 }
 
-.ui-page-theme-a .ui-focus,html .ui-bar-a .ui-focus,html .ui-body-a .ui-focus,html body .ui-group-theme-a .ui-focus,html head+body .ui-btn-a.ui-focus,html head+body .ui-body-a.ui-focus
-	{
+.ui-page-theme-a .ui-focus, html .ui-bar-a .ui-focus, html .ui-body-a .ui-focus,
+	html body .ui-group-theme-a .ui-focus, html head+body .ui-btn-a.ui-focus,
+	html head+body .ui-body-a.ui-focus {
 	-webkit-box-shadow: 0 0 0px #3388cc /*{c-active-background-color}*/;
 	-moz-box-shadow: 0 0 0px #3388cc /*{c-active-background-color}*/;
 	box-shadow: 0 0 0px #3388cc /*{c-active-background-color}*/;
@@ -40,7 +41,7 @@
 	margin: 0 auto;
 }
 
-.ui-mobile [data-role=header],.ui-mobile [data-role=footer] {
+.ui-mobile [data-role=header], .ui-mobile [data-role=footer] {
 	text-shadow: 0px 0px 0px #000 !important;
 }
 
@@ -105,7 +106,7 @@ body {
 	xbackground: url(../img/plus.png) no-repeat !important;
 }
 
-.img-gallery .ui-listview>.ui-li-has-thumb>.ui-btn,.ui-listview>.ui-li-static.ui-li-has-thumb
+.img-gallery .ui-listview>.ui-li-has-thumb>.ui-btn, .ui-listview>.ui-li-static.ui-li-has-thumb
 	{
 	min-height: 6.625em;
 }
@@ -125,6 +126,13 @@ body {
 } */
 .cropper-point .point-se {
 	background-image: url("../img/crop.png") !important;
+}
+
+.ui-header.ui-screen-hidden+.ui-selectmenu-list li  .ui-btn {
+	line-height: .5em !important;
+	border-top-width: 0;
+	font-size: .9em !important;
+	xfont-weight: normal !important;
 }
 
 /* First breakpoint is 48em (768px). 3 column layout. Tiles 250x250 pixels incl. margin at the breakpoint. */
@@ -147,7 +155,7 @@ body {
 		padding: 1em 0 1em 0px !important;
 		margin-top: 0px;
 	}
-	#pnl_selected_files  .ui-content .ui-listview,.ui-panel-inner>.ui-listview
+	#pnl_selected_files  .ui-content .ui-listview, .ui-panel-inner>.ui-listview
 		{
 		margin: 0em;
 	}
@@ -161,7 +169,7 @@ body {
 	.logoimage {
 		width: 80%;
 	}
-	.img-gallery  .ui-listview>.ui-li-has-thumb>.ui-btn,.ui-listview>.ui-li-static.ui-li-has-thumb
+	.img-gallery  .ui-listview>.ui-li-has-thumb>.ui-btn, .ui-listview>.ui-li-static.ui-li-has-thumb
 		{
 		padding-left: 1.25em !important;
 	}
@@ -189,8 +197,8 @@ body {
 		padding: 1px !important;
 	}
 	/* Make all list items and anchors inherit the border-radius from the UL. */
-	.img-gallery .ui-listview li,.img-gallery .ui-listview li .ui-btn,.img-gallery .ui-listview .ui-li-thumb
-		{
+	.img-gallery .ui-listview li, .img-gallery .ui-listview li .ui-btn,
+		.img-gallery .ui-listview .ui-li-thumb {
 		-webkit-border-radius: 0;
 		border-radius: inherit;
 	}
@@ -199,7 +207,7 @@ body {
 		display: none;
 	}
 	/* Make text wrap. */
-	.img-gallery .ui-listview h2,.img-gallery .ui-listview p {
+	.img-gallery .ui-listview h2, .img-gallery .ui-listview p {
 		white-space: normal;
 		overflow: visible;
 		position: absolute;
@@ -229,15 +237,15 @@ body {
 	}
 
 	/* Semi transparent background and different position if there is a thumb. The button has overflow hidden so we don't need to set border-radius. */
-	.ui-listview .ui-li-has-thumb h2,.ui-listview .ui-li-has-thumb p {
+	.ui-listview .ui-li-has-thumb h2, .ui-listview .ui-li-has-thumb p {
 		background: #111;
 		background: rgba(232, 214, 218, 1);
-		color: #BB133E;
+		color: #000;
 	}
 	.ui-listview .ui-li-has-thumb h2 {
 		bottom: 0%;
 		background: transparent !important;
-		color: #202C3C !important;
+		color: #000 !important;
 		font-size: .9em !important;
 	}
 	.ui-listview .ui-li-has-thumb p {
@@ -274,7 +282,7 @@ body {
 		xbox-shadow: 0px 0px 2px #33ccff;
 	}
 	/* Animate focus and hover style, and resizing. */
-	.img-gallery .ui-listview li,.img-gallery .ui-listview .ui-btn {
+	.img-gallery .ui-listview li, .img-gallery .ui-listview .ui-btn {
 		x-webkit-transition: all 500ms ease;
 		x-moz-transition: all 500ms ease;
 		x-o-transition: all 500ms ease;
@@ -283,7 +291,8 @@ body {
 	}
 }
 
-@media ( min-width : 600px) { /* .cropper-container {
+@media ( min-width : 600px) {
+	/* .cropper-container {
 		min-height: 400px;
 	}
 	.img-container {
@@ -291,11 +300,23 @@ body {
 	} */
 	.img-gallery .ui-listview li {
 		float: left;
-		width: 12%;
+		width: 21%;
 		xheight: 60px;
 		margin: .5em 0.5em;
-		border: 1px solid transparent;
+		xborder: 1px solid transparent;
 	}
+	.img-gallery .ui-listview .ui-li-has-thumb>img:first-child, .ui-listview .ui-li-has-thumb>.ui-btn>img:first-child,
+		.ui-listview .ui-li-has-thumb .ui-li-thumb {
+		position: absolute;
+		left: 0;
+		top: 0;
+		max-height: 8em !important;
+		max-width: 8em !important;
+	}
+}
+
+.ui-listview-mode {
+	
 }
 
 /* Second breakpoint is 63.75em (1020px). 4 column layout. Tiles will be 250x250 pixels incl. margin again at the breakpoint. */
@@ -308,8 +329,114 @@ body {
 	.logoimage {
 		width: 100%;
 	}
+	.ui-btn {
+		font-size: 25px !important;
+	}
+	.ui-btn-icon-notext:after, .ui-btn-icon-left:after, .ui-btn-icon-right:after
+		{
+		top: 38% !important;
+		margin-top: -11px !important;
+	}
+	.ui-btn-icon-left:after, .ui-btn-icon-right:after, .ui-btn-icon-top:after,
+		.ui-btn-icon-bottom:after, .ui-btn-icon-notext:after {
+		content: "";
+		position: absolute;
+		display: block;
+		width: 44px !important;
+		height: 44px !important;
+		background-size: 50% !important;
+	}
+	.xui-panel {
+		width: 25em !important;
+		min-height: 100%;
+		max-height: none;
+		border-width: 0;
+		position: absolute;
+		top: 0;
+		display: block;
+	}
+	.ui-input-search:after {
+		background-size: 100% !important;
+	}
+	.ui-btn-icon-notext:after, .ui-btn-icon-top:after, .ui-btn-icon-bottom:after
+		{
+		left: 32% !important;
+		margin-left: -11px;
+	}
+	.ui-header.ui-screen-hidden+.ui-selectmenu-list li  .ui-btn {
+		line-height: 1em !important;
+		xfont-size: 1.2em !important;
+	}
+	.ui-mobile label, div.ui-controlgroup-label {
+		font-weight: normal;
+		font-size: 32px !important;
+	}
+	.ui-input-search:after {
+		top: 36% !important;
+		margin-top: -7px !important;
+		width: 40px !important;
+		height: 40px !important;
+		background-size: 80% !important;
+	}
+
+	.ui-input-search.ui-input-has-clear .ui-btn.ui-input-clear,
+		.ui-input-text.ui-input-has-clear .ui-btn.ui-input-clear {
+		top: 32% !important;
+	}
+	.ui-icon-delete:after {
+		width: 40px !important;
+		height: 40px !important;
+	}
+	.ui-input-text, .ui-input-search {
+		margin: 0.2em 0 !important;
+	}
+	.ui-li-count {
+		font-size: 30px !important;
+	}
 	.img-gallery .ui-content {
 		padding: .625em; /* 10px */
+	}
+	.ui-mini .ui-input-text input, .ui-mini .ui-input-search input,
+		.ui-input-text.ui-mini input, .ui-input-search.ui-mini input, .ui-mini textarea.ui-input-text,
+		textarea.ui-mini {
+		xfont-size: 32px !important;
+	}
+	.xui-alt-icon.ui-icon-search:after, .ui-alt-icon .ui-icon-search:after,
+		.ui-input-search:after {
+		background-size: contain !important;
+	}
+	.xui-input-search input {
+		padding-left: 1.75em;
+		xfont-size: 32px!importanat;
+	}
+	.xui-header .ui-title, .ui-footer .ui-title {
+		xfont-size: 1em;
+		min-height: 5.1em!importanat;
+	}
+
+	/* #pop_file_actions-popup .ui-btn-icon-notext, .ui-header button.ui-btn.ui-btn-icon-notext,
+		.ui-footer button.ui-btn.ui-btn-icon-notext {
+		width: 2.75em !important;
+		height: 2.75em !important;
+	}
+
+	#pop_file_actions-popup .ui-btn-icon-notext:after, .ui-btn-icon-left:after,
+		.ui-btn-icon-right:after {
+		top: 17% !important;
+	}
+
+	#pop_file_actions-popup  .ui-icon-delete:after {
+		width: 70px !important;
+		height: 70px !important;
+	}
+ */
+	body {
+		font-size: 32px !important;
+	}
+	.ui-listview .ui-li-has-thumb h2 {
+		font-size: 1.2em !important;
+		padding-left: 25px !important;
+		text-align: center !important;
 	}
 	/* Set a max-width for the last breakpoint to prevent too much stretching on large screens.
     By setting the max-width equal to the breakpoint width minus padding we keep square tiles. */
@@ -317,12 +444,44 @@ body {
 		max-width: 62.5em; /* 1000px */
 		margin: 0 auto;
 	}
+	.img-gallery img {
+		width: 100%;
+		height: 100%;
+	}
+	ximg {
+		width: 100%;
+		height: 100%;
+	}
+	.xui-panel-animate.ui-panel-page-content-position-leftx {
+		left: 0;
+		right: 0;
+		-webkit-transform: translate3d(25em, 0, 0) !important;
+		-moz-transform: translate3d(25em, 0, 0) !important;
+		transform: translate3d(25em, 0, 0) !important;
+	}
+	.img-gallery .ui-listview .ui-li-has-thumb>img:first-child, .ui-listview .ui-li-has-thumb>.ui-btn>img:first-child,
+		.ui-listview .ui-li-has-thumb .ui-li-thumb {
+		position: absolute;
+		left: 0;
+		top: 0;
+		max-height: 15em !important;
+		max-width: 15em !important;
+	}
+	.img-gallery .ui-listview .ui-li-has-thumb>img:first-child, .ui-listview .ui-li-has-thumb>.ui-btn>img.ui-listview-mode
+		{
+		max-width: 5em !important;
+	}
+
 	/* Because of the 1000px max-width the width will always be 230px (and margin left/right 10px),
     but we stick to percentage values for demo purposes. */
 	.img-gallery .ui-listview li {
-		width: 8%;
+		width: 24%;
 		xheight: 90px;
-		margin: .5em .5em;
+		margin: .1em .1em;
+	}
+	.img-gallery .ui-listview>.ui-li-has-thumb>.ui-btn, .ui-listview>.ui-li-static.ui-li-has-thumb
+		{
+		min-height: 11.7em !important;
 	}
 }
 /* For this demo we used images with a size of 310x310 pixels. Just before the second breakpoint the images reach their max width: 1019px - 2 x 9px padding = 1001px x 30.9333% = ~310px */
@@ -380,7 +539,7 @@ body {
 	color: #FFFFFF;
 }
 
-body .ui-body-c,body .ui-overlay-c {
+body .ui-body-c, body .ui-overlay-c {
 	text-shadow: 0 0 0;
 }
 
@@ -404,7 +563,8 @@ body .ui-body-c,body .ui-overlay-c {
 	text-align: center;
 }
 
-.ui-controlgroup-horizontal .ui-controlgroup-controls .ui-btn-icon-notext,.ui-controlgroup-horizontal .ui-controlgroup-controls button.ui-btn-icon-notext
+.ui-controlgroup-horizontal .ui-controlgroup-controls .ui-btn-icon-notext,
+	.ui-controlgroup-horizontal .ui-controlgroup-controls button.ui-btn-icon-notext
 	{
 	width: 2.5em !important;
 	height: 2.7em !important;
@@ -431,12 +591,14 @@ body .ui-body-c,body .ui-overlay-c {
 	text-rendering: auto !important;
 }
 
-.ui-bar-a,.ui-page-theme-a .ui-bar-inherit,html .ui-bar-a .ui-bar-inherit,html .ui-body-a .ui-bar-inherit,html body .ui-group-theme-a .ui-bar-inherit
+.ui-bar-a, .ui-page-theme-a .ui-bar-inherit, html .ui-bar-a .ui-bar-inherit,
+	html .ui-body-a .ui-bar-inherit, html body .ui-group-theme-a .ui-bar-inherit
 	{
 	border: #202C3C !important;
 }
 
-.ui-bar-a,.ui-page-theme-a .ui-bar-inherit,html .ui-bar-a .ui-bar-inherit,html .ui-body-a .ui-bar-inherit,html body .ui-group-theme-a .ui-bar-inherit
+.ui-bar-a, .ui-page-theme-a .ui-bar-inherit, html .ui-bar-a .ui-bar-inherit,
+	html .ui-body-a .ui-bar-inherit, html body .ui-group-theme-a .ui-bar-inherit
 	{
 	background-color: #202C3C !important;;
 	border-color: #202C3C !important;;
@@ -462,16 +624,16 @@ body .ui-body-c,body .ui-overlay-c {
 }
 
 .ui-loader-background {
-    width:100%;
-    height:100%;
-    top:0;
-    margin: 0;
-    background: rgba(0, 0, 0, 0.3);
-    display:none;
-    position: fixed;
-    z-index:100;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	margin: 0;
+	background: rgba(0, 0, 0, 0.3);
+	display: none;
+	position: fixed;
+	z-index: 100;
 }
 
 .ui-loading .ui-loader-background {
-    display:block;
+	display: block;
 }
