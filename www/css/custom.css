@@ -614,6 +614,17 @@ body .ui-body-c, body .ui-overlay-c {
 	background-size: 18px 18px;
 }
 
+.ui-icon-zoom-i:after {
+	background-image: url("../img/zoom-out.png");
+	background-size: 18px 18px;
+}
+
+.ui-icon-zoom-o:after {
+	background-image: url("../img/zoom-in.png");
+	background-size: 18px 18px;
+}
+
+
 #pop_file_actions {
 	background: transparent !important;
 	border: 0 !important;
