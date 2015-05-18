@@ -331,6 +331,11 @@ body {
 		top: 10% !important;
 		margin-top: 0px !important;
 	}
+	
+	#crop-toolbar  .ui-btn-icon-notext:after {
+		top: 10% !important;
+		margin-top: 0px !important;
+	}
 	.logoimage {
 		width: 100%;
 	}
@@ -349,7 +354,7 @@ body {
 		display: block;
 		width: 44px !important;
 		height: 44px !important;
-		background-size: 50% !important;
+		background-size: 60% !important;
 	}
 	.xui-panel {
 		width: 25em !important;
@@ -434,6 +439,10 @@ body {
 		height: 70px !important;
 	}
  */
+	.ui-listview>.ui-li-divider {
+		font-size: 32px !important;
+	}
+	
 	body {
 		font-size: 32px !important;
 	}
@@ -494,8 +503,8 @@ body {
 		{
 		min-height: 11.7em !important;
 	}
-	#crop-toolbar .ui-btn {
-		font-size: 32px !important;
+	#crop-toolbar .ui-crop-tools .ui-btn {
+		font-size: 30px !important;
 		padding: 1em 1em !important;
 		margin: 0.1em .3em !important;
 	}
@@ -656,7 +665,7 @@ body .ui-body-c, body .ui-overlay-c {
 }
 
 #crop-toolbar {
-	background-color: #4f4b5a;
+	background-color: #FFFFFF;
 }
 
 .ui-loader-background {
@@ -692,7 +701,24 @@ body .ui-body-c, body .ui-overlay-c {
 	max-width: 90%
 }
 
-
 #edit-toolbar label {
+	margin: 0 0;
+}
+.ui-crop-tools{
+	
+}
+
+
+#crop-toolbar #slider-crop-label {
+	position: relative;
+	float: right;
+}
+
+#crop-toolbar .ui-slider {
+	max-width: 90%;
+	xbackground-color: #FFFFFF;
+}
+
+#crop-toolbar label {
 	margin: 0 0;
 }

@@ -172,6 +172,11 @@ ImageEditorPage.prototype.init = function() {
 					_self.onContrastChange(event);
 				});
 
+				$("#slider-crop").on("slidestop", function(event) {
+					_self.currentCropSize= event.target.value;
+					_self.onCropSizeChange(event);
+				});
+				
 				$('.img-container').html(
 						[ '<img id="img_editable" src="' + _self.image64
 								+ '" />' ].join(''));
@@ -246,9 +251,29 @@ ImageEditorPage.prototype.enableCropMode = function() {
 	}
 }
 
-ImageEditorPage.prototype.onContrastChange = function(event) {
-	var _self = this;
 
+ImageEditorPage.prototype.onCropSizeChange = function(event) {
+	var _self = this;
+	console.log("onCropSizeChange>>>"+event.target.value);
+	var data = _self.corpperImage.cropper("getCropBoxData");
+	data.width = data.width + event.target.value*10;
+	_self.corpperImage.cropper("setCropBoxData", data);
+//
+//	var contraValue = event.target.value - _self.cValue;
+//	var contraImageData = _self.editCtx.getImageData(0, 0, _self.gcanvas.width,
+//			_self.gcanvas.height);
+//	var data = contraImageData.data;
+//	var factor = (259 * (contraValue + 255)) / (255 * (259 - contraValue));
+//	for (var i = 0; i < data.length; i += 4) {
+//		data[i] = factor * (data[i] - 128) + 128;
+//		data[i + 1] = factor * (data[i + 1] - 128) + 128;
+//		data[i + 2] = factor * (data[i + 2] - 128) + 128;
+//	}
+//	_self.editCtx.putImageData(contraImageData, 0, 0);
+//	_self.cValue = event.target.value;
+}
+
+ImageEditorPage.prototype.onContrastChange = function(event) {
 	var _self = this;
 	var contraValue = event.target.value - _self.cValue;
 	var contraImageData = _self.editCtx.getImageData(0, 0, _self.gcanvas.width,

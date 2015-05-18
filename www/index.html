@@ -294,7 +294,7 @@ End of MR line page
 	<div data-role="page" id="pg_inspection_detail" data-theme="c">
 		<div data-role="header" data-fullscreen="false" data-position="fixed"
 			data-theme="c">
-			<a href="#pnl_inspModify" id="inspMRDetail" data-corners="true"
+			<a href="#" id="inspMRDetail" data-corners="true"
 				data-shadow="false" data-iconshadow="false" data-wrapperels="span"
 				title="Inspection Line" data-rel="popup" data-rel="popup"
 				data-transition="flip"></a>
@@ -316,6 +316,14 @@ End of MR line page
 				data-filter-placeholder="Search Inspection Lines" id="_list_insp"
 				data-count-theme="b"></ul>
 		</div>
+		
+		<div data-role="popup" id="pop_process_log" data-corners="true"
+			data-shadow="false" data-theme="b">
+			<ul data-role="listview" data-inset="true">
+				<li data-role="list-divider">Attach/Sync Log</li>
+			</ul>
+		</div>
+		
 		<div data-role="footer" data-fullscreen="false" data-position="fixed"
 			data-theme="a">
 			<div data-role="navbar" data-iconpos="left">
@@ -325,10 +333,14 @@ End of MR line page
 						title="Back">MRLines</a></li>
 					<li><a href="#" id="btn_finish_mr" data-icon="check"
 						data-shadow="false" data-wrapperels="span" data-theme="a"
-						title="Finish">Attach Files</a></li>
+						title="Finish">Finish</a></li>
 					<li><a href="#" id="btn_sync_insp" data-icon="refresh"
 						data-shadow="true" data-wrapperels="span" data-theme="a"
 						title="Refresh">Sync</a></li>
+					<li><a href="#pop_process_log" id="insp_process_log" data-icon="tag"
+						data-iconpos="notext" data-corners="true" data-shadow="false"
+						data-iconshadow="false" data-wrapperels="span" title="Process log"
+						data-rel="popup" data-rel="popup" data-transition="flip">Progress(0/0)</a></li>
 				</ul>
 			</div>
 		</div>
@@ -544,31 +556,40 @@ Start of Crop page
 				</ul>
 
 
-				<div id="crop-toolbar" data-theme="b">
+				<div id="crop-toolbar" data-theme="b" class="ui-grid-a">
 					<!-- Class added to the wrapper -->
+					<div class="ui-block-a ui-crop-tools" >
 					<a class="ui-btn-icon-center" id="btn_crop_finished" href="#"
-						data-icon="check" data-shadow="false" data-theme="c"
+						data-icon="check" data-shadow="false" data-theme="b"
 						title="filter"></a> <a class="ui-btn-icon-center"
 						id="btn_zoom_plus" href="#" data-icon="plus" data-iconpos="notext"
-						data-shadow="false" data-wrapperels="span" data-theme="c"
+						data-shadow="false" data-wrapperels="span" data-theme="b"
 						title="save"></a><a class="ui-btn-icon-center" id="btn_zoom_minus"
 						data-method="enable" data-icon="minus" data-iconpos="notext"
-						href="#" data-shadow="false" data-theme="c" title="crop"></a><a
+						href="#" data-shadow="false" data-theme="b" title="crop"></a><a
 						class="ui-btn-icon-center" href="#" data-shadow="false"
 						data-icon="forward" id="btn_rotate_right" data-iconpos="notext"
-						data-theme="c" title="Reset"></a><a class="ui-btn-icon-center"
+						data-theme="b" title="Reset"></a><a class="ui-btn-icon-center"
 						href="#" data-shadow="false" data-icon="back" id="btn_rotate_left"
-						data-iconpos="notext" data-theme="c" title="Reset"></a><a
+						data-iconpos="notext" data-theme="b" title="Reset"></a><a
 						class="ui-btn-icon-center" id="btn_move" href="#"
-						data-shadow="false" data-icon="action" data-theme="c"
-						data-iconpos="notext" title="move"></a> <a
+						data-shadow="false" data-icon="action" data-theme="b"
+						data-iconpos="notext" title="move"></a> <!-- <a
 						class="ui-btn-icon-zoom-o" id="btn_crop_zoom_plus"
 						data-icon="zoom-o" href="#" data-iconpos="notext"
 						data-shadow="false" data-wrapperels="span" data-theme="c"
 						title="save"></a><a class="ui-btn-icon-zoom-i"
 						id="btn_crop_zoom_minus" data-method="enable" data-icon="zoom-i"
 						data-iconpos="notext" href="#" data-shadow="false" data-theme="c"
-						title="crop"></a>
+						title="crop"></a> -->
+					</div>
+					<div class="ui-block-b">
+						<label for="slider-crop" data-theme="b"
+							class="ui-icon-crop ui-btn-c  ui-btn-icon-notext">Crop</label>
+						<input data-highlight="true" data-track-theme="a" data-mini="true"
+							type="range" name="slider-crop" id="slider-crop"
+							value="0" min="-50" max="50" class="ui-hidden-accessible" />
+					</div>
 				</div>
 				<div data-theme="c" id="edit-toolbar" class="ui-grid-a">
 					<div class="ui-block-a">
@@ -580,8 +601,8 @@ Start of Crop page
 					</div>
 					<div class="ui-block-b">
 						<label for="slider-contrast"
-							class="ui-icon-contrast ui-btn-c  ui-btn-icon-notext">Contrast</label> <input
-							data-highlight="true" data-track-theme="a" data-mini="true"
+							class="ui-icon-contrast ui-btn-c  ui-btn-icon-notext">Contrast</label>
+						<input data-highlight="true" data-track-theme="a" data-mini="true"
 							type="range" name="slider-contrast" id="slider-contrast"
 							value="0" min="-50" max="50" class="ui-hidden-accessible" />
 					</div>
