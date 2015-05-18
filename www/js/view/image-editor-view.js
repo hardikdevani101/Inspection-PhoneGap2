@@ -130,6 +130,7 @@ ImageEditorPage.prototype.cropFinished = function() {
 	_self.isEditEnable = true;
 	_self.isCropEnable = false;
 	$("#crop-toolbar").hide();
+	$("#edit-toolbar").show();
 	// _self.corpperImage
 	$('#img_editable').attr('src', _self.currentImage);
 	$('#img_editable').load(function() {
@@ -147,19 +148,19 @@ ImageEditorPage.prototype.init = function() {
 				_self.rederBreadCrumb();
 				_self.cValue = 0;
 				_self.bValue = 0;
-				$("#txt_prefix").val($('#prefixInpectLine').html());
-				$('#btn_filter_ok')
-						.on(
-								'click',
-								function() {
-									$("#prefixInpectLine").html(
-											$('#txt_prefix').val());
-									if ($("#prefixInpectLine").data('id'))
-										_self.app.appCache.prefixCache[$(
-												"#prefixInpectLine").data('id')
-												.toString()] = $('#txt_prefix')
-												.val();
-								});
+//				$("#txt_prefix").val($('#prefixInpectLine').html());
+//				$('#btn_filter_ok')
+//						.on(
+//								'click',
+//								function() {
+//									$("#prefixInpectLine").html(
+//											$('#txt_prefix').val());
+//									if ($("#prefixInpectLine").data('id'))
+//										_self.app.appCache.prefixCache[$(
+//												"#prefixInpectLine").data('id')
+//												.toString()] = $('#txt_prefix')
+//												.val();
+//								});
 
 				$("#slider-brightness").on("slidestop", function(event) {
 					_self.brightness = event.target.value;
@@ -181,6 +182,7 @@ ImageEditorPage.prototype.init = function() {
 				});
 
 				$("#crop-toolbar").hide();
+				$("#edit-toolbar").show();
 				$("#btn_skip_edit").on("tap", function() {
 					$.mobile.changePage("#pg_gallery");
 				});
@@ -198,6 +200,8 @@ ImageEditorPage.prototype.init = function() {
 					_self.enableEditMode();
 					_self.isCropEnable = false;
 					_self.isEditEnable = true;
+					$("#crop-toolbar").hide();
+					$("#edit-toolbar").show();
 					_self.corpperImage.cropper("destroy");
 				});
 
@@ -209,6 +213,7 @@ ImageEditorPage.prototype.init = function() {
 						$("#crop-image-container").hide();
 						$("#edit-canvase").show();
 						$("#crop-toolbar").hide();
+						$("#edit-toolbar").show();
 						_self.isCropEnable = false;
 						_self.isEditEnable = true;
 						// _self.corpperImage.cropper("destroy");
@@ -218,6 +223,7 @@ ImageEditorPage.prototype.init = function() {
 						_self.isEditEnable = false;
 						$("#crop-image-container").show();
 						$("#edit-canvase").hide();
+						$("#edit-toolbar").hide();
 						$("#crop-toolbar").show();
 						_self.enableCropMode();
 						_self.corpperImage.cropper("setDragMode", "crop");

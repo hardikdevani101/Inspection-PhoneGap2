@@ -536,8 +536,13 @@ Start of Crop page
 					<!-- 					<li><a id="btn_add_watermark" href="#" data-shadow="false"
 						data-icon="plus" data-theme="c" title="watermark">Watermark</a></li>
  -->
-					<li><a id="btn_img_filter" href="#pnl_image_filters"
-						data-shadow="false" data-icon="grid" data-theme="a" title="filter">Filters</a></li>
+					<!-- 	<li><a id="btn_img_filter" href="#pnl_image_filters"
+						data-shadow="false" data-icon="grid" data-theme="a" title="filter">Filters</a></li> -->
+					<li><a id="btn_skip_edit" href="#" data-shadow="false"
+						data-icon="back" data-theme="a" title="Skip Edit">Skip</a></li>
+					<li><a id="btn_edit_finished" href="#" data-icon=""
+						xdata-iconpos="notext" data-shadow="false" data-wrapperels="span"
+						data-theme="a" title="save">Save</a></li>
 				</ul>
 
 
@@ -559,67 +564,39 @@ Start of Crop page
 						class="ui-btn-icon-center" id="btn_move" href="#"
 						data-shadow="false" data-icon="action" data-theme="c"
 						data-iconpos="notext" title="move"></a> <a
-						class="ui-btn-icon-zoom-o" id="btn_crop_zoom_plus" data-icon="zoom-o" href="#"
-						 data-iconpos="notext" data-shadow="false"
-						data-wrapperels="span" data-theme="c" title="save"></a><a
-						class="ui-btn-icon-zoom-i" id="btn_crop_zoom_minus"
-						data-method="enable" data-icon="zoom-i" data-iconpos="notext"
-						href="#" data-shadow="false" data-theme="c" title="crop"></a>
+						class="ui-btn-icon-zoom-o" id="btn_crop_zoom_plus"
+						data-icon="zoom-o" href="#" data-iconpos="notext"
+						data-shadow="false" data-wrapperels="span" data-theme="c"
+						title="save"></a><a class="ui-btn-icon-zoom-i"
+						id="btn_crop_zoom_minus" data-method="enable" data-icon="zoom-i"
+						data-iconpos="notext" href="#" data-shadow="false" data-theme="c"
+						title="crop"></a>
+				</div>
+				<div data-theme="b" id="edit-toolbar" class="ui-grid-a">
+					<div class="ui-block-a ui-field-contain">
+						<label for="slider-brightness"
+							class="ui-icon-brightness ui-btn-icon-notext">Brightness</label>
+						<input data-highlight="true" data-track-theme="a" data-mini="true"
+							type="range" name="slider-brightness" id="slider-brightness"
+							value="0" min="-50" max="50" class="ui-hidden-accessible" />
+					</div>
+					<div class="ui-block-b ui-field-contain">
+						<label for="slider-contrast"
+							class="ui-icon-contrast ui-btn-icon-notext">Contrast</label> <input
+							data-highlight="true" data-track-theme="a" data-mini="true"
+							type="range" name="slider-contrast" id="slider-contrast"
+							value="0" min="-50" max="50" class="ui-hidden-accessible" />
+					</div>
 				</div>
 			</div>
 
 		</div>
-		<div data-role="panel" data-position="right" data-theme="c"
-			id="pnl_image_filters" data-content-theme="c">
-			<ul data-role="listview" data-autodividers="false" data-mini="true"
-				data-theme="c" data-inset="false">
-				<li class="ui-rangeslider" data-shadow="false"
-					data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-					data-iconpos="right" data-theme="c"><label
-					for="slider-brightness">Brightness</label> <input
-					data-highlight="true" data-theme="a" data-track-theme="a"
-					data-mini="true" type="range" name="slider-brightness"
-					id="slider-brightness" value="0" data-highlight="false" min="-50"
-					max="50" class="ui-hidden-accessible" /></li>
-				<li class="ui-rangeslider" data-shadow="false"
-					data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-					data-iconpos="right" data-theme="c"><label
-					for="slider-contrast">Contrast</label> <input data-highlight="true"
-					data-theme="a" data-track-theme="a" data-mini="true" type="range"
-					name="slider-contrast" id="slider-contrast" value="0"
-					data-highlight="false" min="-50" max="50"
-					class="ui-hidden-accessible" /></li>
-				<li class="ui-rangeslider" data-shadow="false"
-					data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-					data-iconpos="right" data-theme="c"><label for="txt_prefix">Prefix</label>
-					<div class="ui-bar">
-						<input type="text" data-native-menu="false" id="txt_prefix">
-					</div></li>
-				<li data-theme="c">
-					<button data-mini="true" id="btn_filter_ok" data-icon="power"
-						data-corners="true" data-iconpos="" data-shadow="false"
-						data-iconshadow="false" data-wrapperels="span" title="Logout">Ok</button>
-				</li>
 
-			</ul>
-		</div>
 
 		<div data-role="main" class="ui-content">
 			<div class="ui-grid-solo cropper-container">
 				<div id="crop-image-container" class="ui-block-a img-container"></div>
 				<canvas id="edit-canvase"></canvas>
-			</div>
-		</div>
-		<div data-role="footer" data-fullscreen="false" data-position="fixed"
-			data-theme="a">
-			<div data-role="navbar" data-iconpos="left">
-				<ul>
-					<li><a id="btn_skip_edit" href="#" data-shadow="false"
-						data-icon="back" data-theme="a" title="Skip Edit">Skip</a></li>
-					<li><a id="btn_edit_finished" href="#" data-icon=""
-						xdata-iconpos="notext" data-shadow="false" data-wrapperels="span"
-						data-theme="a" title="save">Save</a></li>
-				</ul>
 			</div>
 		</div>
 

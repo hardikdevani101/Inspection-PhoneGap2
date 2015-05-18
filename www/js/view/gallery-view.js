@@ -114,20 +114,20 @@ GalleryPage.prototype.onFileData = function(selFiles) {
 	});
 
 	// TODO Remove dummy data Runner in production.
-	// _self.inspFiles[152452] = [];
-	// for (var i = 0; i < 15; i++) {
-	// var item = {};
-	// item['filePath'] = '/file/path/file' + i + '.jpg';
-	// item['name'] = "file" + i + ".txt";
-	// item['dataSource'] = "LS";
-	// item['uploded'] = "Y";
-	// if (i % 2 == 0) {
-	// item['filePath'] = '/file/path/file' + i + '.jpg';
-	// item['name'] = "file" + i;
-	// item['dataSource'] = "CMR";
-	// }
-	// _self.inspFiles[152452].push(item);
-	// }
+	 _self.inspFiles[152452] = [];
+	 for (var i = 0; i < 15; i++) {
+	 var item = {};
+	 item['filePath'] = '/file/path/file' + i + '.jpg';
+	 item['name'] = "file" + i + ".txt";
+	 item['dataSource'] = "LS";
+	 item['uploded'] = "Y";
+	 if (i % 2 == 0) {
+	 item['filePath'] = '/file/path/file' + i + '.jpg';
+	 item['name'] = "file" + i;
+	 item['dataSource'] = "CMR";
+	 }
+	 _self.inspFiles[152452].push(item);
+	 }
 	// Dummy Data Runner End.
 
 	_self.renderInspFiles();
@@ -180,8 +180,8 @@ GalleryPage.prototype.init = function() {
 					function() {
 						_self.rederBreadCrumb();
 						// TODO remove below hard coded.
-						// _self.line_id = 152452;
-						_self.line_id = _self.app.appCache.session.x_instructionline_id;
+						 _self.line_id = 152452;
+//						_self.line_id = _self.app.appCache.session.x_instructionline_id;
 						// _self.app.appCache.session.x_instructionline_id;
 						_self.visGallery = new Tbl_VISGallery(_self.app);
 						_self.loadInspFile();
@@ -323,20 +323,20 @@ GalleryPage.prototype.loadInspFile = function() {
 			}
 
 			// TODO Remove dummy data Runner in production.
-			// _self.inspFiles[152452] = [];
-			// for (var i = 0; i < 15; i++) {
-			// var item = {};
-			// item['filePath'] = '/file/path/file' + i + '.jpg';
-			// item['name'] = "file" + i + ".txt";
-			// item['dataSource'] = "LS";
-			// item['uploded'] = "Y";
-			// if (i % 2 == 0) {
-			// item['filePath'] = '/file/path/file' + i + '.jpg';
-			// item['name'] = "file" + i;
-			// item['dataSource'] = "CMR";
-			// }
-			// _self.inspFiles[152452].push(item);
-			// }
+			 _self.inspFiles[152452] = [];
+			 for (var i = 0; i < 15; i++) {
+			 var item = {};
+			 item['filePath'] = '/file/path/file' + i + '.jpg';
+			 item['name'] = "file" + i + ".txt";
+			 item['dataSource'] = "LS";
+			 item['uploded'] = "Y";
+			 if (i % 2 == 0) {
+			 item['filePath'] = '/file/path/file' + i + '.jpg';
+			 item['name'] = "file" + i;
+			 item['dataSource'] = "CMR";
+			 }
+			 _self.inspFiles[152452].push(item);
+			 }
 			// Dummy Data Runner End.
 
 			_self.renderInspFiles();
@@ -376,24 +376,24 @@ GalleryPage.prototype.loadActualImage = function(inspID) {
 					// TODO remove below dummy data runner in
 					// production.
 					// Start of dummy data filler.
-					// var img = _self.app.file64;
-					// setInterval(
-					// function() {
-					// _self.app.appCache.imgCache[dataid] = img;
-					// $(
-					// 'li[data-id="' + dataid
-					// + '"] img')
-					// .attr('src', img);
-					// }, 1000);
+					 var img = _self.app.file64;
+					 setInterval(
+					 function() {
+					 _self.app.appCache.imgCache[dataid] = img;
+					 $(
+					 'li[data-id="' + dataid
+					 + '"] img')
+					 .attr('src', img);
+					 }, 1000);
 					// End of dummy data filler.
 
-					_self.app.appFS.getFileByURL({
-						fileURI : this.filePath
-					}, function(param) {
-						img = param.data
-						self.app.appCache.imgCache[dataid] = img;
-						$('li[data-id="' + dataid + '"] img').attr('src', img);
-					});
+//					_self.app.appFS.getFileByURL({
+//						fileURI : this.filePath
+//					}, function(param) {
+//						img = param.data
+//						self.app.appCache.imgCache[dataid] = img;
+//						$('li[data-id="' + dataid + '"] img').attr('src', img);
+//					});
 				}
 			}
 

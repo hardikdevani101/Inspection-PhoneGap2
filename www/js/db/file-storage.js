@@ -40,25 +40,48 @@ FS.prototype.filelist = function(path, success) {
 	// if (path.endsWith('/')) {
 	// path = path.substring(0, path.length - 1);
 	// }
-	window.resolveLocalFileSystemURL(path, function(dirEntry) {
-		var DirReader = dirEntry.createReader();
-		DirReader.readEntries(function(entries) {
-			var dirArr = [];
-			var fileArr = [];
-			for (var i = 0; i < entries.length; i++) { // sort entries
-				var entry = entries[i];
-				if (entry.isDirectory) {
-					dirArr.push(entry.name);
-				} else if (entry.isFile) {
-					fileArr.push(entry.name);
+
+	if (window.resolveLocalFileSystemURL) {
+		window.resolveLocalFileSystemURL(path, function(dirEntry) {
+			var DirReader = dirEntry.createReader();
+			DirReader.readEntries(function(entries) {
+				var dirArr = [];
+				var fileArr = [];
+				for (var i = 0; i < entries.length; i++) { // sort entries
+					var entry = entries[i];
+					if (entry.isDirectory) {
+						dirArr.push(entry.name);
+					} else if (entry.isFile) {
+						fileArr.push(entry.name);
+					}
 				}
-			}
-			success([ {
-				fileNames : fileArr,
-				directory : dirArr
-			} ]);
+				success([ {
+					fileNames : fileArr,
+					directory : dirArr
+				} ]);
+			}, _self.errorHandler);
 		}, _self.errorHandler);
-	}, _self.errorHandler);
+	} else {
+		window.webkitResolveLocalFileSystemURL(path, function(dirEntry) {
+			var DirReader = dirEntry.createReader();
+			DirReader.readEntries(function(entries) {
+				var dirArr = [];
+				var fileArr = [];
+				for (var i = 0; i < entries.length; i++) { // sort entries
+					var entry = entries[i];
+					if (entry.isDirectory) {
+						dirArr.push(entry.name);
+					} else if (entry.isFile) {
+						fileArr.push(entry.name);
+					}
+				}
+				success([ {
+					fileNames : fileArr,
+					directory : dirArr
+				} ]);
+			}, _self.errorHandler);
+		}, _self.errorHandler);
+	}
 }
 
 FS.prototype.getFile = function(path, success) {
@@ -110,7 +133,11 @@ FS.prototype.createVISFile = function(param) {
 											var binaryData = Base64Binary
 													.decodeArrayBuffer(fileBase64);
 											writer.onwrite = function(evt) {
-
+												var fileFullPath = fileEntry
+														.toURL();
+												param['oldURI'] = param.filePath;
+												param.filePath = fileFullPath;
+												param['fileName'] = fileEntry.name;
 												if (_self.app.galleryview.inspFiles[param.inspID]) {
 
 													findResult = [];
@@ -123,19 +150,25 @@ FS.prototype.createVISFile = function(param) {
 													}
 
 													if (findResult.length > 0) {
+														console
+																.log("Found image on cache");
 														$
 																.each(
 																		_self.app.galleryview.inspFiles[param.inspID],
 																		function() {
 																			if (this.filePath == param['oldURI']) {
 																				this.filePath == param.filePath;
-																				this['name'] == fileName;
+																				this['name'] == fileEntry.name;
 																			}
 																		});
 													} else {
+														console
+																.log("not Found image on cache");
+														console
+																.log(param.fileName);
 														item = {};
 														item['filePath'] = param.filePath;
-														item['name'] = param.fileName;
+														item['name'] = fileEntry.name;
 														item['uploded'] = "N";
 														item['dataSource'] = "LS";
 														_self.app.galleryview.inspFiles[param.inspID]
@@ -143,16 +176,12 @@ FS.prototype.createVISFile = function(param) {
 
 													}
 													_self.app.appCache.imgCache[param.filePath] = param.fileData;
-													_self.app.galleryview
-															.renderInspFiles();
 												}
-												var fileFullPath = fileEntry
-														.toURL();
-												param['oldURI'] = param.filePath;
-												param.filePath = fileFullPath;
-												param['fileName'] = fileEntry.name;
+
 												_self.app.appDB
 														.doGalleryEntry(param);
+												_self.app.galleryview
+														.renderInspFiles();
 											};
 											writer.write(binaryData);
 										}, _self.errorHandler);

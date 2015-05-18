@@ -636,6 +636,17 @@ body .ui-body-c, body .ui-overlay-c {
 	background-size: 18px 18px;
 }
 
+.ui-icon-brightness:after {
+	background-image: url("../img/brightness.png");
+	background-size: 18px 18px;
+}
+
+.ui-icon-contrast:after {
+	background-image: url("../img/contrast.png");
+	background-size: 18px 18px;
+}
+
+
 #pop_file_actions {
 	background: transparent !important;
 	border: 0 !important;
