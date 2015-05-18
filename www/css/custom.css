@@ -327,11 +327,26 @@ body {
 	.img-container {
 		min-height: 480px;
 	} */
+	#pop_process_log {
+		font-size: 20px !important;
+	}
+	
+	#pop_process_log ul{
+		font-size: 20px !important;
+	}
+
+	#pop_process_log ul li{
+		font-size: 20px !important;
+	}
+
+	#pop_process_log .ui-btn{
+		font-size: 20px !important;
+	}
+	
 	#edit-toolbar  .ui-btn-icon-notext:after {
 		top: 10% !important;
 		margin-top: 0px !important;
 	}
-	
 	#crop-toolbar  .ui-btn-icon-notext:after {
 		top: 10% !important;
 		margin-top: 0px !important;
@@ -442,7 +457,6 @@ body {
 	.ui-listview>.ui-li-divider {
 		font-size: 32px !important;
 	}
-	
 	body {
 		font-size: 32px !important;
 	}
@@ -704,10 +718,10 @@ body .ui-body-c, body .ui-overlay-c {
 #edit-toolbar label {
 	margin: 0 0;
 }
-.ui-crop-tools{
+
+.ui-crop-tools {
 	
 }
-
 
 #crop-toolbar #slider-crop-label {
 	position: relative;

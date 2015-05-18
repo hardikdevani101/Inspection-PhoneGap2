@@ -1,11 +1,14 @@
 var InspLinesPage = function(app) {
 	this.app = app;
+	this.totalPendingItems = 0;
+	this.progressedItem = 0;
+	this.isAlertDisplay = false;
+
 }
 
 InspLinesPage.prototype.rederBreadCrumb = function() {
 	var _self = this;
-	$('#pg_inspection #btn_user').html(
-			_self.app.appCache.settingInfo.username);
+	$('#pg_inspection #btn_user').html(_self.app.appCache.settingInfo.username);
 };
 
 InspLinesPage.prototype.init = function() {
@@ -14,10 +17,65 @@ InspLinesPage.prototype.init = function() {
 	// String(_self.app.appCache.loginInfo.username));
 	// _self.loadMRLines();
 
-	$(document).on("pagebeforeshow", "#pg_inspection", function() {
-		_self.rederBreadCrumb();
-		_self.loadMRLines();
+	$(document).on(
+			"pagebeforeshow",
+			"#pg_inspection",
+			function() {
+				_self.rederBreadCrumb();
+				_self.loadMRLines();
+				// TODO : Dummy Data Runner Start
+				// var ermsg = {
+				// 'X_INSTRUCTIONLINE_ID' : 'MR2323',
+				// 'M_INOUT_ID' : '23242342',
+				// 'fileURI' : 'file/files/ererer.ted',
+				// 'error' : 'ERROR Msg'
+				// };
+				// _self.app.appFTPUtil.processLog.push(ermsg);
+				// _self.app.appFTPUtil.processLog.push(ermsg);
+				// _self.app.appFTPUtil.processLog.push(ermsg);
+				// _self.app.appFTPUtil.processLog.push(ermsg);
+				// _self.app.appFTPUtil.processLog.push(ermsg);
+				// TODO : Dummy Data Runner End
+
+				$("#insp_process_log").hide();
+				if (_self.app.appFTPUtil.processLog.length > 0) {
+					$("#insp_process_log").html(
+							_self.app.appFTPUtil.processLog.length);
+					$("#insp_process_log").show();
+				}
+			});
+
+	$("#insp_process_log").on('tap', function() {
+		$("#pop_process_log").popup('open')
 	});
+
+	$("#btn_retry_attach").on('tap', function() {
+		console.log('>>>>>>>>> Retry Attach')
+	})
+
+	$("#btn_retry_sync").on('tap', function() {
+		console.log('>>>>>>>>> Retry Sync')
+	})
+
+	$("#pop_process_log")
+			.bind(
+					{
+						popupbeforeposition : function(event, ui) {
+							var items = '<li data-role="list-divider">Sync Failed</li>';
+							$.each(_self.app.appFTPUtil.processLog, function(
+									item, index) {
+								var line = '<li data-mini="true">MRLine:'
+										+ this.M_INOUT_ID + '-InspLine:'
+										+ this.X_INSTRUCTIONLINE_ID + '-File:'
+										+ this.fileURI + ' -Error:'
+										+ this.error + '</li>';
+								items += line;
+							});
+							$("#sync_items").html(items);
+							$('#sync_items').listview("refresh");
+						}
+					});
+
 	$('#btn_refresh_mrlines').on("click", function() {
 		_self.app.appCache.mrLines = [];
 		_self.loadMRLines();
@@ -45,12 +103,20 @@ InspLinesPage.prototype.syncInspLines = function() {
 				_self.app.appFTPUtil.uploadFile(results.rows.item(i).file,
 						results.rows.item(i).mr_line,
 						results.rows.item(i).insp_line,
-						results.rows.item(i).in_out_id);
+						results.rows.item(i).in_out_id, function(msg) {
+							if (!_self.isAlertDisplay) {
+								_self.isAlertDisplay = true;
+								$("#insp_process_log").show();
+							}
+							$("#insp_process_log").html(
+									_self.app.appFTPUtil.processLog.length);
+						});
 			}
-		} else {
-			alert("Completed");
 		}
 	};
+	
+	//Restart Sync Process.	
+	_self.app.appFTPUtil.processLog=[];	
 	_self.app.appDB.getUploadFailedEntry(success);
 }
 
@@ -101,9 +167,7 @@ InspLinesPage.prototype.loadMRLines = function() {
 		});
 	}
 };
-InspLinesPage.prototype.updateInspLinesDetail = function() {
 
-};
 InspLinesPage.prototype.renderInspLines = function() {
 	var _self = this;
 	var sel_inoutline_id = _self.app.appCache.session.m_inoutline_id;
@@ -149,6 +213,7 @@ InspLinesPage.prototype.renderCounts = function() {
 	_self.inspCount = {};
 
 	if (_self.app.appCache.inspLines[mrLineID]) {
+
 		$.each(_self.app.appCache.inspLines[mrLineID], function() {
 			_self.app.appDB.getTotalInspEntries(this, function(param, results) {
 				var elm = $('a#inspline_' + param.x_instructionline_id

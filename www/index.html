@@ -294,8 +294,8 @@ End of MR line page
 	<div data-role="page" id="pg_inspection_detail" data-theme="c">
 		<div data-role="header" data-fullscreen="false" data-position="fixed"
 			data-theme="c">
-			<a href="#" id="inspMRDetail" data-corners="true"
-				data-shadow="false" data-iconshadow="false" data-wrapperels="span"
+			<a href="#" id="inspMRDetail" data-corners="true" data-shadow="false"
+				data-iconshadow="false" data-wrapperels="span"
 				title="Inspection Line" data-rel="popup" data-rel="popup"
 				data-transition="flip"></a>
 			<h2 data-role="heading">Inspection Lines</h2>
@@ -305,9 +305,12 @@ End of MR line page
 					data-corners="false" data-shadow="false" data-iconshadow="false"
 					data-wrapperels="span" title="User" data-rel="popup"
 					data-transition="flip"></button>
-				<button href="#" id="btn_logout" data-icon="power"
-					data-corners="false" data-iconpos="notext" data-shadow="false"
-					data-iconshadow="false" data-wrapperels="span" title="Logout">SignOut</button>
+				<button id="btn_logout" data-icon="power" data-corners="false"
+					data-iconpos="notext" data-shadow="false" data-iconshadow="false"
+					data-wrapperels="span" title="Logout">SignOut</button>
+				<button id="insp_process_log" data-icon="alert" data-corners="false"
+					data-shadow="false" data-iconshadow="false" data-wrapperels="span"
+					title="Alerts">0</button>
 			</div>
 		</div>
 		<!-------------- Second page main content ----------->
@@ -316,14 +319,35 @@ End of MR line page
 				data-filter-placeholder="Search Inspection Lines" id="_list_insp"
 				data-count-theme="b"></ul>
 		</div>
-		
-		<div data-role="popup" id="pop_process_log" data-corners="true"
-			data-shadow="false" data-theme="b">
-			<ul data-role="listview" data-inset="true">
-				<li data-role="list-divider">Attach/Sync Log</li>
-			</ul>
+
+		<div data-role="popup" id="pop_process_log" data-theme="c"
+			data-dismissible="false">
+			<div data-role="header" data-theme="b">
+				<a href="#" data-theme="b" 
+					class="ui-btn-left ui-btn ui-btn-c ui-icon-delete ui-btn-icon-notext"
+					data-rel="back"></a>
+				<h1 class="ui-title">Alerts</h1>
+				<div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+					<button data-theme="b" id="btn_retry_sync" data-mini="true" data-icon=""
+						data-corners="false" data-theme="b" data-shadow="false" data-iconshadow="false"
+						data-wrapperels="span" title="Logout">Retry Sync</button>
+					<button id="btn_retry_attach" data-icon="" data-corners="false"
+						data-shadow="false" data-iconshadow="false" data-theme="b" data-wrapperels="span"
+						title="Alerts">Retry Finish</button>
+				</div>
+			</div>
+			<div data-role="main" class="ui-content" data-theme="b">
+				<ul data-role="listview" id="sync_items" data-inset="false"
+					data-mini="true">
+					<li data-role="list-divider">Sync Log</li>
+				</ul>
+				<ul data-role="listview" id="attach_items" data-inset="false"
+					data-mini="true">
+					<li data-role="list-divider">Attach Log</li>
+				</ul>
+			</div>
 		</div>
-		
+
 		<div data-role="footer" data-fullscreen="false" data-position="fixed"
 			data-theme="a">
 			<div data-role="navbar" data-iconpos="left">
@@ -337,10 +361,6 @@ End of MR line page
 					<li><a href="#" id="btn_sync_insp" data-icon="refresh"
 						data-shadow="true" data-wrapperels="span" data-theme="a"
 						title="Refresh">Sync</a></li>
-					<li><a href="#pop_process_log" id="insp_process_log" data-icon="tag"
-						data-iconpos="notext" data-corners="true" data-shadow="false"
-						data-iconshadow="false" data-wrapperels="span" title="Process log"
-						data-rel="popup" data-rel="popup" data-transition="flip">Progress(0/0)</a></li>
 				</ul>
 			</div>
 		</div>
@@ -558,23 +578,24 @@ Start of Crop page
 
 				<div id="crop-toolbar" data-theme="b" class="ui-grid-a">
 					<!-- Class added to the wrapper -->
-					<div class="ui-block-a ui-crop-tools" >
-					<a class="ui-btn-icon-center" id="btn_crop_finished" href="#"
-						data-icon="check" data-shadow="false" data-theme="b"
-						title="filter"></a> <a class="ui-btn-icon-center"
-						id="btn_zoom_plus" href="#" data-icon="plus" data-iconpos="notext"
-						data-shadow="false" data-wrapperels="span" data-theme="b"
-						title="save"></a><a class="ui-btn-icon-center" id="btn_zoom_minus"
-						data-method="enable" data-icon="minus" data-iconpos="notext"
-						href="#" data-shadow="false" data-theme="b" title="crop"></a><a
-						class="ui-btn-icon-center" href="#" data-shadow="false"
-						data-icon="forward" id="btn_rotate_right" data-iconpos="notext"
-						data-theme="b" title="Reset"></a><a class="ui-btn-icon-center"
-						href="#" data-shadow="false" data-icon="back" id="btn_rotate_left"
-						data-iconpos="notext" data-theme="b" title="Reset"></a><a
-						class="ui-btn-icon-center" id="btn_move" href="#"
-						data-shadow="false" data-icon="action" data-theme="b"
-						data-iconpos="notext" title="move"></a> <!-- <a
+					<div class="ui-block-a ui-crop-tools">
+						<a class="ui-btn-icon-center" id="btn_crop_finished" href="#"
+							data-icon="check" data-shadow="false" data-theme="b"
+							title="filter"></a> <a class="ui-btn-icon-center"
+							id="btn_zoom_plus" href="#" data-icon="plus"
+							data-iconpos="notext" data-shadow="false" data-wrapperels="span"
+							data-theme="b" title="save"></a><a class="ui-btn-icon-center"
+							id="btn_zoom_minus" data-method="enable" data-icon="minus"
+							data-iconpos="notext" href="#" data-shadow="false" data-theme="b"
+							title="crop"></a><a class="ui-btn-icon-center" href="#"
+							data-shadow="false" data-icon="forward" id="btn_rotate_right"
+							data-iconpos="notext" data-theme="b" title="Reset"></a><a
+							class="ui-btn-icon-center" href="#" data-shadow="false"
+							data-icon="back" id="btn_rotate_left" data-iconpos="notext"
+							data-theme="b" title="Reset"></a><a class="ui-btn-icon-center"
+							id="btn_move" href="#" data-shadow="false" data-icon="action"
+							data-theme="b" data-iconpos="notext" title="move"></a>
+						<!-- <a
 						class="ui-btn-icon-zoom-o" id="btn_crop_zoom_plus"
 						data-icon="zoom-o" href="#" data-iconpos="notext"
 						data-shadow="false" data-wrapperels="span" data-theme="c"
@@ -585,10 +606,10 @@ Start of Crop page
 					</div>
 					<div class="ui-block-b">
 						<label for="slider-crop" data-theme="b"
-							class="ui-icon-crop ui-btn-c  ui-btn-icon-notext">Crop</label>
-						<input data-highlight="true" data-track-theme="a" data-mini="true"
-							type="range" name="slider-crop" id="slider-crop"
-							value="0" min="-50" max="50" class="ui-hidden-accessible" />
+							class="ui-icon-crop ui-btn-c  ui-btn-icon-notext">Crop</label> <input
+							data-highlight="true" data-track-theme="a" data-mini="true"
+							type="range" name="slider-crop" id="slider-crop" value="0"
+							min="-50" max="50" class="ui-hidden-accessible" />
 					</div>
 				</div>
 				<div data-theme="c" id="edit-toolbar" class="ui-grid-a">

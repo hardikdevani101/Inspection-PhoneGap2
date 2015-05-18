@@ -1,5 +1,6 @@
 var FTPUtils = function(app) {
 	this.app = app;
+	this.processLog = [];
 }
 
 FTPUtils.prototype.init = function() {
@@ -7,7 +8,7 @@ FTPUtils.prototype.init = function() {
 }
 
 FTPUtils.prototype.uploadFile = function(fileURI, M_InOutLine_ID,
-		X_INSTRUCTIONLINE_ID, M_INOUT_ID) {
+		X_INSTRUCTIONLINE_ID, M_INOUT_ID, onError) {
 	var _self = this;
 	var ft = new FileTransfer();
 	var options = new FileUploadOptions();
@@ -19,7 +20,17 @@ FTPUtils.prototype.uploadFile = function(fileURI, M_InOutLine_ID,
 		var newFileName = $(xmlResponse).find('newName').text().trim();
 		_self.app.appDB.onChangeUplaodStatus(M_InOutLine_ID,
 				X_INSTRUCTIONLINE_ID, M_INOUT_ID, newFileName, fileURI);
-	}, _self.uploadFail, options);
+	}, function(err) {
+		var msg = _self.uploadFail(err);
+		var ermsg = {
+			'X_INSTRUCTIONLINE_ID' : X_INSTRUCTIONLINE_ID,
+			'M_INOUT_ID' : M_INOUT_ID,
+			'fileURI' : fileURI,
+			'error' : msg
+		};
+		_self.processLog.push(ermsg);
+		onError(ermsg);
+	}, options);
 }
 
 FTPUtils.prototype.getSDPath = function(Fname) {
@@ -52,5 +63,6 @@ FTPUtils.prototype.uploadFail = function(error) {
 		break;
 	}
 	;
+	return msg;
 	console.log("File-Transfer:Error - " + msg);
 }

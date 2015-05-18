@@ -113,7 +113,7 @@ App.prototype.hideDialog = function() {
 App.prototype.registerErrorPopup = function(pageId) {
 	var popupHtml = '<div id="'
 			+ pageId
-			+ '_ErrorPopup" data-role="popup" class="ui-body-b" data-theme="none" data-dismissible="false"><div data-role="header" class ="ui-header ui-bar-a" data-theme="b"><h1 class="ui-title">Error</h1>			<a href="#" class="ui-btn-left ui-btn ui-btn-c ui-icon-delete ui-corner-all ui-btn-icon-notext" data-rel="back"></a></div><div role="main" class="ui-content" data-theme="c" data-mini="true" style="margin-top: auto !important;"> <p id="error_msg" data-theme="c"></p></div></div>';
+			+ '_ErrorPopup" data-role="popup" class="ui-body-b" data-theme="none" data-dismissible="false"><div data-role="header" class ="ui-header ui-bar-a" data-theme="b"><h1 class="ui-title">Alerts</h1>			<a href="#" class="ui-btn-left ui-btn ui-btn-c ui-icon-delete ui-corner-all ui-btn-icon-notext" data-rel="back"></a></div><div role="main" class="ui-content" data-theme="c" data-mini="true" style="margin-top: auto !important;"> <p id="error_msg" data-theme="c"></p></div></div>';
 	$("#" + pageId).append(popupHtml);
 	$('#' + pageId + '_ErrorPopup').popup();
 }
