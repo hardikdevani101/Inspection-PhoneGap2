@@ -1,13 +1,13 @@
 var DB = function(app) {
 	console.log("DB constructor");
 	this.app = app;
-	this.dbstore = window.openDatabase("vision_db", "1.0", "vision_db",
+	this.currentDBVersion = "1.1"
+	this.dbstore = window.openDatabase("vision_db", "", "vision_db",
 			2 * 1024 * 1024);
 }
 
 DB.prototype.init = function(success, error) {
 	var _self = this;
-	console.log("DB init");
 	var successCallback = _self.success;
 	if (typeof (success) === "function") {
 		successCallback = success;
@@ -16,21 +16,54 @@ DB.prototype.init = function(success, error) {
 	if (typeof (error) === "function") {
 		errorCallback = error;
 	}
+
+	// TODO degrade db to 1.0 version.
+	// _self.dbstore.changeVersion(_self.dbstore.version, "1.0", function(tx) {
+	// }, function(error) {
+	// console.log('Version Update Error >>> ' + error)
+	// });
+
+	console.log("DB Initialize with version >>> " + _self.dbstore.version);
+
 	_self.dbstore
 			.transaction(
 					function(tx) {
-						//						 tx.executeSql('DROP TABLE IF EXISTS vis_gallery');
-//						tx.executeSql('DROP TABLE IF EXISTS vis_setting');
-						tx
-								.executeSql('CREATE TABLE IF NOT EXISTS '
-										+ ' vis_setting'
-										+ ' (vis_url, vis_lang, vis_client_id, vis_role, vis_whouse_id, vis_ord_id, username,userid,userpwd, vis_img_qulty, is_login, app_version , editApp)');
-						tx
-								.executeSql('CREATE TABLE IF NOT EXISTS '
-										+ ' vis_gallery '
-										+ ' (mr_line,insp_line DEFAULT "0",in_out_id DEFAULT "0",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F", dataSource DEFAULT "CMR")');
+						if (_self.dbstore.version == "") {
+							tx.executeSql('DROP TABLE IF EXISTS vis_gallery');
+							tx.executeSql('DROP TABLE IF EXISTS vis_setting');
+							tx
+									.executeSql('CREATE TABLE IF NOT EXISTS '
+											+ ' vis_setting'
+											+ ' (vis_url, vis_lang, vis_client_id, vis_role, vis_whouse_id, vis_ord_id, username,userid,userpwd, vis_img_qulty, is_login, app_version)');
+							tx
+									.executeSql('CREATE TABLE IF NOT EXISTS '
+											+ ' vis_gallery '
+											+ ' (mr_line,insp_line DEFAULT "0",in_out_id DEFAULT "0",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F", dataSource DEFAULT "CMR")');
+						}
 
 					}, _self.errorCallback, _self.successCallback);
+
+	if (_self.dbstore.version == "1.0") {
+		_self.dbstore.changeVersion(_self.dbstore.version, "1.1", function(tx) {
+			tx.executeSql('ALTER TABLE vis_setting ADD COLUMN img_editor');
+			tx.executeSql('ALTER COLUMN img_editor SET DEFAULT "Vision"');
+		}, function(error) {
+			if (error.code == 5) {
+				// _self.dbstore
+				// .transaction(function(tx) {
+				// tx
+				// .executeSql('UPDATE vis_setting SET img_editor="Vision"');
+				// });
+			}
+			console.log('DB Version Update Error : 1.1>>> ' + error.message)
+		});
+	}
+
+	// if (_self.dbstore.version == "1.1") {
+	// _self.dbstore.changeVersion("", "1.2", function(tx) {
+	// // TODO No changes yet
+	// });
+	// }
 }
 
 DB.prototype.reloadDB = function() {
