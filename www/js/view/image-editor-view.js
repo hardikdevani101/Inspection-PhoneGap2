@@ -352,7 +352,7 @@ ImageEditorPage.prototype.initCropMode = function() {
 		_self.cropResize = true;
 		// _self.setCropBoxData(10);
 		var data = _self.corpperImage.cropper("getCropBoxData");
-		data.width = data.width + 10;
+		data.width = data.width + 15;
 		_self.corpperImage.cropper("setCropBoxData", data);
 	});
 
@@ -360,7 +360,7 @@ ImageEditorPage.prototype.initCropMode = function() {
 		_self.cropResize = true;
 		// _self.setCropBoxData(-10);
 		var data = _self.corpperImage.cropper("getCropBoxData");
-		data.width = data.width - 10;
+		data.width = data.width - 15;
 		_self.corpperImage.cropper("setCropBoxData", data);
 	});
 

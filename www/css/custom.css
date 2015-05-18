@@ -323,9 +323,14 @@ body {
 @media ( min-width : 63.75em ) { /* .cropper-container {
 		min-height: 480px;
 	}
+	
 	.img-container {
 		min-height: 480px;
 	} */
+	#edit-toolbar  .ui-btn-icon-notext:after {
+		top: 10% !important;
+		margin-top: 0px !important;
+	}
 	.logoimage {
 		width: 100%;
 	}
@@ -474,14 +479,13 @@ body {
 	/* Because of the 1000px max-width the width will always be 230px (and margin left/right 10px),
     but we stick to percentage values for demo purposes. */
 	.img-gallery .ui-listview li {
-		width: 24%;
+		width: 23%;
 		xheight: 90px;
 		margin: .1em .1em;
 	}
 	#pnl_selected_files .ui-listview li {
 		width: 47% !important;
 	}
-
 	.current_dir_location_list .ui-bar {
 		padding: .5em .5em !important;
 		margin: 0em 0em 1.5em !important;
@@ -646,7 +650,6 @@ body .ui-body-c, body .ui-overlay-c {
 	background-size: 18px 18px;
 }
 
-
 #pop_file_actions {
 	background: transparent !important;
 	border: 0 !important;
@@ -669,4 +672,27 @@ body .ui-body-c, body .ui-overlay-c {
 
 .ui-loading .ui-loader-background {
 	display: block;
+}
+
+#edit-toolbar #slider-contrast-label {
+	position: relative;
+	float: right;
+}
+
+#edit-toolbar {
+	background-color: #FFFFFF;
+}
+
+#edit-toolbar #slider-brightness-label {
+	position: relative;
+	float: right;
+}
+
+#edit-toolbar .ui-slider {
+	max-width: 90%
+}
+
+
+#edit-toolbar label {
+	margin: 0 0;
 }
