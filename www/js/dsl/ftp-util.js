@@ -8,7 +8,7 @@ FTPUtils.prototype.init = function() {
 }
 
 FTPUtils.prototype.uploadFile = function(fileURI, M_InOutLine_ID,
-		X_INSTRUCTIONLINE_ID, M_INOUT_ID, onError) {
+		X_INSTRUCTIONLINE_ID, isMR, onError) {
 	var _self = this;
 	var ft = new FileTransfer();
 	var options = new FileUploadOptions();
@@ -19,12 +19,12 @@ FTPUtils.prototype.uploadFile = function(fileURI, M_InOutLine_ID,
 		var xmlResponse = result.response;
 		var newFileName = $(xmlResponse).find('newName').text().trim();
 		_self.app.appDB.onChangeUplaodStatus(M_InOutLine_ID,
-				X_INSTRUCTIONLINE_ID, M_INOUT_ID, newFileName, fileURI);
+				X_INSTRUCTIONLINE_ID, isMR, newFileName, fileURI);
 	}, function(err) {
 		var msg = _self.uploadFail(err);
 		var ermsg = {
 			'X_INSTRUCTIONLINE_ID' : X_INSTRUCTIONLINE_ID,
-			'M_INOUT_ID' : M_INOUT_ID,
+			'isMR' : isMR,
 			'fileURI' : fileURI,
 			'error' : msg
 		};

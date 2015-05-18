@@ -24,7 +24,37 @@ AviaryEditor.prototype.setup = function(options) {
 	_self.selectedWM = options.watermark;
 }
 
-AviaryEditor.prototype.edit = function() {
+AviaryEditor.prototype.edit = function(callBack) {
+	var _self = this;
+	if (_self.imageURI.startsWith("ftp")) {
+		var prefix = "PS";
+		if (_self.app.appCache.prefixCache[_self.app.appCache.session.m_inoutline_id]) {
+			prefix = _self.app.appCache.prefixCache[_self.app.appCache.session.m_inoutline_id];
+		}
+		var date = new Date;
+		var milSec = Math.floor(Math.random() * date.getMilliseconds());
+		var sec = date.getSeconds();
+		var mi = date.getMinutes();
+		var hh = date.getHours();
+		var yy = date.getFullYear();
+		var mm = date.getMonth() + 1;
+		var dd = date.getDate();
+		var fileName = prefix + "_" + mm + dd + yy + "_" + hh + mi + sec
+				+ milSec + ".jpg";
+		_self.app.ftpClient.get(_self.app.appFS.vis_dir.fullPath + "/"
+				+ fileName, _self.imageURI, {}, function(result) {
+			_self.param.actualURI = _self.imageURI;
+			_self.imageURI = result[0].uri;
+			_self.openEditor(callBack);
+		}, function(msg) {
+			console.log('Error Getting File >>> ' + dataid);
+		});
+	} else {
+		_self.openEditor(callBack);
+	}
+}
+
+AviaryEditor.prototype.openEditor = function(callBack) {
 	var _self = this;
 	cordova.plugins.Aviary.show({
 		imageURI : _self.imageURI,
@@ -42,19 +72,20 @@ AviaryEditor.prototype.edit = function() {
 			// var editedImageURI = result.src;
 			// console.log("File name: " + editedImageFileName + ", Image URI: "
 			// + editedImageURI);
+			console.log("sucess>>>>>>>>>>>>>>>>>>>>>>>");
 			_self.param['oldURI'] = _self.imageURI;
 			_self.param['name'] = result.name;
 			_self.param['fileURI'] = result.src;
-			_self.addWaterMark();
+			_self.addWaterMark(callBack);
 			// sucessCallback(_self.param);
 		},
 		error : function(message) {
-			console.log(message);
+			console.log(">>>>>>>>>>>>>>>>>>>" + message);
 		}
 	});
 }
 
-AviaryEditor.prototype.addWaterMark = function() {
+AviaryEditor.prototype.addWaterMark = function(sucess) {
 	var _self = this;
 	_self.app.appFS.getFileByURL(_self.param, function(options) {
 		_self.param = options;
@@ -85,8 +116,12 @@ AviaryEditor.prototype.addWaterMark = function() {
 				x = (nGcanvas.width - 20) - (watermark.width);
 				y = (nGcanvas.height - 20) - (watermark.height);
 				nGctx.drawImage(watermark, x, y);
-				_self.app.galleryview.onEditFinish(_self.param, nGcanvas
-						.toDataURL());
+				if (sucess) {
+					sucess(_self.param, nGcanvas.toDataURL());
+				} else {
+					_self.app.galleryview.onEditFinish(_self.param, nGcanvas
+							.toDataURL());
+				}
 			}
 		}
 	});

@@ -28,7 +28,7 @@ DB.prototype.init = function(success, error) {
 	_self.dbstore
 			.transaction(
 					function(tx) {
-						if (_self.dbstore.version == "") {
+//						if (_self.dbstore.version == "") {
 							tx.executeSql('DROP TABLE IF EXISTS vis_gallery');
 							tx.executeSql('DROP TABLE IF EXISTS vis_setting');
 							tx
@@ -38,8 +38,8 @@ DB.prototype.init = function(success, error) {
 							tx
 									.executeSql('CREATE TABLE IF NOT EXISTS '
 											+ ' vis_gallery '
-											+ ' (mr_line,insp_line DEFAULT "0",in_out_id DEFAULT "0",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F", dataSource DEFAULT "CMR")');
-						}
+											+ ' (mr_line,insp_line DEFAULT "0",isMR DEFAULT "N",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F", dataSource DEFAULT "CMR")');
+//						}
 
 					}, _self.errorCallback, _self.successCallback);
 
@@ -66,26 +66,6 @@ DB.prototype.init = function(success, error) {
 	// }
 }
 
-DB.prototype.reloadDB = function() {
-	var _self = this;
-	_self.dbstore
-			.transaction(
-					function(tx) {
-						tx.executeSql('DROP TABLE IF EXISTS vis_setting');
-						tx
-								.executeSql('CREATE TABLE IF NOT EXISTS '
-										+ ' vis_setting'
-										+ ' (vis_url, vis_lang, vis_client_id, vis_role, vis_whouse_id, vis_ord_id, username, vis_img_qulty, is_login, app_version)');
-						tx.executeSql('DROP TABLE IF EXISTS vis_gallery');
-						tx
-								.executeSql('CREATE TABLE IF NOT EXISTS '
-										+ ' vis_gallery '
-										+ ' (mr_line,insp_line DEFAULT "0",in_out_id DEFAULT "0",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F", dataSource DEFAULT "CMR")');
-
-					}, _self.errorCB, _self.success);
-
-}
-
 DB.prototype.getTotalInspEntries = function(param, callBack) {
 	var _self = this;
 	_self.dbstore.transaction(function(tx) {
@@ -108,24 +88,6 @@ DB.prototype.getUploadedInspEntries = function(param, callBack) {
 	}, _self.errorCB, _self.success);
 }
 
-DB.prototype.updateGalleryURIEntry = function(M_InOutLine_ID,
-		X_INSTRUCTIONLINE_ID, M_INOUT_ID, fileName, fileFullPath, oldURI) {
-	var _self = this;
-	_self.dbstore.transaction(function(tx) {
-		var sqlQuery;
-		if (X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null) {
-			sqlQuery = 'UPDATE vis_gallery SET name="' + fileName + '",file="'
-					+ fileFullPath + '" WHERE file="' + oldURI
-					+ '" and in_out_id="' + M_INOUT_ID + '"';
-		} else {
-			sqlQuery = 'UPDATE vis_gallery SET name="' + fileName + '",file="'
-					+ fileFullPath + '" WHERE file="' + oldURI
-					+ '" and insp_line="' + X_INSTRUCTIONLINE_ID + '"';
-		}
-		tx.executeSql(sqlQuery);
-	}, _self.errorCB, _self.success);
-}
-
 DB.prototype.doGalleryEntry = function(fileInfo) {
 	var _self = this;
 	_self.dbstore.transaction(function(tx) {
@@ -133,12 +95,12 @@ DB.prototype.doGalleryEntry = function(fileInfo) {
 		var sqlQuery = " select * from vis_gallery ";
 		var whereSQL = " where file=?";
 		param.push(fileInfo.oldURI);
-		if (fileInfo.inspID == null || fileInfo.inspID == 0) {
-			whereSQL += " and insp_line=?";
+		if (fileInfo.isMR == "N") {
+			whereSQL += ' and isMR="N" and insp_line=?';
 			param.push(fileInfo.inspID);
 		} else {
-			whereSQL += " and in_out_id=?";
-			param.push(fileInfo.mrID);
+			whereSQL += ' and isMR="Y" and insp_line=?';
+			param.push(fileInfo.inspID);
 		}
 		console.log(fileInfo.fileName);
 		tx.executeSql(sqlQuery + whereSQL, param, function(tx, results) {
@@ -148,10 +110,10 @@ DB.prototype.doGalleryEntry = function(fileInfo) {
 				tx.executeSql(sqlQuery + whereSQL, param);
 			} else {
 				sqlQuery = 'INSERT INTO vis_gallery '
-						+ ' (mr_line,in_out_id,insp_line,name,file)'
-						+ ' VALUES ("' + fileInfo.mrLineID + '","'
-						+ fileInfo.mrID + '","' + fileInfo.inspID + '","'
-						+ fileInfo.fileName + '","' + fileInfo.filePath + '")';
+						+ ' (mr_line,isMR,insp_line,name,file)' + ' VALUES ("'
+						+ fileInfo.mrLineID + '","' + fileInfo.isMR + '","'
+						+ fileInfo.inspID + '","' + fileInfo.fileName + '","'
+						+ fileInfo.filePath + '")';
 				tx.executeSql(sqlQuery);
 			}
 		}, _self.errorCB);
@@ -159,33 +121,22 @@ DB.prototype.doGalleryEntry = function(fileInfo) {
 }
 
 DB.prototype.addGalleryEntry = function(M_InOutLine_ID, X_INSTRUCTIONLINE_ID,
-		M_INOUT_ID, fileName, fileFullPath) {
+		isMR, fileName, fileFullPath) {
 	var _self = this;
 
 	_self.dbstore
 			.transaction(
 					function(tx) {
-						var sqlQuery;
-						if (X_INSTRUCTIONLINE_ID == 0
-								|| X_INSTRUCTIONLINE_ID == null) {
-							sqlQuery = 'INSERT INTO vis_gallery(mr_line,in_out_id,name,file) VALUES ("'
-									+ M_InOutLine_ID
-									+ '","'
-									+ M_INOUT_ID
-									+ '","'
-									+ fileName
-									+ '","'
-									+ fileFullPath
-									+ '")';
-						} else {
-							sqlQuery = 'INSERT INTO vis_gallery(mr_line,insp_line,name,file) VALUES ("'
-									+ M_InOutLine_ID
-									+ '","'
-									+ X_INSTRUCTIONLINE_ID
-									+ '","'
-									+ fileName
-									+ '","' + fileFullPath + '")';
-						}
+						var sqlQuery = 'INSERT INTO vis_gallery(mr_line,insp_line,isMR,name,file) VALUES ("'
+								+ M_InOutLine_ID
+								+ '","'
+								+ X_INSTRUCTIONLINE_ID
+								+ '","'
+								+ isMR
+								+ '","'
+								+ fileName
+								+ '","'
+								+ fileFullPath + '")';
 						tx.executeSql(sqlQuery, [], function(tx, results) {
 							if (!results.rowsAffected) {
 								console.log('No rows affected!');
@@ -208,19 +159,19 @@ DB.prototype.onAttachSucess = function(param) {
 			}
 			sql = sql.substring(0, sql.length - 1) + ') and ';
 			if (param.type == 0) {
-				sql = ' in_out_id = "' + param.id + '"';
+				sql = ' isMR ="Y" and insp_line = "' + param.id + '"';
 			} else {
-				sql = 'insp_line = "' + param.id + '"';
+				sql = ' isMR ="N" and insp_line = "' + param.id + '"';
 			}
 		}
 		alert(param.failer.toString());
 	} else {
 		if (param.type == 1) {
 			sql = 'UPDATE vis_gallery SET imgAttach="T" WHERE insp_line="'
-					+ param.id + '"';
+					+ param.id + '" and isMR="N"';
 		} else {
-			sql = 'UPDATE vis_gallery SET imgAttach="T" WHERE in_out_id="'
-					+ param.id + '"';
+			sql = 'UPDATE vis_gallery SET imgAttach="T" WHERE insp_line="'
+					+ param.id + '" isMR="Y"';
 		}
 	}
 	_self.dbstore.transaction(function(tx) {
@@ -237,19 +188,21 @@ DB.prototype.onAttachSucess = function(param) {
 }
 
 DB.prototype.onChangeUplaodStatus = function(M_InOutLine_ID,
-		X_INSTRUCTIONLINE_ID, M_INOUT_ID, fileName, fileFullPath) {
+		X_INSTRUCTIONLINE_ID, isMR, fileName, fileFullPath) {
 	var _self = this;
 	_self.dbstore.transaction(function(tx) {
 		var sqlQuery;
 
-		if (X_INSTRUCTIONLINE_ID == 0 || X_INSTRUCTIONLINE_ID == null) {
+		if (isMR == "Y") {
 			sqlQuery = 'UPDATE vis_gallery SET imgUpload="T",name="' + fileName
-					+ '" WHERE file="' + fileFullPath + '" and in_out_id="'
-					+ M_INOUT_ID + '"';
+					+ '" WHERE file="' + fileFullPath
+					+ '" and isMR="Y" and insp_line="' + X_INSTRUCTIONLINE_ID
+					+ '"';
 		} else {
 			sqlQuery = 'UPDATE vis_gallery SET imgUpload="T",name="' + fileName
-					+ '" WHERE file="' + fileFullPath + '" and insp_line="'
-					+ X_INSTRUCTIONLINE_ID + '"';
+					+ '" WHERE file="' + fileFullPath
+					+ '" and isMR="N" and insp_line="' + X_INSTRUCTIONLINE_ID
+					+ '"';
 		}
 		tx.executeSql(sqlQuery);
 	}, _self.errorCB, _self.success);

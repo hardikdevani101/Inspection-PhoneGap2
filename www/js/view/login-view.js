@@ -3,8 +3,7 @@ var LoginPage = function(app) {
 };
 LoginPage.prototype.rederBreadCrumb = function() {
 	var _self = this;
-	$('#pg_home #btn_user')
-			.html(_self.app.appCache.settingInfo.username);
+	$('#pg_home #btn_user').html(_self.app.appCache.settingInfo.username);
 };
 LoginPage.prototype.onLogin = function() {
 	var _self = this;
@@ -19,7 +18,8 @@ LoginPage.prototype.onLogin = function() {
 						function(result) {
 							if (result.loginInfo.error) {
 								alert(result.loginInfo.error);
-				_self.app.showError("pg_login", result.loginInfo.error);
+								_self.app.showError("pg_login",
+										result.loginInfo.error);
 							} else {
 								_self.app.isLogin = true;
 								_self.app.appCache.settingInfo['userid'] = result.loginInfo.ad_user_id;
@@ -42,7 +42,7 @@ LoginPage.prototype.onLogin = function() {
 							_self.app.settingnview.reloadServerDetail();
 
 						}, function() {
-			_self.app.showError("pg_login", "Login failed");
+							_self.app.showError("pg_login", "Login failed");
 							console.log("Login failed");
 						});
 

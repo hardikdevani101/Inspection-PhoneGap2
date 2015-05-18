@@ -46,6 +46,7 @@ SettingsPage.prototype.init = function() {
 	$("#txt_organization").on("change", function() {
 		_self.onOrgChange();
 	});
+
 	$("#txt_url").on("change", function() {
 		_self.onServerChange()
 	});
@@ -238,12 +239,12 @@ SettingsPage.prototype.onSettingFind = function(setting) {
 		$("#txt_lang").val(setting.lang).attr('selected', true).siblings(
 				'option').removeAttr('selected');
 		$("#txt_lang").selectmenu("refresh", true);
-		$("#txt_warehouse").val(setting.warehouse_id).attr('selected', true)
-				.siblings('option').removeAttr('selected');
-		$("#txt_warehouse").selectmenu("refresh", true);
 		$("#txt_organization").val(setting.org_id).attr('selected', true)
 				.siblings('option').removeAttr('selected');
 		$("#txt_organization").selectmenu("refresh", true);
+		$("#txt_warehouse").val(setting.warehouse_id).attr('selected', true)
+				.siblings('option').removeAttr('selected');
+		$("#txt_warehouse").selectmenu("refresh", true);
 		$("#txt_organization").trigger("change");
 		$("#txt_editApp").val(setting.editApp).attr('selected', true).siblings(
 				'option').removeAttr('selected');

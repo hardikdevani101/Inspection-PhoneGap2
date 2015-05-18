@@ -103,7 +103,7 @@ InspLinesPage.prototype.syncInspLines = function() {
 				_self.app.appFTPUtil.uploadFile(results.rows.item(i).file,
 						results.rows.item(i).mr_line,
 						results.rows.item(i).insp_line,
-						results.rows.item(i).in_out_id, function(msg) {
+						results.rows.item(i).isMR, function(msg) {
 							if (!_self.isAlertDisplay) {
 								_self.isAlertDisplay = true;
 								$("#insp_process_log").show();
@@ -111,6 +111,7 @@ InspLinesPage.prototype.syncInspLines = function() {
 							$("#insp_process_log").html(
 									_self.app.appFTPUtil.processLog.length);
 						});
+
 			}
 		}
 	};
@@ -134,7 +135,6 @@ InspLinesPage.prototype.renderMRLines = function() {
 	$('#_list_mrlines').listview("refresh");
 
 	$('#_list_mrlines li a').on('click', function() {
-		console.log($(this).data("id"));
 		_self.app.appCache.session.m_inoutline_id = $(this).data("id");
 		$.mobile.changePage("#pg_inspection_detail");
 	});
@@ -162,8 +162,8 @@ InspLinesPage.prototype.loadMRLines = function() {
 			userid : app.appCache.settingInfo.userid
 		}, success, function() {
 			// popup Errorbox.
-			console.log("Load MR-lines failed");
 			_self.app.hideDialog();
+			_self.app.showError("pg_inspection", "Load MR-lines failed");
 		});
 	}
 };
@@ -175,7 +175,7 @@ InspLinesPage.prototype.renderInspLines = function() {
 	function mrLine(element, index, array) {
 		return (element.m_inoutline_id == sel_inoutline_id);
 	}
-	var mr_lines = _self.app.inspLinePage.mrLines.filter(mrLine);
+	var mr_lines = _self.app.appCache.mrLines.filter(mrLine);
 	if (!_self.app.appCache.prefixCache[sel_inoutline_id]) {
 		_self.app.appCache.prefixCache[sel_inoutline_id] = mr_lines[0].desc;
 	}
@@ -187,9 +187,9 @@ InspLinesPage.prototype.renderInspLines = function() {
 	if (!(typeof _self.app.appCache.inspLines[sel_inoutline_id] === 'undefined')
 			&& _self.app.appCache.inspLines[sel_inoutline_id].length > 0) {
 		$.each(_self.app.appCache.inspLines[sel_inoutline_id], function() {
-			var line = '<li><a id="inspline_' + this.x_instructionline_id
-					+ '" data-id="' + this.x_instructionline_id + '">'
-					+ this.name
+			var line = '<li><a data-isMR="' + this.isMR + '" id="inspline_'
+					+ this.x_instructionline_id + '" data-id="'
+					+ this.x_instructionline_id + '">' + this.name
 					+ '<span class="ui-li-count">0/0</span></a></li>';
 			items = items + line;
 		});
@@ -200,10 +200,12 @@ InspLinesPage.prototype.renderInspLines = function() {
 				function() {
 					_self.app.appCache.session.x_instructionline_id = $(this)
 							.data("id");
+					_self.app.appCache.session.isMR = $(this).data("isMR");
 					$.mobile.changePage("#pg_gallery");
 				});
 	}
-	_self.app.hideDialog();
+	// _self.app.hideDialog();
+	$.mobile.loading('hide');
 	_self.renderCounts();
 };
 
@@ -247,7 +249,7 @@ InspLinesPage.prototype.onFinishedCalled = function() {
 				var item = {};
 				if (results.rows.item(i).insp_line == null
 						|| results.rows.item(i).insp_line == 0) {
-					item['id'] = results.rows.item(i).in_out_id;
+					item['id'] = results.rows.item(i).insp_line;
 					item['type'] = 0;
 				} else {
 					item['id'] = results.rows.item(i).insp_line;
@@ -306,11 +308,11 @@ InspLinesPage.prototype.onFinishedCalled = function() {
 InspLinesPage.prototype.loadInspLines = function(params) {
 	var _self = this;
 	_self.rederInspLinesDetailsBreadCrumb();
-	_self.app.showDialog('Loading..');
+	// _self.app.showDialog('Loading..');
+	$.mobile.loading('show');
 	var sel_inoutline_id = _self.app.appCache.session.m_inoutline_id;
 	if (!(typeof params === 'undefined')) {
 		sel_inoutline_id = params.selected_mrline;
-		console.log(sel_inoutline_id);
 	}
 
 	if (!(typeof _self.app.appCache.inspLines[sel_inoutline_id] === 'undefined')) {
@@ -326,8 +328,9 @@ InspLinesPage.prototype.loadInspLines = function(params) {
 		visionApi.getInspLines({
 			m_inoutline_id : sel_inoutline_id
 		}, success, function() {
-			_self.app.hideDialog();
-			console.log("Failed to Load - Inspection lines");
+			$.mobile.loading('hide');
+			_self.app.showError("pg_inspection_detail",
+					"Failed to Load - Inspection lines");
 		});
 	}
 }

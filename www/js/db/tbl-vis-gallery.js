@@ -16,26 +16,15 @@ Tbl_VISGallery.prototype.addFile = function(fileInfo, success, error) {
 	this.appDB.dbstore
 			.transaction(
 					function(tx) {
-						var sqlQuery;
-						if (fileInfo.X_INSTRUCTIONLINE_ID == 0
-								|| fileInfo.X_INSTRUCTIONLINE_ID == null)
-							sqlQuery = 'INSERT INTO vis_gallery(mr_line,in_out_id,name,file) VALUES ("'
-									+ fileInfo.M_InOutLine_ID
-									+ '","'
-									+ fileInfo.M_INOUT_ID
-									+ '","'
-									+ fileInfo.fileName
-									+ '","'
-									+ fileInfo.fileFullPath + '")';
-						else
-							sqlQuery = 'INSERT INTO vis_gallery(mr_line,insp_line,name,file) VALUES ("'
-									+ fileInfo.M_InOutLine_ID
-									+ '","'
-									+ fileInfo.X_INSTRUCTIONLINE_ID
-									+ '","'
-									+ fileInfo.fileName
-									+ '","'
-									+ fileInfo.fileFullPath + '")';
+						var sqlQuery = 'INSERT INTO vis_gallery(mr_line,insp_line,isMR,name,file) VALUES ("'
+								+ fileInfo.M_InOutLine_ID
+								+ '","'
+								+ fileInfo.X_INSTRUCTIONLINE_ID
+								+ '","'
+								+ fileInfo.isMR
+								+ '","'
+								+ fileInfo.fileName
+								+ '","' + fileInfo.fileFullPath + '")';
 						tx.executeSql(sqlQuery, [], sucessCallback,
 								errorCallback);
 					}, errorCallback);
@@ -51,12 +40,10 @@ Tbl_VISGallery.prototype.getFilesByMRInfo = function(fileInfo, sucsses, error) {
 	if (typeof (error) === "function") {
 		errorCallback = error;
 	}
-	var sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
-			+ fileinfo.M_InOutLine_ID + '" and insp_line="'
-			+ fileinfo.X_INSTRUCTIONLINE_ID + '"';
-	console.log("DB query " + sqlQuery);
-
 	this.appDB.dbstore.transaction(function(tx) {
+		sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
+				+ fileInfo.M_InOutLine_ID + '" and isMR="Y" and insp_line="'
+				+ fileInfo.X_INSTRUCTIONLINE_ID + '"';
 		tx.executeSql(sqlQuery, [], successCallback, errorCallback);
 	}, errorCallback);
 }
@@ -92,8 +79,8 @@ Tbl_VISGallery.prototype.addFileInfo = function(fileInfo, success, error) {
 	}
 	this.appDB.dbstore.transaction(function(tx) {
 		var sqlQuery = 'INSERT INTO vis_gallery'
-				+ ' (mr_line,in_out_id,insp_line,name,file,dataSource)'
-				+ ' VALUES ("' + fileInfo.mrLineID + '","' + fileInfo.mrID
+				+ ' (mr_line,isMR,insp_line,name,file,dataSource)'
+				+ ' VALUES ("' + fileInfo.mrLineID + '","' + fileInfo.isMR
 				+ '","' + fileInfo.inspID + '","' + fileInfo.fileName + '","'
 				+ fileInfo.filePath + '","' + fileInfo.dataSource + '")';
 		console.log(sqlQuery);
@@ -117,10 +104,12 @@ Tbl_VISGallery.prototype.deleteFileInfo = function(fileInfo, success, error) {
 		var sqlQuery = 'Delete From vis_gallery where file="'
 				+ fileInfo.fileFullPath + '"';
 		console.log(fileInfo.inspID);
-		if (fileInfo.inspID == null || fileInfo.inspID == 0) {
-			sqlQuery += ' and in_out_id="' + fileInfo.mrID + '"';
+		if (fileInfo.isMR == "Y") {
+			sqlQuery += ' and isMR="Y" and  insp_line="' + fileInfo.inspID
+					+ '"';
 		} else {
-			sqlQuery += ' and insp_line="' + fileInfo.inspID + '"';
+			sqlQuery += ' and isMR="N" and  insp_line="' + fileInfo.inspID
+					+ '"';
 		}
 		console.log(sqlQuery);
 		tx.executeSql(sqlQuery, [], successCallback, errorCallback);
@@ -208,13 +197,15 @@ Tbl_VISGallery.prototype.getFilesByMR = function(fileInfo, success, error) {
 	}
 	this.appDB.dbstore.transaction(function(tx) {
 		var sqlQuery;
-		if (fileInfo.X_INSTRUCTIONLINE_ID == 0
-				|| fileInfo.X_INSTRUCTIONLINE_ID == null)
+		if (fileInfo.isMR = "Y")
 			sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
-					+ M_InOutLine_ID + '" and in_out_id="' + M_INOUT_ID + '"';
+					+ fileInfo.M_InOutLine_ID
+					+ '" and isMR="Y" and insp_line="'
+					+ fileInfo.X_INSTRUCTIONLINE_ID + '"';
 		else
 			sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
-					+ fileInfo.M_InOutLine_ID + '" and insp_line="'
+					+ fileInfo.M_InOutLine_ID
+					+ '" and isMR="N" and insp_line="'
 					+ fileInfo.X_INSTRUCTIONLINE_ID + '"';
 
 		tx.executeSql(sqlQuery, [], successCallback, errorCallback);
@@ -234,21 +225,21 @@ Tbl_VISGallery.prototype.getUploadCounts = function(fileInfo, success, error) {
 		var sqlQuery;
 		if (fileInfo.isInsp == 0)
 			sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
-					+ fileInfo.mInNumber + '" and in_out_id="'
+					+ fileInfo.mInNumber + '" and isMR="Y" and insp_line="'
 					+ fileInfo.InspNumber + '"';
 		else
 			sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
-					+ fileInfo.mInNumber + '" and insp_line="'
+					+ fileInfo.mInNumber + '" and isMR="N" and insp_line="'
 					+ fileInfo.InspNumber + '"';
 		tx.executeSql(sqlQuery, [], function(tx, results) {
 			var totImg = results.rows.length;
 			if (fileInfo.isInsp == 0)
 				sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
-						+ fileInfo.mInNumber + '" and in_out_id="'
+						+ fileInfo.mInNumber + '" and isMR="Y" and insp_line="'
 						+ fileInfo.InspNumber + '" and imgUpload="T"';
 			else
 				sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
-						+ fileInfo.mInNumber + '" and insp_line="'
+						+ fileInfo.mInNumber + '" and isMR="N" and insp_line="'
 						+ fileInfo.InspNumber + '" and imgUpload="T"';
 			tx.executeSql(sqlQuery, [], function(tx, results) {
 				var totImgUpload = results.rows.length;
@@ -277,13 +268,12 @@ Tbl_VISGallery.prototype.updateFileOnSuccess = function(fileInfo, success,
 		if (fileInfo.isInsp == 0) {
 			sqlQuery = 'UPDATE vis_gallery SET imgAttach="T",imgUpload="T" WHERE name="'
 					+ fileInfo.fileName
-					+ '" and in_out_id="'
-					+ imginspline
-					+ '"';
+					+ '" and isMR="Y" and insp_line="'
+					+ fileInfo.imginspline + '"';
 		} else {
 			sqlQuery = 'UPDATE vis_gallery SET imgAttach="T",imgUpload="T" WHERE name="'
 					+ fileInfo.fileName
-					+ '" and insp_line="'
+					+ '" and isMR="N" and insp_line="'
 					+ fileInfo.imginspline + '"';
 		}
 		tx.executeSql(sqlQuery);
@@ -300,20 +290,18 @@ Tbl_VISGallery.prototype.removeOtherFiles = function(fileInfo, success, error) {
 		errorCallback = error;
 	}
 
-	this.appDB.dbstore.transaction(
-			function(tx) {
-				var sqlQuery;
-				if (fileInfo.X_INSTRUCTIONLINE_ID == 0
-						|| fileInfo.X_INSTRUCTIONLINE_ID == null)
-					sqlQuery = 'DELETE FROM vis_gallery WHERE file="'
-							+ fileInfo.tempfile + '" and in_out_id="'
-							+ fileInfo.M_INOUT_ID + '"';
-				else
-					sqlQuery = 'DELETE FROM vis_gallery WHERE file="' + tmpfile
-							+ '" and insp_line="'
-							+ fileInfo.X_INSTRUCTIONLINE_ID + '"';
-				tx.executeSql(sqlQuery, errorCallback);
-			}, successCallback, errorCallback);
+	this.appDB.dbstore.transaction(function(tx) {
+		var sqlQuery;
+		if (fileInfo.isMR == "Y")
+			sqlQuery = 'DELETE FROM vis_gallery WHERE file="'
+					+ fileInfo.tempfile + '" and isMR="Y" and insp_line="'
+					+ fileInfo.X_INSTRUCTIONLINE_ID + '"';
+		else
+			sqlQuery = 'DELETE FROM vis_gallery WHERE file="'
+					+ fileInfo.tempfile + '" and isMR="N" and insp_line="'
+					+ fileInfo.X_INSTRUCTIONLINE_ID + '"';
+		tx.executeSql(sqlQuery, errorCallback);
+	}, successCallback, errorCallback);
 }
 
 Tbl_VISGallery.prototype.updateFileOnUploadFailure = function(fileInfo,
@@ -332,7 +320,9 @@ Tbl_VISGallery.prototype.updateFileOnUploadFailure = function(fileInfo,
 						var sqlQuery;
 						sqlQuery = 'UPDATE vis_gallery SET imgUpload="F",imgAttach="F" WHERE name="'
 								+ fileInfo.name
-								+ '" and in_out_id="'
+								+ '" and isMR="'
+								+ fileInfo.isMR
+								+ '" and insp_line="'
 								+ fileInfo.imginspline + '"';
 						tx.executeSql(sqlQuery);
 					}, errorCallback);

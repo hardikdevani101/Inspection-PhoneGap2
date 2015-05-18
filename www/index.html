@@ -448,7 +448,7 @@ End of Inspection page
 						<button href="#pnl_file_sources" id="btn-add" data-icon="plus"
 							data-corners="true" data-iconpos="notext" data-shadow="false"
 							data-iconshadow="false" data-wrapperels="span" title="Logout"
-							class="ui-btn ui-icon-plus ui-btn-icon-notext ui-last-child">>Add</button>
+							class="ui-btn ui-icon-plus ui-btn-icon-notext ui-last-child">Add</button>
 					</div>
 				</div>
 			</div>
@@ -529,6 +529,17 @@ Start of File Explorer page
 				<ul data-role="listview" id="ls_sel_files" data-inset="false">
 				</ul>
 			</div>
+		</div>
+		
+		<div data-role="popup" id="pop_fileEplorer_actions" data-corners="true"
+			data-shadow="false" data-theme="b">
+			<ul data-role="listview" data-inset="true">
+				<li data-role="list-divider">Choose an action</li>
+				<li><a href="#" data-theme="b" class="ui-icon-edit"
+					id="btn_FEedit_file">Edit</a></li>
+				<li><a href="#" data-theme="b" class="ui-icon-delete"
+					id="btn_FEdelete_file">Delete</a></li>
+			</ul>
 		</div>
 
 		<div data-role="footer" data-fullscreen="false" data-position="fixed"

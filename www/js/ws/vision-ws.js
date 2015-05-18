@@ -251,6 +251,19 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 						var xmlResponse = response;
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
+						function mrLine(element, index, array) {
+							return (element.m_inoutline_id == params.m_inoutline_id);
+						}
+						var mr_lines = _self.app.appCache.mrLines
+								.filter(mrLine);
+						if (mr_lines && mr_lines.length > 0) {
+							var resultline = {};
+							resultline['x_instructionline_id'] = mr_lines[0].m_inout_id;
+							resultline['isMR'] = "Y";
+							resultline['name'] = "Vendor Paper work";
+							jsonResponse.push(resultline);
+						}
+
 						if (fullNodeList.length > 0) {
 							for (var i = 0; i < fullNodeList.length; i++) {
 								var dlab, dval;
@@ -264,6 +277,7 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 								}
 								var resultline = {};
 								resultline['x_instructionline_id'] = dval
+								resultline['isMR'] = "N";
 								resultline['name'] = dlab;
 								jsonResponse.push(resultline);
 							}

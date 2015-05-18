@@ -267,55 +267,6 @@ FS.prototype.getExtention = function(Fname) {
 	return tmpArray.pop();
 }
 
-FS.prototype.saveVISFile = function(fileData, oldFileURI) {
-	var _self = this;
-	var date = new Date;
-	var sec = date.getSeconds();
-	var mi = date.getMinutes();
-	var hh = date.getHours();
-	var yy = date.getFullYear();
-	var mm = date.getMonth() + 1;
-	var dd = date.getDate();
-	var fileName = mm + dd + yy + "_" + hh + mi + sec + ".jpg";
-	_self.vis_dir.getFile(fileName, {
-		create : true,
-		exclusive : false
-	}, function(fileEntry) {
-		fileEntry.createWriter(function(writer) {
-			writer.onwrite = function(evt) {
-				var fileFullPath = fileEntry.toURL();
-				console.log(fileFullPath);
-				console.log("New File Created");
-				var mrLineID1 = _self.app.appCache.session.m_inoutline_id;
-				var inspID1 = _self.app.appCache.session.x_instructionline_id;
-				var mrID1 = _self.app.appCache.session.M_INOUT_ID;
-
-				_self.app.appDB.updateGalleryURIEntry(mrLineID1, inspID1,
-						mrID1, fileEntry.name, fileFullPath, oldFileURI);
-
-				_self.getFileByURL({
-					oldURI : oldFileURI,
-					fileURI : fileFullPath,
-					inspID : inspID1
-				}, function(param) {
-					_self.onUpdateCacheImageData(param);
-				})
-
-				// $.each(_self.app.appCache.inspFiles[inspID], function() {
-				// if (this.filePath == oldFileURI) {
-				// this.filePath == fileFullPath;
-				// this['name'] == fileEntry.name;
-				// this.data = evt.target.result;
-				// $.mobile.changePage("#pg_gallery");
-				// }
-				// });
-
-			};
-			writer.write(fileData);
-		}, _self.errorHandler);
-	}, _self.errorHandler);
-}
-
 FS.prototype.onUpdateCacheImageData = function(param) {
 	var _self = this;
 	$.each(_self.app.appCache.inspFiles[param.inspID], function() {
@@ -338,11 +289,11 @@ FS.prototype.getFileName = function(tmpFile) {
 	return tmpArray.pop();
 }
 
-FS.prototype.uploadFile = function(file, mr_line, insp_line, in_out_id) {
+FS.prototype.uploadFile = function(file, mr_line, insp_line, isMR) {
 	var _self = this;
 	_self.fileSystem.root.getFile(file, null, function(fileEntry) {
 		_self.app.appFTPUtil.uploadFile(fileEntry, mr_line, insp_line,
-				in_out_id);
+				isMR);
 	}, _self.errorHandler);
 }
 
