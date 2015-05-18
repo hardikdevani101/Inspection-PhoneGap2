@@ -478,6 +478,14 @@ body {
 		xheight: 90px;
 		margin: .1em .1em;
 	}
+	#pnl_selected_files .ui-listview li {
+		width: 47% !important;
+	}
+
+	.current_dir_location_list .ui-bar {
+		padding: .5em .5em !important;
+		margin: 0em 0em 1.5em !important;
+	}
 	.img-gallery .ui-listview>.ui-li-has-thumb>.ui-btn, .ui-listview>.ui-li-static.ui-li-has-thumb
 		{
 		min-height: 11.7em !important;
@@ -627,7 +635,6 @@ body .ui-body-c, body .ui-overlay-c {
 	background-image: url("../img/zoom-in.png");
 	background-size: 18px 18px;
 }
-
 
 #pop_file_actions {
 	background: transparent !important;

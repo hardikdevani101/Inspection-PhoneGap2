@@ -24,38 +24,39 @@ FileExplorerPage.prototype.init = function() {
 		_self.rederBreadCrumb();
 		_self.fillDataProviders();
 		_self.loadData();
+	});
 
-		$("#btn_finish_file_selection").on('click', function() {
-			// TODO: Push Selected File information to Gallery
-			// Page.
-			_self.app.galleryview.onFileData(_self.selFiles);
-			$.mobile.changePage("#pg_gallery");
-		});
+	$("#btn_finish_file_selection").on('click', function() {
+		// TODO: Push Selected File information to Gallery
+		// Page.
+		_self.app.galleryview.onFileData(_self.selFiles);
+		$.mobile.changePage("#pg_gallery");
+	});
 
-		$("#btn_reload_files").on("tap", function(event) {
-			_self.currentDirPath = '/';
-			// _self.selFiles = [];
-			_self.explodeDirectory(_self.currentDirPath, function() {
-				_self.renderContent()
-			}, function(msg) {
-				console.log("Error in loading server data.")
-			});
-		});
-
-		$("#sel_dataproviders").on("change", function(event) {
-			if ($("#sel_dataproviders").val() == 'LS') {
-				_self.isLocalStorage = true;
-			} else {
-				_self.isLocalStorage = false;
-			}
-			_self.onDataStorageChange(event);
-		});
-
-		// $("#selected-files-count").off();
-		$('#selected-files-count').on("tap", function(event) {
-			_self.renderSelectedFiles(event);
+	$("#btn_reload_files").on("tap", function(event) {
+		_self.currentDirPath = '/';
+		// _self.selFiles = [];
+		_self.explodeDirectory(_self.currentDirPath, function() {
+			_self.renderContent()
+		}, function(msg) {
+			console.log("Error in loading server data.")
 		});
 	});
+
+	$("#sel_dataproviders").on("change", function(event) {
+		if ($("#sel_dataproviders").val() == 'LS') {
+			_self.isLocalStorage = true;
+		} else {
+			_self.isLocalStorage = false;
+		}
+		_self.onDataStorageChange(event);
+	});
+
+	// $("#selected-files-count").off();
+	$('#selected-files-count').on("tap", function(event) {
+		_self.renderSelectedFiles(event);
+	});
+
 	$("#btn_file_view_mode").on(
 			'click',
 			function() {
@@ -67,6 +68,12 @@ FileExplorerPage.prototype.init = function() {
 					$(this).addClass('ui-icon-grid');
 					$('#pg_file_explorer #pg_file_main').removeClass(
 							'img-gallery');
+					$('#pg_file_explorer #pg_file_main img').addClass(
+							'ui-listview-mode');
+
+					$('#pg_file_explorer #pg_file_main .current_dir_location')
+							.addClass('current_dir_location_list');
+
 					_self.isGridView = false;
 					$('#ls_files li a').removeClass("ui-icon-carat-r");
 					$("#ls_files p a.ui-icon-arrow-d").hide();
@@ -74,7 +81,8 @@ FileExplorerPage.prototype.init = function() {
 						$('#ls_files li[data-id="' + file.filePath + '"] a')
 								.addClass("ui-icon-arrow-d");
 					});
-					$("#ls_files  .ui-listview .ui-li-has-thumb h2").css("color", "#FFF");
+					$("#ls_files  .ui-listview .ui-li-has-thumb h2").css(
+							"color", "#FFF");
 				} else {
 					$(this).removeClass('ui-icon-grid');
 					$(this).html('List View');
@@ -82,13 +90,17 @@ FileExplorerPage.prototype.init = function() {
 					_self.isGridView = true;
 					$('#pg_file_explorer #pg_file_main')
 							.addClass('img-gallery');
+					$('#pg_file_explorer #pg_file_main img').removeClass(
+							'ui-listview-mode');
 					$("#ls_files p a.ui-icon-arrow-d").hide();
+
 					$.each(_self.selFiles, function(index, file) {
 						$(
 								'#ls_files li[data-id="' + file.filePath
 										+ '"] p a.ui-icon-arrow-d').show();
 					});
-					$("#ls_files  .ui-listview .ui-li-has-thumb h2").css("color", "#202C3C");
+					$("#ls_files  .ui-listview .ui-li-has-thumb h2").css(
+							"color", "#202C3C");
 				}
 			});
 }
@@ -157,7 +169,7 @@ FileExplorerPage.prototype.fillDataProviders = function() {
 	var reloadDataProviders = function() {
 		$('#sel_dataproviders').html("");
 		// root URI = "file:///storage/sdcard0";
-		console.log(">>>>>>>>>"+_self.app.appFS.rootURI);
+		console.log(">>>>>>>>>" + _self.app.appFS.rootURI);
 		$("#sel_dataproviders").append(
 				new Option("LocalStorage", _self.app.appFS.rootURI));
 		if (_self.app.appCache.ftpServers.length > 0) {
@@ -208,9 +220,9 @@ FileExplorerPage.prototype.fillDataProviders = function() {
 			// _self.app.appCache.ftpServers.push(data);
 			// });
 			// reloadDataProviders();
-			// // popup Errorbox.
-			// console.log("Load FTP Servers failed" + msg);
-			// _self.app.hideDialog();
+			// popup Errorbox.
+			console.log("Load FTP Servers failed" + msg);
+			_self.app.hideDialog();
 		});
 	}
 }
@@ -380,16 +392,22 @@ FileExplorerPage.prototype.changeDir = function() {
 FileExplorerPage.prototype.renderDirs = function(dirs) {
 	var _self = this;
 	var dirItems = '';
+	var imgClass = '';
+	if (!_self.isGridView) {
+		imgClass = "ui-listview-mode";
+	}
+
 	$.each(dirs, function(index, value) {
 		var fileData = _self.app.dir64;
 		var storage = _self.isLocalStorage ? "LS" : "FTP";
 		var line = '<li data-storage="' + storage + '" data-id="'
 				+ _self.currentDirPath + value
 				+ '" class="dir-placeholder"><a href="#">'
-				+ '<img class="ui-li-thumb" src="' + fileData + '" /><h2>'
-				+ value + '</h2></a></li>';
+				+ '<img class="ui-li-thumb ' + imgClass + '" src="' + fileData
+				+ '" /><h2>' + value + '</h2></a></li>';
 		dirItems = dirItems + line;
 	});
+
 	return dirItems;
 }
 
@@ -401,31 +419,8 @@ FileExplorerPage.prototype.loadActualImage = function(dataid, isLocalStrg) {
 		// console.log('Get image from ' + storage + ' >> ' + dataid);
 		// // TODO remove below dummy data runner in production.
 		// // Start of dummy data filler.
-		// var img =
-		// "data:image/jpg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAd
-		// Hx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3
-		// Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAFoAWgMBIgACEQED
-		// EQH/xAAbAAADAQEBAQEAAAAAAAAAAAAAAQcEBQYCA//EAEAQAAECBAEGCwQHCQAAAAAAAAEAAgME
-		// BRGxBgchMTV0EhYXNlFVdZOy0eITImGBc5GSocHS8BUyQUJDRHGCg//EABkBAQADAQEAAAAAAAAA
-		// AAAAAAQAAwUBAv/EACQRAAEDAgYDAQEAAAAAAAAAAAABAgMEERQhMTIzcRITUUJB/9oADAMBAAIR
-		// AxEAPwC4oQkToUIC5eUFalqNJmNMOu86IcMHS8+XxX1XaxLUeSdHmHXcdEOGNbz0KS1apTFVnXzM
-		// y67joa0amjoCTTU6yLddA08/hkmp91CfnK3UPaR3F8WI7gw4YPut6AFs4pVwaqe4/wC7PNc6kbVk
-		// /pmYq3DUmVEzoLNYGgiSa7nEi4pV3q4/bZ5o4pV3q4/bZ5qvIRsdKX4NhIHZK12G0v8A2c/3dPuu
-		// aT9xW3JnKicpk2yVqEV8SVLuA72xPChfM6fkqipXnDgMgZRFzGge1gNe4DpuR+CtimxC+D0K5IvS
-		// nkxSpMIIBbaxF9C+1hojnOpEk55u4wGEnp0Lcs9UsqoORbpcS5tcrMrR5N0eYddx0Q4Y1vPwXSUf
-		// ymmJmoZRzMJ7i8tjGDCbewAvawV9ND7X2XQpnl9bctTHV6nM1acdMzTru1NaNTB0BYl3OJ9f6vJ/
-		// 6s80cUK91e7vWfmWqksTUsioZqskVbqhzqOCatJ2H9dmKtw1Ke5LZHzsGow5uqMbBZBcHNh8MOLn
-		// fw1agqENSzq2Rr3p4qOpGK1q3GhCEMWCl+crbzN1bi5VBS/OVt5m6txclUfKGq+MoNC2NI7uzALe
-		// sFC2NI7uzALejv3KXs2oIKPznPGJ2gPGFYAo/O88X9oDxhKo9XdBqr89lfQgJhCFoFkDUmhdICEI
-		// UICl+crbzN1bi5VBS/OVt5m6txclUfKGq+MoNC2NI7uzALesFC2NI7uzALejv3KXs2oIKPzvPF/a
-		// A8YVgCj87zxf2gPGEui1d0Gqvz2V8JhIJhB/ov8Ag0IQukBCEKEBS/OVt5m6txcqgpfnK28zdW4u
-		// SqPlDVfGUGhbGkd3ZgFvWChbGkd3ZgFvR37lL2bUEo/O88X9oDxhWAqPzujLCJc/348YSqLV3Qaq
-		// 0b2V8JpAp3QxaaDQlcIuFCDQlcIuFCDUvzk7eZurfE5U+6l+chwdX2gHSJZoP1uSqPlC1fGUKhbG
-		// kd3ZgFvWCg7GkfoGYBb0d25RDNqCKmWXdGiydSdUYTSYEYgucP5Hfq3zVNOpfnGY18NzXtDmkaQR
-		// cFe4ZFjddDxNGj25k7p+X83LyzIc1KMmHgW9oH8G4+IsVp5RYnVje/8ASvMZRwocCrRWQYbIbL/u
-		// saAFzFqJTROzsZvvkblc91yixOrG9/6UcosTqxvf+leFQu4SH4dxMn091yixOrG9/wClHKLE6sb3
-		// /pXhUKYSH4TEyfT3D84kYscGU1gdbQTG0X+pefkZWeyorTjFJe6I4GNEA91jfw/wuTCAMRgIuC4K
-		// zUSXgS8hDbAgw4YIvZjQMFVKjKdt2Jmp7jV0y2cptl4bYUJkNgs1rQAPgv1SCayjSRLH/9k="
+		// var img = _self.app.image64;
+
 		// setInterval(function() {
 		// _self.app.appCache.imgCache[dataid] = img;
 		// $('li[data-id="' + dataid + '"] img').attr('src', img);
@@ -452,7 +447,6 @@ FileExplorerPage.prototype.loadActualImage = function(dataid, isLocalStrg) {
 			}, function(msg) {
 				console.log('Error Getting File >>> ' + dataid);
 			});
-
 		}
 	}
 
@@ -490,6 +484,11 @@ FileExplorerPage.prototype.renderFiles = function(files) {
 							}
 						}
 						var storage = _self.isLocalStorage ? "LS" : "FTP";
+						var imgClass = '';
+						if (!_self.isGridView) {
+							imgClass = "ui-listview-mode";
+						}
+
 						var line = '<li data-storage="'
 								+ storage
 								+ '"  data-name="'
@@ -497,7 +496,9 @@ FileExplorerPage.prototype.renderFiles = function(files) {
 								+ '"data-id="'
 								+ dataid
 								+ '" class="file-placeholder"><a href="#">'
-								+ '<img class="ui-li-thumb" src="'
+								+ '<img class="ui-li-thumb '
+								+ imgClass
+								+ '" src="'
 								+ fileData
 								+ '" /><h2>'
 								+ value.substr(0, (value.lastIndexOf('.')))
