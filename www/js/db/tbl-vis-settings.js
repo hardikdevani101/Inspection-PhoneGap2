@@ -42,7 +42,7 @@ Tbl_VISSetting.prototype.find = function(filter, success, error) {
 				setting['username'] = results.rows.item(0).username;
 				setting['userid'] = results.rows.item(0).userid;
 				setting['password'] = results.rows.item(0).userpwd;
-				setting['editApp'] = results.rows.item(0).editApp;
+				setting['img_editor'] = results.rows.item(0).img_editor;
 			}
 			successCallback(setting);
 		});
@@ -63,7 +63,7 @@ Tbl_VISSetting.prototype.add = function(settingInfo, success, error) {
 					function(tx) {
 						tx
 								.executeSql('INSERT INTO vis_setting '
-										+ ' (vis_url, vis_lang, vis_client_id, vis_role, vis_whouse_id, vis_ord_id,editApp, vis_img_qulty)'
+										+ ' (vis_url, vis_lang, vis_client_id, vis_role, vis_whouse_id, vis_ord_id,img_editor, vis_img_qulty)'
 										+ ' VALUES ("'
 										+ settingInfo['service_url'] + '","'
 										+ settingInfo['lang'] + '","'
@@ -71,7 +71,7 @@ Tbl_VISSetting.prototype.add = function(settingInfo, success, error) {
 										+ settingInfo['role'] + '","'
 										+ settingInfo['warehouse_id'] + '","'
 										+ settingInfo['org_id'] + '","'
-										+ settingInfo['editApp'] + '","'
+										+ settingInfo['img_editor'] + '","'
 										+ settingInfo['img_quality'] + '")');
 					}, function(err) {
 						console.log("SettingInfo insert failed." + tx.message);
@@ -97,7 +97,7 @@ Tbl_VISSetting.prototype.update = function(setting, success, error) {
 			+ setting.client_id + '",vis_role ="' + setting.role
 			+ '",vis_whouse_id ="' + setting.warehouse_id + '",vis_ord_id ="'
 			+ setting.org_id + '",vis_img_qulty ="' + setting.img_quality
-			+ '",editApp ="' + setting.editApp + '"';
+			+ '",img_editor ="' + setting.img_editor + '"';
 	this.appDB.dbstore.transaction(function(tx) {
 		tx.executeSql(sql, [], function(tx, results) {
 			successCallback(results)

@@ -140,7 +140,7 @@ SettingsPage.prototype.onUpdate = function() {
 	settingInfo['warehouse_id'] = $("#txt_warehouse option:selected").val();
 	settingInfo['img_quality'] = $("#txt_imgQua option:selected").val();
 	settingInfo['role'] = $("#txt_role option:selected").val();
-	settingInfo['editApp'] = $("#txt_editApp option:selected").val();
+	settingInfo['img_editor'] = $("#txt_editApp option:selected").val();
 
 	var error = function(msg) {
 		console.log("Setting Info Updates Fails." + msg);

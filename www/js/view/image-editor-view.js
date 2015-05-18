@@ -114,7 +114,7 @@ ImageEditorPage.prototype.enableEditMode = function() {
 		});
 		$(document).on("vmouseup", "#edit-canvase", function(e) {
 			isDrawing = false;
-			console.log(">>>>>>>>>>>>>vmouseup");
+			// console.log(">>>>>>>>>>>>>vmouseup");
 			$('#img_editable').attr('src', _self.gcanvas.toDataURL());
 		})
 	}
@@ -148,19 +148,19 @@ ImageEditorPage.prototype.init = function() {
 				_self.rederBreadCrumb();
 				_self.cValue = 0;
 				_self.bValue = 0;
-//				$("#txt_prefix").val($('#prefixInpectLine').html());
-//				$('#btn_filter_ok')
-//						.on(
-//								'click',
-//								function() {
-//									$("#prefixInpectLine").html(
-//											$('#txt_prefix').val());
-//									if ($("#prefixInpectLine").data('id'))
-//										_self.app.appCache.prefixCache[$(
-//												"#prefixInpectLine").data('id')
-//												.toString()] = $('#txt_prefix')
-//												.val();
-//								});
+				// $("#txt_prefix").val($('#prefixInpectLine').html());
+				// $('#btn_filter_ok')
+				// .on(
+				// 'click',
+				// function() {
+				// $("#prefixInpectLine").html(
+				// $('#txt_prefix').val());
+				// if ($("#prefixInpectLine").data('id'))
+				// _self.app.appCache.prefixCache[$(
+				// "#prefixInpectLine").data('id')
+				// .toString()] = $('#txt_prefix')
+				// .val();
+				// });
 
 				$("#slider-brightness").on("slidestop", function(event) {
 					_self.brightness = event.target.value;
@@ -344,40 +344,47 @@ ImageEditorPage.prototype.initCropMode = function() {
 	$("#btn_zoom_minus").on("tap", function() {
 		_self.corpperImage.cropper("zoom", -0.1);
 	});
-
-	$(document).on("vmouseup", "#btn_crop_zoom_plus", function(e) {
-		_self.cropResize = false;
-	});
-
-	$(document).on("taphold", "#btn_crop_zoom_plus", function(e) {
+	/*
+	 * $(document).on("vmouseup", "#btn_crop_zoom_plus", function(e) {
+	 * _self.cropResize = false; });
+	 */
+	$(document).on("tap", "#btn_crop_zoom_plus", function(e) {
 		_self.cropResize = true;
-		_self.setCropBoxData(10);
+		// _self.setCropBoxData(10);
+		var data = _self.corpperImage.cropper("getCropBoxData");
+		data.width = data.width + 10;
+		_self.corpperImage.cropper("setCropBoxData", data);
 	});
 
-	$(document).on("vmouseup", "#btn_crop_zoom_minus", function(e) {
-		_self.cropResize = false;
-		console.log("vmouseup>>>>>>>>>>>>>>")
-	});
-
-	$(document).on("taphold", "#btn_crop_zoom_minus", function(e) {
+	$(document).on("tap", "#btn_crop_zoom_minus", function(e) {
 		_self.cropResize = true;
-		//_self.setCropBoxData(-10);
-		console.log("taphold>>>>>>>>>>>>>>")
+		// _self.setCropBoxData(-10);
+		var data = _self.corpperImage.cropper("getCropBoxData");
+		data.width = data.width - 10;
+		_self.corpperImage.cropper("setCropBoxData", data);
 	});
 
 	/*
-	 * $("#btn_crop_zoom_plus").on("touchstart", function() { _self.cropResize =
-	 * true; _self.setCropBoxData(10); });
+	 * $(document).on("vmouseup", "#btn_crop_zoom_minus", function(e) {
+	 * _self.cropResize = false; // console.log("vmouseup>>>>>>>>>>>>>>") });
 	 * 
-	 * $("#btn_crop_zoom_minus").on("touchstart", function() { _self.cropResize =
-	 * true; _self.setCropBoxData(-10); });
+	 * $(document).on("taphold", "#btn_crop_zoom_minus", function(e) {
+	 * _self.cropResize = true; //_self.setCropBoxData(-10); //
+	 * console.log("taphold>>>>>>>>>>>>>>") });
 	 * 
-	 * $("#btn_crop_zoom_plus").on("touchstop", function() { _self.cropResize =
-	 * false; });
-	 * 
-	 * $("#btn_crop_zoom_minus").on("touchstop", function() { _self.cropResize =
-	 * false; });
-	 */
+	 *//*
+		 * $("#btn_crop_zoom_plus").on("touchstart", function() {
+		 * _self.cropResize = true; _self.setCropBoxData(10); });
+		 * 
+		 * $("#btn_crop_zoom_minus").on("touchstart", function() {
+		 * _self.cropResize = true; _self.setCropBoxData(-10); });
+		 * 
+		 * $("#btn_crop_zoom_plus").on("touchstop", function() {
+		 * _self.cropResize = false; });
+		 * 
+		 * $("#btn_crop_zoom_minus").on("touchstop", function() {
+		 * _self.cropResize = false; });
+		 */
 
 	$("#btn_rotate_left").on("tap", function() {
 		_self.corpperImage.cropper("rotate", -45);
