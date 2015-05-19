@@ -20,13 +20,15 @@ ImageEditorPage.prototype.rederBreadCrumb = function() {
 	$('#pg_cropView #btn_user').html(_self.app.appCache.settingInfo.username);
 };
 
-ImageEditorPage.prototype.setup = function(options, callBack) {
-	this.canWidth = options.width;
-	this.canHeight = options.height;
-	this.image64 = options.img64;
-	this.sourceInfo = options.sourceInfo;
-	this.selectedWM = options.watermark;
-	this.callBack = callBack;
+ImageEditorPage.prototype.setup = function(options, isGallery) {
+	var _self = this;
+	_self.canWidth = options.width;
+	_self.canHeight = options.height;
+	_self.image64 = options.img64;
+	_self.sourceInfo = options.sourceInfo;
+	_self.selectedWM = options.watermark;
+	_self.isGallery = isGallery;
+	console.log(options.watermark);
 }
 
 ImageEditorPage.prototype.drowRect = function(x, y, w, h) {
@@ -145,7 +147,7 @@ ImageEditorPage.prototype.init = function() {
 			"pagebeforeshow",
 			"#pg_img_editor",
 			function() {
-				$.mobile.loading('show');
+				_self.app.showDialog('Loading...');
 				_self.rederBreadCrumb();
 				_self.cValue = 0;
 				_self.bValue = 0;
@@ -398,18 +400,18 @@ ImageEditorPage.prototype.initCropMode = function() {
 	 * console.log("taphold>>>>>>>>>>>>>>") });
 	 * 
 	 *//*
-	 * $("#btn_crop_zoom_plus").on("touchstart", function() {
-	 * _self.cropResize = true; _self.setCropBoxData(10); });
-	 * 
-	 * $("#btn_crop_zoom_minus").on("touchstart", function() {
-	 * _self.cropResize = true; _self.setCropBoxData(-10); });
-	 * 
-	 * $("#btn_crop_zoom_plus").on("touchstop", function() {
-	 * _self.cropResize = false; });
-	 * 
-	 * $("#btn_crop_zoom_minus").on("touchstop", function() {
-	 * _self.cropResize = false; });
-	 */
+		 * $("#btn_crop_zoom_plus").on("touchstart", function() {
+		 * _self.cropResize = true; _self.setCropBoxData(10); });
+		 * 
+		 * $("#btn_crop_zoom_minus").on("touchstart", function() {
+		 * _self.cropResize = true; _self.setCropBoxData(-10); });
+		 * 
+		 * $("#btn_crop_zoom_plus").on("touchstop", function() {
+		 * _self.cropResize = false; });
+		 * 
+		 * $("#btn_crop_zoom_minus").on("touchstop", function() {
+		 * _self.cropResize = false; });
+		 */
 
 	$("#btn_rotate_left").on("tap", function() {
 		_self.corpperImage.cropper("rotate", -45);
@@ -448,6 +450,7 @@ ImageEditorPage.prototype.onEditFinish = function() {
 	// this selectedWM = $('select[name="select-crop-waterMark"]').val();
 	// TODO: getWatermark image data from appCache.
 	var watermarkImage = _self.app.watermark64;
+	console.log(_self.selectedWM);
 	if (_self.selectedWM) {
 		var findResult = jQuery.grep(_self.app.appCache.waterMarkImgs,
 				function(item, index) {
@@ -479,11 +482,15 @@ ImageEditorPage.prototype.onEditFinish = function() {
 			y = (nGcanvas.height - 20) - (watermark.height);
 			nGctx.drawImage(watermark, x, y);
 
-			if (_self.callBack) {
-				_self.callBack(_self.sourceInfo, nGcanvas.toDataURL());
-			} else {
+			console.log(_self.isGallery);
+			if (_self.isGallery == 'Y') {
 				_self.app.galleryview.onEditFinish(_self.sourceInfo, nGcanvas
 						.toDataURL());
+				$.mobile.changePage("#pg_gallery");
+			} else {
+				_self.app.fileExplorer.onEditFinish(_self.sourceInfo, nGcanvas
+						.toDataURL(),"Y");
+				$.mobile.changePage("#pg_file_explorer");
 			}
 		}
 	}

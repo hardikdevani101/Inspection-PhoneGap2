@@ -1,6 +1,7 @@
 ﻿var VisionApi = function(app) {
 
 	this.app = app;
+	this.processLog = {};
 	this.baseUrl = app.appCache.settingInfo.service_url;
 	this.wsTypeModelADService = "ModelADService";
 	this.completeUrl = this.baseUrl + "/VISService/services/"
@@ -342,6 +343,13 @@ VisionApi.prototype.uploadImage = function(params, success, error) {
 		var failedArrayList = [];
 		if (!tmpArray[1] == "")
 			failedArrayList = tmpArray[1].split('$$');
+		if (failedArrayList && failedArrayList.length > 0) {
+			$.each(failedArrayList, function() {
+				_self.processLog.attachImage.push(this);
+			});
+		}
+		console.log(tmpArray[0]);
+		console.log(tmpArray[1]);
 		success({
 			'id' : params.imginspline,
 			'success' : successArrayList,
@@ -403,7 +411,15 @@ VisionApi.prototype.uploadImageByMInOut = function(params, success, error) {
 		var summary = response.getElementsByTagName("Summary");
 		var tmpArray = summary[0].textContent.split(']$[');
 		var successArrayList = tmpArray[0].split('$$');
-		var failedArrayList = tmpArray[1].split('$$');
+		var failedArrayList = [];
+		if (!tmpArray[1] == "")
+			failedArrayList = tmpArray[1].split('$$');
+		if (failedArrayList && failedArrayList.length > 0) {
+			$.each(failedArrayList, function() {
+				_self.processLog.attachImage.push(this);
+			});
+		}
+
 		success({
 			'id' : params.recid,
 			'success' : successArrayList,

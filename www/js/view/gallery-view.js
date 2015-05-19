@@ -89,16 +89,19 @@ GalleryPage.prototype.onFileData = function(selFiles) {
 		param['fileName'] = file.name;
 		param['filePath'] = file.filePath;
 		param['dataSource'] = file.dataSource;
-		var result = jQuery.grep(_self.inspFiles[_self.line_id], function(item,
-				index) {
-			if (item.filePath == file.filePath) {
-				item['filePath'] = file.filePath;
-				item['name'] = file.name;
-				item['uploded'] = file.uploded;
-				item['dataSource'] = file.dataSource;
-			}
-			return item.filePath == file.filePath;
-		});
+		var result = [];
+		if (_self.inspFiles[_self.line_id]) {
+			result = jQuery.grep(_self.inspFiles[_self.line_id], function(item,
+					index) {
+				if (item.filePath == file.filePath) {
+					item['filePath'] = file.filePath;
+					item['name'] = file.name;
+					item['uploded'] = file.uploded;
+					item['dataSource'] = file.dataSource;
+				}
+				return item.filePath == file.filePath;
+			});
+		}
 		if (!result.length > 0) {
 			_self.onCreateNewEntry(file, param);
 		}
@@ -178,7 +181,6 @@ GalleryPage.prototype.init = function() {
 					"pagebeforeshow",
 					"#pg_gallery",
 					function() {
-						$.mobile.loading('show');
 						_self.isGridView = true;
 
 						_self.rederBreadCrumb();
@@ -187,26 +189,16 @@ GalleryPage.prototype.init = function() {
 						_self.line_id = _self.app.appCache.session.x_instructionline_id;
 						_self.isMR = _self.app.appCache.session.isMR;
 						_self.visGallery = new Tbl_VISGallery(_self.app);
-						_self.loadInspFile();
+
+						setTimeout(function() {
+							_self.loadInspFile();
+						}, 10);
 
 						$('#pg_gallery #pg_gal_main').addClass('img-gallery');
 						$('#pg_gallery #pg_gal_main img').removeClass(
 								'ui-listview-mode');
 						$("#ls_inspFiles p button.ui-icon-arrow-u").hide();
-						if (_self.inspFiles[_self.line_id]) {
-							$
-									.each(
-											_self.inspFiles[_self.line_id],
-											function(index, file) {
-												if (file.uploded == 'T') {
-													$(
-															'#ls_inspFiles li[data-id="'
-																	+ file.filePath
-																	+ '"] p button.ui-icon-arrow-u')
-															.show();
-												}
-											});
-						}
+
 						$("#ls_inspFiles li button h2").css("color", "white");
 
 						if (_self.app.appCache.waterMarkImgs.length > 0) {
@@ -234,6 +226,10 @@ GalleryPage.prototype.init = function() {
 	$('#prefixInpectLine').on('click', function() {
 		$("#prefixModify").popup("open");
 		$("#prefixInpect").val($('#prefixInpectLine').html());
+	});
+
+	$(document).on("panelbeforeopen", "#pnl_file_sources", function(e, ui) {
+		$("#pnl_file_sources").enhanceWithin();
 	});
 
 	$('#btn-add').on('click', function() {
@@ -343,6 +339,7 @@ GalleryPage.prototype.loadInspFile = function() {
 				item['name'] = result.rows.item(i).name;
 				item['uploded'] = result.rows.item(i).imgUpload;
 				item['dataSource'] = result.rows.item(i).dataSource;
+				console.log(result.rows.item(i).file);
 				_self.inspFiles[_self.line_id].push(item);
 			}
 
@@ -448,15 +445,14 @@ GalleryPage.prototype.onFileTap = function(event) {
 				value, index) {
 			return value.filePath == dataid;
 		});
-
 		if (sourceInfo.length > 0) {
 			if (_self.app.appCache.settingInfo.img_editor
 					&& _self.app.appCache.settingInfo.img_editor != 'Vision') {
 				_self.app.aviaryEdit.setup({
 					'sourceInfo' : sourceInfo[0],
 					imageURI : sourceInfo[0].filePath,
-					watermark : $('select[name="select-gallery-waterMark"]')
-							.val()
+					watermark : ($('select[name="select-gallery-waterMark"]')
+							.val())
 				});
 			} else {
 				_self.app.imageEditor.setup({
@@ -464,9 +460,9 @@ GalleryPage.prototype.onFileTap = function(event) {
 					width : $("#pg_gallery .ui-panel-wrapper").width(),
 					height : $("#pg_gallery .ui-panel-wrapper").height(),
 					img64 : imgData,
-					watermark : $('select[name="select-gallery-waterMark"]')
-							.val()
-				});
+					watermark : ($('select[name="select-gallery-waterMark"]')
+							.val())
+				}, "Y");
 			}
 		}
 	}
@@ -564,7 +560,7 @@ GalleryPage.prototype.getGalleryImage = function() {
 GalleryPage.prototype.onPhotoDataSuccess = function(imageURI) {
 	var _self = this;
 
-	if (_self.app.appCache.settingInfo.editApp == 'Vision') {
+	if (_self.app.appCache.settingInfo.img_editor == 'Vision') {
 
 		_self.app.appFS.getFileByURL({
 			fileURI : imageURI

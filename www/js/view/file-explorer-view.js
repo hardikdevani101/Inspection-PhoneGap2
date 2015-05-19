@@ -15,13 +15,12 @@ FileExplorerPage.prototype.rederBreadCrumb = function() {
 
 FileExplorerPage.prototype.init = function() {
 	var _self = this;
-	_self.visionApi = new VisionApi(_self.app);
 	_self.isLocalStorage = true;
 	_self.fillDataProviders();
 	$(document).on("pagebeforeshow", "#pg_file_explorer", function() {
-		_self.currentDirPath = '/';
-		_self.selFiles = [];
 		_self.rederBreadCrumb();
+		$('#selected-files-count').html(_self.selFiles.length);
+		$("#pnl_selected_files").enhanceWithin();
 		_self.app.showDialog("Loading");
 		setTimeout(function() {
 			_self.loadData();
@@ -33,6 +32,8 @@ FileExplorerPage.prototype.init = function() {
 		// TODO: Push Selected File information to Gallery
 		// Page.
 		_self.app.galleryview.onFileData(_self.selFiles);
+		_self.currentDirPath = '/';
+		_self.selFiles = [];
 		$.mobile.changePage("#pg_gallery");
 	});
 
@@ -50,18 +51,47 @@ FileExplorerPage.prototype.init = function() {
 			});
 
 	$("#sel_dataproviders").on("change", function(event) {
-		if ($("#sel_dataproviders").val() == 'LS') {
-			_self.isLocalStorage = true;
-		} else {
+		if ($("#sel_dataproviders").val().startsWith('ftp')) {
 			_self.isLocalStorage = false;
+		} else {
+			_self.isLocalStorage = true;
 		}
 		_self.onDataStorageChange(event);
 	});
 
+	$('#btn_FEdelete_file').off('tap', '#btn_FEdelete_file').on('click',
+			function(event) {
+				_self.onDeleteFile(event);
+
+			});
+
+	$('#btn_FEedit_file').off('tap', '#btn_FEedit_file').on('click',
+			function(event) {
+				_self.onEditFile(event);
+			});
+
 	// $("#selected-files-count").off();
 	$('#selected-files-count').on("tap", function(event) {
-		_self.renderSelectedFiles(event);
+		$("#pnl_selected_files").panel("open");
 	});
+
+	$(document).on(
+			"panelbeforeopen",
+			"#pnl_selected_files",
+			function(e, ui) {
+				console.log(">>>>>>>>>panelbeforeopen");
+				_self.renderSelectedFiles(e, ui);
+				$.each(_self.selFiles, function(index, file) {
+					$('#ls_sel_files li[data-id="' + file.filePath + '"]').off(
+							'click');
+					$('#ls_sel_files li[data-id="' + file.filePath + '"]').on(
+							'click', function(event) {
+								_self.onSelFileTap(event);
+							});
+
+				});
+				$("#pnl_selected_files").enhanceWithin();
+			});
 
 	$("#btn_file_view_mode").on(
 			'click',
@@ -152,28 +182,11 @@ FileExplorerPage.prototype.renderSelectedFiles = function() {
 	$('#ls_sel_files').html(fileItems);
 	$('#ls_sel_files').listview("refresh");
 	$("#ls_sel_files .ui-icon-arrow-d").hide();
-	$("#ls_sel_files .file-placeholder").off('tap',
-			'#ls_sel_files .file-placeholder').on("tap", function(event) {
-		_self.onSelFileTap(event);
-	});
-
-	$('#btn_FEdelete_file').off('tap', '#btn_FEdelete_file').on('click',
-			function(event) {
-				_self.onDeleteFile(event);
-
-			});
-
-	$('#btn_FEedit_file').off('tap', '#btn_FEedit_file').on('click',
-			function(event) {
-				_self.onEditFile(event);
-			});
-
-	$("#pnl_selected_files").panel("open");
 }
 
 FileExplorerPage.prototype.onDataStorageChange = function() {
 	var _self = this;
-	$.mobile.loading('show');
+	_self.app.showDialog('Loading...');
 	_self.currentDirPath = '/';
 	$("#current-dir-path").html('<h3 class="ui-bar ui-bar-a">root</h3>');
 	// _self.selFiles = [];
@@ -217,7 +230,7 @@ FileExplorerPage.prototype.fillDataProviders = function() {
 			});
 			reloadDataProviders();
 		}
-		_self.visionApi.getFTPServerList({
+		_self.app.visionApi.getFTPServerList({
 			orgid : app.appCache.settingInfo.org_id
 		}, success, function(msg) {
 			// _self.app.showDialog("Loading..");
@@ -291,8 +304,9 @@ FileExplorerPage.prototype.renderContent = function(dirPath) {
 
 			$.each(_self.selFiles, function(index, file) {
 				if (_self.isGridView) {
-					$('li[data-id="' + file.filePath + '"] .ui-icon-arrow-d')
-							.show();
+					$(
+							'#ls_files li[data-id="' + file.filePath
+									+ '"] .ui-icon-arrow-d').show();
 				} else {
 					$('#ls_files li[data-id="' + file.filePath + '"] a')
 							.removeClass("ui-icon-arrow-d");
@@ -303,27 +317,32 @@ FileExplorerPage.prototype.renderContent = function(dirPath) {
 			$.each(files, function(index, file) {
 				var dataid = $("#sel_dataproviders").val()
 						+ _self.currentDirPath + file
-				$('li[data-id="' + dataid + '"]').off('click');
-				$('li[data-id="' + dataid + '"]').on("click", function(event) {
-					event.preventDefault();
-					console.log("onFileTap>>>> ")
-					_self.onFileTap(event)
-				});
-			});
-
-			$.each(dirs, function(index, value) {
-				$('li[data-id="' + _self.currentDirPath + value + '"]').off(
-						'click');
-				$('li[data-id="' + _self.currentDirPath + value + '"]').on(
-						"click", function(event) {
+				$('#ls_files li[data-id="' + dataid + '"]').off('click');
+				$('#ls_files li[data-id="' + dataid + '"]').on("click",
+						function(event) {
 							event.preventDefault();
-							console.log("onDirTap>>>> ")
-							_self.onDirTap(event)
+							console.log("onFileTap>>>> ")
+							_self.onFileTap(event)
 						});
 			});
+
+			$.each(dirs,
+					function(index, value) {
+						$(
+								'#ls_dirs li[data-id="' + _self.currentDirPath
+										+ value + '"]').off('click');
+						$(
+								'#ls_dirs li[data-id="' + _self.currentDirPath
+										+ value + '"]').on("click",
+								function(event) {
+									event.preventDefault();
+									console.log("onDirTap>>>> ")
+									_self.onDirTap(event)
+								});
+					});
 		}
 	}
-	// _self.app.hideDialog();
+	_self.app.hideDialog();
 	// $.mobile.loading('hide');
 }
 
@@ -342,17 +361,22 @@ FileExplorerPage.prototype.onDeleteFile = function(event) {
 	}
 	$('#selected-files-count').html(_self.selFiles.length);
 	$("#pop_fileEplorer_actions").popup('close');
+	_self.renderSelectedFiles();
 }
 
-FileExplorerPage.prototype.onEditFinish = function(param, data) {
+FileExplorerPage.prototype.onEditFinish = function(param, data, isLocal) {
 	var _self = this;
 	currentURI = param.oldURI;
 	if (param.actualURI) {
 		currentURI = param.actualURI;
 	}
+	if (isLocal == "Y") {
+		currentURI = param.filePath;
+	}
+	console.log(currentURI);
 	_self.app.appCache.imgCache[currentURI] = data;
 	$('li[data-id="' + currentURI + '"] img').attr('src', data);
-	if (!param.actualURI) {
+	if (!param.actualURI || isLocal == "Y") {
 		$.each(_self.selFiles, function() {
 			if (this.filePath == currentURI) {
 				this.edited = true;
@@ -363,7 +387,7 @@ FileExplorerPage.prototype.onEditFinish = function(param, data) {
 
 FileExplorerPage.prototype.onEditFile = function(event) {
 	var _self = this;
-	if (_self.app.appCache.settingInfo.editApp == 'Vision') {
+	if (_self.app.appCache.settingInfo.img_editor == 'Vision') {
 		event.preventDefault();
 		$.mobile.changePage("#pg_img_editor");
 	} else {
@@ -377,7 +401,7 @@ FileExplorerPage.prototype.onSelFileTap = function(event) {
 	var _self = this;
 	var selected = $(event.delegateTarget).data('id');
 	var file_name = $(event.delegateTarget).data('name');
-
+	console.log(selected);
 	_self.selectedFile = selected;
 
 	if ($(event.delegateTarget).data('isimg')) {
@@ -390,9 +414,11 @@ FileExplorerPage.prototype.onSelFileTap = function(event) {
 	var sourceInfo = jQuery.grep(_self.selFiles, function(item, index) {
 		return item.filePath == selected;
 	});
+	console.log(imgData);
 	if (sourceInfo.length > 0) {
+		console.log(_self.app.appCache.settingInfo.img_editor);
 		if (_self.app.appCache.settingInfo.img_editor
-				&& _self.app.appCache.settingInfo.img_editor == 'Avairy') {
+				&& _self.app.appCache.settingInfo.img_editor == 'Aviary') {
 			_self.app.aviaryEdit.setup({
 				'sourceInfo' : sourceInfo[0],
 				imageURI : sourceInfo[0].filePath,
@@ -401,13 +427,12 @@ FileExplorerPage.prototype.onSelFileTap = function(event) {
 		} else {
 			_self.app.imageEditor.setup({
 				'sourceInfo' : sourceInfo[0],
-				width : $("#pg_gallery .ui-panel-wrapper").width(),
-				height : $("#pg_gallery .ui-panel-wrapper").height(),
+				width : $("#pg_file_explorer .ui-panel-wrapper").width(),
+				height : $("#pg_file_explorer .ui-panel-wrapper").height(),
 				img64 : imgData,
 				watermark : $('select[name="select-gallery-waterMark"]').val()
-			}, function(param, data) {
-				_self.onEditFinish(param, data);
-			});
+			}, "N");
+			console.log(sourceInfo[0].filePath);
 		}
 	}
 }

@@ -17,14 +17,18 @@ FTPUtils.prototype.uploadFile = function(fileURI, M_InOutLine_ID,
 	ft.upload(fileURI, encodeURI(_self.app.appCache.settingInfo.service_url
 			+ "/VISService/fileUpload"), function(result) {
 		var xmlResponse = result.response;
+		var oldfileName = $(xmlResponse).find('oldName').text().trim();
 		var newFileName = $(xmlResponse).find('newName').text().trim();
+		if (newFileName && newFileName.length > 0) {
+			oldfileName = newFileName;
+		}
 		_self.app.appDB.onChangeUplaodStatus(M_InOutLine_ID,
-				X_INSTRUCTIONLINE_ID, isMR, newFileName, fileURI);
+				X_INSTRUCTIONLINE_ID, isMR, oldfileName, fileURI);
 		var sucmsg = {
 			'X_INSTRUCTIONLINE_ID' : X_INSTRUCTIONLINE_ID,
-			'M_INOUT_ID' : M_INOUT_ID,
+			'isMR' : isMR,
 			'fileURI' : fileURI,
-			'newFileName' : newFileName
+			'newFileName' : oldfileName
 		};
 		onSuccess(sucmsg);
 	}, function(err) {

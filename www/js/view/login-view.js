@@ -17,7 +17,6 @@ LoginPage.prototype.onLogin = function() {
 						},
 						function(result) {
 							if (result.loginInfo.error) {
-								alert(result.loginInfo.error);
 								_self.app.showError("pg_login",
 										result.loginInfo.error);
 							} else {
@@ -55,7 +54,6 @@ LoginPage.prototype.onLogin = function() {
 LoginPage.prototype.init = function() {
 	var _self = this;
 
-	var visionapi = new VisionApi(this.app);
 	$('#_form_login').validate({
 		rules : {
 			txt_user : {

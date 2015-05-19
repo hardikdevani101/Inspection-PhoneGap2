@@ -13,29 +13,15 @@ InspLinesPage.prototype.rederBreadCrumb = function() {
 
 InspLinesPage.prototype.init = function() {
 	var _self = this;
-	// $('#pg_inspection div h2').text(
-	// String(_self.app.appCache.loginInfo.username));
-	// _self.loadMRLines();
 
 	$(document).on(
 			"pagebeforeshow",
 			"#pg_inspection",
 			function() {
 				_self.rederBreadCrumb();
-				_self.loadMRLines();
-				// TODO : Dummy Data Runner Start
-				// var ermsg = {
-				// 'X_INSTRUCTIONLINE_ID' : 'MR2323',
-				// 'M_INOUT_ID' : '23242342',
-				// 'fileURI' : 'file/files/ererer.ted',
-				// 'error' : 'ERROR Msg'
-				// };
-				// _self.app.appFTPUtil.processLog.push(ermsg);
-				// _self.app.appFTPUtil.processLog.push(ermsg);
-				// _self.app.appFTPUtil.processLog.push(ermsg);
-				// _self.app.appFTPUtil.processLog.push(ermsg);
-				// _self.app.appFTPUtil.processLog.push(ermsg);
-				// TODO : Dummy Data Runner End
+				setTimeout(function() {
+					_self.loadMRLines();
+				}, 10);
 
 				$("#insp_process_log").hide();
 				if (_self.app.appFTPUtil.processLog.length > 0) {
@@ -57,33 +43,30 @@ InspLinesPage.prototype.init = function() {
 		console.log('>>>>>>>>> Retry Sync')
 	})
 
-	$("#pop_process_log")
-			.bind(
-					{
-						popupbeforeposition : function(event, ui) {
-							var items = '<li data-role="list-divider">Sync Failed</li>';
-							$.each(_self.app.appFTPUtil.processLog, function(
-									item, index) {
-								var line = '<li data-mini="true">MRLine:'
-										+ this.M_INOUT_ID + '-InspLine:'
-										+ this.X_INSTRUCTIONLINE_ID + '-File:'
-										+ this.fileURI + ' -Error:'
-										+ this.error + '</li>';
-								items += line;
-							});
-							$("#sync_items").html(items);
-							$('#sync_items').listview("refresh");
-						}
-					});
+	$("#pop_process_log").bind({
+		popupbeforeposition : function(event, ui) {
+			var items = '<li data-role="list-divider">Sync Failed</li>';
+			if (_self.app.appFTPUtil.processLog) {
+				items += _self.getFTPProcessLog();
+			}
+			if (_self.app.visionApi.processLog.attachImage) {
+				items += _self.getAttacheProcessLog();
+			}
+			$("#sync_items").html(items);
+			$('#sync_items').listview("refresh");
+		}
+	});
 
 	$('#btn_refresh_mrlines').on("click", function() {
 		_self.app.appCache.mrLines = [];
 		_self.loadMRLines();
 	});
 	$(document).on("pagebeforeshow", "#pg_inspection_detail", function() {
-		_self.loadInspLines({
-			'selected_mrline' : _self.app.appCache.session.m_inoutline_id
-		});
+		setTimeout(function() {
+			_self.loadInspLines({
+				'selected_mrline' : _self.app.appCache.session.m_inoutline_id
+			});
+		}, 10);
 	});
 	$('#btn_sync_insp').on("click", function() {
 		_self.app.appCache.inspLines = [];
@@ -95,47 +78,84 @@ InspLinesPage.prototype.init = function() {
 	});
 }
 
+InspLinesPage.prototype.getFTPProcessLog = function() {
+	item = '';
+	$.each(_self.app.appFTPUtil.processLog, function(item, index) {
+		var line = '<li data-mini="true">MRLine:' + this.M_INOUT_ID
+				+ '-InspLine:' + this.X_INSTRUCTIONLINE_ID + '-File:'
+				+ this.fileURI + ' -Error:' + this.error + '</li>';
+		items += line;
+	});
+	return item;
+}
+
+InspLinesPage.prototype.getAttacheProcessLog = function() {
+	item = '';
+	$.each(_self.app.visionApi.processLog.attachImage, function() {
+		var line = '<li data-mini="true">File Failed:' + this + '</li>';
+		items += line;
+	});
+	return item;
+}
+
 InspLinesPage.prototype.displayAlert = function() {
+	var _self = this;
 	if (_self.app.appFTPUtil.processLog.length > 0) {
-		// TODO display Alert
+		$("#pop_process_log").popup("open");
 	} else {
-		// TODO display success
+		_self.app.showError("pg_inspection_detail", "All Files Uploaded");
 	}
 }
 
-InspLinesPage.prototype.syncInspLines = function() {
+InspLinesPage.prototype.syncInspLines = function(callBack) {
 	var _self = this;
+	_self.app.showDialog("Loading");
 	_self.inProgressSyncCount = 0;
+
+	totalFTPCount = 0;
+
+	var ftpSuccess = function(msg) {
+		_self.inProgressSyncCount++;
+		if (_self.inProgressSyncCount == totalFTPCount) {
+			_self.app.hideDialog();
+			if (callBack) {
+				callBack();
+			} else {
+				_self.displayAlert();
+			}
+		}
+	}
+
+	var ftpFailer = function(msg) {
+		_self.inProgressSyncCount++;
+		if (!_self.isAlertDisplay) {
+			_self.isAlertDisplay = true;
+			$("#insp_process_log").show();
+		}
+		$("#insp_process_log").html(_self.app.appFTPUtil.processLog.length);
+
+		if (_self.inProgressSyncCount == totalFTPCount) {
+			_self.app.hideDialog();
+			if (callBack) {
+				callBack();
+			} else {
+				_self.displayAlert();
+			}
+		}
+	}
+
 	var success = function(tx, results) {
 		if (results.rows.length > 0) {
+			totalFTPCount = results.rows.length;
 			for (var i = 0; i < results.rows.length; i++) {
-				_self.app.appFTPUtil
-						.uploadFile(
-								results.rows.item(i).file,
-								results.rows.item(i).mr_line,
-								results.rows.item(i).insp_line,
-								results.rows.item(i).isMR,
-								function(msg) {
-									_self.inProgressSyncCount++;
-									if (!_self.isAlertDisplay) {
-										_self.isAlertDisplay = true;
-										$("#insp_process_log").show();
-									}
-									$("#insp_process_log")
-											.html(
-													_self.app.appFTPUtil.processLog.length);
-
-									if (_self.inProgressSyncCount == results.rows.length) {
-										_self.displayAlert();
-									}
-								},
-								function(msg) {
-									_self.inProgressSyncCount++;
-									if (_self.inProgressSyncCount == results.rows.length) {
-										_self.displayAlert();
-									}
-								});
-
+				_self.app.appFTPUtil.uploadFile(results.rows.item(i).file,
+						results.rows.item(i).mr_line,
+						results.rows.item(i).insp_line,
+						results.rows.item(i).isMR, function(msg) {
+							ftpFailer(msg);
+						}, function(msg) {
+							ftpSuccess(msg);
+						});
 			}
 		}
 	};
@@ -162,15 +182,13 @@ InspLinesPage.prototype.renderMRLines = function() {
 		_self.app.appCache.session.m_inoutline_id = $(this).data("id");
 		$.mobile.changePage("#pg_inspection_detail");
 	});
-
 	$.mobile.loading('hide');
 }
 
 InspLinesPage.prototype.loadMRLines = function() {
 	var _self = this;
-	var visionApi = new VisionApi(_self.app);
 	// _self.app.showDialog('Loading MR Lines');
-	$.mobile.loading('show');
+	_self.app.showDialog("Loading");
 	if (_self.app.appCache.mrLines.length > 0) {
 		_self.renderMRLines();
 	} else {
@@ -182,11 +200,10 @@ InspLinesPage.prototype.loadMRLines = function() {
 			_self.renderMRLines();
 		};
 
-		visionApi.getMRLines({
+		_self.app.visionApi.getMRLines({
 			userid : app.appCache.settingInfo.userid
 		}, success, function() {
 			// popup Errorbox.
-			_self.app.hideDialog();
 			_self.app.showError("pg_inspection", "Load MR-lines failed");
 		});
 	}
@@ -215,6 +232,7 @@ InspLinesPage.prototype.renderInspLines = function() {
 					+ this.x_instructionline_id + '" data-id="'
 					+ this.x_instructionline_id + '">' + this.name
 					+ '<span class="ui-li-count">0/0</span></a></li>';
+			console.log(line);
 			items = items + line;
 		});
 		$('#_list_insp').html(items);
@@ -224,7 +242,7 @@ InspLinesPage.prototype.renderInspLines = function() {
 				function() {
 					_self.app.appCache.session.x_instructionline_id = $(this)
 							.data("id");
-					_self.app.appCache.session.isMR = $(this).data("isMR");
+					_self.app.appCache.session.isMR = $(this).data("ismr");
 					$.mobile.changePage("#pg_gallery");
 				});
 	}
@@ -264,17 +282,48 @@ InspLinesPage.prototype.rederInspLinesDetailsBreadCrumb = function() {
 			_self.app.appCache.settingInfo.username);
 };
 
+InspLinesPage.prototype.displayAttachAlert = function() {
+	var _self = this;
+	if (_self.app.visionApi.processLog.attachImage.length > 0) {
+		if (!_self.isAlertDisplay) {
+			_self.isAlertDisplay = true;
+			$("#insp_process_log").show();
+		}
+		$("#insp_process_log").html(
+				_self.app.visionApi.processLog.attachImage.length);
+		$("#pop_process_log").popup("open");
+	} else {
+		_self.app.showError("pg_inspection_detail", "All Files Attached");
+	}
+}
+
 InspLinesPage.prototype.onFinishedCalled = function() {
 	var _self = this;
-	var visService = new VisionApi(app);
 	_self.inProgressAttachCount = 0;
+	_self.app.visionApi.processLog.attachImage = [];
+	totalAttachCount = 0;
+	var attachSucess = function(param) {
+		_self.app.appDB.onAttachSucess(param);
+		_self.inProgressAttachCount++;
+		if (_self.inProgressAttachCount == totalAttachCount) {
+			_self.displayAttachAlert();
+		}
+	}
+
+	var attachFail = function(msg) {
+		// error
+		_self.inProgressAttachCount++;
+		if (_self.inProgressAttachCount == totalAttachCount) {
+			_self.displayAttachAlert();
+		}
+	}
+
 	var onUploadedEntrySucess = function(tx, results) {
 		if (results.rows.length > 0) {
 			var attachmentList = [];
 			for (var i = 0; i < results.rows.length; i++) {
 				var item = {};
-				if (results.rows.item(i).insp_line == null
-						|| results.rows.item(i).insp_line == 0) {
+				if (results.rows.item(i).isMR == "Y") {
 					item['id'] = results.rows.item(i).insp_line;
 					item['type'] = 0;
 				} else {
@@ -296,53 +345,48 @@ InspLinesPage.prototype.onFinishedCalled = function() {
 				}
 			}
 
+			totalAttachCount = attachmentList.length;
 			$.each(attachmentList, function() {
 				if (this.type == 1) {
-					visService.uploadImage({
+					_self.app.visionApi.uploadImage({
 						imginspline : this.id,
 						imgname : this.files
 					}, function(param) {
-						_self.app.appDB.onAttachSucess(param);
+						attachSucess(param);
 					}, function(msg) {
-						// error
+						attachFail(msg);
 					});
 				} else {
-					visService.uploadImageByMInOut({
+					_self.app.visionApi.uploadImageByMInOut({
 						recid : this.id,
 						tabname : 'M_InOut',
 						imgname : this.files
 					}, function(param) {
-						_self.app.appDB.onAttachSucess(param);
+						attachSucess(param);
 					}, function(msg) {
-						// error
+						attachFail(msg);
 					});
 				}
 			});
 
 		} else {
-			alert("Uploaded");
+			_self.app.showError("pg_inspection_detail", "All Files Attached");
 		}
 	};
 
 	var onFailedUplodEntrysuccess = function(tx, results) {
+		console.log(results.rows.length);
 		if (results.rows.length > 0) {
 			// Restart Sync Process.
 			_self.app.appFTPUtil.processLog = [];
-			for (var i = 0; i < results.rows.length; i++) {
-				_self.app.appFTPUtil.uploadFile(results.rows.item(i).file,
-						results.rows.item(i).mr_line,
-						results.rows.item(i).insp_line,
-						results.rows.item(i).in_out_id, function(msg) {
-							if (!_self.isAlertDisplay) {
-								_self.isAlertDisplay = true;
-								$("#insp_process_log").show();
-							}
-							$("#insp_process_log").html(
-									_self.app.appFTPUtil.processLog.length);
-						}, function(msg) {
-
-						});
-			}
+			_self.syncInspLines(function() {
+				if (_self.app.appFTPUtil.processLog.length > 0) {
+					console.log("Sync Not Complete");
+				} else {
+					_self.app.appDB
+							.getAttachPendingEntry(onUploadedEntrySucess);
+				}
+			});
 		} else {
 			_self.app.appDB.getAttachPendingEntry(onUploadedEntrySucess);
 		}
@@ -353,8 +397,9 @@ InspLinesPage.prototype.onFinishedCalled = function() {
 InspLinesPage.prototype.loadInspLines = function(params) {
 	var _self = this;
 	_self.rederInspLinesDetailsBreadCrumb();
-	// _self.app.showDialog('Loading..');
-	$.mobile.loading('show');
+
+	_self.app.showDialog('Loading..');
+
 	var sel_inoutline_id = _self.app.appCache.session.m_inoutline_id;
 	if (!(typeof params === 'undefined')) {
 		sel_inoutline_id = params.selected_mrline;
@@ -363,17 +408,15 @@ InspLinesPage.prototype.loadInspLines = function(params) {
 	if (!(typeof _self.app.appCache.inspLines[sel_inoutline_id] === 'undefined')) {
 		_self.renderInspLines();
 	} else {
-		var visionApi = new VisionApi(_self.app);
 		var success = function(result) {
 			var items = '';
 			_self.app.appCache.inspLines[sel_inoutline_id] = result.insplines;
 			_self.renderInspLines();
 		}
 
-		visionApi.getInspLines({
+		_self.app.visionApi.getInspLines({
 			m_inoutline_id : sel_inoutline_id
 		}, success, function() {
-			$.mobile.loading('hide');
 			_self.app.showError("pg_inspection_detail",
 					"Failed to Load - Inspection lines");
 		});

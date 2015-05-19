@@ -231,34 +231,34 @@ FS.prototype.init = function() {
 		}, _self.errorHandler);
 	} else if (window.webkitRequestFileSystem) {
 		console.log('Found >> ' + window.webkitRequestFileSystem);
-		window.requestFileSystem = window.webkitRequestFileSystem;
-		window.webkitStorageInfo.requestQuota(window.PERSISTENT,
-				50 * 1024 * 1024, function(grantedBytes) {
-					window.requestFileSystem(window.PERSISTENT, 0, function(
-							filesystem) {
-						_self.fileSystem = filesystem;
-						_self.rootURI = _self.fileSystem.root.toURL();
-						if (_self.rootURI.endsWith('/')) {
-							_self.rootURI = _self.rootURI.substring(0,
-									_self.rootURI.length - 1);
-						}
-						filesystem.root.getDirectory('VIS_Inspection', {
-							create : true
-						}, function(filesystem) {
-							console.log('VIS Directory');
-							_self.vis_dir = filesystem;
-							filesystem.getDirectory('VIS_FTP', {
-								create : true
-							}, function(filesystem) {
-								console.log('VIS FTP');
-								_self.vis_ftp_dir = filesystem;
-							}, _self.errorHandler);
-						}, _self.errorHandler);
-					}, _self.errorHandler);
-
-				}, function(e) {
-					console.log('Error', e);
-				});
+//		window.requestFileSystem = window.webkitRequestFileSystem;
+//		window.webkitStorageInfo.requestQuota(window.PERSISTENT,
+//				50 * 1024 * 1024, function(grantedBytes) {
+//					window.requestFileSystem(window.PERSISTENT, 0, function(
+//							filesystem) {
+//						_self.fileSystem = filesystem;
+//						_self.rootURI = _self.fileSystem.root.toURL();
+//						if (_self.rootURI.endsWith('/')) {
+//							_self.rootURI = _self.rootURI.substring(0,
+//									_self.rootURI.length - 1);
+//						}
+//						filesystem.root.getDirectory('VIS_Inspection', {
+//							create : true
+//						}, function(filesystem) {
+//							console.log('VIS Directory');
+//							_self.vis_dir = filesystem;
+//							filesystem.getDirectory('VIS_FTP', {
+//								create : true
+//							}, function(filesystem) {
+//								console.log('VIS FTP');
+//								_self.vis_ftp_dir = filesystem;
+//							}, _self.errorHandler);
+//						}, _self.errorHandler);
+//					}, _self.errorHandler);
+//
+//				}, function(e) {
+//					console.log('Error', e);
+//				});
 	}
 }
 

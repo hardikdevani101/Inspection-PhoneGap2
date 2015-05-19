@@ -31,7 +31,7 @@ Tbl_VISGallery.prototype.addFile = function(fileInfo, success, error) {
 
 }
 
-Tbl_VISGallery.prototype.getFilesByMRInfo = function(fileInfo, sucsses, error) {
+Tbl_VISGallery.prototype.getFilesByMRInfo = function(fileInfo, success, error) {
 	var successCallback = this.appDB.success;
 	if (typeof (success) === "function") {
 		successCallback = success;
@@ -44,6 +44,7 @@ Tbl_VISGallery.prototype.getFilesByMRInfo = function(fileInfo, sucsses, error) {
 		sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
 				+ fileInfo.M_InOutLine_ID + '" and isMR="Y" and insp_line="'
 				+ fileInfo.X_INSTRUCTIONLINE_ID + '"';
+		console.log(sqlQuery);
 		tx.executeSql(sqlQuery, [], successCallback, errorCallback);
 	}, errorCallback);
 }

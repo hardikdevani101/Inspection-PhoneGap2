@@ -192,15 +192,15 @@ App.prototype.register = function() {
 		_self.inspLinePage.init();
 		_self.appCache.addPage('pg_inspection', _self.inspLinePage);
 
-		var visionApi = new VisionApi(_self);
-		visionApi.getWaterMarkList(function(data) {
+		_self.visionApi = new VisionApi(_self);
+		_self.visionApi.getWaterMarkList(function(data) {
 			_self.appCache.waterMarkImgs = data.responce;
 			_self.loadWaterMarkFiles();
 		}, function() {
 			console.log("Error");
 		});
 
-		visionApi.getFTPServerList({
+		_self.visionApi.getFTPServerList({
 			'orgid' : _self.appCache.settingInfo.org_id
 		}, function(result) {
 			_self.appCache.ftpServers = [];

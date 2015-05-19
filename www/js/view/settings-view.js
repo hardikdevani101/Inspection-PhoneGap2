@@ -42,6 +42,10 @@ SettingsPage.prototype.init = function() {
 	console.log("Inittialize Settings View.");
 	var _self = this;
 
+	$(document).on("panelbeforeopen", "#pg_settings", function(e, ui) {
+		$("#pg_settings").enhanceWithin();
+	});
+
 	// Register Event listeners
 	$("#txt_organization").on("change", function() {
 		_self.onOrgChange();
@@ -53,6 +57,7 @@ SettingsPage.prototype.init = function() {
 
 	_self.renderOrgs();
 	_self.renderRoles();
+	_self.onOrgChange();
 
 	$('#_form_settings').validate({
 		rules : {
@@ -215,7 +220,7 @@ SettingsPage.prototype.onServerChange = function() {
 SettingsPage.prototype.onSettingFind = function(setting) {
 	var _self = this;
 	_self.app.isLogin = setting.is_login;
-	_self.app.editApp = setting.editApp;
+	_self.app.img_editor = setting.img_editor;
 
 	if (!setting.service_url || setting.service_url == '') {
 		if (_self.app.isLogin) {
@@ -246,8 +251,8 @@ SettingsPage.prototype.onSettingFind = function(setting) {
 				.siblings('option').removeAttr('selected');
 		$("#txt_warehouse").selectmenu("refresh", true);
 		$("#txt_organization").trigger("change");
-		$("#txt_editApp").val(setting.editApp).attr('selected', true).siblings(
-				'option').removeAttr('selected');
+		$("#txt_editApp").val(setting.img_editor).attr('selected', true)
+				.siblings('option').removeAttr('selected');
 		$("#txt_editApp").selectmenu("refresh", true);
 
 		// Enhance new select element
