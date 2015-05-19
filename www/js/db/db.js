@@ -74,7 +74,7 @@ DB.prototype.init = function(success, error) {
 						// // TODO No changes yet
 						// });
 						// }
-						_self.successCallback();
+						_self.success();
 					});
 }
 

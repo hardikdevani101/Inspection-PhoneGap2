@@ -25,11 +25,11 @@ App.prototype.onDeviceReady = function() {
 	if (navigator.network) {
 		this.connectionTye = navigator.network.connection.type
 	}
-	
-	if(!this.isOnline){
+
+	if (!this.isOnline) {
 		console.log('No Internet Connection!');
 	}
-	
+
 	this.ftpClient = '';
 
 	// setInterval(function () {
@@ -101,9 +101,10 @@ App.prototype.showDialog = function(msg) {
 	$.mobile.loading('show', {
 		text : msg,
 		textVisible : true,
-		theme : 'b',
+		theme : 'a',
 		html : ""
 	});
+	$('.ui-icon-loading').css('margin-top', $(window).height() / 2);
 };
 
 App.prototype.hideDialog = function() {
@@ -125,7 +126,6 @@ App.prototype.showError = function(pageId, msg) {
 
 App.prototype.register = function() {
 	var _self = this;
-
 	$(document)
 			.on(
 					"pagecreate",
@@ -315,8 +315,8 @@ $(document).ready(function() {
 		if (vision) {
 			app.ftpClient = vision.ftpclient;
 		}
-/*		app.aviaryEdit = new AviaryEditor(app);
-		app.aviaryEdit.init();
-*/	}
+		/*
+		 * app.aviaryEdit = new AviaryEditor(app); app.aviaryEdit.init();
+		 */}
 
 });

@@ -330,19 +330,15 @@ body {
 	#pop_process_log {
 		font-size: 20px !important;
 	}
-	
-	#pop_process_log ul{
+	#pop_process_log ul {
 		font-size: 20px !important;
 	}
-
-	#pop_process_log ul li{
+	#pop_process_log ul li {
 		font-size: 20px !important;
 	}
-
-	#pop_process_log .ui-btn{
+	#pop_process_log .ui-btn {
 		font-size: 20px !important;
 	}
-	
 	#edit-toolbar  .ui-btn-icon-notext:after {
 		top: 10% !important;
 		margin-top: 0px !important;
@@ -461,12 +457,13 @@ body {
 		font-size: 32px !important;
 	}
 	.ui-listview .ui-li-has-thumb h2 {
-		font-size: 1.2em !important;
-		padding-left: 25px !important;
-		text-align: center !important;
+		font-size: .9em !important;
 	}
 	/* Set a max-width for the last breakpoint to prevent too much stretching on large screens.
     By setting the max-width equal to the breakpoint width minus padding we keep square tiles. */
+	.img-gallery .ui-li-has-thumb h2 {
+		background: rgb(168, 165, 158) !important;
+	}
 	.img-gallery .ui-listview {
 		max-width: 62.5em; /* 1000px */
 		margin: 0 auto;
@@ -479,6 +476,24 @@ body {
 		width: 100%;
 		height: 100%;
 	}
+	#pg_file_explorer .img-gallery {
+		padding: 0em !important;
+	}
+	
+	#pg_file_explorer .ui-content{
+		padding-top: 0em !important;
+	}
+	
+	#pg_file_explorer  .img-gallery .ui-listview {
+		margin: 0 auto !important;
+		padding: 0 .5em !important;
+	}
+
+	#pg_file_explorer  .ui-content .ui-listview {
+		margin-top: 0em !important;
+	}
+
+
 	.xui-panel-animate.ui-panel-page-content-position-leftx {
 		left: 0;
 		right: 0;
@@ -505,17 +520,18 @@ body {
 		width: 23%;
 		xheight: 90px;
 		margin: .1em .1em;
+		background: #EAE6DD !important;
 	}
 	#pnl_selected_files .ui-listview li {
 		width: 47% !important;
 	}
 	.current_dir_location_list .ui-bar {
-		padding: .5em .5em !important;
-		margin: 0em 0em 1.5em !important;
+		padding: .0em .0em !important;
+		margin: 0em 0em !important;
 	}
 	.img-gallery .ui-listview>.ui-li-has-thumb>.ui-btn, .ui-listview>.ui-li-static.ui-li-has-thumb
 		{
-		min-height: 11.7em !important;
+		min-height: 10.7em !important;
 	}
 	#crop-toolbar .ui-crop-tools .ui-btn {
 		font-size: 30px !important;
@@ -614,20 +630,94 @@ body .ui-body-c, body .ui-overlay-c {
 }
 
 .current_dir_location {
-	margin-bottom: 5px;
+	margin-bottom: 0px;
 	text-transform: capitalize !important;
 	xfont-weight: bold;
 }
 
 .current_dir_location  .ui-bar {
-	padding: 0em .5em !important;
+	padding: 0em 0em !important;
 	margin-top: 0px !important;
 	font-size: 1em !important;
 }
 
-.current_dir_location  #bc-link {
-	text-decoration: inherit !important;
+.current_dir_location .ui-bar-a {
+	color: #FFF !important;
+}
+/* 
+#current-dir-path {
+	margin-bottom: 20px;
+	line-height: 30px;
+	color: #FFF;
+	padding: 1px;
+	border: 1px solid gray;
+}
+
+#current-dir-path a {
+	display: block;
+	float: left;
+	background: gray;
+	padding-right: 10px;
+	height: 30px;
+	margin-right: 31px;
+	position: relative;
+	text-decoration: none;
+	color: #FFF;
+}
+
+#current-dir-path a:last-of-type {
+	margin-right: 25px;
+}
+
+#current-dir-path a:before {
+	content: "";
+	display: block;
+	width: 0;
+	height: 0;
+	position: absolute;
+	top: 0;
+	left: -30px;
+	border: 15px solid transparent;
+	border-color: gray;
+	border-left-color: transparent;
+}
+
+#current-dir-path a:after {
+	content: "";
+	display: block;
+	width: 0;
+	height: 0;
+	position: absolute;
+	top: 0;
+	right: -30px;
+	border: 15px solid transparent;
+	border-left-color: gray;
+}
+
+#current-dir-path a:first-of-type {
+	padding-left: 15px;
+}
+
+}
+#current-dir-path a:hover {
+	background: red;
+	color: #fff;
+	text-decoration: none;
+}
+
+#current-dir-path a:hover:before {
+	border-color: red;
+	border-left-color: transparent;
+}
+
+#current-dir-path a:hover:after {
+	border-left-color: red;
+}
+ */
+.current_dir_location .bc-link {
+	text-decoration: initial !important;
 	text-rendering: auto !important;
+	color: rgb(237, 200, 26) !important;
 }
 
 .ui-bar-a, .ui-page-theme-a .ui-bar-inherit, html .ui-bar-a .ui-bar-inherit,
@@ -735,4 +825,17 @@ body .ui-body-c, body .ui-overlay-c {
 
 #crop-toolbar label {
 	margin: 0 0;
+}
+
+.ui-loading .ui-loader {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  padding: 0;
+  margin: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: none;
+  position: fixed;
+  z-index: 10000000;
 }
