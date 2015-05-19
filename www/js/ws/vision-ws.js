@@ -349,6 +349,7 @@ VisionApi.prototype.uploadImage = function(params, success, error) {
 			'type' : 1
 		});
 	}).fail(function(err) {
+		error(err.responseText);
 		console.log(err.responseText);
 	});
 };
@@ -410,6 +411,7 @@ VisionApi.prototype.uploadImageByMInOut = function(params, success, error) {
 			'type' : 0
 		});
 	}).fail(function(err) {
+		error(err.responseText);
 		console.log(err.responseText);
 	});
 };

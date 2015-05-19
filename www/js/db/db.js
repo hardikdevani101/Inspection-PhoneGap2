@@ -16,19 +16,12 @@ DB.prototype.init = function(success, error) {
 	if (typeof (error) === "function") {
 		errorCallback = error;
 	}
-
-	// TODO degrade db to 1.0 version.
-	// _self.dbstore.changeVersion(_self.dbstore.version, "1.0", function(tx) {
-	// }, function(error) {
-	// console.log('Version Update Error >>> ' + error)
-	// });
-
 	console.log("DB Initialize with version >>> " + _self.dbstore.version);
 
 	_self.dbstore
 			.transaction(
 					function(tx) {
-//						if (_self.dbstore.version == "") {
+						if (_self.dbstore.version == "") {
 							tx.executeSql('DROP TABLE IF EXISTS vis_gallery');
 							tx.executeSql('DROP TABLE IF EXISTS vis_setting');
 							tx
@@ -39,31 +32,50 @@ DB.prototype.init = function(success, error) {
 									.executeSql('CREATE TABLE IF NOT EXISTS '
 											+ ' vis_gallery '
 											+ ' (mr_line,insp_line DEFAULT "0",isMR DEFAULT "N",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F", dataSource DEFAULT "CMR")');
-//						}
-
-					}, _self.errorCallback, _self.successCallback);
-
-	if (_self.dbstore.version == "1.0") {
-		_self.dbstore.changeVersion(_self.dbstore.version, "1.1", function(tx) {
-			tx.executeSql('ALTER TABLE vis_setting ADD COLUMN img_editor');
-			tx.executeSql('ALTER COLUMN img_editor SET DEFAULT "Vision"');
-		}, function(error) {
-			if (error.code == 5) {
-				// _self.dbstore
-				// .transaction(function(tx) {
-				// tx
-				// .executeSql('UPDATE vis_setting SET img_editor="Vision"');
-				// });
-			}
-			console.log('DB Version Update Error : 1.1>>> ' + error.message)
-		});
-	}
-
-	// if (_self.dbstore.version == "1.1") {
-	// _self.dbstore.changeVersion("", "1.2", function(tx) {
-	// // TODO No changes yet
-	// });
-	// }
+							_self.dbstore.changeVersion(_self.dbstore.version,
+									"1.0", function(tx) {
+									}, function(error) {
+										console.log('Version Update Error >>> '
+												+ error)
+									});
+						}
+					},
+					_self.errorCallback,
+					function() {
+						if (_self.dbstore.version == "1.0") {
+							_self.dbstore
+									.changeVersion(
+											_self.dbstore.version,
+											"1.1",
+											function(tx) {
+												tx
+														.executeSql('ALTER TABLE vis_setting ADD COLUMN img_editor');
+												tx
+														.executeSql('ALTER COLUMN img_editor SET DEFAULT "Vision"');
+											},
+											function(error) {
+												if (error.code == 5) {
+													// _self.dbstore
+													// .transaction(function(tx)
+													// {
+													// tx
+													// .executeSql('UPDATE
+													// vis_setting SET
+													// img_editor="Vision"');
+													// });
+												}
+												console
+														.log('DB Version Update Error : 1.1>>> '
+																+ error.message)
+											});
+						}
+						// if (_self.dbstore.version == "1.1") {
+						// _self.dbstore.changeVersion("", "1.2", function(tx) {
+						// // TODO No changes yet
+						// });
+						// }
+						_self.successCallback();
+					});
 }
 
 DB.prototype.getTotalInspEntries = function(param, callBack) {

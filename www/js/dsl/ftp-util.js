@@ -20,6 +20,13 @@ FTPUtils.prototype.uploadFile = function(fileURI, M_InOutLine_ID,
 		var newFileName = $(xmlResponse).find('newName').text().trim();
 		_self.app.appDB.onChangeUplaodStatus(M_InOutLine_ID,
 				X_INSTRUCTIONLINE_ID, isMR, newFileName, fileURI);
+		var sucmsg = {
+			'X_INSTRUCTIONLINE_ID' : X_INSTRUCTIONLINE_ID,
+			'M_INOUT_ID' : M_INOUT_ID,
+			'fileURI' : fileURI,
+			'newFileName' : newFileName
+		};
+		onSuccess(sucmsg);
 	}, function(err) {
 		var msg = _self.uploadFail(err);
 		var ermsg = {

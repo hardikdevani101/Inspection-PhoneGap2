@@ -95,29 +95,53 @@ InspLinesPage.prototype.init = function() {
 	});
 }
 
+InspLinesPage.prototype.displayAlert = function() {
+	if (_self.app.appFTPUtil.processLog.length > 0) {
+		// TODO display Alert
+	} else {
+		// TODO display success
+	}
+}
+
 InspLinesPage.prototype.syncInspLines = function() {
 	var _self = this;
+	_self.inProgressSyncCount = 0;
 	var success = function(tx, results) {
 		if (results.rows.length > 0) {
 			for (var i = 0; i < results.rows.length; i++) {
-				_self.app.appFTPUtil.uploadFile(results.rows.item(i).file,
-						results.rows.item(i).mr_line,
-						results.rows.item(i).insp_line,
-						results.rows.item(i).isMR, function(msg) {
-							if (!_self.isAlertDisplay) {
-								_self.isAlertDisplay = true;
-								$("#insp_process_log").show();
-							}
-							$("#insp_process_log").html(
-									_self.app.appFTPUtil.processLog.length);
-						});
+				_self.app.appFTPUtil
+						.uploadFile(
+								results.rows.item(i).file,
+								results.rows.item(i).mr_line,
+								results.rows.item(i).insp_line,
+								results.rows.item(i).isMR,
+								function(msg) {
+									_self.inProgressSyncCount++;
+									if (!_self.isAlertDisplay) {
+										_self.isAlertDisplay = true;
+										$("#insp_process_log").show();
+									}
+									$("#insp_process_log")
+											.html(
+													_self.app.appFTPUtil.processLog.length);
+
+									if (_self.inProgressSyncCount == results.rows.length) {
+										_self.displayAlert();
+									}
+								},
+								function(msg) {
+									_self.inProgressSyncCount++;
+									if (_self.inProgressSyncCount == results.rows.length) {
+										_self.displayAlert();
+									}
+								});
 
 			}
 		}
 	};
-	
-	//Restart Sync Process.	
-	_self.app.appFTPUtil.processLog=[];	
+
+	// Restart Sync Process.
+	_self.app.appFTPUtil.processLog = [];
 	_self.app.appDB.getUploadFailedEntry(success);
 }
 
@@ -242,6 +266,8 @@ InspLinesPage.prototype.rederInspLinesDetailsBreadCrumb = function() {
 
 InspLinesPage.prototype.onFinishedCalled = function() {
 	var _self = this;
+	var visService = new VisionApi(app);
+	_self.inProgressAttachCount = 0;
 	var onUploadedEntrySucess = function(tx, results) {
 		if (results.rows.length > 0) {
 			var attachmentList = [];
@@ -270,7 +296,6 @@ InspLinesPage.prototype.onFinishedCalled = function() {
 				}
 			}
 
-			var visService = new VisionApi(app);
 			$.each(attachmentList, function() {
 				if (this.type == 1) {
 					visService.uploadImage({
@@ -278,6 +303,8 @@ InspLinesPage.prototype.onFinishedCalled = function() {
 						imgname : this.files
 					}, function(param) {
 						_self.app.appDB.onAttachSucess(param);
+					}, function(msg) {
+						// error
 					});
 				} else {
 					visService.uploadImageByMInOut({
@@ -286,6 +313,8 @@ InspLinesPage.prototype.onFinishedCalled = function() {
 						imgname : this.files
 					}, function(param) {
 						_self.app.appDB.onAttachSucess(param);
+					}, function(msg) {
+						// error
 					});
 				}
 			});
@@ -297,7 +326,23 @@ InspLinesPage.prototype.onFinishedCalled = function() {
 
 	var onFailedUplodEntrysuccess = function(tx, results) {
 		if (results.rows.length > 0) {
-			alert("Please first sync all files");
+			// Restart Sync Process.
+			_self.app.appFTPUtil.processLog = [];
+			for (var i = 0; i < results.rows.length; i++) {
+				_self.app.appFTPUtil.uploadFile(results.rows.item(i).file,
+						results.rows.item(i).mr_line,
+						results.rows.item(i).insp_line,
+						results.rows.item(i).in_out_id, function(msg) {
+							if (!_self.isAlertDisplay) {
+								_self.isAlertDisplay = true;
+								$("#insp_process_log").show();
+							}
+							$("#insp_process_log").html(
+									_self.app.appFTPUtil.processLog.length);
+						}, function(msg) {
+
+						});
+			}
 		} else {
 			_self.app.appDB.getAttachPendingEntry(onUploadedEntrySucess);
 		}
