@@ -8,7 +8,7 @@ FTPUtils.prototype.init = function() {
 }
 
 FTPUtils.prototype.uploadFile = function(fileURI, M_InOutLine_ID,
-		X_INSTRUCTIONLINE_ID, isMR, onError) {
+		X_INSTRUCTIONLINE_ID, isMR, onError, onSuccess) {
 	var _self = this;
 	var ft = new FileTransfer();
 	var options = new FileUploadOptions();

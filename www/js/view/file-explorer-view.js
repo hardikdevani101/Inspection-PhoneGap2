@@ -149,16 +149,16 @@ FileExplorerPage.prototype.renderSelectedFiles = function() {
 	$('#ls_sel_files').html(fileItems);
 	$('#ls_sel_files').listview("refresh");
 	$("#ls_sel_files .ui-icon-arrow-d").hide();
-	$("#ls_sel_files .file-placeholder").on("tap", function(event) {
+	$("#ls_sel_files .file-placeholder").off('tap', '#ls_sel_files .file-placeholder').on("tap", function(event) {
 		_self.onSelFileTap(event);
 	});
 
-	$('#btn_FEdelete_file').on('click', function(event) {
+	$('#btn_FEdelete_file').off('tap', '#btn_FEdelete_file').on('click', function(event) {
 		_self.onDeleteFile(event);
 
 	});
 
-	$('#btn_FEedit_file').on('click', function(event) {
+	$('#btn_FEedit_file').off('tap', '#btn_FEedit_file').on('click', function(event) {
 		_self.onEditFile(event);
 	});
 
@@ -293,11 +293,11 @@ FileExplorerPage.prototype.renderContent = function(dirPath) {
 
 			});
 
-			$("#ls_dirs .dir-placeholder").bind("tap", function(event) {
+			$("#ls_dirs .dir-placeholder").off('tap', '#ls_dirs .dir-placeholder').on("tap", function(event) {
 				_self.onDirTap(event)
 			});
 
-			$("#ls_files .file-placeholder").bind("tap", function(event) {
+			$("#ls_files .file-placeholder").off('tap', '#ls_files .file-placeholder').on("tap", function(event) {
 				_self.onFileTap(event)
 			});
 		}
@@ -472,7 +472,7 @@ FileExplorerPage.prototype.renderDirPath = function() {
 	$("#current-dir-path").html(
 			'<h3 class="ui-bar ui-bar-c">' + items + '</h3>');
 
-	$(".bc-link").on("tap", function(event) {
+	$(".bc-link").off('tap', '.bc-link').on("tap", function(event) {
 		_self.onDirTap(event);
 	});
 };
