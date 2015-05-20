@@ -12,12 +12,6 @@ App.prototype.onDeviceReady = function() {
 	$.mobile.allowCrossDomainPages = true;
 	$.support.cors = true;
 	$.mobile.loadingMessage = "Loading..";
-	$("[data-role=header]").toolbar({
-		tapToggle : false
-	});
-	$("[data-role=footer]").toolbar({
-		tapToggle : false
-	});
 
 	this.isOnline = navigator.onLine ? true : false;
 	if (navigator.network) {
@@ -124,12 +118,14 @@ App.prototype.showError = function(pageId, msg) {
 
 App.prototype.register = function() {
 	var _self = this;
+
 	$(document)
 			.on(
 					"pagecreate",
 					"#pg_home",
 					function(event) {
 						// Check if already login
+
 						_self.registerErrorPopup('pg_settings');
 						_self.isLogin = false;
 						_self.settingnview = new SettingsPage(_self);
@@ -234,6 +230,17 @@ App.prototype.register = function() {
 		_self.imageEditor = new ImageEditorPage(_self);
 		_self.imageEditor.init();
 		_self.appCache.addPage('pg_img_editor', _self.imageEditor);
+	});
+
+	$(document).on("pagecreate", "#pg_img_editor", function(event) {
+		$("#pg_img_editor [data-role=header]").toolbar({
+			transition : "fade",
+			tapToggle : false
+		});
+		$("#pg_img_editor [data-role=footer]").toolbar({
+			transition : "fade",
+			tapToggle : false
+		});
 	});
 
 	$(document).on("pagecreate", "#pg_file_explorer", function(event) {

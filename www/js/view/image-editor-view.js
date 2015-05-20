@@ -10,9 +10,11 @@ var ImageEditorPage = function(app) {
 	this.isCropEnable = false;
 	this.isEditEnable = true;
 	this.curentImage = this.image64;
-	this.gcanvas = $('#edit-canvase');
+	this.gcanvas = '';
 	this.editCtx = '';
 	this.isCropperOn = false;
+	this.cValue = 0;
+	this.bValue = 0;
 }
 
 ImageEditorPage.prototype.rederBreadCrumb = function() {
@@ -20,24 +22,11 @@ ImageEditorPage.prototype.rederBreadCrumb = function() {
 	$('#pg_cropView #btn_user').html(_self.app.appCache.settingInfo.username);
 };
 
-ImageEditorPage.prototype.setup = function(options, isGallery) {
-	var _self = this;
-	_self.canWidth = options.width;
-	_self.canHeight = options.height;
-	_self.image64 = options.img64;
-	_self.sourceInfo = options.sourceInfo;
-	_self.selectedWM = options.watermark;
-	_self.isGallery = isGallery;
-	console.log(options.watermark);
-}
-
-ImageEditorPage.prototype.drowRect = function(x, y, w, h) {
-	var _self = this;
-	_self.editCtx.beginPath();
-	_self.editCtx.fillStyle = "#ffffff";
-	_self.editCtx.fillRect(x, y, w, h);
-	_self.editCtx.closePath();
-	_self.editCtx.stroke();
+ImageEditorPage.prototype.setup = function(options, callBack) {
+	this.image64 = options.img64;
+	this.sourceInfo = options.sourceInfo;
+	this.selectedWM = options.watermark;
+	this.callBack = callBack;
 }
 
 ImageEditorPage.prototype.saveEditedImage = function() {
@@ -50,208 +39,206 @@ ImageEditorPage.prototype.saveEditedImage = function() {
 }
 
 ImageEditorPage.prototype.enableEditMode = function() {
-	$("#crop-image-container").hide();
-	$("#edit-canvase").show();
 	var _self = this;
-	_self.gcanvas = $("#edit-canvase")[0];
-	_self.bValue = 50;
-	_self.cValue = 50;
-	if (_self.gcanvas && _self.gcanvas.getContext) {
-		_self.editCtx = _self.gcanvas.getContext("2d");
-		var img = $('#img_editable').get(0);
+	$("#crop-toolbar").hide();
+	$("#edit-toolbar").show();
+	$("#crop-image-container").hide();
+	$("#edit-image-container").show();
+	setTimeout(function() {
+		$('#edit_img_src').css("z-index", 2000000);
+		$('#edit_img_src').veditor({
+			previewImgId : "crop_img_src",
+			canvasWidth : _self.cropImageW,
+			canvasHeight : _self.cropImageH
+		});
+	}, 10);
+}
 
-		if (img.height < img.width && !((img.height / img.width) > .70)) {
-			// if (img.height < img.width ) {
+ImageEditorPage.prototype.cropFinished = function() {
+	var _self = this;
+	_self.croppedCanvas = _self.corpperImage.cropper("getCroppedCanvas");
+	_self.currentImage = _self.croppedCanvas.toDataURL();
+	_self.isEditEnable = true;
+	_self.isCropEnable = false;
+	$("#crop-toolbar").hide();
+	$("#edit-toolbar").show();
+	$('#crop_img_src').attr('src', _self.currentImage);
+	$('#edit_img_src').veditor('setPreviewImageData')
+	_self.enableEditMode();
+}
+
+ImageEditorPage.prototype.reload = function() {
+	var _self = this;
+	_self.rederBreadCrumb();
+	_self.cValue = 0;
+	_self.bValue = 0;
+	_self.canHeight = $(window).height() - (17 * $(window).height() / 100);
+	_self.canWidth = $(window).width() - 20;
+}
+
+ImageEditorPage.prototype.loadEditableImage = function() {
+	var _self = this;
+	$('#pg_img_editor #edit-image-container').html(
+			[ '<img id="edit_img_src" src="' + _self.image64 + '" />' ]
+					.join(''));
+	setTimeout(function() {
+		// console.log("load edit_img_src");
+		img = $("#edit_img_src")[0];
+
+		if (img.height < img.width && !((img.height / img.width) > .90)) {
 			_self.cropImageW = (_self.canHeight * 4) / 3;
 			_self.cropImageH = (_self.cropImageW / img.width) * img.height;
 		} else {
 			_self.cropImageH = _self.canHeight;
 			_self.cropImageW = (_self.cropImageH / img.height) * img.width;
 		}
+		_self.cropImageH = _self.cropImageH - 32;
+		_self.cropImageW = _self.cropImageW - 32;
 
-		// _self.gcanvas.height = _self.canHeight;
-		// _self.gcanvas.width = _self.canWidth;
-		_self.gcanvas.height = _self.cropImageH;
-		_self.gcanvas.width = _self.cropImageW;
-		_self.editCtx.drawImage(img, 0, 0, img.width, img.height, 0, 0,
-				_self.cropImageW, _self.cropImageH);
-
-		var distanceBetween = function(point1, point2) {
-			return Math.sqrt(Math.pow(point2.x - point1.x, 2)
-					+ Math.pow(point2.y - point1.y, 2));
-		}
-		var angleBetween = function(point1, point2) {
-			return Math.atan2(point2.x - point1.x, point2.y - point1.y);
-		}
-		var ctx = _self.editCtx;
-		ctx.lineJoin = ctx.lineCap = 'round';
-		var isDrawing, lastPoint;
-		$(document).on("vmousemove", "#edit-canvase", function(e) {
-			if (!isDrawing)
-				return;
-			var currentPoint = {
-				x : e.clientX,
-				y : e.clientY - 20
-			};
-			var dist = distanceBetween(lastPoint, currentPoint);
-			var angle = angleBetween(lastPoint, currentPoint);
-			for (var i = 0; i < dist; i += 5) {
-				x = lastPoint.x + (Math.sin(angle) * i);
-				y = lastPoint.y + (Math.cos(angle) * i);
-				var radgrad = ctx.createRadialGradient(x, y, 10, x, y, 20);
-				radgrad.addColorStop(0, '#FFF');
-				radgrad.addColorStop(0.5, '#FFF');
-				radgrad.addColorStop(1, '#FFF');
-
-				_self.editCtx.fillStyle = radgrad;
-				_self.editCtx.fillRect(x - 20, y - 20, 40, 40);
-			}
-			lastPoint = currentPoint;
-		});
-		$(document).on("vmousedown", "#edit-canvase", function(e) {
-			isDrawing = true;
-			lastPoint = {
-				x : e.clientX,
-				y : e.clientY - 20
-			};
-		});
-		$(document).on("vmouseup", "#edit-canvase", function(e) {
-			isDrawing = false;
-			$('#img_editable').attr('src', _self.gcanvas.toDataURL());
-		})
-	}
+		_self.enableEditMode();
+	}, 10);
 }
 
-ImageEditorPage.prototype.cropFinished = function() {
+ImageEditorPage.prototype.loadCropableImage = function() {
 	var _self = this;
-	_self.croppedCanvas = _self.corpperImage.cropper("getCroppedCanvas", {
-		width : 1024,
-		height : 769
-	});
-	_self.currentImage = _self.croppedCanvas.toDataURL();
-	_self.isEditEnable = true;
+
+	$('#pg_img_editor  .img-container').html(
+			[ '<img id="crop_img_src" src="' + _self.image64 + '" />' ]
+					.join(''));
+	setTimeout(function() {
+		if (!_self.isCropperOn)
+			_self.initCropMode();
+	}, 10);
+}
+
+ImageEditorPage.prototype.reset = function() {
+	var _self = this;
+	$("#slider-brightness").val(0).slider("refresh");
+	$("#slider-contrast").val(0).slider("refresh");
+	$('#edit_img_src').veditor('reset');
+	_self.enableEditMode();
 	_self.isCropEnable = false;
+	_self.isEditEnable = true;
 	$("#crop-toolbar").hide();
 	$("#edit-toolbar").show();
-	// _self.corpperImage
-	$('#img_editable').attr('src', _self.currentImage);
-	$('#img_editable').load(function() {
+	_self.corpperImage.cropper("destroy");
+}
+
+ImageEditorPage.prototype.viewToggle = function() {
+	var _self = this;
+	if (_self.isCropEnable) {
+		$("#crop-image-container").hide();
+		$("#edit-canvase").show();
+		$("#crop-toolbar").hide();
+		$("#edit-toolbar").show();
+		_self.isCropEnable = false;
+		_self.isEditEnable = true;
+		// _self.corpperImage.cropper("destroy");
 		_self.enableEditMode();
-	});
-	// .cropper("destroy");
+	} else {
+		_self.isCropEnable = true;
+		_self.isEditEnable = false;
+		$("#crop-image-container").show();
+		$("#edit-canvase").hide();
+		$("#edit-toolbar").hide();
+		$("#crop-toolbar").show();
+		_self.enableCropMode();
+		_self.corpperImage.cropper("setDragMode", "crop");
+	}
 }
 
 ImageEditorPage.prototype.init = function() {
 	var _self = this;
-	$(document).on(
-			"pagebeforeshow",
-			"#pg_img_editor",
-			function() {
-				_self.app.showDialog('Loading...');
-				_self.rederBreadCrumb();
-				_self.cValue = 0;
-				_self.bValue = 0;
-				// $("#txt_prefix").val($('#prefixInpectLine').html());
-				// $('#btn_filter_ok')
-				// .on(
-				// 'click',
-				// function() {
-				// $("#prefixInpectLine").html(
-				// $('#txt_prefix').val());
-				// if ($("#prefixInpectLine").data('id'))
-				// _self.app.appCache.prefixCache[$(
-				// "#prefixInpectLine").data('id')
-				// .toString()] = $('#txt_prefix')
-				// .val();
-				// });
+	$(document).on("pagebeforeshow", "#pg_img_editor", function() {
+		_self.reload();
+		_self.loadEditableImage();
+		_self.loadCropableImage();
+	});
 
-				$("#slider-brightness").on("slidestop", function(event) {
-					_self.brightness = event.target.value;
-					_self.onBrightnessChange(event);
-				});
+	$("#btn_skip_edit").on("tap", function() {
+		$.mobile.changePage("#pg_gallery");
+	});
 
-				$("#slider-contrast").on("slidestop", function(event) {
-					_self.contrast = event.target.value;
-					_self.onContrastChange(event);
-				});
+	$("#btn_add_watermark").on("tap", function() {
+		_self.applyWatermark();
+	});
 
-				$("#slider-crop").on("slidestop", function(event) {
-					_self.currentCropSize = event.target.value;
-					_self.onCropSizeChange(event);
-				});
+	$("#btn_reset").on("tap", function() {
+		_self.reset();
+	});
 
-				$('.img-container').html(
-						[ '<img id="img_editable" src="' + _self.image64
-								+ '" />' ].join(''));
-				$("#img_editable").load(function() {
-					_self.initCropMode();
-					_self.enableEditMode();
-				});
+	$("#btn_edit_finished").on("tap", function() {
+		_self.onEditFinish();
+	});
 
-				$("#crop-toolbar").hide();
-				$("#edit-toolbar").show();
-				$("#btn_skip_edit").on("tap", function() {
-					$.mobile.changePage("#pg_gallery");
-				});
+	$("#btn_crop").on("tap", function() {
+		_self.viewToggle();
+	});
 
-				$("#btn_add_watermark").on("tap", function() {
-					_self.applyWatermark();
-				});
+	$("#slider-brightness").on("slidestop", function(event) {
+		_self.brightness = event.target.value;
+		_self.onBrightnessChange(event);
+	});
 
-				$("#btn_reset").on("tap", function() {
-					$("#slider-brightness").val(0).slider("refresh");
-					$("#slider-contrast").val(0).slider("refresh");
-					_self.cValue = 0;
-					_self.bValue = 0;
-					var img = $('#img_editable').attr('src', _self.image64);
-					_self.enableEditMode();
-					_self.isCropEnable = false;
-					_self.isEditEnable = true;
-					$("#crop-toolbar").hide();
-					$("#edit-toolbar").show();
-					_self.corpperImage.cropper("destroy");
-				});
+	$("#slider-contrast").on("slidestop", function(event) {
+		_self.contrast = event.target.value;
+		_self.onContrastChange(event);
+	});
 
-				$("#btn_edit_finished").on("tap", function() {
-					_self.onEditFinish();
-				});
-				$("#btn_crop").on("tap", function() {
-					if (_self.isCropEnable) {
-						$("#crop-image-container").hide();
-						$("#edit-canvase").show();
-						$("#crop-toolbar").hide();
-						$("#edit-toolbar").show();
-						_self.isCropEnable = false;
-						_self.isEditEnable = true;
-						// _self.corpperImage.cropper("destroy");
-						_self.enableEditMode();
-					} else {
-						_self.isCropEnable = true;
-						_self.isEditEnable = false;
-						$("#crop-image-container").show();
-						$("#edit-canvase").hide();
-						$("#edit-toolbar").hide();
-						$("#crop-toolbar").show();
-						_self.enableCropMode();
-						_self.corpperImage.cropper("setDragMode", "crop");
+	$("#slider-crop").on("slidestop", function(event) {
+		_self.currentCropSize = event.target.value;
+		_self.onCropSizeChange(event);
+	});
 
-					}
-				});
-				$.mobile.loading('hide');
-			});
+	$("#btn_zoom_plus").on("tap", function() {
+		_self.corpperImage.cropper("zoom", 0.1);
+	});
+
+	$("#btn_zoom_minus").on("tap", function() {
+		_self.corpperImage.cropper("zoom", -0.1);
+	});
+
+	$(document).on("tap", "#btn_crop_zoom_plus", function(e) {
+		_self.cropResize = true;
+		var data = _self.corpperImage.cropper("getCropBoxData");
+		data.width = data.width + 15;
+		_self.corpperImage.cropper("setCropBoxData", data);
+	});
+
+	$(document).on("tap", "#btn_crop_zoom_minus", function(e) {
+		_self.cropResize = true;
+		var data = _self.corpperImage.cropper("getCropBoxData");
+		data.width = data.width - 15;
+		_self.corpperImage.cropper("setCropBoxData", data);
+	});
+
+	$("#btn_rotate_left").on("tap", function() {
+		_self.corpperImage.cropper("rotate", -45);
+	});
+
+	$("#btn_rotate_right").on("tap", function() {
+		_self.corpperImage.cropper("rotate", 45);
+	});
+
+	$("#btn_crop_move").on("tap", function() {
+		_self.corpperImage.cropper("setDragMode", "move");
+	});
+
+	$("#btn_crop_finished").on("tap", function() {
+		_self.cropFinished();
+	});
+
 };
 
 ImageEditorPage.prototype.enableCropMode = function() {
+	$("#crop-image-container").show();
+	$("#edit-image-container").hide();
 	var _self = this;
-	if (_self.isCropperOn) {
+	if (!_self.isCropperOn) {
 		_self.initCropMode();
 	}
-	if (_self.gcanvas) {
-		URL = window.URL || window.webkitURL;
-		_self.corpperImage.one('built.cropper', function() {
-			URL.revokeObjectURL(_self.gcanvas.toDataURL());
-		}).cropper('reset').cropper('replace', _self.gcanvas.toDataURL());
-	}
+	_self.corpperImage.cropper('destroy');
+	_self.corpperImage.cropper('reset');
 }
 
 ImageEditorPage.prototype.onCropSizeChange = function(event) {
@@ -259,25 +246,13 @@ ImageEditorPage.prototype.onCropSizeChange = function(event) {
 	var data = _self.corpperImage.cropper("getCropBoxData");
 	data.width = data.width + event.target.value * 10;
 	_self.corpperImage.cropper("setCropBoxData", data);
-	//
-	// var contraValue = event.target.value - _self.cValue;
-	// var contraImageData = _self.editCtx.getImageData(0, 0,
-	// _self.gcanvas.width,
-	// _self.gcanvas.height);
-	// var data = contraImageData.data;
-	// var factor = (259 * (contraValue + 255)) / (255 * (259 - contraValue));
-	// for (var i = 0; i < data.length; i += 4) {
-	// data[i] = factor * (data[i] - 128) + 128;
-	// data[i + 1] = factor * (data[i + 1] - 128) + 128;
-	// data[i + 2] = factor * (data[i + 2] - 128) + 128;
-	// }
-	// _self.editCtx.putImageData(contraImageData, 0, 0);
-	// _self.cValue = event.target.value;
 }
 
 ImageEditorPage.prototype.onContrastChange = function(event) {
 	var _self = this;
 	var contraValue = event.target.value - _self.cValue;
+	_self.gcanvas = $("#edit_img_src")[0];
+	_self.editCtx = _self.gcanvas.getContext('2d');
 	var contraImageData = _self.editCtx.getImageData(0, 0, _self.gcanvas.width,
 			_self.gcanvas.height);
 	var data = contraImageData.data;
@@ -294,6 +269,9 @@ ImageEditorPage.prototype.onContrastChange = function(event) {
 ImageEditorPage.prototype.onBrightnessChange = function(event) {
 	var _self = this;
 
+	_self.gcanvas = $("#edit_img_src")[0];
+	_self.editCtx = _self.gcanvas.getContext('2d');
+
 	var brightValue = event.target.value - _self.bValue;
 	var brightImageData = _self.editCtx.getImageData(0, 0, _self.gcanvas.width,
 			_self.gcanvas.height);
@@ -309,26 +287,23 @@ ImageEditorPage.prototype.onBrightnessChange = function(event) {
 
 ImageEditorPage.prototype.initCropMode = function() {
 	var _self = this;
-	var $image = $('#img_editable'), $dataX = $('#dataX'), $dataY = $('#dataY'), $dataHeight = $('#dataHeight'), $dataWidth = $('#dataWidth'), $dataRotate = $('#dataRotate');
+	var $image = $('#crop_img_src'), $dataX = $('#dataX'), $dataY = $('#dataY'), $dataHeight = $('#dataHeight'), $dataWidth = $('#dataWidth'), $dataRotate = $('#dataRotate');
+	$("#crop-image-container").css('max-width', _self.cropImageW);
+	$("#crop-image-container").css('max-height', _self.cropImageH);
 	var options = {
-		highlight : true,
 		rotatable : true,
 		zoomable : true,
 		touchDragZoom : true,
-		// minCanvasWidth : _self.canWidth,
-		// minCanvasHeight : _self.canHeight,
-		// minCropBoxWidth: '160',
-		// minCropBoxHeight: '90',
+		autoCropArea : 0.5,
+		strict : false,
+		guides : false,
+		highlight : false,
+		dragCrop : false,
+		minCanvasWidth : $image[0].width,
+		minCanvasHeight : $image[0].height,
 		maxContainerWidth : _self.cropImageW,
 		maxContainerHeight : _self.cropImageH,
-		// build: null,
-		// built: null,
-		// dragstart: null,
-		// dragmove: null,
-		// dragend: null,
-		// zoomin: null,
-		// zoomout: null,
-		aspectRatio : 4 / 3,
+		aspectRatio : 16 / 9,
 		crop : function(data) {
 			$dataX.val(Math.round(data.x));
 			$dataY.val(Math.round(data.y));
@@ -340,10 +315,11 @@ ImageEditorPage.prototype.initCropMode = function() {
 
 	$image.on({
 		'build.cropper' : function(e) {
-			// console.log(e.type);
 		},
 		'built.cropper' : function(e) {
-			// console.log(e.type);
+			$image.cropper('setCropBoxData', $image.cropper('getCropBoxData'));
+			$image.cropper('setCanvasData', $image.cropper('getCanvasData'));
+			_self.corpperImage = $image;
 		},
 		'dragstart.cropper' : function(e) {
 			// console.log(e.type, e.dragType);
@@ -361,73 +337,6 @@ ImageEditorPage.prototype.initCropMode = function() {
 			// console.log(e.type);
 		}
 	}).cropper(options);
-
-	_self.corpperImage = $image;
-
-	$("#btn_zoom_plus").on("tap", function() {
-		_self.corpperImage.cropper("zoom", 0.1);
-	});
-
-	$("#btn_zoom_minus").on("tap", function() {
-		_self.corpperImage.cropper("zoom", -0.1);
-	});
-	/*
-	 * $(document).on("vmouseup", "#btn_crop_zoom_plus", function(e) {
-	 * _self.cropResize = false; });
-	 */
-	$(document).on("tap", "#btn_crop_zoom_plus", function(e) {
-		_self.cropResize = true;
-		// _self.setCropBoxData(10);
-		var data = _self.corpperImage.cropper("getCropBoxData");
-		data.width = data.width + 15;
-		_self.corpperImage.cropper("setCropBoxData", data);
-	});
-
-	$(document).on("tap", "#btn_crop_zoom_minus", function(e) {
-		_self.cropResize = true;
-		// _self.setCropBoxData(-10);
-		var data = _self.corpperImage.cropper("getCropBoxData");
-		data.width = data.width - 15;
-		_self.corpperImage.cropper("setCropBoxData", data);
-	});
-
-	/*
-	 * $(document).on("vmouseup", "#btn_crop_zoom_minus", function(e) {
-	 * _self.cropResize = false; // console.log("vmouseup>>>>>>>>>>>>>>") });
-	 * 
-	 * $(document).on("taphold", "#btn_crop_zoom_minus", function(e) {
-	 * _self.cropResize = true; //_self.setCropBoxData(-10); //
-	 * console.log("taphold>>>>>>>>>>>>>>") });
-	 * 
-	 *//*
-		 * $("#btn_crop_zoom_plus").on("touchstart", function() {
-		 * _self.cropResize = true; _self.setCropBoxData(10); });
-		 * 
-		 * $("#btn_crop_zoom_minus").on("touchstart", function() {
-		 * _self.cropResize = true; _self.setCropBoxData(-10); });
-		 * 
-		 * $("#btn_crop_zoom_plus").on("touchstop", function() {
-		 * _self.cropResize = false; });
-		 * 
-		 * $("#btn_crop_zoom_minus").on("touchstop", function() {
-		 * _self.cropResize = false; });
-		 */
-
-	$("#btn_rotate_left").on("tap", function() {
-		_self.corpperImage.cropper("rotate", -45);
-	});
-
-	$("#btn_rotate_right").on("tap", function() {
-		_self.corpperImage.cropper("rotate", 45);
-	});
-
-	$("#btn_crop_move").on("tap", function() {
-		_self.corpperImage.cropper("setDragMode", "move");
-	});
-
-	$("#btn_crop_finished").on("tap", function() {
-		_self.cropFinished();
-	});
 
 	_self.isCropperOn = true;
 }
@@ -447,10 +356,7 @@ ImageEditorPage.prototype.setCropBoxData = function(param) {
 
 ImageEditorPage.prototype.onEditFinish = function() {
 	var _self = this;
-	// this selectedWM = $('select[name="select-crop-waterMark"]').val();
-	// TODO: getWatermark image data from appCache.
 	var watermarkImage = _self.app.watermark64;
-	console.log(_self.selectedWM);
 	if (_self.selectedWM) {
 		var findResult = jQuery.grep(_self.app.appCache.waterMarkImgs,
 				function(item, index) {
@@ -460,13 +366,9 @@ ImageEditorPage.prototype.onEditFinish = function() {
 			watermarkImage = findResult[0].data;
 		}
 	}
-
 	var watermark = new Image();
 	watermark.src = watermarkImage;
-	// var sourceImage = $('#img_editable').get(0);
 	watermark.onload = function() {
-		// _self.gcanvas = document.createElement('canvas');
-
 		var origImg = new Image();
 		origImg.src = _self.gcanvas.toDataURL();
 		origImg.onload = function() {
@@ -482,15 +384,11 @@ ImageEditorPage.prototype.onEditFinish = function() {
 			y = (nGcanvas.height - 20) - (watermark.height);
 			nGctx.drawImage(watermark, x, y);
 
-			console.log(_self.isGallery);
-			if (_self.isGallery == 'Y') {
+			if (_self.callBack) {
+				_self.callBack(_self.sourceInfo, nGcanvas.toDataURL());
+			} else {
 				_self.app.galleryview.onEditFinish(_self.sourceInfo, nGcanvas
 						.toDataURL());
-				$.mobile.changePage("#pg_gallery");
-			} else {
-				_self.app.fileExplorer.onEditFinish(_self.sourceInfo, nGcanvas
-						.toDataURL(),"Y");
-				$.mobile.changePage("#pg_file_explorer");
 			}
 		}
 	}
