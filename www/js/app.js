@@ -53,6 +53,8 @@ App.prototype.onDeviceReady = function() {
 		console.log("App Init Error - " + msg)
 	});
 
+	_self.visionApi = new VisionApi(_self);
+
 	// Initiate file-storage on page load.
 	// app.appFS = new FS(app);
 	// app.appFS.init();
@@ -244,6 +246,14 @@ App.prototype.register = function() {
 	});
 
 	$(document).on("pagecreate", "#pg_file_explorer", function(event) {
+		$("#pg_file_explorer [data-role=header]").toolbar({
+			transition : "fade",
+			tapToggle : false
+		});
+		$("#pg_file_explorer [data-role=footer]").toolbar({
+			transition : "fade",
+			tapToggle : false
+		});
 		_self.registerErrorPopup('pg_file_explorer');
 		_self.fileExplorer = new FileExplorerPage(_self);
 		_self.fileExplorer.init();
@@ -317,6 +327,7 @@ $(document).ready(function() {
 
 		app.ftpClient = '';
 		app.aviaryEdit = '';
+
 		if (vision) {
 			app.ftpClient = vision.ftpclient;
 		}

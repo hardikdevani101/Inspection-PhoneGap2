@@ -462,7 +462,7 @@ body {
 	/* Set a max-width for the last breakpoint to prevent too much stretching on large screens.
     By setting the max-width equal to the breakpoint width minus padding we keep square tiles. */
 	.img-gallery .ui-li-has-thumb h2 {
-		background: rgb(168, 165, 158) !important;
+		background: rgb(199, 184, 153) !important;
 	}
 	.img-gallery .ui-listview {
 		max-width: 62.5em; /* 1000px */
@@ -515,7 +515,10 @@ body {
 		width: 23%;
 		xheight: 90px;
 		margin: .1em .1em;
-		background: #EAE6DD !important;
+		background: #F5F4D0 !important;
+	}
+	.img-gallery .ui-listview li:hover {
+		background: #DDDCC5 !important;
 	}
 	#pnl_selected_files .ui-listview li {
 		width: 47% !important;
@@ -534,6 +537,15 @@ body {
 		margin: 0.1em .3em !important;
 	}
 }
+
+.img-gallery-listview {
+	padding: 0em !important;
+}
+
+.img-gallery-listview .ui-listview {
+	margin: 0em !important;
+}
+
 /* For this demo we used images with a size of 310x310 pixels. Just before the second breakpoint the images reach their max width: 1019px - 2 x 9px padding = 1001px x 30.9333% = ~310px */
 .ui-btn-corner-all {
 	-moz-border-radius: 0;

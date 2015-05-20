@@ -104,6 +104,8 @@ FileExplorerPage.prototype.init = function() {
 					$(this).addClass('ui-icon-grid');
 					$('#pg_file_explorer #pg_file_main').removeClass(
 							'img-gallery');
+					$('#pg_file_explorer .ui-content').addClass(
+							'img-gallery-listview');
 					$('#pg_file_explorer #pg_file_main img').addClass(
 							'ui-listview-mode');
 
@@ -126,6 +128,8 @@ FileExplorerPage.prototype.init = function() {
 					_self.isGridView = true;
 					$('#pg_file_explorer #pg_file_main')
 							.addClass('img-gallery');
+					$('#pg_file_explorer .ui-content').removeClass(
+							'img-gallery-listview');
 					$('#pg_file_explorer #pg_file_main img').removeClass(
 							'ui-listview-mode');
 					$("#ls_files p a.ui-icon-arrow-d").hide();
@@ -235,25 +239,25 @@ FileExplorerPage.prototype.fillDataProviders = function() {
 		}, success, function(msg) {
 			// _self.app.showDialog("Loading..");
 			// // TODO close below dummy data runner.
-			// resultline = {};
-			// resultline['record-id'] = '2323';
-			// resultline['url'] = 'ftp://343.343.343.34';
-			// resultline['isFTP'] = 'Y';
-			// resultline['name'] = 'Ftp Server';
-			// resultline['password'] = 'username';
-			// resultline['user'] = 'username';
-			// _self.app.appCache.ftpServers.push(resultline);
-			// var result = {
-			// 'ftpservers' : [ resultline, resultline, resultline ],
-			// 'total' : 1
-			// };
-			//
-			// var items = '';
-			// _self.app.appCache.ftpServers = [];
-			// $.each(result.ftpservers, function(index, data) {
-			// _self.app.appCache.ftpServers.push(data);
-			// });
-			// reloadDataProviders();
+//			 resultline = {};
+//			 resultline['record-id'] = '2323';
+//			 resultline['url'] = 'ftp://343.343.343.34';
+//			 resultline['isFTP'] = 'Y';
+//			 resultline['name'] = 'Ftp Server';
+//			 resultline['password'] = 'username';
+//			 resultline['user'] = 'username';
+//			 _self.app.appCache.ftpServers.push(resultline);
+//			 var result = {
+//			 'ftpservers' : [ resultline, resultline, resultline ],
+//			 'total' : 1
+//			 };
+			
+//			 var items = '';
+//			 _self.app.appCache.ftpServers = [];
+//			 $.each(result.ftpservers, function(index, data) {
+//			 _self.app.appCache.ftpServers.push(data);
+//			 });
+//			 reloadDataProviders();
 			// // TODO End.
 			// popup Errorbox.
 			_self.app.showError("pg_file_explorer", "FTP Servers failed : "
@@ -577,10 +581,10 @@ FileExplorerPage.prototype.loadActualImage = function(dataid, isLocalStrg) {
 		// console.log('Get image from ' + storage + ' >> ' + dataid);
 		// // TODO remove below dummy data runner in production.
 		// // Start of dummy data filler.
-		// var img = _self.app.image64;
-		// _self.app.appCache.imgCache[dataid] = img;
-		// $('li[data-id="' + dataid + '"] img').attr('src', img);
-
+//		 var img = _self.app.image64;
+//		 _self.app.appCache.imgCache[dataid] = img;
+//		 $('li[data-id="' + dataid + '"] img').attr('src', img);
+//
 		// End of dummy data filler.
 
 		if (isLocalStrg) {
@@ -720,26 +724,26 @@ FileExplorerPage.prototype.explodeDirectory = function(dirName, callback, error)
 		}
 
 		// TODO - Remove below dummy data filler.
-		// var randomNum = Math.floor(Math.random() * 31);
-		// var extensionList = [ "jpg", "pdf", "png", "txt" ];
-		// var tempFiles = [], tempDir = [];
-		// for (var i = 0; i < randomNum; i++) {
-		// tempFiles.push('file'
-		// + i
-		// + '.'
-		// + extensionList[Math.floor(Math.random()
-		// * (extensionList.length))]);
-		// }
-		// randomNum = Math.floor(Math.random() * 31);
-		// var dirList = [ "subfolder", "textf" ];
-		// for (var i = 0; i < randomNum; i++) {
-		// tempDir.push(dirList[Math.floor(Math.random() * (dirList.length))]
-		// + "_" + i);
-		// }
-		// successCB([ {
-		// fileNames : tempFiles,
-		// directory : tempDir
-		// } ]);
+//		 var randomNum = Math.floor(Math.random() * 31);
+//		 var extensionList = [ "jpg", "pdf", "png", "txt" ];
+//		 var tempFiles = [], tempDir = [];
+//		 for (var i = 0; i < randomNum; i++) {
+//		 tempFiles.push('file'
+//		 + i
+//		 + '.'
+//		 + extensionList[Math.floor(Math.random()
+//		 * (extensionList.length))]);
+//		 }
+//		 randomNum = Math.floor(Math.random() * 31);
+//		 var dirList = [ "subfolder", "textf" ];
+//		 for (var i = 0; i < randomNum; i++) {
+//		 tempDir.push(dirList[Math.floor(Math.random() * (dirList.length))]
+//		 + "_" + i);
+//		 }
+//		 successCB([ {
+//		 fileNames : tempFiles,
+//		 directory : tempDir
+//		 } ]);
 		// TODO - End
 	} else {
 		callback();
