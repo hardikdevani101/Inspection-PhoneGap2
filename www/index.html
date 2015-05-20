@@ -86,8 +86,8 @@
 				</div>
 			</div>
 		</div>
-		<div data-role="panel" data-position="left" data-theme="c"
-			id="pg_settings" data-content-theme="c">
+		<div data-role="panel" data-position="left" data-theme="b"
+			id="pg_settings" data-content-theme="b" data-display="overlay">
 
 			<div class="ui-panel-wrapper">
 				<div class="ui-content">
@@ -418,19 +418,19 @@ End of Inspection page
 					id="btn_delete_file">Delete</a></li>
 			</ul>
 		</div>
-		<div data-role="panel" data-theme="c" id="pnl_file_sources"
-			data-position="right">
+		<div data-role="panel" data-theme="b" id="pnl_file_sources"
+			data-position="right" data-display="overlay">
 			<div class="ui-panel-wrapper">
 				<div class="ui-content">
-					<ul data-role="listview" data-theme="c">
+					<ul data-role="listview" data-theme="b">
 						<li data-shadow="false" data-iconshadow="false"
 							data-wrapperels="div" data-icon="grid" data-iconpos="right"
-							data-theme="c"><a href="#" id="btn_pic_gallery">Gallery</a></li>
+							data-theme="b"><a href="#" id="btn_pic_gallery">Gallery</a></li>
 						<li data-shadow="false" data-iconshadow="false"
 							data-wrapperels="div" data-icon="camera" data-iconpos="right"
-							data-theme="c"><a href="#" id="btn_pic_camera">Camera</a></li>
+							data-theme="b"><a href="#" id="btn_pic_camera">Camera</a></li>
 						<li data-icon="cloud" data-shadow="false" data-iconshadow="false"
-							data-wrapperels="div" data-iconpos="right" data-theme="c"><a
+							data-wrapperels="div" data-iconpos="right" data-theme="b"><a
 							href="#pg_file_explorer" data-rel="close">File Explorer</a></li>
 					</ul>
 				</div>
@@ -457,7 +457,7 @@ End of Inspection page
 							data-corners="true" data-shadow="false" data-iconshadow="false"
 							data-wrapperels="span" title="InspLine" data-rel="popup"
 							data-transition="flip">text</button>
-						<button href="#pnl_file_sources" id="btn-add" data-icon="plus"
+						<button id="btn-add" data-icon="plus"
 							data-corners="true" data-iconpos="notext" data-shadow="false"
 							data-iconshadow="false" data-wrapperels="span" title="Logout"
 							class="ui-btn ui-icon-plus ui-btn-icon-notext ui-last-child">Add</button>
@@ -521,7 +521,7 @@ Start of File Explorer page
 		</div>
 
 		<div data-role="panel" data-position="left" data-theme="b"
-			id="pnl_selected_files">
+			id="pnl_selected_files" data-display="overlay">
 			<div class="ui-panel-wrapper">
 				<div class="ui-content img-gallery">
 					<h3 class="ui-bar ui-bar-c">Selected Files</h3>

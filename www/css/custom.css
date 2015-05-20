@@ -479,21 +479,16 @@ body {
 	#pg_file_explorer .img-gallery {
 		padding: 0em !important;
 	}
-	
-	#pg_file_explorer .ui-content{
+	#pg_file_explorer .ui-content {
 		padding-top: 0em !important;
 	}
-	
 	#pg_file_explorer  .img-gallery .ui-listview {
 		margin: 0 auto !important;
 		padding: 0 .5em !important;
 	}
-
 	#pg_file_explorer  .ui-content .ui-listview {
 		margin-top: 0em !important;
 	}
-
-
 	.xui-panel-animate.ui-panel-page-content-position-leftx {
 		left: 0;
 		right: 0;
@@ -828,14 +823,18 @@ body .ui-body-c, body .ui-overlay-c {
 }
 
 .ui-loading .ui-loader {
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  padding: 0;
-  margin: 0;
-  background: rgba(0, 0, 0, 0.3);
-  display: none;
-  position: fixed;
-  z-index: 10000000;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	padding: 0;
+	margin: 0;
+	background: rgba(0, 0, 0, 0.3);
+	display: none;
+	position: fixed;
+	z-index: 10000000;
+}
+
+.ui-panel-inner {
+	padding: 0em !important;
 }
