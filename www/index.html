@@ -88,47 +88,51 @@
 		</div>
 		<div data-role="panel" data-position="left" data-theme="c"
 			id="pg_settings" data-content-theme="c">
-			<form id="_form_settings">
-				<ul data-role="listview" data-autodividers="false" data-mini="true"
-					data-theme="c" data-inset="false">
-					<li data-icon="delete" data-shadow="false" data-iconshadow="false"
-						data-wrapperels="div" data-iconpos="right" data-theme="a"><a
-						href="#" data-rel="close">Settings</a></li>
 
-					<li class="ui-field-contain" data-shadow="false"
-						data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-						data-iconpos="right" data-theme="c"><label
-						for="select-server">Srv</label> <select name="txt_url"
-						id="txt_url" data-native-menu="false" data-mini="true">
-							<option value="http://10.210.23.176:8088">FE VISD</option>
-							<option value="http://10.210.23.77:8088">Production</option>
-							<option value="http://10.210.23.78:8088">Development</option>
-							<option value="http://10.210.23.97:8088">Test</option>
-							<option value="http://203.88.138.222:8384" selected>Logilite-Dev</option>
-					</select></li>
+			<div class="ui-panel-wrapper">
+				<div class="ui-content">
+					<form id="_form_settings">
+						<ul data-role="listview" data-autodividers="false"
+							data-mini="true" data-theme="c" data-inset="false">
+							<li data-icon="delete" data-shadow="false"
+								data-iconshadow="false" data-wrapperels="div"
+								data-iconpos="right" data-theme="a"><a href="#"
+								data-rel="close">Settings</a></li>
 
-					<li class="ui-field-contain" data-shadow="false"
-						data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-						data-iconpos="right" data-theme="c"><label for="select-lang">Lang</label>
-						<select name="txt_lang" id="txt_lang" data-native-menu="false"
-						data-mini="true">
-							<option value="en_US">English</option>
-					</select></li>
+							<li class="ui-field-contain" data-shadow="false"
+								data-iconshadow="false" data-wrapperels="div"
+								data-icon="arrow-r" data-iconpos="right" data-theme="c"><label
+								for="select-server">Srv</label> <select name="txt_url"
+								id="txt_url" data-native-menu="false" data-mini="true">
+									<option value="http://10.210.23.176:8088">FE VISD</option>
+									<option value="http://10.210.23.77:8088">Production</option>
+									<option value="http://10.210.23.78:8088">Development</option>
+									<option value="http://10.210.23.97:8088">Test</option>
+									<option value="http://203.88.138.222:8384" selected>Logilite-Dev</option>
+							</select></li>
 
-					<li class="ui-field-contain" data-shadow="false"
-						data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-						data-iconpos="right" data-theme="c"><label
-						for="select-client">Client</label> <select name="txt_client"
-						id="txt_client" data-native-menu="false" data-mini="true">
-							<option value="1000000">Velocity</option>
-					</select></li>
+							<li class="ui-field-contain" data-shadow="false"
+								data-iconshadow="false" data-wrapperels="div"
+								data-icon="arrow-r" data-iconpos="right" data-theme="c"><label
+								for="select-lang">Lang</label> <select name="txt_lang"
+								id="txt_lang" data-native-menu="false" data-mini="true">
+									<option value="en_US">English</option>
+							</select></li>
 
-					<li class="ui-field-contain" data-shadow="false"
-						data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-						data-iconpos="right" data-theme="c"><label for="select-role">Role</label>
-						<select name="txt_role" id="txt_role" data-native-menu="false"
-						data-mini="true">
-							<!-- 	<option value="1000138">FE QA Manager</option>
+							<li class="ui-field-contain" data-shadow="false"
+								data-iconshadow="false" data-wrapperels="div"
+								data-icon="arrow-r" data-iconpos="right" data-theme="c"><label
+								for="select-client">Client</label> <select name="txt_client"
+								id="txt_client" data-native-menu="false" data-mini="true">
+									<option value="1000000">Velocity</option>
+							</select></li>
+
+							<li class="ui-field-contain" data-shadow="false"
+								data-iconshadow="false" data-wrapperels="div"
+								data-icon="arrow-r" data-iconpos="right" data-theme="c"><label
+								for="select-role">Role</label> <select name="txt_role"
+								id="txt_role" data-native-menu="false" data-mini="true">
+									<!-- 	<option value="1000138">FE QA Manager</option>
 							<option value="1000139">FE QA Team</option>
 							<option value="1000043">Warehouse QA Team</option>
 							<option value="1000055">Warehouse QA Manager</option>
@@ -137,14 +141,14 @@
 							<option value="1000054">Warehouse IC Manager</option>
 							<option value="1000000">Velocity Admin</option> -->
 
-					</select></li>
+							</select></li>
 
-					<li class="ui-field-contain" data-shadow="false"
-						data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-						data-iconpos="right" data-theme="c"><label for="select-org">Org</label>
-						<select name="txt_organization" id="txt_organization"
-						data-native-menu="false" data-mini="true">
-							<!-- <option value="0">*</option>
+							<li class="ui-field-contain" data-shadow="false"
+								data-iconshadow="false" data-wrapperels="div"
+								data-icon="arrow-r" data-iconpos="right" data-theme="c"><label
+								for="select-org">Org</label> <select name="txt_organization"
+								id="txt_organization" data-native-menu="false" data-mini="true">
+									<!-- <option value="0">*</option>
 							<option value="1000019">Amsterdam</option>
 							<option value="1000003">Austin</option>
 							<option value="1000020">Japan</option>
@@ -153,40 +157,43 @@
 							<option value="1000025">FE_MADC</option>
 							<option value="1000026">FE EMEADC</option>
 							<option value="1000027">FE APDC</option> -->
-					</select></li>
+							</select></li>
 
-					<li class="ui-field-contain" data-shadow="false"
-						data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-						data-iconpos="right" data-theme="c"><label
-						for="select-warehouse">WH</label> <select name="txt_warehouse"
-						id="txt_warehouse" data-native-menu="false" data-mini="true">
-					</select></li>
+							<li class="ui-field-contain" data-shadow="false"
+								data-iconshadow="false" data-wrapperels="div"
+								data-icon="arrow-r" data-iconpos="right" data-theme="c"><label
+								for="select-warehouse">WH</label> <select name="txt_warehouse"
+								id="txt_warehouse" data-native-menu="false" data-mini="true">
+							</select></li>
 
-					<li class="ui-field-contain" data-shadow="false"
-						data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-						data-iconpos="right" data-theme="c"><label
-						for="select-imgqua">Img</label> <select name="txt_imgQua"
-						id="txt_imgQua" data-native-menu="false" data-mini="true">
-							<option value="50">50% (low)</option>
-							<option value="75">75% (default)</option>
-							<option value="80">80% (high)</option>
-							<option value="90">90% (higher)</option>
-							<option value="100">100% (highest)</option>
-					</select></li>
-					<li class="ui-field-contain" data-shadow="false"
-						data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-						data-iconpos="right" data-theme="c"><label
-						for="select-editApp">Img Editor</label> <select name="txt_editApp"
-						id="txt_editApp" data-native-menu="false" data-mini="true">
-							<option value="Vision">Vision</option>
-							<option value="Aviary">Aviary</option>
-					</select></li>
-					<li data-shadow="false" data-iconshadow="false"
-						data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
-						data-theme="c"><input id="btn_setting_save" type="submit"
-						data-inline="true" value="Save" data-theme="a" data-mini="true"></li>
-				</ul>
-			</form>
+							<li class="ui-field-contain" data-shadow="false"
+								data-iconshadow="false" data-wrapperels="div"
+								data-icon="arrow-r" data-iconpos="right" data-theme="c"><label
+								for="select-imgqua">Img</label> <select name="txt_imgQua"
+								id="txt_imgQua" data-native-menu="false" data-mini="true">
+									<option value="50">50% (low)</option>
+									<option value="75">75% (default)</option>
+									<option value="80">80% (high)</option>
+									<option value="90">90% (higher)</option>
+									<option value="100">100% (highest)</option>
+							</select></li>
+							<li class="ui-field-contain" data-shadow="false"
+								data-iconshadow="false" data-wrapperels="div"
+								data-icon="arrow-r" data-iconpos="right" data-theme="c"><label
+								for="select-editApp">Img Editor</label> <select
+								name="txt_editApp" id="txt_editApp" data-native-menu="false"
+								data-mini="true">
+									<option value="Vision">Vision</option>
+									<option value="Aviary">Aviary</option>
+							</select></li>
+							<li data-shadow="false" data-iconshadow="false"
+								data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
+								data-theme="c"><input id="btn_setting_save" type="submit"
+								data-inline="true" value="Save" data-theme="a" data-mini="true"></li>
+						</ul>
+					</form>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -242,7 +249,7 @@ End of Home page
 				<li class="ui-field-contain" data-shadow="false"
 					data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
 					data-iconpos="right" data-theme="c"><label for="select-server">Release
-						Date: 5th May, 2015</label></li>
+						Date: 20th May, 2015</label></li>
 			</ul>
 		</div>
 	</div>
@@ -356,7 +363,7 @@ End of MR line page
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
 					<li><a href="#pg_inspection" data-icon="arrow-l"
-						data-shadow="false" data-wrapperels="span" data-theme="a"
+						data-shadow="false" data-wrapperels="span" data-rel="back" data-theme="a"
 						title="Back">MRLines</a></li>
 					<li><a href="#" id="btn_finish_mr" data-icon="check"
 						data-shadow="false" data-wrapperels="span" data-theme="a"
@@ -405,7 +412,6 @@ End of Inspection page
 		<div data-role="popup" id="pop_file_actions" data-corners="true"
 			data-shadow="false" data-theme="b">
 			<ul data-role="listview" data-inset="true">
-				<li data-role="list-divider">Choose an action</li>
 				<li><a href="#" data-theme="b" class="ui-icon-edit"
 					id="btn_edit_file">Edit</a></li>
 				<li><a href="#" data-theme="b" class="ui-icon-delete"
@@ -414,19 +420,22 @@ End of Inspection page
 		</div>
 		<div data-role="panel" data-theme="c" id="pnl_file_sources"
 			data-position="right">
-			<ul data-role="listview" data-theme="c">
-				<li data-shadow="false" data-iconshadow="false"
-					data-wrapperels="div" data-icon="grid" data-iconpos="right"
-					data-theme="c"><a href="#" id="btn_pic_gallery">Gallery</a></li>
-				<li data-shadow="false" data-iconshadow="false"
-					data-wrapperels="div" data-icon="camera" data-iconpos="right"
-					data-theme="c"><a href="#" id="btn_pic_camera">Camera</a></li>
-				<li data-icon="cloud" data-shadow="false" data-iconshadow="false"
-					data-wrapperels="div" data-iconpos="right" data-theme="c"><a
-					href="#pg_file_explorer" data-rel="close">File Explorer</a></li>
-			</ul>
+			<div class="ui-panel-wrapper">
+				<div class="ui-content">
+					<ul data-role="listview" data-theme="c">
+						<li data-shadow="false" data-iconshadow="false"
+							data-wrapperels="div" data-icon="grid" data-iconpos="right"
+							data-theme="c"><a href="#" id="btn_pic_gallery">Gallery</a></li>
+						<li data-shadow="false" data-iconshadow="false"
+							data-wrapperels="div" data-icon="camera" data-iconpos="right"
+							data-theme="c"><a href="#" id="btn_pic_camera">Camera</a></li>
+						<li data-icon="cloud" data-shadow="false" data-iconshadow="false"
+							data-wrapperels="div" data-iconpos="right" data-theme="c"><a
+							href="#pg_file_explorer" data-rel="close">File Explorer</a></li>
+					</ul>
+				</div>
+			</div>
 		</div>
-
 		<div data-role="footer" data-position="fixed" data-theme="c">
 			<div data-role="navbar">
 				<div class="ui-grid-a">
@@ -468,20 +477,6 @@ End of Inspection page
 					data-inset="fasle"></li>
 			</ul>
 		</div>
-		<!-- 
-		<div data-role="popup" id="prefixModify" data-theme="c"
-			class="ui-corner-all">
-			<div>
-				<div data-role="header" class="ui-header " data-theme="b">
-					<h1 class="ui-title">Prefix</h1>
-					<a href="#" data-shadow="false" id="btn_update_prefix"
-						class="ui-btn-right ui-btn ui-btn-c ui-icon-edit ui-btn-icon-right ui-corner-all ui-btn-icon-notext"
-						data-rel="back"></a>
-				</div>
-				
-				
-			</div>
-		</div> -->
 	</div>
 	<!-------------------------------------------------------------
 End of Gallery page
@@ -525,19 +520,21 @@ Start of File Explorer page
 			</ul>
 		</div>
 
-		<div data-role="panel" data-position="left" data-theme="c"
+		<div data-role="panel" data-position="left" data-theme="b"
 			id="pnl_selected_files">
-			<div class="ui-content img-gallery">
-				<h3 class="ui-bar ui-bar-c">Selected Files</h3>
-				<ul data-role="listview" id="ls_sel_files" data-inset="false">
-				</ul>
+			<div class="ui-panel-wrapper">
+				<div class="ui-content img-gallery">
+					<h3 class="ui-bar ui-bar-c">Selected Files</h3>
+					<ul data-role="listview" id="ls_sel_files" data-theme="b"
+						data-inset="false">
+					</ul>
+				</div>
 			</div>
 		</div>
 
 		<div data-role="popup" id="pop_fileEplorer_actions"
 			data-corners="true" data-shadow="false" data-theme="b">
 			<ul data-role="listview" data-inset="true">
-				<li data-role="list-divider">Choose an action</li>
 				<li><a href="#" data-theme="b" class="ui-icon-edit"
 					id="btn_FEedit_file">Edit</a></li>
 				<li><a href="#" data-theme="b" class="ui-icon-delete"
@@ -549,8 +546,12 @@ Start of File Explorer page
 			data-theme="a">
 			<div data-role="navbar" data-iconpos="left" data-theme="a">
 				<ul data-theme="a">
+					<li><a href="#pg_gallery" data-icon="arrow-l"
+						data-shadow="false" data-wrapperels="span" title="Back"
+						data-rel="back">Back</a></li>
 					<li><a href="#" data-icon="check" data-shadow="false"
-						data-wrapperels="span" id="btn_finish_file_selection" title="Back">Done</a></li>
+						data-wrapperels="span" id="btn_finish_file_selection"
+						title="Finish">Done</a></li>
 					<li><a href="#" id="btn_reload_files" data-icon="refresh"
 						data-shadow="false" data-wrapperels="span" title="Clear Selected">Reload</a></li>
 					<li><a href="#" id="btn_file_view_mode"
@@ -570,8 +571,6 @@ Start of Crop page
 	<div id="pg_img_editor" data-role="page" data-theme="c">
 		<div data-role="footer" data-fullscreen="false" data-position="fixed">
 			<div data-role="navbar" data-iconpos="left">
-
-
 
 				<div id="crop-toolbar" data-theme="b" class="ui-grid-a">
 					<!-- Class added to the wrapper -->
@@ -644,19 +643,14 @@ Start of Crop page
 						data-theme="a" title="save">Save</a></li>
 				</ul>
 			</div>
-
 		</div>
-
 
 		<div data-role="main" class="ui-content">
 			<div id="edit-image-container" class="ui-block-a edit-img-container"></div>
 			<div class="ui-grid-solo cropper-container">
 				<div id="crop-image-container" class="ui-block-a img-container"></div>
-				<!-- <img id="img_editable"></img> -->
-				<!-- <canvas id="edit-canvase"></canvas> -->
 			</div>
 		</div>
-
 	</div>
 
 	<!-------------------------------------------------------------
