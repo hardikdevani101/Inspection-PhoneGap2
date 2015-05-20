@@ -538,6 +538,10 @@ body {
 	}
 }
 
+.ui-page {
+	-webkit-backface-visibility: hidden;
+}
+
 .img-gallery-listview {
 	padding: 0em !important;
 }
@@ -849,4 +853,193 @@ body .ui-body-c, body .ui-overlay-c {
 
 .ui-panel-inner {
 	padding: 0em !important;
+}
+
+.ui-shadow, .ui-btn-up-a, .ui-btn-hover-a, .ui-btn-down-a, .ui-body-b,
+	.ui-btn-up-b, .ui-btn-hover-b, .ui-btn-down-b, .ui-bar-c, .ui-body-c,
+	.ui-btn-up-c, .ui-btn-hover-c, .ui-btn-down-c, .ui-bar-c, .ui-body-d,
+	.ui-btn-up-d, .ui-btn-hover-d, .ui-btn-down-d, .ui-bar-d, .ui-body-e,
+	.ui-btn-up-e, .ui-btn-hover-e, .ui-btn-down-e, .ui-bar-e,
+	.ui-overlay-shadow, .ui-shadow, .ui-btn-active, .ui-body-a, .ui-bar-a {
+	text-shadow: none !important;
+	box-shadow: none !important;
+	-webkit-box-shadow: none !important;
+}
+
+/* disable shadows for better android performance */
+.ui-body-a, .ui-bar-a, .ui-btn-up-a, .ui-btn-hover-a, .ui-btn-down-a,
+	.ui-body-b, .ui-bar-b, .ui-btn-up-b, .ui-btn-hover-b, .ui-btn-down-b,
+	.ui-body-c, .ui-bar-c, .ui-btn-up-c, .ui-btn-hover-c, .ui-btn-down-c,
+	.ui-body-d, .ui-bar-d, .ui-btn-up-d, .ui-btn-hover-d, .ui-btn-down-d,
+	.ui-body-e, .ui-bar-e, .ui-btn-up-e, .ui-btn-hover-e, .ui-btn-down-e,
+	.ui-shadow-inset, .ui-icon-shadow, .ui-focus, .ui-overlay-shadow,
+	.ui-shadow, .ui-btn-active, * {
+	text-shadow: none !important;
+	box-shadow: none !important;
+	-moz-box-shadow: none !important;
+	-webkit-box-shadow: none !important;
+}
+
+.listview li {translateZ (0);
+	
+}
+
+/* Force list items to be cached
+   See: cubiq.org/you-shall-not-flicker */
+ul.ui-listview li {
+	-webkit-transition-duration: 0;
+	-webkit-transform: translate3d(0, 0, 0);
+}
+
+/* corner rounding classes
+-----------------------------------------------------------------------------------------------------------*/
+.ui-corner-tl {
+	-moz-border-radius-topleft: 0 !important /*{global-radii-blocks}*/;
+	-webkit-border-top-left-radius: 0 !important /*{global-radii-blocks}*/;
+	border-top-left-radius: 0 !important /*{global-radii-blocks}*/;
+}
+
+.ui-corner-tr {
+	-moz-border-radius-topright: 0 !important /*{global-radii-blocks}*/;
+	-webkit-border-top-right-radius: 0 !important /*{global-radii-blocks}*/;
+	border-top-right-radius: 0 !important /*{global-radii-blocks}*/;
+}
+
+.ui-corner-bl {
+	-moz-border-radius-bottomleft: 0 !important /*{global-radii-blocks}*/;
+	-webkit-border-bottom-left-radius: 0 !important
+		/*{global-radii-blocks}*/;
+	border-bottom-left-radius: 0 !important /*{global-radii-blocks}*/;
+}
+
+.ui-corner-br {
+	-moz-border-radius-bottomright: 0 !important /*{global-radii-blocks}*/;
+	-webkit-border-bottom-right-radius: 0 !important
+		/*{global-radii-blocks}*/;
+	border-bottom-right-radius: 0 !important /*{global-radii-blocks}*/;
+}
+
+.ui-corner-top {
+	-moz-border-radius-topleft: 0 !important /*{global-radii-blocks}*/;
+	-webkit-border-top-left-radius: 0 !important /*{global-radii-blocks}*/;
+	border-top-left-radius: 0 !important /*{global-radii-blocks}*/;
+	-moz-border-radius-topright: 0 !important /*{global-radii-blocks}*/;
+	-webkit-border-top-right-radius: 0 !important /*{global-radii-blocks}*/;
+	border-top-right-radius: 0 !important /*{global-radii-blocks}*/;
+}
+
+.ui-corner-bottom {
+	-moz-border-radius-bottomleft: 0 !important /*{global-radii-blocks}*/;
+	-webkit-border-bottom-left-radius: 0 !important
+		/*{global-radii-blocks}*/;
+	border-bottom-left-radius: 0 !important /*{global-radii-blocks}*/;
+	-moz-border-radius-bottomright: 0 !important /*{global-radii-blocks}*/;
+	-webkit-border-bottom-right-radius: 0 !important
+		/*{global-radii-blocks}*/;
+	border-bottom-right-radius: 0 !important /*{global-radii-blocks}*/;
+}
+
+.ui-corner-right {
+	-moz-border-radius-topright: 0 !important /*{global-radii-blocks}*/;
+	-webkit-border-top-right-radius: 0 !important /*{global-radii-blocks}*/;
+	border-top-right-radius: 0 !important /*{global-radii-blocks}*/;
+	-moz-border-radius-bottomright: 0 !important /*{global-radii-blocks}*/;
+	-webkit-border-bottom-right-radius: 0 !important
+		/*{global-radii-blocks}*/;
+	border-bottom-right-radius: 0 !important /*{global-radii-blocks}*/;
+}
+
+.ui-corner-left {
+	-moz-border-radius-topleft: 0 !important /*{global-radii-blocks}*/;
+	-webkit-border-top-left-radius: 0 !important /*{global-radii-blocks}*/;
+	border-top-left-radius: 0 !important /*{global-radii-blocks}*/;
+	-moz-border-radius-bottomleft: 0 !important /*{global-radii-blocks}*/;
+	-webkit-border-bottom-left-radius: 0 !important
+		/*{global-radii-blocks}*/;
+	border-bottom-left-radius: 0 !important /*{global-radii-blocks}*/;
+}
+
+.ui-corner-all {
+	-moz-border-radius: 0 !important /*{global-radii-blocks}*/;
+	-webkit-border-radius: 0 !important /*{global-radii-blocks}*/;
+	border-radius: 0 !important /*{global-radii-blocks}*/;
+}
+
+.ui-corner-none {
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+}
+
+.ui-overlay-shadow {
+	-moz-box-shadow: 0px 0px 0px rgba(0, 0, 0, 0) !important;
+	-webkit-box-shadow: 0px 0px 0px rgba(0, 0, 0, 0) !important;
+	box-shadow: 0px 0px 0px rgba(0, 0, 0, 0) !important;
+}
+
+.ui-shadow {
+	-moz-box-shadow: 0px 0px 0px /*{global-box-shadow-size}*/  			
+		rgba(0, 0, 0, 0) /*{global-box-shadow-color}*/ !important;
+	-webkit-box-shadow: 0px 0px 0px /*{global-box-shadow-size}*/  		
+		rgba(0, 0, 0, 0) /*{global-box-shadow-color}*/ !important;
+	box-shadow: 0px 0px 0px /*{global-box-shadow-size}*/  				
+		rgba(0, 0, 0, 0) /*{global-box-shadow-color}*/ !important;
+}
+
+.ui-bar-a .ui-shadow, .ui-bar-b .ui-shadow, .ui-bar-c .ui-shadow {
+	-moz-box-shadow: 0px 0px 0 rgba(255, 255, 255, 0) !important;
+	-webkit-box-shadow: 0px 0px 0 rgba(255, 255, 255, 0) !important;
+	box-shadow: 0px 0px 0 rgba(255, 255, 255, 0) !important;
+}
+
+.ui-shadow-inset {
+	-moz-box-shadow: inset 0px 0px 0px rgba(0, 0, 0, 0) !important;
+	-webkit-box-shadow: inset 0px 0px 0px rgba(0, 0, 0, 0) !important;
+	box-shadow: inset 0px 0px 0px rgba(0, 0, 0, 0) !important;
+}
+
+.ui-icon-shadow {
+	-moz-box-shadow: 0px 0px 0 rgba(255, 255, 255, 0) !important;
+	-webkit-box-shadow: 0px 0px 0 rgba(255, 255, 255, 0) !important;
+	box-shadow: 0px 0px 0 rgba(255, 255, 255, 0) !important;
+}
+
+/* Focus state - set here for specificity
+-----------------------------------------------------------------------------------------------------------*/
+.ui-focus {
+	-moz-box-shadow: 0px 0px 0px #387bbe
+		/*{global-active-background-color}*/ !important;
+	-webkit-box-shadow: 0px 0px 0px #387bbe
+		/*{global-active-background-color}*/ !important;
+	box-shadow: 0px 0px 0px #387bbe /*{global-active-background-color}*/ 
+		!important;
+}
+
+/* unset box shadow in browsers that don't do it right
+-----------------------------------------------------------------------------------------------------------*/
+.ui-mobile-nosupport-boxshadow * {
+	-moz-box-shadow: none !important !important !important;
+	-webkit-box-shadow: none !important !important !important;
+	box-shadow: none !important !important !important;
+}
+
+/* ...and bring back focus */
+.ui-mobile-nosupport-boxshadow .ui-focus {
+	outline-width: 0px !important !important;
+}
+
+.ui-field-contain {
+	border-bottom-width: 0px !important;
+}
+
+.ui-slider-track.ui-mini .ui-slider-handle {
+  height: 30px !important;
+  width: 30px !important;
+  margin: -15px 0 0 -15px !important;
+  background: rgb(240, 200, 39) !important;
+}
+
+.ui-slider-track .ui-btn.ui-slider-handle {
+  height: 30px !important;
+  width: 30px !important;
 }

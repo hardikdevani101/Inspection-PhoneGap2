@@ -156,7 +156,7 @@ ImageEditorPage.prototype.init = function() {
 	});
 
 	$("#btn_skip_edit").on("tap", function() {
-		$.mobile.changePage("#pg_gallery");
+		$.mobile.changePage("#pg_gallery",{'reverse':true});
 	});
 
 	$("#btn_add_watermark").on("tap", function() {
