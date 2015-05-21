@@ -154,9 +154,6 @@ ImageEditorPage.prototype.init = function() {
 	var _self = this;
 	_self.el_cropToolbar = $("#crop-toolbar", _self.context);
 	_self.el_editToolbar = $("#edit-toolbar", _self.context);
-	_self.el_sliderBrightness = $("#slider-brightness", _self.context);
-	_self.el_sliderContrast = $("#slider-contrast", _self.context);
-	_self.el_sliderCrop = $("#slider-crop", _self.context);
 	_self.el_btnSkipEdit = $("#btn_skip_edit", _self.context);
 	_self.el_btnAddWatermark = $("#btn_add_watermark", _self.context);
 	_self.el_btnReset = $("#btn_reset", _self.context);
@@ -179,8 +176,11 @@ ImageEditorPage.prototype.init = function() {
 		_self.loadEditableImage();
 		_self.loadCropableImage();
 
-		_self.el_sliderBrightness.off("slidestop");
-		_self.el_sliderBrightness.on("slidestop", function(event) {
+		_self.el_sliderBrightness = $("#slider-brightness", _self.context);
+		_self.el_sliderContrast = $("#slider-contrast", _self.context);
+		_self.el_sliderCrop = $("#slider-crop", _self.context);
+		
+		_self.el_sliderBrightness.on("slidestop", function(event, ui) {
 			_self.brightness = event.target.value;
 			_self.onBrightnessChange(event);
 			event.preventDefault();
@@ -188,7 +188,7 @@ ImageEditorPage.prototype.init = function() {
 		});
 
 		_self.el_sliderContrast.off("slidestop");
-		_self.el_sliderContrast.on("slidestop", function(event) {
+		_self.el_sliderContrast.on("slidestop", function(event, ui) {
 			_self.contrast = event.target.value;
 			_self.onContrastChange(event);
 			event.preventDefault();
@@ -196,12 +196,13 @@ ImageEditorPage.prototype.init = function() {
 		});
 
 		_self.el_sliderCrop.off("slidestop");
-		_self.el_sliderCrop.on("slidestop", function(event) {
+		_self.el_sliderCrop.on("slidestop", function(event, ui) {
 			_self.currentCropSize = event.target.value;
 			_self.onCropSizeChange(event);
 			event.preventDefault();
 			return false;
 		});
+
 		event.preventDefault();
 		return false;
 	});
@@ -296,9 +297,9 @@ ImageEditorPage.prototype.init = function() {
 };
 
 ImageEditorPage.prototype.enableCropMode = function() {
+	var _self = this;
 	_self.el_cropImgContainer.show();
 	_self.el_editImgContainer.hide();
-	var _self = this;
 	if (!_self.isCropperOn) {
 		_self.initCropMode();
 	}
@@ -316,7 +317,7 @@ ImageEditorPage.prototype.onCropSizeChange = function(event) {
 ImageEditorPage.prototype.onContrastChange = function(event) {
 	var _self = this;
 	var contraValue = event.target.value - _self.cValue;
-	_self.gcanvas = $("#edit_img_src","#edit-image-container")[0];
+	_self.gcanvas = $("#edit_img_src", "#edit-image-container")[0];
 	_self.editCtx = _self.gcanvas.getContext('2d');
 	var contraImageData = _self.editCtx.getImageData(0, 0, _self.gcanvas.width,
 			_self.gcanvas.height);
@@ -333,7 +334,7 @@ ImageEditorPage.prototype.onContrastChange = function(event) {
 
 ImageEditorPage.prototype.onBrightnessChange = function(event) {
 	var _self = this;
-	_self.gcanvas = $("#edit_img_src","#edit-image-container")[0];
+	_self.gcanvas = $("#edit_img_src", "#edit-image-container")[0];
 	_self.editCtx = _self.gcanvas.getContext('2d');
 	var brightValue = event.target.value - _self.bValue;
 	var brightImageData = _self.editCtx.getImageData(0, 0, _self.gcanvas.width,
@@ -350,9 +351,9 @@ ImageEditorPage.prototype.onBrightnessChange = function(event) {
 
 ImageEditorPage.prototype.initCropMode = function() {
 	var _self = this;
-	var $image = $('#crop_img_src',"#crop-image-container"), $dataX = $('#dataX'), $dataY = $('#dataY'), $dataHeight = $('#dataHeight'), $dataWidth = $('#dataWidth'), $dataRotate = $('#dataRotate');
-	_self.corpImgContainer.css('max-width', _self.cropImageW);
-	_self.corpImgContainer.css('max-height', _self.cropImageH);
+	var $image = $('#crop_img_src', "#crop-image-container"), $dataX = $('#dataX'), $dataY = $('#dataY'), $dataHeight = $('#dataHeight'), $dataWidth = $('#dataWidth'), $dataRotate = $('#dataRotate');
+	_self.el_cropImgContainer.css('max-width', _self.cropImageW);
+	_self.el_cropImgContainer.css('max-height', _self.cropImageH);
 	var options = {
 		rotatable : true,
 		zoomable : true,
@@ -416,7 +417,7 @@ ImageEditorPage.prototype.setCropBoxData = function(param) {
 
 ImageEditorPage.prototype.onEditFinish = function() {
 	var _self = this;
-	_self.gcanvas = $("#edit_img_src","#edit-image-container")[0];
+	_self.gcanvas = $("#edit_img_src", "#edit-image-container")[0];
 	var watermarkImage = _self.app.watermark64;
 	if (_self.selectedWM) {
 		var findResult = jQuery.grep(_self.app.appCache.waterMarkImgs,
