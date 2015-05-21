@@ -191,12 +191,11 @@ SettingsPage.prototype.onUpdate = function() {
 
 SettingsPage.prototype.onOrgChange = function() {
 	var _self = this;
-	var el_txWH = $("#txt_warehouse", _self.context);
-	el_txWH.empty();
-	var org_id = el_txWH.val();
+	_self.el_txWH.empty();
+	var org_id = _self.el_txOrg.val();
 	if (org_id == null || org_id == 0) {
 		for (var i = 0; i < app.appCache.warehouseList.length; i++) {
-			el_txWH.append(new Option(app.appCache.warehouseList[i].name,
+			_self.el_txWH.append(new Option(app.appCache.warehouseList[i].name,
 					app.appCache.warehouseList[i].warehouseid));
 		}
 	} else {
@@ -204,10 +203,11 @@ SettingsPage.prototype.onOrgChange = function() {
 			return e.orgid == org_id;
 		});
 		for (var i = 0; i < result.length; i++) {
-			el_txWH.append(new Option(result[i].name, result[i].warehouseid));
+			_self.el_txWH.append(new Option(result[i].name,
+					result[i].warehouseid));
 		}
 	}
-	el_txWH.selectmenu('refresh', true);
+	_self.el_txWH.selectmenu('refresh', true);
 }
 
 SettingsPage.prototype.onServerChange = function() {

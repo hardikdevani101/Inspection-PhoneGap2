@@ -33,6 +33,8 @@ InspLinesPage.prototype.init = function() {
 
 	_self.el_ispProgLog.on('tap', function() {
 		$("#pop_process_log", _self.contextInspDetail).popup('open')
+		event.preventDefault();
+		return false;
 	});
 
 	$("#btn_retry_attach", "#insp_process_log").on('tap', function(event) {
@@ -68,12 +70,15 @@ InspLinesPage.prototype.init = function() {
 			var el_attachItems = $("#attach_items", "#insp_process_log");
 			el_attachItems.html(items);
 			el_attachItems.listview("refresh");
+			return false;
 		}
 	});
 
 	$('#btn_refresh_mrlines', _self.context).on("click", function() {
 		_self.app.appCache.mrLines = [];
 		_self.loadMRLines();
+		event.preventDefault();
+		return false;
 	});
 
 	var contextPageInspDetail = $(_self.contextInspDetail);
@@ -83,15 +88,21 @@ InspLinesPage.prototype.init = function() {
 				'selected_mrline' : _self.app.appCache.session.m_inoutline_id
 			});
 		}, 10);
+		event.preventDefault();
+		return false;
 	});
 
 	$('#btn_sync_insp', _self.contextInspDetail).on("click", function() {
 		_self.app.appCache.inspLines = [];
 		_self.syncInspLines();
+		event.preventDefault();
+		return false;
 	});
 
 	$('#btn_finish_mr', _self.contextInspDetail).on('click', function() {
 		_self.onFinishedCalled();
+		event.preventDefault();
+		return false;
 	});
 }
 

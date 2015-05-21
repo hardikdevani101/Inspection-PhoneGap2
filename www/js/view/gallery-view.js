@@ -494,6 +494,7 @@ GalleryPage.prototype.getFileViewHtml = function(file) {
 	if (isImage) {
 		classname = 'image-data-source';
 	}
+	console.log(file.name + ">>>>>" + file.dataSource + ">>>>>" + isImage);
 	var line = '<li data-isimg="' + isImage + '" data-isup="' + file.uploded
 			+ '" data-storage="' + file.dataStorage + '"  data-name="'
 			+ file.name + '"data-id="' + file.filePath
@@ -583,31 +584,56 @@ GalleryPage.prototype.getGalleryImage = function() {
 GalleryPage.prototype.onPhotoDataSuccess = function(imageURI) {
 	var _self = this;
 
-	if (_self.app.appCache.settingInfo.img_editor == 'Vision') {
+//	if (_self.app.appCache.settingInfo.img_editor == 'Vision') {
+//
+//		_self.app.appFS.getFileByURL({
+//			fileURI : imageURI
+//		}, function(param) {
+//			_self.app.imageEditor.setup({
+//				'sourceInfo' : {},
+//				img64 : param.data,
+//				watermark : $('select[name="select-gallery-waterMark"]').val()
+//			}, 'Y');
+//		});
+//		$.mobile.changePage("#pg_img_editor");
+//	} else {
+//
+//		_self.app.aviaryEdit.setup({
+//			'sourceInfo' : {},
+//			imageURI : imageURI,
+//			watermark : $('select[name="select-gallery-waterMark"]').val()
+//		});
+//
+//		// _self.app.aviaryEdit.setup({}, imageURI);
+//		_self.app.aviaryEdit.edit();
+//
+//	}
 
-		_self.app.appFS.getFileByURL({
-			fileURI : imageURI
-		}, function(param) {
-			_self.app.imageEditor.setup({
-				'sourceInfo' : {},
-				width : $("#pg_gallery .ui-panel-wrapper").width(),
-				height : $("#pg_gallery .ui-panel-wrapper").height(),
-				img64 : param.data,
-				watermark : $('select[name="select-gallery-waterMark"]').val()
-			});
-		});
-		$.mobile.changePage("#pg_img_editor");
-	} else {
-
+	if (_self.app.appCache.settingInfo.img_editor
+			&& _self.app.appCache.settingInfo.img_editor != 'Vision') {
 		_self.app.aviaryEdit.setup({
-			'sourceInfo' : {},
-			imageURI : imageURI,
-			watermark : $('select[name="select-gallery-waterMark"]').val()
+			'sourceInfo' : sourceInfo[0],
+			imageURI : sourceInfo[0].filePath,
+			watermark : ($('select[name="select-gallery-waterMark"]').val())
 		});
-
-		// _self.app.aviaryEdit.setup({}, imageURI);
 		_self.app.aviaryEdit.edit();
-
+	} else {
+		_self.app.appFS
+				.getFileByURL(
+						{
+							fileURI : imageURI
+						},
+						function(param) {
+							_self.app.imageEditor
+									.setup(
+											{
+												img64 : imgData,
+												'sourceInfo' : sourceInfo[0],
+												watermark : ($('select[name="select-gallery-waterMark"]')
+														.val())
+											}, "Y");
+						});
+		$.mobile.changePage("#pg_img_editor");
 	}
 
 }

@@ -104,25 +104,28 @@ DB.prototype.getUploadedInspEntries = function(param, callBack) {
 
 DB.prototype.doGalleryEntry = function(fileInfo) {
 	var _self = this;
+	var param = [];
+	console.log(">>>>" + fileInfo.oldURI);
+	var sqlQuery = " select * from vis_gallery ";
+	var whereSQL = ' where file="' + fileInfo.oldURI + '"';
+	;
+	param.push(fileInfo.oldURI);
+	if (fileInfo.isMR == "N") {
+		whereSQL += ' and isMR="N" and insp_line="' + fileInfo.inspID + '"';
+		param.push(fileInfo.inspID);
+	} else {
+		whereSQL += ' and isMR="Y" and insp_line="' + fileInfo.inspID + '"';
+		param.push(fileInfo.inspID);
+	}
+	console.log(sqlQuery + whereSQL);
+
 	_self.dbstore.transaction(function(tx) {
-		var param = [];
-		var sqlQuery = " select * from vis_gallery ";
-		var whereSQL = " where file=?";
-		param.push(fileInfo.oldURI);
-		if (fileInfo.isMR == "N") {
-			whereSQL += ' and isMR="N" and insp_line=?';
-			param.push(fileInfo.inspID);
-		} else {
-			whereSQL += ' and isMR="Y" and insp_line=?';
-			param.push(fileInfo.inspID);
-		}
-		console.log(sqlQuery + whereSQL);
-		tx.executeSql(sqlQuery + whereSQL, param, function(tx, results) {
+		tx.executeSql(sqlQuery + whereSQL, [], function(tx, results) {
 			if (results.rows.length > 0) {
 				sqlQuery = 'UPDATE vis_gallery SET name="' + fileInfo.fileName
 						+ '",file="' + fileInfo.filePath + '" ';
 				console.log(sqlQuery);
-				tx.executeSql(sqlQuery + whereSQL, param);
+				tx.executeSql(sqlQuery + whereSQL, []);
 			} else {
 				sqlQuery = 'INSERT INTO vis_gallery '
 						+ ' (mr_line,isMR,insp_line,name,file)' + ' VALUES ("'

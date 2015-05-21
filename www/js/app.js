@@ -28,22 +28,22 @@ App.prototype.onDeviceReady = function() {
 	// connectionStatus = navigator.onLine ? 'online' : 'offline';
 	// }, 100);
 	//	
-	$.mobile.defaultPageTransition = 'slide';
+	$.mobile.defaultPageTransition = 'none';
 	$.mobile.defaultDialogTransition = 'pop';
 	$("a").attr("data-transition", "slide");
 	$.support.touchOverflow = true;
 	$.mobile.touchOverflowEnabled = true;
 	$.fn.buttonMarkup.defaults.corners = false;
-	// $.mobile.transitionFallbacks.slideout = "none"
+	$.mobile.transitionFallbacks.slideout = "none"
 
 	if (navigator.userAgent.indexOf("Android") != -1) {
-		$.mobile.defaultPageTransition = 'slide';
+		$.mobile.defaultPageTransition = 'none';
 		$.mobile.defaultDialogTransition = 'pop';
 		$("a").attr("data-transition", "slide");
 		$.support.touchOverflow = true;
 		$.mobile.touchOverflowEnabled = true;
 		$.fn.buttonMarkup.defaults.corners = false;
-		// $.mobile.transitionFallbacks.slideout = "none"
+		$.mobile.transitionFallbacks.slideout = "none"
 	}
 
 	var _self = this;

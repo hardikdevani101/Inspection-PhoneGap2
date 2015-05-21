@@ -96,6 +96,7 @@ FS.prototype.getFile = function(path, success) {
 }
 
 FS.prototype.createVISFile = function(param) {
+	console.log(param.filePath);
 	var _self = this;
 	var prefix = "PS";
 	if (_self.app.appCache.prefixCache[param.mrLineID]) {
@@ -131,11 +132,15 @@ FS.prototype.createVISFile = function(param) {
 											writer.onwrite = function(evt) {
 												var fileFullPath = fileEntry
 														.toURL();
-												param['oldURI'] = param.filePath;
+												var oldFullPath = param.filePath;
+												console.log(oldFullPath);
+												param['oldURI'] = oldFullPath;
 												param.filePath = fileFullPath;
 												param['fileName'] = fileEntry.name;
-												if (_self.app.galleryview.inspFiles[param.inspID]) {
 
+												_self.app.appDB
+														.doGalleryEntry(param);
+												if (_self.app.galleryview.inspFiles[param.inspID]) {
 													findResult = [];
 													for (var i = 0; i < _self.app.galleryview.inspFiles[param.inspID].length; i++) {
 														item = _self.app.galleryview.inspFiles[param.inspID][i];
@@ -159,7 +164,7 @@ FS.prototype.createVISFile = function(param) {
 														item = {};
 														item['filePath'] = param.filePath;
 														item['name'] = fileEntry.name;
-														item['uploded'] = "N";
+														item['uploded'] = "F";
 														item['dataSource'] = "LS";
 														_self.app.galleryview.inspFiles[param.inspID]
 																.push(item);
@@ -167,11 +172,6 @@ FS.prototype.createVISFile = function(param) {
 													}
 													_self.app.appCache.imgCache[param.filePath] = param.fileData;
 												}
-
-												_self.app.appDB
-														.doGalleryEntry(param);
-												_self.app.galleryview
-														.renderInspFiles();
 											};
 											writer.write(binaryData);
 										}, _self.errorHandler);
