@@ -300,6 +300,9 @@
 				data.ctx.drawImage(data.source, 0, 0, data.source.width,
 						data.source.height, 0, 0, data.w, data.h);
 				// data.ctx.globalCompositeOperation = 'destination-out';
+				if (data.previewImgId != null) {
+					$('#' + data.previewImgId).attr('src', data.source.src);
+				}
 				var n = data.numParts;
 				while (n--)
 					data.parts[n] = 1;

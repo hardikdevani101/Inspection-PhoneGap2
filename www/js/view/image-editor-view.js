@@ -22,11 +22,11 @@ ImageEditorPage.prototype.rederBreadCrumb = function() {
 	$('#pg_cropView #btn_user').html(_self.app.appCache.settingInfo.username);
 };
 
-ImageEditorPage.prototype.setup = function(options, callBack) {
+ImageEditorPage.prototype.setup = function(options, isGallery) {
 	this.image64 = options.img64;
 	this.sourceInfo = options.sourceInfo;
 	this.selectedWM = options.watermark;
-	this.callBack = callBack;
+	_self.isGallery = isGallery;
 }
 
 ImageEditorPage.prototype.saveEditedImage = function() {
@@ -121,7 +121,9 @@ ImageEditorPage.prototype.reset = function() {
 	_self.isEditEnable = true;
 	$("#crop-toolbar").hide();
 	$("#edit-toolbar").show();
+
 	_self.corpperImage.cropper("destroy");
+	_self.corpperImage.cropper("reset");
 }
 
 ImageEditorPage.prototype.viewToggle = function() {
@@ -153,6 +155,25 @@ ImageEditorPage.prototype.init = function() {
 		_self.reload();
 		_self.loadEditableImage();
 		_self.loadCropableImage();
+
+		$("#slider-brightness").off("slidestop");
+		$("#slider-brightness").on("slidestop", function(event) {
+			_self.brightness = event.target.value;
+			_self.onBrightnessChange(event);
+		});
+
+		$("#slider-contrast").off("slidestop");
+		$("#slider-contrast").on("slidestop", function(event) {
+			_self.contrast = event.target.value;
+			_self.onContrastChange(event);
+		});
+
+		$("#slider-crop").off("slidestop");
+		$("#slider-crop").on("slidestop", function(event) {
+			_self.currentCropSize = event.target.value;
+			_self.onCropSizeChange(event);
+		});
+
 	});
 
 	$("#btn_skip_edit").on("tap", function() {
@@ -173,21 +194,6 @@ ImageEditorPage.prototype.init = function() {
 
 	$("#btn_crop").on("tap", function() {
 		_self.viewToggle();
-	});
-
-	$("#slider-brightness").on("slidestop", function(event) {
-		_self.brightness = event.target.value;
-		_self.onBrightnessChange(event);
-	});
-
-	$("#slider-contrast").on("slidestop", function(event) {
-		_self.contrast = event.target.value;
-		_self.onContrastChange(event);
-	});
-
-	$("#slider-crop").on("slidestop", function(event) {
-		_self.currentCropSize = event.target.value;
-		_self.onCropSizeChange(event);
 	});
 
 	$("#btn_zoom_plus").on("tap", function() {
@@ -268,10 +274,8 @@ ImageEditorPage.prototype.onContrastChange = function(event) {
 
 ImageEditorPage.prototype.onBrightnessChange = function(event) {
 	var _self = this;
-
 	_self.gcanvas = $("#edit_img_src")[0];
 	_self.editCtx = _self.gcanvas.getContext('2d');
-
 	var brightValue = event.target.value - _self.bValue;
 	var brightImageData = _self.editCtx.getImageData(0, 0, _self.gcanvas.width,
 			_self.gcanvas.height);
@@ -294,16 +298,11 @@ ImageEditorPage.prototype.initCropMode = function() {
 		rotatable : true,
 		zoomable : true,
 		touchDragZoom : true,
-		autoCropArea : 0.5,
-		strict : false,
-		guides : false,
-		highlight : false,
-		dragCrop : false,
 		minCanvasWidth : $image[0].width,
 		minCanvasHeight : $image[0].height,
 		maxContainerWidth : _self.cropImageW,
 		maxContainerHeight : _self.cropImageH,
-		aspectRatio : 16 / 9,
+		aspectRatio : 4 / 3,
 		crop : function(data) {
 			$dataX.val(Math.round(data.x));
 			$dataY.val(Math.round(data.y));
@@ -356,6 +355,7 @@ ImageEditorPage.prototype.setCropBoxData = function(param) {
 
 ImageEditorPage.prototype.onEditFinish = function() {
 	var _self = this;
+	_self.gcanvas = $("#edit_img_src")[0];
 	var watermarkImage = _self.app.watermark64;
 	if (_self.selectedWM) {
 		var findResult = jQuery.grep(_self.app.appCache.waterMarkImgs,
@@ -384,12 +384,17 @@ ImageEditorPage.prototype.onEditFinish = function() {
 			y = (nGcanvas.height - 20) - (watermark.height);
 			nGctx.drawImage(watermark, x, y);
 
-			if (_self.callBack) {
-				_self.callBack(_self.sourceInfo, nGcanvas.toDataURL());
-			} else {
+			console.log(_self.isGallery);
+			if (_self.isGallery == 'Y') {
 				_self.app.galleryview.onEditFinish(_self.sourceInfo, nGcanvas
 						.toDataURL());
+				$.mobile.changePage("#pg_gallery");
+			} else {
+				_self.app.fileExplorer.onEditFinish(_self.sourceInfo, nGcanvas
+						.toDataURL(),"Y");
+				$.mobile.changePage("#pg_file_explorer");
 			}
+
 		}
 	}
 }

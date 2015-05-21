@@ -228,14 +228,18 @@ GalleryPage.prototype.init = function() {
 		$("#prefixInpect").val($('#prefixInpectLine').html());
 	});
 
-	$(document).on("panelbeforeopen", "#pnl_file_sources", function(e, ui) {
-		$("#pnl_file_sources").enhanceWithin();
-	});
+	// $(document).on("panelbeforeopen", "#pnl_file_sources", function(e, ui) {
+	// $("#pnl_file_sources").enhanceWithin();
+	// });
 
 	$('#btn-add').on('click', function() {
-		$("#pnl_file_sources").panel("open");
-		$("#pnl_file_sources").trigger("updatelayout");
+		$("#pnl_file_sources").panel("toggle");
+		$("#pnl_file_sources").enhanceWithin();
+		$("#pnl_file_sources").panel({
+			disabled : false
+		});
 	});
+
 	$('#btn_update_prefix').on(
 			'click',
 			function() {
@@ -434,7 +438,9 @@ GalleryPage.prototype.onFileTap = function(event) {
 	var imgData = _self.app.appCache.imgCache[dataid];
 
 	_self.selectedFile = dataid;
-	if ($(event.delegateTarget).data('isimg')) {
+	console.log($(event.delegateTarget).data('isup'));
+	if ($(event.delegateTarget).data('isimg')
+			&& $(event.delegateTarget).data('isup') == 'F') {
 		$("#btn_edit_file").show();
 	} else {
 		$("#btn_edit_file").hide();
@@ -456,10 +462,8 @@ GalleryPage.prototype.onFileTap = function(event) {
 				});
 			} else {
 				_self.app.imageEditor.setup({
-					'sourceInfo' : sourceInfo[0],
-					width : $("#pg_gallery .ui-panel-wrapper").width(),
-					height : $("#pg_gallery .ui-panel-wrapper").height(),
 					img64 : imgData,
+					'sourceInfo' : sourceInfo[0],
 					watermark : ($('select[name="select-gallery-waterMark"]')
 							.val())
 				}, "Y");
@@ -490,10 +494,10 @@ GalleryPage.prototype.getFileViewHtml = function(file) {
 	if (isImage) {
 		classname = 'image-data-source';
 	}
-	var line = '<li data-isimg="' + isImage + '" data-storage="'
-			+ file.dataStorage + '"  data-name="' + file.name + '"data-id="'
-			+ file.filePath + '" class="file-placeholder ' + classname
-			+ '"><a data-rel="popup" href="#pop_file_actions">'
+	var line = '<li data-isimg="' + isImage + '" data-isup="' + file.uploded
+			+ '" data-storage="' + file.dataStorage + '"  data-name="'
+			+ file.name + '"data-id="' + file.filePath
+			+ '" class="file-placeholder ' + classname + '"><a href="#">'
 			+ '<img class="ui-li-thumb" src="' + fileData + '" /><h2>'
 			+ file.name + '</h2>';
 	if (file.uploded == 'T') {
@@ -521,16 +525,35 @@ GalleryPage.prototype.renderInspFiles = function() {
 				if (_self.isGridView) {
 					$('li[data-id="' + file.filePath + '"] .ui-icon-arrow-u')
 							.show();
-				} else {
-					$('#ls_inspFiles li[data-id="' + file.filePath + '"] a')
-							.removeClass("ui-icon-arrow-u");
 				}
 			}
 		});
+		$.each(_self.inspFiles[_self.line_id],
+				function(index, file) {
 
-		$("#ls_inspFiles .file-placeholder").bind("tap", function(event) {
-			_self.onFileTap(event);
-		});
+					$('#ls_inspFiles li[data-id="' + file.filePath + '"]').off(
+							'click');
+					$('#ls_inspFiles li[data-id="' + file.filePath + '"]').on(
+							"click", function(event) {
+								event.preventDefault();
+								console.log("file-placeholder tap >>>>>");
+								$("#pop_file_actions").popup("close");
+								$("#pop_file_actions").popup("open", {
+									x : event.clientX,
+									y : event.clientY
+								});
+								_self.onFileTap(event);
+								$("#pop_file_actions").enhanceWithin();
+							});
+				});
+		// $("#ls_inspFiles .file-placeholder").bind("tap", function(event) {
+		// console.log("file-placeholder tap >>>>>");
+		// $("#pop_file_actions").popup("open", {
+		// x : event.clientX,
+		// y : event.clientY
+		// });
+		// _self.onFileTap(event);
+		// });
 	}
 }
 

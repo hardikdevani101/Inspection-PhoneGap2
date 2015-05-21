@@ -36,10 +36,6 @@ FS.prototype.errorHandler = function(e) {
 
 FS.prototype.filelist = function(path, success) {
 	var _self = this;
-	console.log(path);
-	// if (path.endsWith('/')) {
-	// path = path.substring(0, path.length - 1);
-	// }
 
 	if (window.resolveLocalFileSystemURL) {
 		window.resolveLocalFileSystemURL(path, function(dirEntry) {
@@ -150,8 +146,6 @@ FS.prototype.createVISFile = function(param) {
 													}
 
 													if (findResult.length > 0) {
-														console
-																.log("Found image on cache");
 														$
 																.each(
 																		_self.app.galleryview.inspFiles[param.inspID],
@@ -162,10 +156,6 @@ FS.prototype.createVISFile = function(param) {
 																			}
 																		});
 													} else {
-														console
-																.log("not Found image on cache");
-														console
-																.log(param.fileName);
 														item = {};
 														item['filePath'] = param.filePath;
 														item['name'] = fileEntry.name;
@@ -231,34 +221,34 @@ FS.prototype.init = function() {
 		}, _self.errorHandler);
 	} else if (window.webkitRequestFileSystem) {
 		console.log('Found >> ' + window.webkitRequestFileSystem);
-//		window.requestFileSystem = window.webkitRequestFileSystem;
-//		window.webkitStorageInfo.requestQuota(window.PERSISTENT,
-//				50 * 1024 * 1024, function(grantedBytes) {
-//					window.requestFileSystem(window.PERSISTENT, 0, function(
-//							filesystem) {
-//						_self.fileSystem = filesystem;
-//						_self.rootURI = _self.fileSystem.root.toURL();
-//						if (_self.rootURI.endsWith('/')) {
-//							_self.rootURI = _self.rootURI.substring(0,
-//									_self.rootURI.length - 1);
-//						}
-//						filesystem.root.getDirectory('VIS_Inspection', {
-//							create : true
-//						}, function(filesystem) {
-//							console.log('VIS Directory');
-//							_self.vis_dir = filesystem;
-//							filesystem.getDirectory('VIS_FTP', {
-//								create : true
-//							}, function(filesystem) {
-//								console.log('VIS FTP');
-//								_self.vis_ftp_dir = filesystem;
-//							}, _self.errorHandler);
-//						}, _self.errorHandler);
-//					}, _self.errorHandler);
-//
-//				}, function(e) {
-//					console.log('Error', e);
-//				});
+		// window.requestFileSystem = window.webkitRequestFileSystem;
+		// window.webkitStorageInfo.requestQuota(window.PERSISTENT,
+		// 50 * 1024 * 1024, function(grantedBytes) {
+		// window.requestFileSystem(window.PERSISTENT, 0, function(
+		// filesystem) {
+		// _self.fileSystem = filesystem;
+		// _self.rootURI = _self.fileSystem.root.toURL();
+		// if (_self.rootURI.endsWith('/')) {
+		// _self.rootURI = _self.rootURI.substring(0,
+		// _self.rootURI.length - 1);
+		// }
+		// filesystem.root.getDirectory('VIS_Inspection', {
+		// create : true
+		// }, function(filesystem) {
+		// console.log('VIS Directory');
+		// _self.vis_dir = filesystem;
+		// filesystem.getDirectory('VIS_FTP', {
+		// create : true
+		// }, function(filesystem) {
+		// console.log('VIS FTP');
+		// _self.vis_ftp_dir = filesystem;
+		// }, _self.errorHandler);
+		// }, _self.errorHandler);
+		// }, _self.errorHandler);
+		//
+		// }, function(e) {
+		// console.log('Error', e);
+		// });
 	}
 }
 
@@ -292,8 +282,7 @@ FS.prototype.getFileName = function(tmpFile) {
 FS.prototype.uploadFile = function(file, mr_line, insp_line, isMR) {
 	var _self = this;
 	_self.fileSystem.root.getFile(file, null, function(fileEntry) {
-		_self.app.appFTPUtil.uploadFile(fileEntry, mr_line, insp_line,
-				isMR);
+		_self.app.appFTPUtil.uploadFile(fileEntry, mr_line, insp_line, isMR);
 	}, _self.errorHandler);
 }
 

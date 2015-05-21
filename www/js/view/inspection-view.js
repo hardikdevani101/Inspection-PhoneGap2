@@ -123,6 +123,7 @@ InspLinesPage.prototype.syncInspLines = function(callBack) {
 			} else {
 				_self.displayAlert();
 			}
+			_self.renderCounts();
 		}
 	}
 
@@ -141,6 +142,7 @@ InspLinesPage.prototype.syncInspLines = function(callBack) {
 			} else {
 				_self.displayAlert();
 			}
+			_self.renderCounts();
 		}
 	}
 
