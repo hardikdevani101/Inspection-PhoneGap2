@@ -3,6 +3,8 @@ var InspLinesPage = function(app) {
 	this.totalPendingItems = 0;
 	this.progressedItem = 0;
 	this.isAlertDisplay = false;
+	this.context = "#pg_inspection"
+	this.contextInspDetail = "#pg_inspection_detail";
 
 }
 
@@ -13,67 +15,82 @@ InspLinesPage.prototype.rederBreadCrumb = function() {
 
 InspLinesPage.prototype.init = function() {
 	var _self = this;
+	_self.contextPage = $(_self.context);
+	_self.el_ispProgLog = $("#insp_process_log", _self.contextInspDetail);
 
-	$(document).on(
-			"pagebeforeshow",
-			"#pg_inspection",
-			function() {
-				_self.rederBreadCrumb();
-				setTimeout(function() {
-					_self.loadMRLines();
-				}, 10);
+	_self.contextPage.on("pagebeforeshow", function() {
+		_self.rederBreadCrumb();
+		setTimeout(function() {
+			_self.loadMRLines();
+		}, 10);
 
-				$("#insp_process_log").hide();
-				if (_self.app.appFTPUtil.processLog.length > 0) {
-					$("#insp_process_log").html(
-							_self.app.appFTPUtil.processLog.length);
-					$("#insp_process_log").show();
-				}
-			});
-
-	$("#insp_process_log").on('tap', function() {
-		$("#pop_process_log").popup('open')
+		_self.el_ispProgLog.hide();
+		if (_self.app.appFTPUtil.processLog.length > 0) {
+			_self.el_ispProgLog.html(_self.app.appFTPUtil.processLog.length);
+			_self.el_ispProgLog.show();
+		}
 	});
 
-	$("#btn_retry_attach").on('tap', function() {
-		console.log('>>>>>>>>> Retry Attach')
-	})
+	_self.el_ispProgLog.on('tap', function() {
+		$("#pop_process_log", _self.contextInspDetail).popup('open')
+	});
 
-	$("#btn_retry_sync").on('tap', function() {
-		console.log('>>>>>>>>> Retry Sync')
-	})
+	$("#btn_retry_attach", "#insp_process_log").on('tap', function(event) {
+		_self = this;
+		$("#pop_process_log", _self.contextInspDetail).popup("close");
+		_self.onFinishedCalled();
+		event.preventDefault();
+		return false
+	});
 
-	$("#pop_process_log").bind({
+	$("#btn_retry_sync", "#insp_process_log").on('tap', function(event) {
+		_self = this;
+		$("#pop_process_log", _self.contextInspDetail).popup("close");
+		_self.syncInspLines();
+		event.preventDefault();
+		return false;
+	});
+
+	$("#pop_process_log", _self.contextInspDetail).bind({
 		popupbeforeposition : function(event, ui) {
+			var el_syncItems = $("#sync_items", "#insp_process_log");
 			var items = '<li data-role="list-divider">Sync Failed</li>';
 			if (_self.app.appFTPUtil.processLog) {
 				items += _self.getFTPProcessLog();
 			}
+			el_syncItems.html(items);
+			el_syncItems.listview("refresh");
+
+			var items = '<li data-role="list-divider">Attached Failed</li>';
 			if (_self.app.visionApi.processLog.attachImage) {
 				items += _self.getAttacheProcessLog();
 			}
-			$("#sync_items").html(items);
-			$('#sync_items').listview("refresh");
+			var el_attachItems = $("#attach_items", "#insp_process_log");
+			el_attachItems.html(items);
+			el_attachItems.listview("refresh");
 		}
 	});
 
-	$('#btn_refresh_mrlines').on("click", function() {
+	$('#btn_refresh_mrlines', _self.context).on("click", function() {
 		_self.app.appCache.mrLines = [];
 		_self.loadMRLines();
 	});
-	$(document).on("pagebeforeshow", "#pg_inspection_detail", function() {
+
+	var contextPageInspDetail = $(_self.contextInspDetail);
+	contextPageInspDetail.on("pagebeforeshow", function() {
 		setTimeout(function() {
 			_self.loadInspLines({
 				'selected_mrline' : _self.app.appCache.session.m_inoutline_id
 			});
 		}, 10);
 	});
-	$('#btn_sync_insp').on("click", function() {
+
+	$('#btn_sync_insp', _self.contextInspDetail).on("click", function() {
 		_self.app.appCache.inspLines = [];
 		_self.syncInspLines();
 	});
 
-	$('#btn_finish_mr').on('click', function() {
+	$('#btn_finish_mr', _self.contextInspDetail).on('click', function() {
 		_self.onFinishedCalled();
 	});
 }
@@ -101,9 +118,10 @@ InspLinesPage.prototype.getAttacheProcessLog = function() {
 InspLinesPage.prototype.displayAlert = function() {
 	var _self = this;
 	if (_self.app.appFTPUtil.processLog.length > 0) {
-		$("#pop_process_log").popup("open");
+		$("#pop_process_log", _self.contextInspDetail).popup("open");
 	} else {
-		_self.app.showError("pg_inspection_detail", "All Files Uploaded");
+		_self.app.showError("pg_inspection_detail",
+				"All Files Uploaded Successfully.");
 	}
 }
 
@@ -111,9 +129,7 @@ InspLinesPage.prototype.syncInspLines = function(callBack) {
 	var _self = this;
 	_self.app.showDialog("Loading");
 	_self.inProgressSyncCount = 0;
-
 	totalFTPCount = 0;
-
 	var ftpSuccess = function(msg) {
 		_self.inProgressSyncCount++;
 		if (_self.inProgressSyncCount == totalFTPCount) {
@@ -126,15 +142,14 @@ InspLinesPage.prototype.syncInspLines = function(callBack) {
 			_self.renderCounts();
 		}
 	}
-
 	var ftpFailer = function(msg) {
 		_self.inProgressSyncCount++;
+		var el_insProcLog = $("#insp_process_log", _self.contextInspDetail);
 		if (!_self.isAlertDisplay) {
 			_self.isAlertDisplay = true;
-			$("#insp_process_log").show();
+			el_insProcLog.show();
 		}
-		$("#insp_process_log").html(_self.app.appFTPUtil.processLog.length);
-
+		el_insProcLog.html(_self.app.appFTPUtil.processLog.length);
 		if (_self.inProgressSyncCount == totalFTPCount) {
 			_self.app.hideDialog();
 			if (callBack) {
@@ -177,13 +192,19 @@ InspLinesPage.prototype.renderMRLines = function() {
 		items = items + line;
 	});
 
-	$('#_list_mrlines').html(items);
-	$('#_list_mrlines').listview("refresh");
+	var el_mrlinesList = $('#_list_mrlines', _self.context);
 
-	$('#_list_mrlines li a').on('click', function() {
+	el_mrlinesList.html(items);
+	el_mrlinesList.listview("refresh");
+	var el_mrLinelinks = $('#_list_mrlines li a', _self.context);
+	el_mrLinelinks.off('click');
+	el_mrLinelinks.on('click', function(event) {
 		_self.app.appCache.session.m_inoutline_id = $(this).data("id");
 		$.mobile.changePage("#pg_inspection_detail");
+		event.preventDefault();
+		return false;
 	});
+
 	$.mobile.loading('hide');
 }
 
@@ -204,9 +225,10 @@ InspLinesPage.prototype.loadMRLines = function() {
 
 		_self.app.visionApi.getMRLines({
 			userid : app.appCache.settingInfo.userid
-		}, success, function() {
-			// popup Errorbox.
-			_self.app.showError("pg_inspection", "Load MR-lines failed");
+		}, success, function(msg) {
+			_self.app.showError("pg_inspection",
+					"Failed to load MR-lines! Check internet Connection & Server Availability."
+							+ msg);
 		});
 	}
 };
@@ -215,17 +237,21 @@ InspLinesPage.prototype.renderInspLines = function() {
 	var _self = this;
 	var sel_inoutline_id = _self.app.appCache.session.m_inoutline_id;
 	var items = '';
-	function mrLine(element, index, array) {
+
+	var mr_lines = _self.app.appCache.mrLines.filter(function(element, index,
+			array) {
 		return (element.m_inoutline_id == sel_inoutline_id);
-	}
-	var mr_lines = _self.app.appCache.mrLines.filter(mrLine);
+	});
+
 	if (!_self.app.appCache.prefixCache[sel_inoutline_id]) {
 		_self.app.appCache.prefixCache[sel_inoutline_id] = mr_lines[0].desc;
 	}
-	$('#inspMRDetail').html(mr_lines[0].label);
-	$('#prefixInpectLine').attr("data-id", sel_inoutline_id);
-	$('#prefixInpectLine').html(
-			_self.app.appCache.prefixCache[sel_inoutline_id]);
+
+	$('#inspMRDetail', _self.contextInspDetail).html(mr_lines[0].label);
+
+	var el_prefixInspLine = $('#prefixInpectLine', _self.contextInspDetail);
+	el_prefixInspLine.attr("data-id", sel_inoutline_id);
+	el_prefixInspLine.html(_self.app.appCache.prefixCache[sel_inoutline_id]);
 
 	if (!(typeof _self.app.appCache.inspLines[sel_inoutline_id] === 'undefined')
 			&& _self.app.appCache.inspLines[sel_inoutline_id].length > 0) {
@@ -237,16 +263,21 @@ InspLinesPage.prototype.renderInspLines = function() {
 			console.log(line);
 			items = items + line;
 		});
-		$('#_list_insp').html(items);
-		$('#_list_insp').listview("refresh");
-		$('#_list_insp li a').on(
-				'click',
-				function() {
-					_self.app.appCache.session.x_instructionline_id = $(this)
-							.data("id");
-					_self.app.appCache.session.isMR = $(this).data("ismr");
-					$.mobile.changePage("#pg_gallery");
-				});
+
+		var el_inspLineList = $('#_list_insp', _self.contextInspDetail);
+
+		el_inspLineList.html(items);
+		el_inspLineList.listview("refresh");
+
+		var el_inspLineLinks = $('#_list_insp li a', _self.contextInspDetail);
+
+		el_inspLineLinks.off('click');
+		el_inspLineLinks.on('click', function() {
+			_self.app.appCache.session.x_instructionline_id = $(this)
+					.data("id");
+			_self.app.appCache.session.isMR = $(this).data("ismr");
+			$.mobile.changePage("#pg_gallery");
+		});
 	}
 	// _self.app.hideDialog();
 	$.mobile.loading('hide');
@@ -259,20 +290,21 @@ InspLinesPage.prototype.renderCounts = function() {
 	_self.inspCount = {};
 
 	if (_self.app.appCache.inspLines[mrLineID]) {
-
+		var el_inspLineList = $('#_list_insp', _self.contextInspDetail);
 		$.each(_self.app.appCache.inspLines[mrLineID], function() {
 			_self.app.appDB.getTotalInspEntries(this, function(param, results) {
 				var elm = $('a#inspline_' + param.x_instructionline_id
-						+ ' span');
+						+ ' span', "#_list_insp");
 				elm.html(results + "/" + elm.html().split("/").pop());
-				$('#_list_insp').listview("refresh");
+				el_inspLineList.listview("refresh");
 			});
+
 			_self.app.appDB.getUploadedInspEntries(this, function(param,
 					results) {
 				var elm = $('a#inspline_' + param.x_instructionline_id
-						+ ' span');
+						+ ' span', "#_list_insp");
 				elm.html(elm.html().split("/").shift() + "/" + results);
-				$('#_list_insp').listview("refresh");
+				el_inspLineList.listview("refresh");
 			});
 		});
 	}
@@ -286,16 +318,17 @@ InspLinesPage.prototype.rederInspLinesDetailsBreadCrumb = function() {
 
 InspLinesPage.prototype.displayAttachAlert = function() {
 	var _self = this;
+	var el_inspProcLog = $("#insp_process_log", _self.contextInspDetail);
 	if (_self.app.visionApi.processLog.attachImage.length > 0) {
 		if (!_self.isAlertDisplay) {
 			_self.isAlertDisplay = true;
-			$("#insp_process_log").show();
+			el_inspProcLog.show();
 		}
-		$("#insp_process_log").html(
-				_self.app.visionApi.processLog.attachImage.length);
-		$("#pop_process_log").popup("open");
+		el_inspProcLog.html(_self.app.visionApi.processLog.attachImage.length);
+		$("#pop_process_log", _self.contextInspDetail).popup("open");
 	} else {
-		_self.app.showError("pg_inspection_detail", "All Files Attached");
+		_self.app.showError("pg_inspection_detail",
+				"All Files are Attached Successfully!");
 	}
 }
 
@@ -313,7 +346,6 @@ InspLinesPage.prototype.onFinishedCalled = function() {
 	}
 
 	var attachFail = function(msg) {
-		// error
 		_self.inProgressAttachCount++;
 		if (_self.inProgressAttachCount == totalAttachCount) {
 			_self.displayAttachAlert();
@@ -372,18 +404,18 @@ InspLinesPage.prototype.onFinishedCalled = function() {
 			});
 
 		} else {
-			_self.app.showError("pg_inspection_detail", "All Files Attached");
+			_self.app.showError("pg_inspection_detail",
+					"No files pending for attach.");
 		}
 	};
 
 	var onFailedUplodEntrysuccess = function(tx, results) {
-		console.log(results.rows.length);
 		if (results.rows.length > 0) {
 			// Restart Sync Process.
 			_self.app.appFTPUtil.processLog = [];
 			_self.syncInspLines(function() {
 				if (_self.app.appFTPUtil.processLog.length > 0) {
-					console.log("Sync Not Complete");
+					_self.displayAlert();
 				} else {
 					_self.app.appDB
 							.getAttachPendingEntry(onUploadedEntrySucess);
@@ -399,9 +431,7 @@ InspLinesPage.prototype.onFinishedCalled = function() {
 InspLinesPage.prototype.loadInspLines = function(params) {
 	var _self = this;
 	_self.rederInspLinesDetailsBreadCrumb();
-
 	_self.app.showDialog('Loading..');
-
 	var sel_inoutline_id = _self.app.appCache.session.m_inoutline_id;
 	if (!(typeof params === 'undefined')) {
 		sel_inoutline_id = params.selected_mrline;

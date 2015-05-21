@@ -1,10 +1,13 @@
 var LoginPage = function(app) {
 	this.app = app;
+	this.context = "#pg_login";
 };
+
 LoginPage.prototype.rederBreadCrumb = function() {
 	var _self = this;
-	$('#pg_home #btn_user').html(_self.app.appCache.settingInfo.username);
+	$('#btn_user', _self.context).html(_self.app.appCache.settingInfo.username);
 };
+
 LoginPage.prototype.onLogin = function() {
 	var _self = this;
 	try {
@@ -12,8 +15,8 @@ LoginPage.prototype.onLogin = function() {
 		this.visionApi
 				.login(
 						{
-							username : $("#txt_user").val(),
-							password : $("#txt_password").val()
+							username : $("#txt_user", _self.context).val(),
+							password : $("#txt_password", _self.context).val()
 						},
 						function(result) {
 							if (result.loginInfo.error) {
@@ -54,7 +57,7 @@ LoginPage.prototype.onLogin = function() {
 LoginPage.prototype.init = function() {
 	var _self = this;
 
-	$('#_form_login').validate({
+	$('#_form_login', _self.context).validate({
 		rules : {
 			txt_user : {
 				required : true
@@ -73,13 +76,13 @@ LoginPage.prototype.init = function() {
 		},
 		errorPlacement : function(error, element) {
 			// error.appendTo(element.parent().prev());
-			$("#login-error-box").html(error);
+			$("#login-error-box", _self.context).html(error);
 			//			
 			// element.attr("placeholder", error);
 			// element.attr("style", "border:1px solid red;");
 		},
 		invalidHandler : function() {
-			$("#login-error-box").popup("open", {
+			$("#login-error-box", _self.context).popup("open", {
 				overlayTheme : "a",
 				positionTo : "#txt_user"
 			});
