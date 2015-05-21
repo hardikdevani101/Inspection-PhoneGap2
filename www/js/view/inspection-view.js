@@ -271,7 +271,6 @@ InspLinesPage.prototype.renderInspLines = function() {
 					+ this.x_instructionline_id + '" data-id="'
 					+ this.x_instructionline_id + '">' + this.name
 					+ '<span class="ui-li-count">0/0</span></a></li>';
-			console.log(line);
 			items = items + line;
 		});
 

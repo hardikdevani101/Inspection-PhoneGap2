@@ -195,6 +195,14 @@ App.prototype.register = function() {
 			});
 
 	$(document).on("pagecreate", "#pg_inspection", function(event) {
+		$("#pg_inspection [data-role=header]").toolbar({
+			transition : "fade",
+			tapToggle : false
+		});
+		$("#pg_inspection [data-role=footer]").toolbar({
+			transition : "fade",
+			tapToggle : false
+		});
 		_self.registerErrorPopup('pg_inspection');
 		_self.inspLinePage = new InspLinesPage(_self);
 		_self.inspLinePage.init();
@@ -227,6 +235,14 @@ App.prototype.register = function() {
 	});
 
 	$(document).on("pagecreate", "#pg_inspection_detail", function(event) {
+		$("#pg_inspection_detail [data-role=header]").toolbar({
+			transition : "fade",
+			tapToggle : false
+		});
+		$("#pg_inspection_detail [data-role=footer]").toolbar({
+			transition : "fade",
+			tapToggle : false
+		});
 		_self.registerErrorPopup('pg_inspection_detail');
 		_self.inspLinePage.loadInspLines({
 			m_inoutline_id : _self.appCache.session.m_inoutline_id
@@ -234,6 +250,14 @@ App.prototype.register = function() {
 	});
 
 	$(document).on("pagecreate", "#pg_gallery", function(event) {
+		$("#pg_gallery [data-role=header]").toolbar({
+			transition : "fade",
+			tapToggle : false
+		});
+		$("#pg_gallery [data-role=footer]").toolbar({
+			transition : "fade",
+			tapToggle : false
+		});
 		_self.registerErrorPopup('pg_gallery');
 		_self.galleryview = new GalleryPage(_self);
 		_self.galleryview.init();

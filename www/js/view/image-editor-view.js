@@ -85,8 +85,8 @@ ImageEditorPage.prototype.loadEditableImage = function() {
 	setTimeout(function() {
 		// console.log("load edit_img_src");
 		img = $("#edit_img_src")[0];
-		var randerHeight = window.innerHeight * 0.80;
-		if (img.height < img.width && !((img.height / img.width) > .80)) {
+		var randerHeight = window.innerHeight * 0.70;
+		if (img.height < img.width && !((img.height / img.width) > .70)) {
 			_self.cropImageW = (randerHeight * 4) / 3;
 			_self.cropImageH = (_self.cropImageW / img.width) * img.height;
 		} else {
