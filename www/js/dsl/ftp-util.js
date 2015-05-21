@@ -14,7 +14,7 @@ FTPUtils.prototype.uploadFile = function(fileURI, M_InOutLine_ID,
 	var options = new FileUploadOptions();
 	options.fileKey = "file";
 	options.fileName = fileURI.split('/').pop();
-	ft.upload(fileURI, encodeURI(_self.app.appCache.settingInfo.service_url
+	ft.upload(encodeURI(fileURI), encodeURI(_self.app.appCache.settingInfo.service_url
 			+ "/VISService/fileUpload"), function(result) {
 		var xmlResponse = result.response;
 		var oldfileName = $(xmlResponse).find('oldName').text().trim();

@@ -9,8 +9,7 @@ var GalleryPage = function(app) {
 
 GalleryPage.prototype.rederBreadCrumb = function() {
 	var _self = this;
-	$('#pg_gallery #btn_user', _self.context).html(
-			_self.app.appCache.settingInfo.username);
+	$('#btn_user', _self.context).html(_self.app.appCache.settingInfo.username);
 };
 
 GalleryPage.prototype.onEditFinish = function(sourceInfo, editedImgData) {
@@ -205,7 +204,7 @@ GalleryPage.prototype.init = function() {
 	$(document)
 			.on(
 					"pagebeforeshow",
-					"#pg_gallery",
+					_self.context,
 					function() {
 						_self.isGridView = true;
 
@@ -563,17 +562,18 @@ GalleryPage.prototype.renderInspFiles = function() {
 			$('#ls_inspFiles li[data-id="' + file.filePath + '"]',
 					_self.context).off('click');
 			$('#ls_inspFiles li[data-id="' + file.filePath + '"]',
-					_self.context).on("click", function(event) {
-				_self.el_fileAction_popup.popup("close");
-				_self.el_fileAction_popup.popup("open", {
-					x : event.clientX,
-					y : event.clientY
-				});
-				_self.onFileTap(event);
-				_self.el_fileAction_popup.enhanceWithin();
-				event.preventDefault();
-				return false;
-			});
+					_self.context).on(
+					"click",
+					function(event) {
+						_self.el_fileAction_popup.popup("open", {
+							positionTo : '#ls_inspFiles li[data-id="'
+									+ file.filePath + '"]'
+						});
+						_self.onFileTap(event);
+						_self.el_fileAction_popup.enhanceWithin();
+						event.preventDefault();
+						return false;
+					});
 		});
 	}
 }

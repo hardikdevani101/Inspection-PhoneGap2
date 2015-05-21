@@ -53,7 +53,7 @@ FileExplorerPage.prototype.init = function() {
 		return false;
 	});
 
-	var el_dataProviders = $("#sel_dataproviders", _self.context)
+	var el_dataProviders = $("#sel_dataproviders", _self.context);
 	el_dataProviders.on("change", function(event) {
 		if (el_dataProviders.val().startsWith('ftp')) {
 			_self.isLocalStorage = false;
@@ -73,6 +73,14 @@ FileExplorerPage.prototype.init = function() {
 		return false;
 	});
 
+	_self.el_file_back = $("#btn_back_file", _self.context);
+	_self.el_file_back.off('click');
+	_self.el_file_back.on('click', function(event) {
+		_self.onBackDir();
+		event.preventDefault();
+		return false;
+	});
+
 	var el_BtnEditFile = $('#btn_FEedit_file', _self.context);
 	el_BtnEditFile.off('click');
 	el_BtnEditFile.on('click', function(event) {
@@ -82,15 +90,15 @@ FileExplorerPage.prototype.init = function() {
 	});
 
 	// $("#selected-files-count").off();
+	var el_pnlSelFiles = $('#pnl_selected_files', _self.context);
 
 	var el_selFileCount = $('#selected-files-count', _self.context);
 	el_selFileCount.on("tap", function(event) {
-		el_selFileCount.panel("open");
+		el_pnlSelFiles.panel("open");
 		event.preventDefault();
 		return false;
 	});
 
-	var el_pnlSelFiles = $('#pnl_selected_files', _self.context);
 	el_pnlSelFiles.on("panelbeforeopen", function(e, ui) {
 		_self.renderSelectedFiles(e, ui);
 		for (var i = 0; i < _self.selFiles.length; i++) {
@@ -99,6 +107,12 @@ FileExplorerPage.prototype.init = function() {
 					+ '"]', '#pnl_selected_files');
 			el_selfile.off('click');
 			el_selfile.on('click', function(event) {
+				$('#pop_fileEplorer_actions', _self.context).popup(
+						"open",
+						{
+							positionTo : '#ls_sel_files li[data-id="'
+									+ file.filePath + '"]'
+						});
 				_self.onSelFileTap(event);
 				event.preventDefault();
 				return false;
@@ -167,40 +181,30 @@ FileExplorerPage.prototype.init = function() {
 FileExplorerPage.prototype.renderSelectedFiles = function() {
 	var _self = this;
 	var fileItems = '';
-	$
-			.each(
-					_self.selFiles,
-					function(index, value) {
-						var extension = value.name.substr((value.name
-								.lastIndexOf('.') + 1));
-						var findResult = jQuery.grep(_self.app.dataTypes,
-								function(item, index) {
-									return item == extension.toUpperCase();
-								});
-						var isImage = false;
-						var fileData = _self.app.file64;
-						var dataid = value.filePath;
-						if (findResult.length > 0) {
-							isImage = true;
-							fileData = _self.app.image64;
-							if (_self.app.appCache.imgCache[dataid]) {
-								fileData = _self.app.appCache.imgCache[dataid];
-							}
-						}
-						var line = '<li data-isimg="'
-								+ isImage
-								+ '" data-name="'
-								+ value.name
-								+ '"data-id="'
-								+ dataid
-								+ '" class="file-placeholder"><a data-rel="popup" href="#pop_fileEplorer_actions">'
-								+ '<img class="ui-li-thumb" src="'
-								+ fileData
-								+ '" /><h2>'
-								+ value.name.substr(0, (value.name
-										.lastIndexOf('.'))) + '</h2></a></li>';
-						fileItems = fileItems + line;
-					});
+	$.each(_self.selFiles, function(index, value) {
+		var extension = value.name.substr((value.name.lastIndexOf('.') + 1));
+		var findResult = jQuery.grep(_self.app.dataTypes,
+				function(item, index) {
+					return item == extension.toUpperCase();
+				});
+		var isImage = false;
+		var fileData = _self.app.file64;
+		var dataid = value.filePath;
+		if (findResult.length > 0) {
+			isImage = true;
+			fileData = _self.app.image64;
+			if (_self.app.appCache.imgCache[dataid]) {
+				fileData = _self.app.appCache.imgCache[dataid];
+			}
+		}
+		var line = '<li data-isimg="' + isImage + '" data-name="' + value.name
+				+ '"data-id="' + dataid
+				+ '" class="file-placeholder"><a href="#">'
+				+ '<img class="ui-li-thumb" src="' + fileData + '" /><h2>'
+				+ value.name.substr(0, (value.name.lastIndexOf('.')))
+				+ '</h2></a></li>';
+		fileItems = fileItems + line;
+	});
 
 	var el_selFilesList = $('#ls_sel_files', _self.context)
 	el_selFilesList.html(fileItems);
@@ -543,12 +547,35 @@ FileExplorerPage.prototype.onDirTap = function(event) {
 	}, 1);
 };
 
+FileExplorerPage.prototype.onBackDir = function() {
+	var _self = this;
+	if (_self.linkRegister && _self.linkRegister.length > 1) {
+		_self.linkRegister.pop();
+		_self.currentDirPath = _self.linkRegister.pop();
+		var tmp = _self.currentDirPath;
+		_self.app.showDialog("Loading..");
+		setTimeout(function() {
+			if (!_self.currentDirPath.endsWith('/')) {
+				_self.currentDirPath += '/';
+			}
+			if (tmp == '/') {
+				_self.currentDirPath = '/';
+			}
+			setTimeout(function() {
+				_self.renderDirPath();
+			}, 1)
+			_self.changeDir();
+			_self.app.hideDialog();
+		}, 1);
+	}
+}
+
 FileExplorerPage.prototype.renderDirPath = function() {
 	var _self = this;
 	var dirPathArray = _self.currentDirPath.split('/');
 	var items = '';
 	var dirPath = '/';
-	var linkRegister = [];
+	_self.linkRegister = [];
 	for (var i = 0; i < dirPathArray.length; i++) {
 		var value = dirPathArray[i];
 		if (i != dirPathArray.length - 1) {
@@ -557,7 +584,7 @@ FileExplorerPage.prototype.renderDirPath = function() {
 				value = 'root ';
 				dirPath = '/'
 			}
-			linkRegister.push(dirPath);
+			_self.linkRegister.push(dirPath);
 			var line = "<a href='#' class='bc-link' data-id='" + dirPath
 					+ "'> ~" + value + "</a>";
 			if (i == dirPathArray.length - 2) {
@@ -570,8 +597,8 @@ FileExplorerPage.prototype.renderDirPath = function() {
 	$("#current-dir-path", _self.context).html(
 			'<h3 class="ui-bar ui-bar-a">' + items + '</h3>');
 
-	for (var i = 0; i < linkRegister.length; i++) {
-		var value = linkRegister[i];
+	for (var i = 0; i < _self.linkRegister.length; i++) {
+		var value = _self.linkRegister[i];
 		var el_dirLink = $(
 				"#current-dir-path .current_dir_location a[data-id='" + value
 						+ "']", _self.context)
@@ -624,7 +651,7 @@ FileExplorerPage.prototype.loadActualImage = function(dataid, isLocalStrg) {
 		// var img = _self.app.image64;
 		// _self.app.appCache.imgCache[dataid] = img;
 		// $('li[data-id="' + dataid + '"] img').attr('src', img);
-		//
+
 		// End of dummy data filler.
 
 		if (isLocalStrg) {

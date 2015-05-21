@@ -45,7 +45,7 @@
 <script src="js/db/file-storage.js"></script>
 <script src="js/db/tbl-vis-settings.js"></script>
 <script src="js/db/tbl-vis-gallery.js"></script>
-<script src="js/dsl/file-util.js"></script>
+<!-- <script src="js/dsl/file-util.js"></script> -->
 <script src="js/dsl/ftp-util.js"></script>
 <script src="js/ws/vision-ws.js"></script>
 <script src="js/view/aboutus-view.js"></script>
@@ -180,9 +180,8 @@
 							<li class="ui-field-contain" data-shadow="false"
 								data-iconshadow="false" data-wrapperels="div"
 								data-icon="arrow-r" data-iconpos="right" data-theme="c"><label
-								for="select-editApp">Editor</label> <select
-								name="txt_editApp" id="txt_editApp" data-native-menu="false"
-								data-mini="true">
+								for="select-editApp">Editor</label> <select name="txt_editApp"
+								id="txt_editApp" data-native-menu="false" data-mini="true">
 									<option value="Vision">Vision</option>
 									<option value="Aviary">Aviary</option>
 							</select></li>
@@ -382,8 +381,8 @@ End of Inspection page
 	<!-------------- Gallery page ----------->
 	<div data-role="page" id="pg_gallery" data-theme="c">
 		<div data-role="header" data-position="fixed" data-theme="c">
-			<a href="#pg_inspection_detail" data-icon="arrow-l" id="lbl_inspDetail"
-				class="ui-btn-icon-notext" data-shadow="false"
+			<a href="#pg_inspection_detail" data-icon="arrow-l"
+				id="lbl_inspDetail" class="ui-btn-icon-notext" data-shadow="false"
 				data-wrapperels="span" title="Back">Inspection Lines</a>
 			<h2 data-role="heading">Documents</h2>
 			<div data-role="controlgroup" data-type="horizontal"
@@ -457,9 +456,9 @@ End of Inspection page
 							data-corners="true" data-shadow="false" data-iconshadow="false"
 							data-wrapperels="span" title="InspLine" data-rel="popup"
 							data-transition="flip">text</button>
-						<button id="btn-add" data-icon="plus"
-							data-corners="true" data-iconpos="notext" data-shadow="false"
-							data-iconshadow="false" data-wrapperels="span" title="Logout"
+						<button id="btn-add" data-icon="plus" data-corners="true"
+							data-iconpos="notext" data-shadow="false" data-iconshadow="false"
+							data-wrapperels="span" title="Logout"
 							class="ui-btn ui-icon-plus ui-btn-icon-notext ui-last-child">Add</button>
 					</div>
 				</div>
@@ -546,9 +545,12 @@ Start of File Explorer page
 			data-theme="a">
 			<div data-role="navbar" data-iconpos="left" data-theme="a">
 				<ul data-theme="a">
-					<li><a href="#pg_gallery" data-icon="arrow-l"
+					<li><a href="#" data-icon="back" id="btn_back_file"
 						data-shadow="false" data-wrapperels="span" title="Back"
 						data-rel="back">Back</a></li>
+					<li><a href="#pg_gallery" data-icon="arrow-l"
+						data-shadow="false" data-wrapperels="span" title="Back"
+						data-rel="back">Skip</a></li>
 					<li><a href="#" data-icon="check" data-shadow="false"
 						data-wrapperels="span" id="btn_finish_file_selection"
 						title="Finish">Done</a></li>
@@ -637,7 +639,8 @@ Start of Crop page
 					<!-- 	<li><a id="btn_img_filter" href="#pnl_image_filters"
 						data-shadow="false" data-icon="grid" data-theme="a" title="filter">Filters</a></li> -->
 					<li><a id="btn_skip_edit" href="#" data-shadow="false"
-						data-icon="back" data-transition="reverse" data-theme="a" title="Skip Edit">Skip</a></li>
+						data-icon="back" data-transition="reverse" data-theme="a"
+						title="Skip Edit">Skip</a></li>
 					<li><a id="btn_edit_finished" href="#" data-icon=""
 						xdata-iconpos="notext" data-shadow="false" data-wrapperels="span"
 						data-theme="a" title="save">Save</a></li>

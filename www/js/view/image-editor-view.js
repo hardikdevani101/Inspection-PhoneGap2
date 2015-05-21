@@ -28,6 +28,7 @@ ImageEditorPage.prototype.setup = function(options, isGallery) {
 	_self.image64 = options.img64;
 	_self.sourceInfo = options.sourceInfo;
 	_self.selectedWM = options.watermark;
+	_self.isGallery = isGallery;
 }
 
 ImageEditorPage.prototype.saveEditedImage = function() {
