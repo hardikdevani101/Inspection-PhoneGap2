@@ -4,11 +4,13 @@ var FileExplorerPage = function(app) {
 	this.isLocalStorage = true;
 	this.isGridView = true;
 	this.selFiles = [];
+	this.context = "#pg_file_explorer";
 }
 
 FileExplorerPage.prototype.rederBreadCrumb = function() {
 	var _self = this;
-	$("#current-dir-path").html('<h3 class="ui-bar ui-bar-a">root</h3>');
+	$("#current-dir-path", _self.context).html(
+			'<h3 class="ui-bar ui-bar-a">root</h3>');
 	$('#pg_file_explorer #btn_user').html(
 			_self.app.appCache.settingInfo.username);
 };
@@ -17,10 +19,12 @@ FileExplorerPage.prototype.init = function() {
 	var _self = this;
 	_self.isLocalStorage = true;
 	_self.fillDataProviders();
-	$(document).on("pagebeforeshow", "#pg_file_explorer", function() {
+	var contextPage = $("#pg_file_explorer");
+	contextPage.on("pagebeforeshow", function() {
 		_self.rederBreadCrumb();
-		$('#selected-files-count').html(_self.selFiles.length);
-		$("#pnl_selected_files").enhanceWithin();
+		$('#selected-files-count', _self.context).html(_self.selFiles.length);
+		$("#pnl_selected_files", _self.context).enhanceWithin();
+
 		_self.app.showDialog("Loading");
 		setTimeout(function() {
 			_self.loadData();
@@ -28,99 +32,111 @@ FileExplorerPage.prototype.init = function() {
 		}, 1);
 	});
 
-	$("#btn_finish_file_selection").on('click', function() {
+	$("#btn_finish_file_selection", _self.context).on('click', function(event) {
 		// TODO: Push Selected File information to Gallery
 		// Page.
 		_self.app.galleryview.onFileData(_self.selFiles);
 		_self.currentDirPath = '/';
 		_self.selFiles = [];
 		$.mobile.changePage("#pg_gallery");
+		event.preventDefault();
+		return false;
 	});
 
-	$("#btn_reload_files").on(
-			"tap",
-			function(event) {
-				_self.currentDirPath = '/';
-				// _self.selFiles = [];
-				_self.explodeDirectory(_self.currentDirPath, function() {
-					_self.renderContent()
-				}, function(msg) {
-					_self.app.showError("pg_file_explorer",
-							"Error in loading server data");
-				});
-			});
+	$("#btn_reload_files", _self.context).on("tap", function(event) {
+		_self.currentDirPath = '/';
+		// _self.selFiles = [];
+		_self.explodeDirectory(_self.currentDirPath, function() {
+			_self.renderContent()
+		});
+		event.preventDefault();
+		return false;
+	});
 
-	$("#sel_dataproviders").on("change", function(event) {
-		if ($("#sel_dataproviders").val().startsWith('ftp')) {
+	var el_dataProviders = $("#sel_dataproviders", _self.context)
+	el_dataProviders.on("change", function(event) {
+		if (el_dataProviders.val().startsWith('ftp')) {
 			_self.isLocalStorage = false;
 		} else {
 			_self.isLocalStorage = true;
 		}
 		_self.onDataStorageChange(event);
+		event.preventDefault();
+		return false;
 	});
 
-	$('#btn_FEdelete_file').off('tap', '#btn_FEdelete_file').on('click',
-			function(event) {
-				_self.onDeleteFile(event);
+	var el_BtnDeleteFile = $('#btn_FEdelete_file', _self.context);
+	el_BtnDeleteFile.off('click')
+	el_BtnDeleteFile.on('click', function(event) {
+		_self.onDeleteFile(event);
+		event.preventDefault();
+		return false;
+	});
 
-			});
-
-	$('#btn_FEedit_file').off('tap', '#btn_FEedit_file').on('click',
-			function(event) {
-				_self.onEditFile(event);
-			});
+	var el_BtnEditFile = $('#btn_FEedit_file', _self.context);
+	el_BtnEditFile.off('click');
+	el_BtnEditFile.on('click', function(event) {
+		_self.onEditFile(event);
+		event.preventDefault();
+		return false;
+	});
 
 	// $("#selected-files-count").off();
-	$('#selected-files-count').on("tap", function(event) {
-		$("#pnl_selected_files").panel("open");
+
+	var el_selFileCount = $('#selected-files-count', _self.context);
+	el_selFileCount.on("tap", function(event) {
+		el_selFileCount.panel("open");
+		event.preventDefault();
+		return false;
 	});
 
-	$(document).on(
-			"panelbeforeopen",
-			"#pnl_selected_files",
-			function(e, ui) {
-				console.log(">>>>>>>>>panelbeforeopen");
-				_self.renderSelectedFiles(e, ui);
-				$.each(_self.selFiles, function(index, file) {
-					$('#ls_sel_files li[data-id="' + file.filePath + '"]').off(
-							'click');
-					$('#ls_sel_files li[data-id="' + file.filePath + '"]').on(
-							'click', function(event) {
-								_self.onSelFileTap(event);
-							});
-
-				});
-				$("#pnl_selected_files").enhanceWithin();
+	var el_pnlSelFiles = $('#pnl_selected_files', _self.context);
+	el_pnlSelFiles.on("panelbeforeopen", function(e, ui) {
+		_self.renderSelectedFiles(e, ui);
+		for (var i = 0; i < _self.selFiles.length; i++) {
+			var file = _self.selFiles[i];
+			var el_selfile = $('#ls_sel_files li[data-id="' + file.filePath
+					+ '"]', '#pnl_selected_files');
+			el_selfile.off('click');
+			el_selfile.on('click', function(event) {
+				_self.onSelFileTap(event);
+				event.preventDefault();
+				return false;
 			});
+		}
+		el_pnlSelFiles.enhanceWithin();
+		e.preventDefault();
+		return false;
+	});
 
-	$("#btn_file_view_mode").on(
-			'click',
-			function() {
+	var el_btnFileViewMode = $("#btn_file_view_mode", _self.context);
+	el_btnFileViewMode.on('click',
+			function(event) {
 				$(this).removeClass("ui-btn-active");
 				if ($(this).attr('class').indexOf('ui-icon-bars') >= 0) {
 
 					$(this).removeClass('ui-icon-bars');
 					$(this).html('Grid View');
 					$(this).addClass('ui-icon-grid');
+
 					$('#pg_file_explorer #pg_file_main').removeClass(
 							'img-gallery');
 					$('#pg_file_explorer .ui-content').addClass(
 							'img-gallery-listview');
 					$('#pg_file_explorer #pg_file_main img').addClass(
 							'ui-listview-mode');
-
 					$('#pg_file_explorer #pg_file_main .current_dir_location')
 							.addClass('current_dir_location_list');
-
 					_self.isGridView = false;
-					$('#ls_files li a').removeClass("ui-icon-carat-r");
-					$("#ls_files p a.ui-icon-arrow-d").hide();
+					$('#ls_files li a', _self.context).removeClass(
+							"ui-icon-carat-r");
+					$("#ls_files p a.ui-icon-arrow-d", _self.context).hide();
 					$.each(_self.selFiles, function(index, file) {
-						$('#ls_files li[data-id="' + file.filePath + '"] a')
-								.addClass("ui-icon-arrow-d");
+						$('#ls_files li[data-id="' + file.filePath + '"] a',
+								_self.context).addClass("ui-icon-arrow-d");
 					});
-					$("#ls_files  .ui-listview .ui-li-has-thumb h2").css(
-							"color", "#FFF");
+					$("#ls_files  .ui-listview .ui-li-has-thumb h2",
+							_self.context).css("color", "#FFF");
 				} else {
 					$(this).removeClass('ui-icon-grid');
 					$(this).html('List View');
@@ -132,16 +148,19 @@ FileExplorerPage.prototype.init = function() {
 							'img-gallery-listview');
 					$('#pg_file_explorer #pg_file_main img').removeClass(
 							'ui-listview-mode');
-					$("#ls_files p a.ui-icon-arrow-d").hide();
+					$("#ls_files p a.ui-icon-arrow-d", _self.context).hide();
 
 					$.each(_self.selFiles, function(index, file) {
 						$(
 								'#ls_files li[data-id="' + file.filePath
-										+ '"] p a.ui-icon-arrow-d').show();
+										+ '"] p a.ui-icon-arrow-d',
+								_self.context).show();
 					});
-					$("#ls_files  .ui-listview .ui-li-has-thumb h2").css(
-							"color", "#202C3C");
+					$("#ls_files  .ui-listview .ui-li-has-thumb h2",
+							_self.context).css("color", "#202C3C");
 				}
+				event.preventDefault();
+				return false;
 			});
 }
 
@@ -183,8 +202,9 @@ FileExplorerPage.prototype.renderSelectedFiles = function() {
 						fileItems = fileItems + line;
 					});
 
-	$('#ls_sel_files').html(fileItems);
-	$('#ls_sel_files').listview("refresh");
+	var el_selFilesList = $('#ls_sel_files', _self.context)
+	el_selFilesList.html(fileItems);
+	el_selFilesList.listview("refresh");
 	$("#ls_sel_files .ui-icon-arrow-d").hide();
 }
 
@@ -192,13 +212,10 @@ FileExplorerPage.prototype.onDataStorageChange = function() {
 	var _self = this;
 	_self.app.showDialog('Loading...');
 	_self.currentDirPath = '/';
-	$("#current-dir-path").html('<h3 class="ui-bar ui-bar-a">root</h3>');
-	// _self.selFiles = [];
+	$("#current-dir-path", _self.context).html(
+			'<h3 class="ui-bar ui-bar-a">root</h3>');
 	_self.explodeDirectory(_self.currentDirPath, function() {
 		_self.renderContent()
-	}, function(msg) {
-		_self.app.showError("pg_file_explorer",
-				"Error in loading ftp server data.");
 	});
 }
 
@@ -206,37 +223,44 @@ FileExplorerPage.prototype.onDataStorageChange = function() {
 FileExplorerPage.prototype.fillDataProviders = function() {
 	var _self = this;
 	var reloadDataProviders = function() {
-		$('#sel_dataproviders').html("");
+		var el_dataProvider = $('#sel_dataproviders', _self.context);
+		el_dataProvider.html("");
 		// root URI = "file:///storage/sdcard0";
-		$("#sel_dataproviders").append(
-				new Option("LocalStorage", _self.app.appFS.rootURI));
+		el_dataProvider.append(new Option("LocalStorage",
+				_self.app.appFS.rootURI));
 		if (_self.app.appCache.ftpServers.length > 0) {
 			$.each(_self.app.appCache.ftpServers, function(key, data) {
 				if (data.isFTP == 'Y') {
-					$("#sel_dataproviders").append(
-							new Option(data.name, data.url));
+					el_dataProvider.append(new Option(data.name, data.url));
 				}
 			});
 			// var option1 = $($("option", $('#sel_dataproviders')).get(1));
 			// option1.attr('selected', 'selected');
-			$('#sel_dataproviders').selectmenu();
-			$('#sel_dataproviders').selectmenu('refresh', true);
+			el_dataProvider.selectmenu();
+			el_dataProvider.selectmenu('refresh', true);
 		}
+		_self.app.hideDialog();
 	}
+
 	if (_self.app.appCache.ftpServers.length > 0) {
 		reloadDataProviders();
 	} else {
 		var success = function(result) {
 			var items = '';
 			_self.app.appCache.ftpServers = [];
-			$.each(result.ftpservers, function(index, data) {
-				_self.app.appCache.ftpServers.push(data);
-			});
+			for (var i = 0; i < result.ftpservers.length; i++) {
+				_self.app.appCache.ftpServers.push(result.ftpservers[i]);
+			}
+			// $.each(result.ftpservers, function(index, data) {
+			// _self.app.appCache.ftpServers.push(data);
+			// });
 			reloadDataProviders();
 		}
 		_self.app.visionApi.getFTPServerList({
 			orgid : app.appCache.settingInfo.org_id
-		}, success, function(msg) {
+		}, function(result) {
+			success(result)
+		}, function(msg) {
 			// _self.app.showDialog("Loading..");
 			// // TODO close below dummy data runner.
 			// resultline = {};
@@ -271,79 +295,89 @@ FileExplorerPage.prototype.loadData = function() {
 	var _self = this;
 	_self.explodeDirectory(_self.currentDirPath, function() {
 		_self.renderContent()
-	}, function(msg) {
-		_self.app.showError(msg);
 	});
 	_self.app.hideDialog();
 }
 
 FileExplorerPage.prototype.renderContent = function(dirPath) {
 	var _self = this;
-
 	var dataStorageInfo = _self.app.appCache.localStorage[0];
 	var selected_dataprovider = $("#sel_dataproviders").val();
 	if (!_self.isLocalStorage) {
-		jQuery.grep(_self.app.appCache.ftpServers, function(item, index) {
+		for (var i = 0; i < _self.app.appCache.ftpServers.length; i++) {
+			var item = _self.app.appCache.ftpServers[i];
 			if (item.url == selected_dataprovider) {
 				dataStorageInfo = item;
+				break;
 			}
-			return (item.url == selected_dataprovider);
-		});
+		}
 	}
+
+	var el_filesList = $('#ls_files', _self.context);
+	var el_dirsList = $('#ls_dirs', _self.context);
+	el_filesList.html('');
+	el_filesList.listview("refresh");
+	el_dirsList.html('');
+	el_dirsList.listview("refresh");
 
 	var serverData = dataStorageInfo.data;
 	if (serverData) {
 		if (serverData[_self.currentDirPath]) {
+
 			var files = serverData[_self.currentDirPath].files;
 			var dirs = serverData[_self.currentDirPath].dirs;
+
 			var fileItems = _self.renderFiles(files);
 			var dirItems = _self.renderDirs(dirs);
 
-			$('#ls_files').html(fileItems);
-			$('#ls_files').listview("refresh");
-			$('#ls_dirs').html(dirItems);
-			$('#ls_dirs').listview("refresh");
-			$("#ls_files p a.ui-icon-arrow-d").hide();
-			$('#ls_files li a').removeClass("ui-icon-carat-r");
+			el_filesList.html(fileItems);
+			el_filesList.listview("refresh");
+			el_dirsList.html(dirItems);
+			el_dirsList.listview("refresh");
 
-			$.each(_self.selFiles, function(index, file) {
+			$("#ls_files p a.ui-icon-arrow-d", _self.context).hide();
+			$('#ls_files li a', _self.context).removeClass("ui-icon-carat-r");
+
+			for (var i = 0; i < _self.selFiles.length; i++) {
+				file = _self.selFiles[i];
 				if (_self.isGridView) {
 					$(
 							'#ls_files li[data-id="' + file.filePath
-									+ '"] .ui-icon-arrow-d').show();
+									+ '"] .ui-icon-arrow-d', _self.context)
+							.show();
 				} else {
-					$('#ls_files li[data-id="' + file.filePath + '"] a')
-							.removeClass("ui-icon-arrow-d");
+					$('#ls_files li[data-id="' + file.filePath + '"] a',
+							_self.context).removeClass("ui-icon-arrow-d");
 				}
+			}
 
-			});
-
-			$.each(files, function(index, file) {
+			for (var i = 0; i < files.length; i++) {
+				file = files[i];
 				var dataid = $("#sel_dataproviders").val()
 						+ _self.currentDirPath + file
-				$('#ls_files li[data-id="' + dataid + '"]').off('click');
-				$('#ls_files li[data-id="' + dataid + '"]').on("click",
-						function(event) {
-							event.preventDefault();
-							console.log("onFileTap>>>> ")
-							_self.onFileTap(event)
-						});
-			});
+				var el_fileLi = $('#ls_files li[data-id="' + dataid + '"]',
+						_self.context);
 
-			$.each(dirs,
-					function(index, value) {
-						$(
-								'#ls_dirs li[data-id="' + _self.currentDirPath
-										+ value + '"]').off('click');
-						$(
-								'#ls_dirs li[data-id="' + _self.currentDirPath
-										+ value + '"]').on("click",
-								function(event) {
-									event.preventDefault();
-									console.log("onDirTap>>>> ")
-									_self.onDirTap(event)
-								});
-					});
+				el_fileLi.off('click');
+				el_fileLi.on("click", function(event) {
+					_self.onFileTap(event)
+					event.preventDefault();
+					return false;
+				});
+			}
+
+			for (var i = 0; i < dirs.length; i++) {
+				value = dirs[i];
+				var el_dirLi = $('#ls_dirs li[data-id="' + _self.currentDirPath
+						+ value + '"]', _self.context);
+
+				el_dirLi.off('click');
+				el_dirLi.on("click", function(event) {
+					_self.onDirTap(event)
+					event.preventDefault();
+					return false;
+				});
+			}
 		}
 	}
 	_self.app.hideDialog();
@@ -352,20 +386,22 @@ FileExplorerPage.prototype.renderContent = function(dirPath) {
 
 FileExplorerPage.prototype.onDeleteFile = function(event) {
 	var _self = this;
-	event.preventDefault();
-	_self.selFiles = jQuery.grep(_self.selFiles, function(item, index) {
-		return item.filePath != _self.selectedFile;
-	});
-	if (_self.isGridView) {
-		$('li[data-id="' + _self.selectedFile + '"] p a.ui-icon-arrow-d')
-				.hide();
-	} else {
-		$('#ls_files li[data-id="' + _self.selectedFile + '"] a').removeClass(
-				"ui-icon-arrow-d");
-	}
-	$('#selected-files-count').html(_self.selFiles.length);
-	$("#pop_fileEplorer_actions").popup('close');
-	_self.renderSelectedFiles();
+	$("#pop_fileEplorer_actions", _self.context).popup('close');
+	setTimeout(function() {
+		if (_self.isGridView) {
+			$('li[data-id="' + _self.selectedFile + '"] p a.ui-icon-arrow-d',
+					_self.context).hide();
+		} else {
+			$('#ls_files li[data-id="' + _self.selectedFile + '"] a',
+					_self.context).removeClass("ui-icon-arrow-d");
+		}
+
+		$('#selected-files-count', _self.context).html(_self.selFiles.length);
+		_self.selFiles = jQuery.grep(_self.selFiles, function(item, index) {
+			return item.filePath != _self.selectedFile;
+		});
+		_self.renderSelectedFiles();
+	}, 1);
 }
 
 FileExplorerPage.prototype.onEditFinish = function(param, data, isLocal) {
@@ -379,7 +415,8 @@ FileExplorerPage.prototype.onEditFinish = function(param, data, isLocal) {
 	}
 	console.log(currentURI);
 	_self.app.appCache.imgCache[currentURI] = data;
-	$('li[data-id="' + currentURI + '"] img').attr('src', data);
+	$('li[data-id="' + currentURI + '"] img', "#pnl_selected_files").attr(
+			'src', data);
 	if (!param.actualURI || isLocal == "Y") {
 		$.each(_self.selFiles, function() {
 			if (this.filePath == currentURI) {
@@ -392,7 +429,6 @@ FileExplorerPage.prototype.onEditFinish = function(param, data, isLocal) {
 FileExplorerPage.prototype.onEditFile = function(event) {
 	var _self = this;
 	if (_self.app.appCache.settingInfo.img_editor == 'Vision') {
-		event.preventDefault();
 		$.mobile.changePage("#pg_img_editor");
 	} else {
 		_self.app.aviaryEdit.edit(function(param, data) {
@@ -403,53 +439,55 @@ FileExplorerPage.prototype.onEditFile = function(event) {
 
 FileExplorerPage.prototype.onSelFileTap = function(event) {
 	var _self = this;
-	var selected = $(event.delegateTarget).data('id');
-	var file_name = $(event.delegateTarget).data('name');
-	console.log(selected);
+	var el_selected = $(event.delegateTarget, '#pnl_selected_files');
+	var selected = el_selected.data('id');
 	_self.selectedFile = selected;
-
-	if ($(event.delegateTarget).data('isimg')) {
-		$("#btn_FEedit_file").show();
+	var file_name = el_selected.data('name');
+	var isImg = el_selected.data('isimg');
+	if (isImg) {
+		$("#pop_fileEplorer_actions #btn_FEedit_file", _self.context).show();
 	} else {
-		$("#btn_FEedit_file").hide();
+		$("#pop_fileEplorer_actions #btn_FEedit_file", _self.context).hide();
 	}
-
-	var imgData = _self.app.appCache.imgCache[selected];
-	var sourceInfo = jQuery.grep(_self.selFiles, function(item, index) {
-		return item.filePath == selected;
-	});
-	console.log(imgData);
-	if (sourceInfo.length > 0) {
-		console.log(_self.app.appCache.settingInfo.img_editor);
-		if (_self.app.appCache.settingInfo.img_editor
-				&& _self.app.appCache.settingInfo.img_editor == 'Aviary') {
-			_self.app.aviaryEdit.setup({
-				'sourceInfo' : sourceInfo[0],
-				imageURI : sourceInfo[0].filePath,
-				watermark : $('select[name="select-gallery-waterMark"]').val()
-			});
-		} else {
-			_self.app.imageEditor.setup({
-				'sourceInfo' : sourceInfo[0],
-				img64 : imgData,
-				watermark : $('select[name="select-gallery-waterMark"]').val()
-			}, "N");
-			console.log(sourceInfo[0].filePath);
+	setTimeout(function() {
+		var imgData = _self.app.appCache.imgCache[selected];
+		var sourceInfo = jQuery.grep(_self.selFiles, function(item, index) {
+			return item.filePath == selected;
+		});
+		if (sourceInfo.length > 0) {
+			var el_watermarkList = $('select[name="select-gallery-waterMark"]',
+					_self.context);
+			if (_self.app.appCache.settingInfo.img_editor
+					&& _self.app.appCache.settingInfo.img_editor == 'Aviary') {
+				_self.app.aviaryEdit.setup({
+					'sourceInfo' : sourceInfo[0],
+					imageURI : sourceInfo[0].filePath,
+					watermark : el_watermarkList.val()
+				});
+			} else {
+				_self.app.imageEditor.setup({
+					'sourceInfo' : sourceInfo[0],
+					img64 : imgData,
+					watermark : el_watermarkList.val()
+				}, "N");
+			}
 		}
-	}
+	}, 1);
 }
 
 FileExplorerPage.prototype.onFileTap = function(event) {
 	var _self = this;
-	var selected = $(event.delegateTarget).data('id');
-	var file_name = $(event.delegateTarget).data('name');
+	var el_selectedFile = $(event.delegateTarget, _self.context);
+	var selected = el_selectedFile.data('id');
+	var file_name = el_selectedFile.data('name');
+
 	var findResult = [];
 	if (_self.selFiles.length > 0) {
 		findResult = jQuery.grep(_self.selFiles, function(item, index) {
 			return item.filePath == selected;
 		});
-
 	}
+
 	if (!findResult.length > 0) {
 		dataSrc = "FTP";
 		if (_self.isLocalStorage) {
@@ -463,24 +501,26 @@ FileExplorerPage.prototype.onFileTap = function(event) {
 		});
 
 		if (_self.isGridView) {
-			$('li[data-id="' + selected + '"] p a.ui-icon-arrow-d').show();
+			$('#ls_files li[data-id="' + selected + '"] p a.ui-icon-arrow-d',
+					_self.context).show();
 		} else {
 			// $('li[data-id="' + selected + '"] p a.ui-icon-arrow-d').show();
-			$('#ls_files li[data-id="' + selected + '"] a').addClass(
-					"ui-icon-arrow-d");
+			$('#ls_files li[data-id="' + selected + '"] a', _self.context)
+					.addClass("ui-icon-arrow-d");
 		}
 	} else {
 		_self.selFiles = jQuery.grep(_self.selFiles, function(item, index) {
 			return item.filePath != selected;
 		});
 		if (_self.isGridView) {
-			$('li[data-id="' + selected + '"] p a.ui-icon-arrow-d').hide();
+			$('#ls_files li[data-id="' + selected + '"] p a.ui-icon-arrow-d',
+					_self.context).hide();
 		} else {
-			$('#ls_files li[data-id="' + selected + '"] a').removeClass(
-					"ui-icon-arrow-d");
+			$('#ls_files li[data-id="' + selected + '"] a', _self.context)
+					.removeClass("ui-icon-arrow-d");
 		}
 	}
-	$('#selected-files-count').html(_self.selFiles.length);
+	$('#selected-files-count', _self.context).html(_self.selFiles.length);
 }
 
 FileExplorerPage.prototype.onDirTap = function(event) {
@@ -495,7 +535,9 @@ FileExplorerPage.prototype.onDirTap = function(event) {
 		if (tmp == '/') {
 			_self.currentDirPath = '/';
 		}
-		_self.renderDirPath();
+		setTimeout(function() {
+			_self.renderDirPath();
+		}, 1)
 		_self.changeDir();
 		_self.app.hideDialog();
 	}, 1);
@@ -507,45 +549,45 @@ FileExplorerPage.prototype.renderDirPath = function() {
 	var items = '';
 	var dirPath = '/';
 	var linkRegister = [];
-	$.each(dirPathArray, function(index, value) {
-		if (index != dirPathArray.length - 1) {
+	for (var i = 0; i < dirPathArray.length; i++) {
+		var value = dirPathArray[i];
+		if (i != dirPathArray.length - 1) {
 			dirPath += value + '/';
 			if (value == '') {
 				value = 'root ';
 				dirPath = '/'
 			}
-
 			linkRegister.push(dirPath);
-
 			var line = "<a href='#' class='bc-link' data-id='" + dirPath
 					+ "'> ~" + value + "</a>";
-			if (index == dirPathArray.length - 2) {
+			if (i == dirPathArray.length - 2) {
 				line = ' ~' + value;
 			}
 			items += line;
 		}
-	});
+	}
 
-	$("#current-dir-path").html(
+	$("#current-dir-path", _self.context).html(
 			'<h3 class="ui-bar ui-bar-a">' + items + '</h3>');
 
-	$.each(linkRegister, function(index, value) {
-		$(".current_dir_location a[data-id='" + value + "']").off('click');
-		$(".current_dir_location a[data-id='" + value + "']").on("click",
-				function(event) {
-					console.log("Cliked on link")
-					_self.onDirTap(event);
-				});
-	});
+	for (var i = 0; i < linkRegister.length; i++) {
+		var value = linkRegister[i];
+		var el_dirLink = $(
+				"#current-dir-path .current_dir_location a[data-id='" + value
+						+ "']", _self.context)
+		el_dirLink.off('click');
+		el_dirLink.on("click", function(event) {
+			_self.onDirTap(event);
+			event.preventDefault();
+			return false;
+		});
+	}
 };
 
 FileExplorerPage.prototype.changeDir = function() {
 	var _self = this;
-
 	_self.explodeDirectory(_self.currentDirPath, function() {
 		_self.renderContent(_self.currentDirPath);
-	}, function(msg) {
-		_self.app.showError("pg_file_explorer", msg);
 	});
 };
 
@@ -592,7 +634,8 @@ FileExplorerPage.prototype.loadActualImage = function(dataid, isLocalStrg) {
 				_self.app.appCache.imgCache[dataid] = img64;
 				$('li[data-id="' + dataid + '"] img').attr('src', img64);
 			}, function(msg) {
-				_self.app.showError("pg_file_explorer", msg);
+				_self.app.showError("pg_file_explorer",
+						"Error:Failed to load file from Storage." + msg);
 			});
 		} else {
 
@@ -602,7 +645,8 @@ FileExplorerPage.prototype.loadActualImage = function(dataid, isLocalStrg) {
 				_self.app.appCache.imgCache[dataid] = img64;
 				$('li[data-id="' + dataid + '"] img').attr('src', img64);
 			}, function(msg) {
-				_self.app.showError("pg_file_explorer", msg);
+				_self.app.showError("pg_file_explorer",
+						"Error: Failed to load file from FTP." + msg);
 			});
 		}
 	}
@@ -612,72 +656,72 @@ FileExplorerPage.prototype.loadActualImage = function(dataid, isLocalStrg) {
 FileExplorerPage.prototype.renderFiles = function(files) {
 	var _self = this;
 	var fileItems = '';
-	$
-			.each(
-					files,
-					function(index, value) {
-						var extension = value
-								.substr((value.lastIndexOf('.') + 1));
-						var findResult = jQuery.grep(_self.app.dataTypes,
-								function(item, index) {
-									return item == extension.toUpperCase();
-								});
-						var fileData = _self.app.file64;
-						var isImage = false;
-						if (findResult.length > 0) {
-							isImage = true;
-							fileData = _self.app.image64
-						}
-						var dataid = $("#sel_dataproviders").val()
-								+ _self.currentDirPath + value;
+	for (var i = 0; i < files.length; i++) {
+		var index = i;
+		var value = files[i];
+		var extension = value.substr((value.lastIndexOf('.') + 1));
 
-						// TODO: Get Images from FTP;
-						if (isImage) {
-							if (_self.app.appCache.imgCache[dataid]) {
-								fileData = _self.app.appCache.imgCache[dataid];
-							} else {
-								_self.loadActualImage(dataid,
-										_self.isLocalStorage);
-							}
-						}
-						var storage = _self.isLocalStorage ? "LS" : "FTP";
-						var imgClass = '';
-						if (!_self.isGridView) {
-							imgClass = "ui-listview-mode";
-						}
+		var findResult = jQuery.grep(_self.app.dataTypes,
+				function(item, index) {
+					return item == extension.toUpperCase();
+				});
 
-						var line = '<li data-storage="'
-								+ storage
-								+ '"  data-name="'
-								+ value
-								+ '"data-id="'
-								+ dataid
-								+ '" class="file-placeholder"><a href="#">'
-								+ '<img class="ui-li-thumb '
-								+ imgClass
-								+ '" src="'
-								+ fileData
-								+ '" /><h2>'
-								+ value.substr(0, (value.lastIndexOf('.')))
-								+ '</h2><p class="ui-li-aside"><a class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-d ui-btn-icon-notext ui-btn-b ui-btn-inline"></a></p></a></li>';
-						fileItems = fileItems + line;
-					});
+		var fileData = _self.app.file64;
+		var isImage = false;
+		if (findResult.length > 0) {
+			isImage = true;
+			fileData = _self.app.image64
+		}
+		var dataid = $("#sel_dataproviders", _self.context).val()
+				+ _self.currentDirPath + value;
 
+		// TODO: Get Images from FTP;
+		if (isImage) {
+			if (_self.app.appCache.imgCache[dataid]) {
+				fileData = _self.app.appCache.imgCache[dataid];
+			} else {
+				_self.loadActualImage(dataid, _self.isLocalStorage);
+			}
+		}
+		var storage = _self.isLocalStorage ? "LS" : "FTP";
+		var imgClass = '';
+		if (!_self.isGridView) {
+			imgClass = "ui-listview-mode";
+		}
+
+		var line = '<li data-storage="'
+				+ storage
+				+ '"  data-name="'
+				+ value
+				+ '"data-id="'
+				+ dataid
+				+ '" class="file-placeholder"><a href="#">'
+				+ '<img class="ui-li-thumb '
+				+ imgClass
+				+ '" src="'
+				+ fileData
+				+ '" /><h2>'
+				+ value.substr(0, (value.lastIndexOf('.')))
+				+ '</h2><p class="ui-li-aside"><a class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-d ui-btn-icon-notext ui-btn-b ui-btn-inline"></a></p></a></li>';
+		fileItems = fileItems + line;
+
+	}
 	return fileItems;
 }
 
-FileExplorerPage.prototype.explodeDirectory = function(dirName, callback, error) {
+FileExplorerPage.prototype.explodeDirectory = function(dirName, callback) {
 	var _self = this;
 	var dataStorageInfo = _self.app.appCache.localStorage[0];
 	var dataProviderUrl = '';
-	var selected_dataprovider = $("#sel_dataproviders").val();
+	var selected_dataprovider = $("#sel_dataproviders", _self.context).val();
 	if (!_self.isLocalStorage) {
-		jQuery.grep(_self.app.appCache.ftpServers, function(item, index) {
+		for (var i = 0; i < _self.app.appCache.ftpServers.length; i++) {
+			var item = _self.app.appCache.ftpServers[i];
 			if (item.url == selected_dataprovider) {
 				dataStorageInfo = item;
+				break;
 			}
-			return (item.url == selected_dataprovider);
-		});
+		}
 		dataProviderUrl = dataStorageInfo.url;
 	} else {
 		dataProviderUrl = selected_dataprovider;
@@ -711,14 +755,22 @@ FileExplorerPage.prototype.explodeDirectory = function(dirName, callback, error)
 		if (!_self.isLocalStorage) {
 			_self.app.ftpClient.filelist(ftpUrl, {}, function(results) {
 				successCB(results)
-			}, function() {
+			}, function(msg) {
+				callback();
 				_self.app.showError("pg_file_explorer",
-						"Something wrong with server");
+						"Error:Failed to load data from FTP server.Path:("
+								+ ftpUrl + ")." + msg);
+
 			});
 		} else {
 			_self.app.appFS.filelist(ftpUrl, function(results) {
 				successCB(results)
-			}, error);
+			}, function() {
+				_self.app.showError("pg_file_explorer",
+						"Error:Failed to load data from Local Storage.Path:("
+								+ ftpUrl + ")." + msg);
+				callback();
+			});
 		}
 
 		// TODO - Remove below dummy data filler.
@@ -740,8 +792,8 @@ FileExplorerPage.prototype.explodeDirectory = function(dirName, callback, error)
 		// }
 		// successCB([ {
 		// fileNames : tempFiles,
-		//		 directory : tempDir
-		//		 } ]);
+		// directory : tempDir
+		// } ]);
 		// TODO - End
 	} else {
 		callback();
