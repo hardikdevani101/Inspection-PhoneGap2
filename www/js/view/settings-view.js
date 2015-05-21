@@ -1,7 +1,7 @@
 var SettingsPage = function(app) {
 	this.app = app;
+	this.context = "#pg_settings";
 	this.visSettingsDAO = new Tbl_VISSetting(app);
-	// this.event = event
 }
 
 SettingsPage.prototype.reloadServerDetail = function() {
@@ -9,57 +9,70 @@ SettingsPage.prototype.reloadServerDetail = function() {
 	if (_self.app.appCache.ftpServers.length > 0) {
 		$.each(_self.app.appCache.ftpServers, function(key, data) {
 			if (data.isFTP != 'Y') {
-				$("#txt_url").append(new Option(data.name, data.url));
+				_self.el_txURL.append(new Option(data.name, data.url));
 			}
 		});
-		$('#txt_url').selectmenu();
-		$('#txt_url').selectmenu('refresh', true);
+		_self.el_txURL.selectmenu();
+		_self.el_txURL.selectmenu('refresh', true);
 	}
 }
 
 SettingsPage.prototype.renderOrgs = function() {
-	$("#txt_organization").empty();
-	for (var i = 0; i < app.appCache.orgList.length; i++) {
-		$("#txt_organization").append(
-				new Option(app.appCache.orgList[i].name,
-						app.appCache.orgList[i].orgid));
+	var _self = this;
+	_self.el_txOrg.empty();
+	for (var i = 0; i < _self.app.appCache.orgList.length; i++) {
+		_self.el_txOrg.append(new Option(app.appCache.orgList[i].name,
+				_self.app.appCache.orgList[i].orgid));
 	}
-	$('#txt_organization').selectmenu('refresh', true);
+	_self.el_txOrg.selectmenu('refresh', true);
 }
 
 SettingsPage.prototype.renderRoles = function() {
-	$("#txt_role").empty();
-	for (var i = 0; i < app.appCache.roleList.length; i++) {
-		$("#txt_role").append(
-				new Option(app.appCache.roleList[i].name,
-						app.appCache.roleList[i].roleid));
+	var _self = this;
+	_self.el_txRole.empty();
+	for (var i = 0; i < _self.app.appCache.roleList.length; i++) {
+		_self.el_txRole.append(new Option(_self.app.appCache.roleList[i].name,
+				_self.app.appCache.roleList[i].roleid));
 	}
-	$('#txt_role').selectmenu('refresh', true);
+	_self.el_txRole.selectmenu('refresh', true);
 }
 
 SettingsPage.prototype.init = function() {
-	// Initialize components.
-	console.log("Inittialize Settings View.");
 	var _self = this;
+	_self.contextPage = $("#pg_settings", $.mobile.activePage);
+	_self.el_txWH = $("#txt_warehouse", _self.context);
+	_self.el_txOrg = $("#txt_organization", _self.context);
+	_self.el_txURL = $("#txt_url", _self.context);
+	_self.el_txRole = $("#txt_role", _self.context);
+	_self.el_txClient = $("#txt_client", _self.context);
+	_self.el_imgQua = $("#txt_imgQua", _self.context);
+	_self.el_txLang = $("#txt_lang", _self.context);
+	_self.el_txEditor = $("#txt_editApp", _self.context);
 
-	$(document).on("panelbeforeopen", "#pg_settings", function(e, ui) {
-		$("#pg_settings").enhanceWithin();
+	_self.contextPage.on("panelbeforeopen", function(event, ui) {
+		_self.contextPage.enhanceWithin();
+		event.preventDefault();
+		return false;
 	});
 
 	// Register Event listeners
-	$("#txt_organization").on("change", function() {
+	_self.el_txOrg.on("change", function(event) {
 		_self.onOrgChange();
+		event.preventDefault();
+		return false;
 	});
 
-	$("#txt_url").on("change", function() {
+	_self.el_txURL.on("change", function(event) {
 		_self.onServerChange()
+		event.preventDefault();
+		return false;
 	});
 
 	_self.renderOrgs();
 	_self.renderRoles();
 	_self.onOrgChange();
 
-	$('#_form_settings').validate({
+	$('#_form_settings', _self.context).validate({
 		rules : {
 			txt_url : {
 				required : true
@@ -84,7 +97,6 @@ SettingsPage.prototype.init = function() {
 			}
 		},
 		invalidHandler : function() {
-			alert("invalid form"); // for demo
 		},
 		messages : {
 			txt_url : {
@@ -110,8 +122,8 @@ SettingsPage.prototype.init = function() {
 			}
 		},
 		errorPlacement : function(error, element) {
-			// error.appendTo(element.parent().prev());
-			// element.attr("placeholer","Required Field");
+			// // error.appendTo(element.parent().prev());
+			// // element.attr("placeholer","Required Field");
 			element.attr("style", "border:1px solid red;");
 		},
 		submitHandler : function(form) {
@@ -128,10 +140,10 @@ SettingsPage.prototype.init = function() {
 			_self.app.appCache.settingInfo = settingInfo;
 			_self.onSettingFind(settingInfo);
 		} else {
-			$("#pg_settings").panel("open", {});
+			$(_self.context, $.mobile.activePage).panel("open", {});
 		}
 	}, function(msg) {
-		console.log("SettingInfo Error - " + msg);
+		_self.app.showError("pg_settings", "No Settings Found:" + msg)
 	});
 
 }
@@ -139,123 +151,126 @@ SettingsPage.prototype.init = function() {
 SettingsPage.prototype.onUpdate = function() {
 	var _self = this;
 	var settingInfo = {};
-	settingInfo['lang'] = $("#txt_lang option:selected").val();
-	settingInfo['service_url'] = $("#txt_url option:selected").val();
-	settingInfo['client_id'] = $("#txt_client option:selected").val();
-	settingInfo['org_id'] = $("#txt_organization option:selected").val();
-	settingInfo['warehouse_id'] = $("#txt_warehouse option:selected").val();
-	settingInfo['img_quality'] = $("#txt_imgQua option:selected").val();
-	settingInfo['role'] = $("#txt_role option:selected").val();
-	settingInfo['img_editor'] = $("#txt_editApp option:selected").val();
+	settingInfo['lang'] = $("#txt_lang option:selected", _self.context).val();
+	settingInfo['service_url'] = $("#txt_url option:selected", _self.context)
+			.val();
+	settingInfo['client_id'] = $("#txt_client option:selected", _self.context)
+			.val();
+	settingInfo['org_id'] = $("#txt_organization option:selected",
+			_self.context).val();
+	settingInfo['warehouse_id'] = $("#txt_warehouse option:selected",
+			_self.context).val();
+	settingInfo['img_quality'] = $("#txt_imgQua option:selected", _self.context)
+			.val();
+	settingInfo['role'] = $("#txt_role option:selected", _self.context).val();
+	settingInfo['img_editor'] = $("#txt_editApp option:selected", _self.context)
+			.val();
 
 	var error = function(msg) {
-		console.log("Setting Info Updates Fails." + msg);
+		_self.app.showError("pg_settings", "Error: SettingInfo Update Failed-"
+				+ msg)
 	};
 
 	this.visSettingsDAO.find({}, function(result) {
 		if (result.service_url) {
 			_self.visSettingsDAO.update(settingInfo, function(data) {
 				_self.app.appCache.updateSettingInfo(settingInfo);
-				$("#pg_settings").panel("close");
+				$("#pg_settings", $.mobile.activePage).panel("close");
 			}, error);
 		} else {
 			_self.visSettingsDAO.add(settingInfo, function(data) {
 				_self.app.appCache.updateSettingInfo(settingInfo);
-				$("#pg_settings").panel("close");
+				$("#pg_settings", $.mobile.activePage).panel("close");
 			}, error);
 		}
 	}, function(msg) {
-		console.log("SettingInfo Error - " + msg);
+		_self.app
+				.showError('pg_settings', "Error:No Seeting info Found-" + msg)
 	});
 }
 
 SettingsPage.prototype.onOrgChange = function() {
-	console.log("Organizartion Change");
-	$("#txt_warehouse").empty();
-	var org_id = $("#txt_organization").val();
+	var _self = this;
+	var el_txWH = $("#txt_warehouse", _self.context);
+	el_txWH.empty();
+	var org_id = el_txWH.val();
 	if (org_id == null || org_id == 0) {
 		for (var i = 0; i < app.appCache.warehouseList.length; i++) {
-			$("#txt_warehouse").append(
-					new Option(app.appCache.warehouseList[i].name,
-							app.appCache.warehouseList[i].warehouseid));
+			el_txWH.append(new Option(app.appCache.warehouseList[i].name,
+					app.appCache.warehouseList[i].warehouseid));
 		}
 	} else {
 		var result = $.grep(app.appCache.warehouseList, function(e) {
 			return e.orgid == org_id;
 		});
 		for (var i = 0; i < result.length; i++) {
-			$("#txt_warehouse").append(
-					new Option(result[i].name, result[i].warehouseid));
+			el_txWH.append(new Option(result[i].name, result[i].warehouseid));
 		}
 	}
-	$('#txt_warehouse').selectmenu('refresh', true);
+	el_txWH.selectmenu('refresh', true);
 }
 
 SettingsPage.prototype.onServerChange = function() {
-	console.log("Server Change");
 	var _self = this;
+	var el_txWH = _self.el_txWH;
+	var el_txOrg = _self.el_txOrg;
 
-	$("#txt_warehouse").empty();
-	var org_id = $("#txt_organization").val();
+	el_txWH.empty();
+	var org_id = el_txOrg.val();
 	if (org_id == null || org_id == 0) {
 		for (var i = 0; i < app.appCache.warehouseList.length; i++) {
-			$("#txt_warehouse").append(
-					new Option(app.appCache.warehouseList[i].name,
-							app.appCache.warehouseList[i].warehouseid));
+			el_txWH.append(new Option(app.appCache.warehouseList[i].name,
+					app.appCache.warehouseList[i].warehouseid));
 		}
 	} else {
 		var result = $.grep(app.appCache.warehouseList, function(e) {
 			return e.orgid == org_id;
 		});
 		for (var i = 0; i < result.length; i++) {
-			$("#txt_warehouse").append(
-					new Option(result[i].name, result[i].warehouseid));
+			el_txWH.append(new Option(result[i].name, result[i].warehouseid));
 		}
 	}
-	$('#txt_warehouse').selectmenu('refresh', true);
-
-	// _self.app.logout();
+	el_txWH.selectmenu('refresh', true);
 }
 
 SettingsPage.prototype.onSettingFind = function(setting) {
 	var _self = this;
 	_self.app.isLogin = setting.is_login;
 	_self.app.img_editor = setting.img_editor;
+	var contextPage = _self.contextPage;
 
 	if (!setting.service_url || setting.service_url == '') {
 		if (_self.app.isLogin) {
 			_self.app.logout();
 		}
-		$("#pg_settings").panel("open", {});
+		contextPage.panel("open", {});
 	} else {
-		$("#pg_settings").panel("close");
-		$("#txt_url").val(setting.service_url).attr('selected', true).siblings(
-				'option').removeAttr('selected');
-		$("#txt_url").selectmenu("refresh", true);
-		$("#txt_role").val(setting.role).attr('selected', true).siblings(
-				'option').removeAttr('selected');
-		$("#txt_role").selectmenu("refresh", true);
-		$("#txt_client").val(setting.client_id).attr('selected', true)
-				.siblings('option').removeAttr('selected');
-		$("#txt_client").selectmenu("refresh", true);
-		$("#txt_imgQua").val(setting.img_quality).attr('selected', true)
-				.siblings('option').removeAttr('selected');
-		$("#txt_imgQua").selectmenu("refresh", true);
-		$("#txt_lang").val(setting.lang).attr('selected', true).siblings(
-				'option').removeAttr('selected');
-		$("#txt_lang").selectmenu("refresh", true);
-		$("#txt_organization").val(setting.org_id).attr('selected', true)
-				.siblings('option').removeAttr('selected');
-		$("#txt_organization").selectmenu("refresh", true);
-		$("#txt_warehouse").val(setting.warehouse_id).attr('selected', true)
-				.siblings('option').removeAttr('selected');
-		$("#txt_warehouse").selectmenu("refresh", true);
-		$("#txt_organization").trigger("change");
-		$("#txt_editApp").val(setting.img_editor).attr('selected', true)
-				.siblings('option').removeAttr('selected');
-		$("#txt_editApp").selectmenu("refresh", true);
 
-		// Enhance new select element
-		// $('#txt_organization').selectmenu();
+		contextPage.panel("close");
+		_self.el_txURL.val(setting.service_url).attr('selected', true)
+				.siblings('option').removeAttr('selected');
+		_self.el_txURL.selectmenu("refresh", true);
+		_self.el_txRole.val(setting.role).attr('selected', true).siblings(
+				'option').removeAttr('selected');
+		_self.el_txRole.selectmenu("refresh", true);
+		_self.el_txClient.val(setting.client_id).attr('selected', true)
+				.siblings('option').removeAttr('selected');
+		_self.el_txClient.selectmenu("refresh", true);
+		_self.el_imgQua.val(setting.img_quality).attr('selected', true)
+				.siblings('option').removeAttr('selected');
+		_self.el_imgQua.selectmenu("refresh", true);
+		_self.el_txLang.val(setting.lang).attr('selected', true).siblings(
+				'option').removeAttr('selected');
+		_self.el_txLang.selectmenu("refresh", true);
+		_self.el_txOrg.val(setting.org_id).attr('selected', true).siblings(
+				'option').removeAttr('selected');
+		_self.el_txOrg.selectmenu("refresh", true);
+		_self.el_txWH.val(setting.warehouse_id).attr('selected', true)
+				.siblings('option').removeAttr('selected');
+		_self.el_txWH.selectmenu("refresh", true);
+		_self.el_txOrg.trigger("change");
+		_self.el_txEditor.val(setting.img_editor).attr('selected', true)
+				.siblings('option').removeAttr('selected');
+		_self.el_txEditor.selectmenu("refresh", true);
 	}
 }
