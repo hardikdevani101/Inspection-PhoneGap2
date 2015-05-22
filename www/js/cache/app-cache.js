@@ -109,7 +109,7 @@ AppCache.prototype.init = function() {
 	}, {
 		orgid : "1000003",
 		warehouseid : "1000003",
-		name : "Austin Stock in Singapore"
+		name : "Austin Stock in Austin"
 	}, {
 		orgid : "1000003",
 		warehouseid : "1000002",

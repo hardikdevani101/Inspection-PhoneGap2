@@ -255,9 +255,6 @@ FileExplorerPage.prototype.fillDataProviders = function() {
 			for (var i = 0; i < result.ftpservers.length; i++) {
 				_self.app.appCache.ftpServers.push(result.ftpservers[i]);
 			}
-			// $.each(result.ftpservers, function(index, data) {
-			// _self.app.appCache.ftpServers.push(data);
-			// });
 			reloadDataProviders();
 		}
 		_self.app.visionApi.getFTPServerList({

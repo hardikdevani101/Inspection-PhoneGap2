@@ -2,7 +2,7 @@ var DB = function(app) {
 	console.log("DB constructor");
 	this.app = app;
 	this.currentDBVersion = "1.1"
-	this.dbstore = window.openDatabase("vision_db", "", "vision_db",
+	this.dbstore = window.openDatabase("vision_db2", "", "vision_db2",
 			2 * 1024 * 1024);
 }
 
@@ -21,63 +21,171 @@ DB.prototype.init = function(success, error) {
 	_self.dbstore
 			.transaction(
 					function(tx) {
-						if (_self.dbstore.version == "") {
-							// tx.executeSql('DROP TABLE IF EXISTS
-							// vis_gallery');
-							// tx.executeSql('DROP TABLE IF EXISTS
-							// vis_setting');
-							tx
-									.executeSql('CREATE TABLE IF NOT EXISTS '
-											+ ' vis_setting'
-											+ ' (vis_url, vis_lang, vis_client_id, vis_role, vis_whouse_id, vis_ord_id, username,userid,userpwd, vis_img_qulty, is_login, app_version,img_editor)');
-							tx
-									.executeSql('CREATE TABLE IF NOT EXISTS '
-											+ ' vis_gallery '
-											+ ' (mr_line,insp_line DEFAULT "0",isMR DEFAULT "N",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F", dataSource DEFAULT "CMR")');
-							_self.dbstore.changeVersion(_self.dbstore.version,
-									"1.0", function(tx) {
-									}, function(error) {
-										console.log('Version Update Error >>> '
-												+ error)
-									});
-						}
-					},
-					_self.errorCallback,
-					function() {
-						if (_self.dbstore.version == "1.0") {
-							_self.dbstore
-									.changeVersion(
-											_self.dbstore.version,
-											"1.1",
-											function(tx) {
-												tx
-														.executeSql('ALTER TABLE vis_setting ADD COLUMN img_editor');
-												tx
-														.executeSql('ALTER COLUMN img_editor SET DEFAULT "Vision"');
-											},
-											function(error) {
-												if (error.code == 5) {
-													// _self.dbstore
-													// .transaction(function(tx)
-													// {
-													// tx
-													// .executeSql('UPDATE
-													// vis_setting SET
-													// img_editor="Vision"');
-													// });
-												}
-												console
-														.log('DB Version Update Error : 1.1>>> '
-																+ error.message)
-											});
-						}
-						// if (_self.dbstore.version == "1.1") {
-						// _self.dbstore.changeVersion("", "1.2", function(tx) {
-						// // TODO No changes yet
+						// if (_self.dbstore.version == "") {
+						// tx.executeSql('DROP TABLE IF EXISTS
+						// vis_gallery');
+						// tx.executeSql('DROP TABLE IF EXISTS
+						// vis_setting');
+						tx
+								.executeSql('CREATE TABLE IF NOT EXISTS '
+										+ ' vis_setting'
+										+ ' (vis_url, vis_lang, vis_client_id, vis_role, vis_whouse_id, vis_ord_id, username,userid,userpwd, vis_img_qulty, is_login, app_version,img_editor DEFAULT "Vision")');
+						tx
+								.executeSql('CREATE TABLE IF NOT EXISTS '
+										+ ' vis_gallery '
+										+ ' (mr_line,insp_line DEFAULT "0",isMR DEFAULT "N",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F", dataSource DEFAULT "CMR")');
+						tx
+								.executeSql('CREATE TABLE IF NOT EXISTS '
+										+ ' vis_server '
+										+ ' (rid, name , url , isFTP , user , password , isSelected DEFAULT "F")');
+						_self.dbstore.changeVersion(_self.dbstore.version,
+								"1.0", function(tx) {
+								}, function(error) {
+									console.log('Version Update Error >>> '
+											+ error)
+								});
+						// }
+					}, _self.errorCallback, function() {
+
+						_self.dbstore.transaction(_self.loadFTPEntry,
+								_self.errorCB);
+
+						// if (_self.dbstore.version == "1.0") {
+						// _self.dbstore
+						// .changeVersion(
+						// _self.dbstore.version,
+						// "1.1",
+						// function(tx) {
+						// tx
+						// .executeSql(
+						// 'ALTER TABLE vis_setting ADD COLUMN img_editor
+						// DEFAULT "Vision"',
+						// [],
+						// function() {
+						// alert('change done');
+						// },
+						// function() {
+						// alert('Error');
+						// });
+						//
+						// alert('change done');
+						// },
+						// function(error) {
+						// if (error.code == 5) {
+						// // _self.dbstore
+						// // .transaction(function(tx)
+						// // {
+						// // tx
+						// // .executeSql('UPDATE
+						// // vis_setting SET
+						// // img_editor="Vision"');
+						// // });
+						// }
+						// alert('DB Version Update Error : 1.1>>> '
+						// + error.message
+						// + "Error Code : "
+						// + error.code);
+						// console
+						// .log('DB Version Update Error : 1.1>>> '
+						// + error.message)
 						// });
 						// }
 						successCallback();
 					});
+}
+
+DB.prototype.loadFTPEntry = function(tx) {
+	var _self = this;
+	tx
+			.executeSql(
+					'select * from vis_server',
+					[],
+					function(tx, results) {
+						if (results.rows.length == 0) {
+							_self.app.appCache.ftpServers.push({
+								name : "FE VISD",
+								url : "http://10.210.23.176:8088",
+								isFTP : "F"
+							});
+							_self.app.appCache.ftpServers.push({
+								name : "Production",
+								url : "http://10.210.23.77:8088",
+								isFTP : "F"
+							});
+							_self.app.appCache.ftpServers.push({
+								name : "Development",
+								url : "http://10.210.23.78:8088",
+								isFTP : "F"
+							});
+							_self.app.appCache.ftpServers.push({
+								name : "Test",
+								url : "http://10.210.23.97:8088",
+								isFTP : "F"
+							});
+							_self.app.appCache.ftpServers.push({
+								name : "Logilite-Dev",
+								url : "http://203.88.138.222:8384",
+								isFTP : "F"
+							});
+							tx
+									.executeSql('insert into vis_server (name , url , isFTP) '
+											+ ' values ("FE VISD","http://10.210.23.176:8088","F")');
+							tx
+									.executeSql('insert into vis_server (name , url , isFTP)'
+											+ ' values ("Production","http://10.210.23.77:8088","F")');
+							tx
+									.executeSql('insert into vis_server (name , url , isFTP)'
+											+ ' values ("Development","http://10.210.23.78:8088","F")');
+							tx
+									.executeSql('insert into vis_server (name , url , isFTP)'
+											+ ' values ("Test","http://10.210.23.97:8088","F")');
+							tx
+									.executeSql('insert into vis_server (name , url , isFTP)'
+											+ ' values ("Logilite-Dev","http://203.88.138.222:8384","F")');
+						} else {
+							for (var j = 0; j < results.rows.length; j++) {
+								result = 0
+								rowitem = results.rows.item(j);
+								result = jQuery.grep(
+										_self.app.appCache.ftpServers,
+										function(item, index) {
+											return item.url == rowitem.url;
+										});
+								if (!result.length > 0) {
+									_self.app.appCache.ftpServers.push(rowitem);
+								}
+
+							}
+						}
+						_self.app.settingnview.renderServer();
+					}, _self.errorCB);
+}
+
+DB.prototype.createFTPEntry = function() {
+	var _self = this;
+	_self.dbstore.transaction(function(tx) {
+		tx.executeSql('select * from vis_server', [], function(tx, results) {
+			for (var i = 0; i < _self.app.appCache.ftpServers.length; i++) {
+				ftpItem = _self.app.appCache.ftpServers[i];
+				found = false;
+				for (var j = 0; j < results.rows.length; j++) {
+					item = results.rows.item(j);
+					if (ftpItem.url == item.url) {
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					tx.executeSql('insert into vis_server '
+							+ ' (rid , name , url , isFTP , user , password)'
+							+ ' values ("' + ftpItem.rid + '","' + ftpItem.name
+							+ '","' + ftpItem.url + '","' + ftpItem.isFTP
+							+ '","' + ftpItem.user + '","' + ftpItem.password
+							+ '")');
+				}
+			}
+		}, _self.errorCB);
+	}, _self.errorCB);
 }
 
 DB.prototype.getTotalInspEntries = function(param, callBack) {

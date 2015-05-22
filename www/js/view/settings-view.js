@@ -6,6 +6,29 @@ var SettingsPage = function(app) {
 
 SettingsPage.prototype.reloadServerDetail = function() {
 	var _self = this;
+	_self.app.visionApi.getFTPServerList({
+		orgid : app.appCache.settingInfo.org_id
+	}, function(result) {
+		for (var i = 0; i < result.ftpservers.length; i++) {
+			findCount = 0
+			ftpItem = result.ftpservers[i];
+			findCount = jQuery.grep(_self.app.appCache.ftpServers, function(
+					item, index) {
+				return item.url == ftpItem.url;
+			});
+			if (!findCount.length > 0) {
+				_self.app.appCache.ftpServers.push(ftpItem);
+			}
+		}
+		_self.app.appDB.createFTPEntry();
+	}, function(msg) {
+		_self.app.showError("pg_settings", "Servers failed : " + msg);
+	});
+}
+
+SettingsPage.prototype.renderServer = function() {
+	var _self = this;
+	_self.el_txURL.html('');
 	if (_self.app.appCache.ftpServers.length > 0) {
 		$.each(_self.app.appCache.ftpServers, function(key, data) {
 			if (data.isFTP != 'Y') {
@@ -13,6 +36,11 @@ SettingsPage.prototype.reloadServerDetail = function() {
 			}
 		});
 		_self.el_txURL.selectmenu();
+		if (_self.app.appCache.settingInfo.service_url) {
+			_self.el_txURL.val(_self.app.appCache.settingInfo.service_url)
+					.attr('selected', true).siblings('option').removeAttr(
+							'selected');
+		}
 		_self.el_txURL.selectmenu('refresh', true);
 	}
 }
@@ -51,6 +79,7 @@ SettingsPage.prototype.init = function() {
 
 	_self.contextPage.on("panelbeforeopen", function(event, ui) {
 		_self.contextPage.enhanceWithin();
+		_self.renderServer();
 		event.preventDefault();
 		return false;
 	});

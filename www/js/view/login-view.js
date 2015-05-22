@@ -39,9 +39,9 @@ LoginPage.prototype.onLogin = function() {
 										'change', '#pg_inspection', {
 											reload : false
 										});
+								_self.app.settingnview.reloadServerDetail();
 							}
 							// Load More Server details.
-							_self.app.settingnview.reloadServerDetail();
 
 						}, function() {
 							_self.app.showError("pg_login", "Login failed");

@@ -513,7 +513,7 @@ VisionApi.prototype.getFTPServerList = function(params, success, error) {
 									fUrl = "http://" + fUrl;
 								}
 
-								resultline['record-id'] = recordId;
+								resultline['rid'] = recordId;
 								resultline['url'] = fUrl;
 								resultline['isFTP'] = isFTP;
 								resultline['name'] = fName;

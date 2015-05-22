@@ -24,6 +24,20 @@ InspLinesPage.prototype.init = function() {
 			_self.loadMRLines();
 		}, 10);
 
+		// TODO : Dummy Data Runner Start
+//		var ermsg = {
+//			// 'X_INSTRUCTIONLINE_ID' : 'MR2323',
+//			// 'M_INOUT_ID' : '23242342',
+//			'fileURI' : 'file/files/ererer.ted',
+//			'error' : 'ERROR Msg'
+//		};
+//		_self.app.appFTPUtil.processLog.push(ermsg);
+//		_self.app.appFTPUtil.processLog.push(ermsg);
+//		_self.app.appFTPUtil.processLog.push(ermsg);
+//		_self.app.appFTPUtil.processLog.push(ermsg);
+//		_self.app.appFTPUtil.processLog.push(ermsg);
+		// TODO : Dummy Data Runner End
+
 		_self.el_ispProgLog.hide();
 		if (_self.app.appFTPUtil.processLog.length > 0) {
 			_self.el_ispProgLog.html(_self.app.appFTPUtil.processLog.length);
@@ -32,30 +46,22 @@ InspLinesPage.prototype.init = function() {
 	});
 
 	_self.el_ispProgLog.on('tap', function() {
-		$("#pop_process_log", _self.contextInspDetail).popup('open')
+
+		$("#pop_process_log", _self.contextInspDetail).popup('open');
 		event.preventDefault();
 		return false;
 	});
 
-	$("#btn_retry_attach", "#insp_process_log").on('tap', function(event) {
-		_self = this;
+	$("#btn_retry_attach").on('tap', function(event) {
 		$("#pop_process_log", _self.contextInspDetail).popup("close");
 		_self.onFinishedCalled();
 		event.preventDefault();
 		return false
 	});
 
-	$("#btn_retry_sync", "#insp_process_log").on('tap', function(event) {
-		_self = this;
-		$("#pop_process_log", _self.contextInspDetail).popup("close");
-		_self.syncInspLines();
-		event.preventDefault();
-		return false;
-	});
-
 	$("#pop_process_log", _self.contextInspDetail).bind({
 		popupbeforeposition : function(event, ui) {
-			var el_syncItems = $("#sync_items", "#insp_process_log");
+			var el_syncItems = $("#sync_items");
 			var items = '<li data-role="list-divider">Sync Failed</li>';
 			if (_self.app.appFTPUtil.processLog) {
 				items += _self.getFTPProcessLog();
@@ -67,11 +73,18 @@ InspLinesPage.prototype.init = function() {
 			if (_self.app.visionApi.processLog.attachImage) {
 				items += _self.getAttacheProcessLog();
 			}
-			var el_attachItems = $("#attach_items", "#insp_process_log");
+			var el_attachItems = $("#attach_items");
 			el_attachItems.html(items);
 			el_attachItems.listview("refresh");
-			return false;
+			$("#pop_process_log").enhanceWithin();
 		}
+	});
+
+	$("#btn_retry_sync").on('tap', function(event) {
+		$("#pop_process_log", _self.contextInspDetail).popup("close");
+		_self.syncInspLines();
+		event.preventDefault();
+		return false;
 	});
 
 	$('#btn_refresh_mrlines', _self.context).on("click", function() {
@@ -107,23 +120,23 @@ InspLinesPage.prototype.init = function() {
 }
 
 InspLinesPage.prototype.getFTPProcessLog = function() {
-	item = '';
+	var _self = this;
+	item1 = '';
 	$.each(_self.app.appFTPUtil.processLog, function(item, index) {
-		var line = '<li data-mini="true">MRLine:' + this.M_INOUT_ID
-				+ '-InspLine:' + this.X_INSTRUCTIONLINE_ID + '-File:'
-				+ this.fileURI + ' -Error:' + this.error + '</li>';
-		items += line;
+		var line = '<li data-mini="true">File Failed:' + item + '</li>';
+		item1 += line;
 	});
-	return item;
+	return item1;
 }
 
 InspLinesPage.prototype.getAttacheProcessLog = function() {
-	item = '';
-	$.each(_self.app.visionApi.processLog.attachImage, function() {
-		var line = '<li data-mini="true">File Failed:' + this + '</li>';
-		items += line;
+	var _self = this;
+	item1 = '';
+	$.each(_self.app.visionApi.processLog.attachImage, function(item, index) {
+		var line = '<li data-mini="true">File Failed:' + item + '</li>';
+		item1 += line;
 	});
-	return item;
+	return item1;
 }
 
 InspLinesPage.prototype.displayAlert = function() {
@@ -134,6 +147,7 @@ InspLinesPage.prototype.displayAlert = function() {
 		_self.app.showError("pg_inspection_detail",
 				"All Files Uploaded Successfully.");
 	}
+	_self.app.hideDialog();
 }
 
 InspLinesPage.prototype.syncInspLines = function(callBack) {
@@ -155,6 +169,7 @@ InspLinesPage.prototype.syncInspLines = function(callBack) {
 	}
 	var ftpFailer = function(msg) {
 		_self.inProgressSyncCount++;
+		_self.app.appFTPUtil.processLog.push(msg);
 		var el_insProcLog = $("#insp_process_log", _self.contextInspDetail);
 		if (!_self.isAlertDisplay) {
 			_self.isAlertDisplay = true;
@@ -185,6 +200,10 @@ InspLinesPage.prototype.syncInspLines = function(callBack) {
 							ftpSuccess(msg);
 						});
 			}
+		} else {
+			_self.app.showError("pg_inspection_detail",
+					"No files pending for Sync.");
+			$.mobile.loading('hide');
 		}
 	};
 
@@ -340,6 +359,7 @@ InspLinesPage.prototype.displayAttachAlert = function() {
 		_self.app.showError("pg_inspection_detail",
 				"All Files are Attached Successfully!");
 	}
+	_self.app.hideDialog();
 }
 
 InspLinesPage.prototype.onFinishedCalled = function() {
@@ -357,6 +377,7 @@ InspLinesPage.prototype.onFinishedCalled = function() {
 
 	var attachFail = function(msg) {
 		_self.inProgressAttachCount++;
+		_self.app.visionApi.processLog.attachImage.push(msg);
 		if (_self.inProgressAttachCount == totalAttachCount) {
 			_self.displayAttachAlert();
 		}

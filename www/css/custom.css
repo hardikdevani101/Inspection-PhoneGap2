@@ -327,18 +327,7 @@ body {
 	.img-container {
 		min-height: 480px;
 	} */
-	#pop_process_log {
-		font-size: 20px !important;
-	}
-	#pop_process_log ul {
-		font-size: 20px !important;
-	}
-	#pop_process_log ul li {
-		font-size: 20px !important;
-	}
-	#pop_process_log .ui-btn {
-		font-size: 20px !important;
-	}
+	
 	#edit-toolbar  .ui-btn-icon-notext:after {
 		top: 10% !important;
 		margin-top: 0px !important;
@@ -432,6 +421,7 @@ body {
 	.xui-header .ui-title, .ui-footer .ui-title {
 		xfont-size: 1em;
 		min-height: 5.1em!importanat;
+		color : white !important;
 	}
 
 	/* #pop_file_actions-popup .ui-btn-icon-notext, .ui-header button.ui-btn.ui-btn-icon-notext,
@@ -535,6 +525,22 @@ body {
 		font-size: 30px !important;
 		padding: 1em 1em !important;
 		margin: 0.1em .3em !important;
+	}
+	
+	#pop_process_log {
+		font-size: 20px !important;
+		min-width: 500px !important;
+	}
+	#pop_process_log ul {
+		font-size: 20px !important;
+		min-width: 500px !important;
+	}
+	#pop_process_log ul li {
+		font-size: 20px !important;
+		min-width: 500px !important;
+	}
+	#pop_process_log .ui-btn {
+		font-size: 20px !important;
 	}
 }
 
