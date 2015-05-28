@@ -144,23 +144,28 @@ FS.prototype.createVISFile = function(param) {
 													findResult = [];
 													for (var i = 0; i < _self.app.galleryview.inspFiles[param.inspID].length; i++) {
 														item = _self.app.galleryview.inspFiles[param.inspID][i];
-														if (item.filePath == param['oldURI']) {
+														console.log(item.filePath+">>>>>>>>>>>>>"+param['oldURI']);
+														console.log(item.oldURI+">>>>>>>>>>>>>"+param['oldURI']);
+														if (item.filePath == param['oldURI'] || item.oldURI == param['oldURI']) {
 															findResult
 																	.push(item);
+															console.log("URL Found");
 														}
 													}
 
 													if (findResult.length > 0) {
+														console.log("URL Found");
 														$
 																.each(
 																		_self.app.galleryview.inspFiles[param.inspID],
 																		function() {
-																			if (this.filePath == param['oldURI']) {
-																				this.filePath == param.filePath;
-																				this['name'] == fileEntry.name;
+																			if (this.filePath == param['oldURI'] || this.oldURI == param['oldURI']) {
+																				this.filePath = param.filePath;
+																				this.name = fileEntry.name;
 																			}
 																		});
 													} else {
+														console.log("URL Not Found");
 														item = {};
 														item['filePath'] = param.filePath;
 														item['name'] = fileEntry.name;
@@ -171,6 +176,7 @@ FS.prototype.createVISFile = function(param) {
 
 													}
 													_self.app.appCache.imgCache[param.filePath] = param.fileData;
+													_self.app.galleryview.renderInspFiles();
 												}
 											};
 											writer.write(binaryData);

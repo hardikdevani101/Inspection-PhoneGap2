@@ -291,7 +291,7 @@ body {
 	}
 }
 
-@media ( min-width : 600px) {
+@media ( min-width : 900px) {
 	/* .cropper-container {
 		min-height: 400px;
 	}
@@ -320,7 +320,7 @@ body {
 }
 
 /* Second breakpoint is 63.75em (1020px). 4 column layout. Tiles will be 250x250 pixels incl. margin again at the breakpoint. */
-@media ( min-width : 63.75em ) { /* .cropper-container {
+@media ( min-width : 920px ) { /* .cropper-container {
 		min-height: 480px;
 	}
 	
@@ -374,8 +374,8 @@ body {
 		margin-left: -11px;
 	}
 	.ui-header.ui-screen-hidden+.ui-selectmenu-list li  .ui-btn {
-		line-height: 1em !important;
-		xfont-size: 1.2em !important;
+		xline-height: 1em !important;
+		font-size: .7em !important;
 	}
 	.ui-mobile label, div.ui-controlgroup-label {
 		font-weight: normal;
@@ -524,7 +524,8 @@ body {
 	#crop-toolbar .ui-crop-tools .ui-btn {
 		font-size: 30px !important;
 		padding: 1em 1em !important;
-		margin: 0.1em .3em !important;
+		margin: 0.1em .1em !important;
+		float:left !important;
 	}
 	
 	#pop_process_log {
@@ -543,6 +544,7 @@ body {
 		font-size: 20px !important;
 	}
 }
+
 
 .ui-page {
 	-webkit-backface-visibility: hidden;

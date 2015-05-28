@@ -313,11 +313,12 @@ DB.prototype.onAttachSucess = function(param) {
 					+ param.id + '" and isMR="Y"';
 		}
 	}
-	console.log(sql);
-	console.log(fsql);
 	_self.dbstore.transaction(function(tx) {
 		if (sql.length > 0) {
 			tx.executeSql(sql);
+			if (_self.app.galleryview) {
+				_self.app.galleryview.inspFiles = undefined;
+			}
 		}
 		if (fsql.length > 0) {
 			tx.executeSql(fsql);
@@ -327,6 +328,8 @@ DB.prototype.onAttachSucess = function(param) {
 
 DB.prototype.onChangeUplaodStatus = function(M_InOutLine_ID,
 		X_INSTRUCTIONLINE_ID, isMR, fileName, fileFullPath) {
+	console.log(M_InOutLine_ID+">>>"+
+			X_INSTRUCTIONLINE_ID+">>>"+ isMR+">>>"+ fileName+">>>"+ fileFullPath);
 	var _self = this;
 	_self.dbstore.transaction(function(tx) {
 		var sqlQuery = 'UPDATE vis_gallery SET imgUpload="T"';
@@ -339,12 +342,15 @@ DB.prototype.onChangeUplaodStatus = function(M_InOutLine_ID,
 					+ '" and isMR="Y" and insp_line="' + X_INSTRUCTIONLINE_ID
 					+ '"';
 		} else {
-			sqlQuery = ' WHERE file="' + fileFullPath
+			sqlQuery += ' WHERE file="' + fileFullPath
 					+ '" and isMR="N" and insp_line="' + X_INSTRUCTIONLINE_ID
 					+ '"';
 		}
 		console.log(sqlQuery);
 		tx.executeSql(sqlQuery);
+		if (_self.app.galleryview) {
+			_self.app.galleryview.inspFiles[X_INSTRUCTIONLINE_ID] = undefined;
+		}
 	}, _self.errorCB, _self.success);
 }
 

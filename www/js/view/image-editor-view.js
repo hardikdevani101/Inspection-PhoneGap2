@@ -277,7 +277,7 @@ ImageEditorPage.prototype.init = function() {
 		return false;
 	});
 
-	_self.el_btnRotateLeft.on("tap", function(event) {
+	_self.el_btnRotateRight.on("tap", function(event) {
 		_self.corpperImage.cropper("rotate", 45);
 		event.preventDefault();
 		return false;
