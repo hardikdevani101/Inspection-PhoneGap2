@@ -224,12 +224,12 @@ End of Home page
 				<div id="login-error-box" data-role="popup" data-theme="a"
 					class="ui-content"></div>
 				<div data-role="fieldcontainer">
-					<input id="txt_user" name="txt_user" type="text" value="alex.perez"
+					<input id="txt_user" name="txt_user" type="text" value=""
 						placeholder="Enter Username!" data-mini="true" />
 				</div>
 				<div data-role="fieldcontainer">
 					<input id="txt_password" name="txt_password" type="password"
-						value="password" placeholder="Enter Password!" data-mini="true" />
+						value="" placeholder="Enter Password!" data-mini="true" />
 				</div>
 				<input id="loginbtn" type="submit" data-mini="true"
 					data-inline="true" value="Login" data-theme="a">
@@ -343,6 +343,10 @@ End of MR line page
 				</div>
 			</div>
 			<div data-role="main" class="ui-content" data-theme="b">
+				<ul data-role="listview" id="edit_items" data-inset="false"
+					data-mini="true">
+					<li data-role="list-divider">Edit Log</li>
+				</ul>
 				<ul data-role="listview" id="sync_items" data-inset="false"
 					data-mini="true">
 					<li data-role="list-divider">Sync Log</li>

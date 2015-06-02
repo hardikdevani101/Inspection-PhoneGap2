@@ -96,7 +96,6 @@ FS.prototype.getFile = function(path, success) {
 }
 
 FS.prototype.createVISFile = function(param) {
-	console.log(param.filePath);
 	var _self = this;
 	var prefix = "PS";
 	if (_self.app.appCache.prefixCache[param.mrLineID]) {
@@ -133,10 +132,10 @@ FS.prototype.createVISFile = function(param) {
 												var fileFullPath = fileEntry
 														.toURL();
 												var oldFullPath = param.filePath;
-												console.log(oldFullPath);
 												param['oldURI'] = oldFullPath;
 												param.filePath = fileFullPath;
 												param['fileName'] = fileEntry.name;
+												param['imgEdited'] = 'T';
 
 												_self.app.appDB
 														.doGalleryEntry(param);
@@ -144,17 +143,13 @@ FS.prototype.createVISFile = function(param) {
 													findResult = [];
 													for (var i = 0; i < _self.app.galleryview.inspFiles[param.inspID].length; i++) {
 														item = _self.app.galleryview.inspFiles[param.inspID][i];
-														console.log(item.filePath+">>>>>>>>>>>>>"+param['oldURI']);
-														console.log(item.oldURI+">>>>>>>>>>>>>"+param['oldURI']);
 														if (item.filePath == param['oldURI'] || item.oldURI == param['oldURI']) {
 															findResult
 																	.push(item);
-															console.log("URL Found");
 														}
 													}
 
 													if (findResult.length > 0) {
-														console.log("URL Found");
 														$
 																.each(
 																		_self.app.galleryview.inspFiles[param.inspID],
@@ -162,15 +157,16 @@ FS.prototype.createVISFile = function(param) {
 																			if (this.filePath == param['oldURI'] || this.oldURI == param['oldURI']) {
 																				this.filePath = param.filePath;
 																				this.name = fileEntry.name;
+																				this.imgEdited = 'T';
 																			}
 																		});
 													} else {
-														console.log("URL Not Found");
 														item = {};
 														item['filePath'] = param.filePath;
 														item['name'] = fileEntry.name;
 														item['uploded'] = "F";
 														item['dataSource'] = "LS";
+														item['imgEdited'] = "T";
 														_self.app.galleryview.inspFiles[param.inspID]
 																.push(item);
 
@@ -300,9 +296,7 @@ FS.prototype.getVISFile = function(param, callBack) {
 		fileSystem.file(function(file) {
 			var reader = new FileReader();
 			reader.onloadend = function(evt) {
-				console.log("Read as data URL");
 				param['fileURI'] = fileSystem.toURL();
-				console.log(fileSystem.toURL());
 				param['data'] = evt.target.result;
 				param['fileName'] = file.name;
 

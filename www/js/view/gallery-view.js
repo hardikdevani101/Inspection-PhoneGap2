@@ -24,7 +24,6 @@ GalleryPage.prototype.onEditFinish = function(sourceInfo, editedImgData) {
 		if (sourceInfo.filePath
 				&& sourceInfo.filePath.startsWith(_self.app.appFS.rootURI
 						+ "/VIS_Inspection/")) {
-			console.log("File Found");
 			for (var i = 0; i < _self.inspFiles[sourceInfo['inspID']].length; i++) {
 				obj = _self.inspFiles[sourceInfo['inspID']][i];
 				if (obj.filePath == sourceInfo.filePath) {
@@ -37,7 +36,6 @@ GalleryPage.prototype.onEditFinish = function(sourceInfo, editedImgData) {
 			_self.app.appFS.updateVISFile(sourceInfo);
 			_self.app.galleryview.renderInspFiles();
 		} else {
-			console.log("Create File Found");
 			_self.app.appFS.createVISFile(sourceInfo);
 		}
 	}
@@ -109,20 +107,20 @@ GalleryPage.prototype.onFileData = function(selFiles) {
 					});
 
 	// TODO Remove dummy data Runner in production.
-//	_self.inspFiles[152452] = [];
-//	for (var i = 0; i < 15; i++) {
-//		var item = {};
-//		item['filePath'] = '/file/path/file' + i + '.jpg';
-//		item['name'] = "file" + i + ".txt";
-//		item['dataSource'] = "LS";
-//		item['uploded'] = "Y";
-//		if (i % 2 == 0) {
-//			item['filePath'] = '/file/path/file' + i + '.jpg';
-//			item['name'] = "file" + i;
-//			item['dataSource'] = "CMR";
-//		}
-//		_self.inspFiles[152452].push(item);
-//	}
+	// _self.inspFiles[152452] = [];
+	// for (var i = 0; i < 15; i++) {
+	// var item = {};
+	// item['filePath'] = '/file/path/file' + i + '.jpg';
+	// item['name'] = "file" + i + ".txt";
+	// item['dataSource'] = "LS";
+	// item['uploded'] = "Y";
+	// if (i % 2 == 0) {
+	// item['filePath'] = '/file/path/file' + i + '.jpg';
+	// item['name'] = "file" + i;
+	// item['dataSource'] = "CMR";
+	// }
+	// _self.inspFiles[152452].push(item);
+	// }
 	// Dummy Data Runner End.
 
 	_self.renderInspFiles();
@@ -131,7 +129,7 @@ GalleryPage.prototype.onFileData = function(selFiles) {
 
 GalleryPage.prototype.onCreateNewEntry = function(file) {
 	var _self = this;
-	
+
 	param = {};
 	param['mrLineID'] = _self.app.appCache.session.m_inoutline_id;
 	param['inspID'] = _self.app.appCache.session.x_instructionline_id;
@@ -139,7 +137,7 @@ GalleryPage.prototype.onCreateNewEntry = function(file) {
 	param['fileName'] = file.name;
 	param['filePath'] = file.filePath;
 	param['dataSource'] = file.dataSource;
-	
+
 	item = {};
 	item['filePath'] = file.filePath;
 	item['name'] = file.name;
@@ -216,13 +214,13 @@ GalleryPage.prototype.init = function() {
 
 						_self.rederBreadCrumb();
 						// TODO remove below hard coded.
-//						_self.line_id = 152452;
-						 _self.line_id = _self.app.appCache.session.x_instructionline_id;
+						// _self.line_id = 152452;
+						_self.line_id = _self.app.appCache.session.x_instructionline_id;
 						_self.isMR = _self.app.appCache.session.isMR;
 						_self.visGallery = new Tbl_VISGallery(_self.app);
 						var sel_inoutline_id = _self.app.appCache.session.m_inoutline_id;
 
-//						_self.app.appCache.inspLines[sel_inoutline_id]
+						// _self.app.appCache.inspLines[sel_inoutline_id]
 						for (var i = 0; i < _self.app.appCache.inspLines[sel_inoutline_id].length; i++) {
 							obj = _self.app.appCache.inspLines[sel_inoutline_id][i];
 							if (obj.x_instructionline_id == _self.line_id) {
@@ -236,7 +234,8 @@ GalleryPage.prototype.init = function() {
 						}, 10);
 
 						_self.el_mainDiv.addClass('img-gallery');
-						$("#pg_gal_main img", _self.contextPage).removeClass('ui-listview-mode');
+						$("#pg_gal_main img", _self.contextPage).removeClass(
+								'ui-listview-mode');
 						$("#ls_inspFiles p button.ui-icon-arrow-u",
 								_self.context).hide();
 
@@ -311,7 +310,8 @@ GalleryPage.prototype.init = function() {
 			$(this).addClass('ui-icon-bars ui-btn-icon-notext');
 			_self.el_mainDiv.addClass('img-gallery');
 			_self.el_mainDiv.removeClass('img-gallery-listview');
-			$("#pg_gal_main img", _self.contextPage).removeClass('ui-listview-mode');
+			$("#pg_gal_main img", _self.contextPage).removeClass(
+					'ui-listview-mode');
 			$("#ls_inspFiles p button.ui-icon-arrow-u", _self.context).hide();
 			$.each(_self.inspFiles[_self.line_id], function(index, file) {
 				if (file.uploded == 'T') {
@@ -329,7 +329,8 @@ GalleryPage.prototype.init = function() {
 			$(this).removeClass('ui-icon-bars');
 			$(this).html('Grid View');
 			$(this).addClass('ui-icon-grid ui-btn-icon-notext');
-			$("#pg_gal_main img", _self.contextPage).addClass('ui-listview-mode');
+			$("#pg_gal_main img", _self.contextPage).addClass(
+					'ui-listview-mode');
 			_self.el_mainDiv.removeClass('img-gallery');
 			_self.el_mainDiv.addClass('img-gallery-listview');
 
@@ -383,20 +384,20 @@ GalleryPage.prototype.loadInspFile = function() {
 			}
 
 			// TODO Remove dummy data Runner in production.
-//			_self.inspFiles[152452] = [];
-//			for (var i = 0; i < 15; i++) {
-//				var item = {};
-//				item['filePath'] = '/file/path/file' + i + '.jpg';
-//				item['name'] = "file" + i + ".txt";
-//				item['dataSource'] = "LS";
-//				item['uploded'] = "Y";
-//				if (i % 2 == 0) {
-//					item['filePath'] = '/file/path/file' + i + '.jpg';
-//					item['name'] = "file" + i;
-//					item['dataSource'] = "CMR";
-//				}
-//				_self.inspFiles[152452].push(item);
-//			}
+			// _self.inspFiles[152452] = [];
+			// for (var i = 0; i < 15; i++) {
+			// var item = {};
+			// item['filePath'] = '/file/path/file' + i + '.jpg';
+			// item['name'] = "file" + i + ".txt";
+			// item['dataSource'] = "LS";
+			// item['uploded'] = "Y";
+			// if (i % 2 == 0) {
+			// item['filePath'] = '/file/path/file' + i + '.jpg';
+			// item['name'] = "file" + i;
+			// item['dataSource'] = "CMR";
+			// }
+			// _self.inspFiles[152452].push(item);
+			// }
 			// Dummy Data Runner End.
 
 			_self.renderInspFiles();
@@ -444,21 +445,21 @@ GalleryPage.prototype.loadActualImage = function(inspID) {
 
 					// TODO remove below dummy data runner
 					// Start of dummy data filler.
-//					var img = _self.app.file64;
-//					setInterval(function() {
-//						_self.app.appCache.imgCache[dataid] = img;
-//						$('li[data-id="' + dataid + '"] img').attr('src', img);
-//					}, 1000);
+					// var img = _self.app.file64;
+					// setInterval(function() {
+					// _self.app.appCache.imgCache[dataid] = img;
+					// $('li[data-id="' + dataid + '"] img').attr('src', img);
+					// }, 1000);
 					// End of dummy data filler.
 
-					 _self.app.appFS.getFileByURL({
-					 fileURI : this.filePath
-					 }, function(param) {
-					 img = param.data
-					 self.app.appCache.imgCache[dataid] = img;
-					 $('li[data-id="' + dataid + '"] img', _self.context)
-					 .attr('src', img);
-					 });
+					_self.app.appFS.getFileByURL({
+						fileURI : this.filePath
+					}, function(param) {
+						img = param.data
+						self.app.appCache.imgCache[dataid] = img;
+						$('li[data-id="' + dataid + '"] img', _self.context)
+								.attr('src', img);
+					});
 				}
 			}
 
@@ -473,9 +474,6 @@ GalleryPage.prototype.onFileTap = function(event) {
 	// var imgData = _self.app.tempImage;
 	var imgData = _self.app.appCache.imgCache[dataid];
 
-	console.log($(event.delegateTarget).data('isimg'));
-	console.log($(event.delegateTarget).data('isup'));
-	
 	_self.selectedFile = dataid;
 	if ($(event.delegateTarget).data('isimg')
 			&& $(event.delegateTarget).data('isup') == 'F') {
@@ -487,14 +485,13 @@ GalleryPage.prototype.onFileTap = function(event) {
 	setTimeout(
 			function() {
 				if (_self.app.appCache.imgCache[dataid]) {
-					
+
 					var sourceInfo = jQuery.grep(
 							_self.inspFiles[_self.line_id], function(value,
 									index) {
 								return value.filePath == dataid;
 							});
-					
-					
+
 					if (sourceInfo.length > 0) {
 						if (_self.app.appCache.settingInfo.img_editor
 								&& _self.app.appCache.settingInfo.img_editor != 'Vision') {
@@ -504,6 +501,9 @@ GalleryPage.prototype.onFileTap = function(event) {
 								watermark : (_self.el_waterMark.val())
 							});
 						} else {
+
+							_self.app.imageEditor = new ImageEditorPage(_self.app);
+							_self.app.imageEditor.init();
 							_self.app.imageEditor.setup({
 								img64 : imgData,
 								'sourceInfo' : sourceInfo[0],
@@ -632,7 +632,9 @@ GalleryPage.prototype.onPhotoDataSuccess = function(imageURI) {
 		_self.app.appFS.getFileByURL({
 			fileURI : imageURI
 		}, function(param) {
-			console.log(param.data);
+
+			_self.app.imageEditor = new ImageEditorPage(_self.app);
+			_self.app.imageEditor.init();
 			_self.app.imageEditor.setup({
 				img64 : param.data,
 				'sourceInfo' : {},

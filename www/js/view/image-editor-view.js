@@ -180,7 +180,7 @@ ImageEditorPage.prototype.init = function() {
 		_self.el_sliderBrightness = $("#slider-brightness", _self.context);
 		_self.el_sliderContrast = $("#slider-contrast", _self.context);
 		_self.el_sliderCrop = $("#slider-crop", _self.context);
-		
+
 		_self.el_sliderBrightness.on("slidestop", function(event, ui) {
 			_self.brightness = event.target.value;
 			_self.onBrightnessChange(event);
@@ -208,7 +208,8 @@ ImageEditorPage.prototype.init = function() {
 		return false;
 	});
 
-	_self.el_btnSkipEdit.on("tap", function(event) {
+	_self.el_btnSkipEdit.off("click");
+	_self.el_btnSkipEdit.on("click", function(event) {
 		$.mobile.changePage("#pg_gallery", {
 			'reverse' : true
 		});
@@ -222,38 +223,43 @@ ImageEditorPage.prototype.init = function() {
 		return false;
 	});
 
-	_self.el_btnReset.on("tap", function(event) {
+	_self.el_btnReset.off("click");
+	_self.el_btnReset.on("click", function(event) {
 		_self.reset();
 		event.preventDefault();
 		return false;
 	});
 
-	_self.el_btnEditFinish.off("tap")
-	_self.el_btnEditFinish.on("tap", function(event) {
+	_self.el_btnEditFinish.off("click");
+	_self.el_btnEditFinish.on("click", function(event) {
 		_self.onEditFinish();
 		event.preventDefault();
 		return false;
 	});
 
-	_self.el_btnCrop.on("tap", function(event) {
+	_self.el_btnCrop.off("click");
+	_self.el_btnCrop.on("click", function(event) {
 		_self.viewToggle();
 		event.preventDefault();
 		return false;
 	});
 
-	_self.el_btnZoomPlus.on("tap", function(event) {
+	_self.el_btnZoomPlus.off("click");
+	_self.el_btnZoomPlus.on("click", function(event) {
 		_self.corpperImage.cropper("zoom", 0.1);
 		event.preventDefault();
 		return false;
 	});
 
-	_self.el_btnZoomMinus.on("tap", function(event) {
+	_self.el_btnZoomMinus.off("click");
+	_self.el_btnZoomMinus.on("click", function(event) {
 		_self.corpperImage.cropper("zoom", -0.1);
 		event.preventDefault();
 		return false;
 	});
 
-	_self.el_btnCropZoomPlus.on("tap", function(event) {
+	_self.el_btnCropZoomPlus.off("click");
+	_self.el_btnCropZoomPlus.on("click", function(event) {
 		_self.cropResize = true;
 		var data = _self.corpperImage.cropper("getCropBoxData");
 		data.width = data.width + 15;
@@ -262,7 +268,8 @@ ImageEditorPage.prototype.init = function() {
 		return false;
 	});
 
-	_self.el_btnCropZoomMinus.on("tap", function(event) {
+	_self.el_btnCropZoomMinus.off("click");
+	_self.el_btnCropZoomMinus.on("click", function(event) {
 		_self.cropResize = true;
 		var data = _self.corpperImage.cropper("getCropBoxData");
 		data.width = data.width - 15;
@@ -271,25 +278,29 @@ ImageEditorPage.prototype.init = function() {
 		return false;
 	});
 
-	_self.el_btnRotateLeft.on("tap", function(event) {
+	_self.el_btnRotateLeft.off("click");
+	_self.el_btnRotateLeft.on("click", function(event) {
 		_self.corpperImage.cropper("rotate", -45);
 		event.preventDefault();
 		return false;
 	});
 
-	_self.el_btnRotateRight.on("tap", function(event) {
+	_self.el_btnRotateRight.off("click");
+	_self.el_btnRotateRight.on("click", function(event) {
 		_self.corpperImage.cropper("rotate", 45);
 		event.preventDefault();
 		return false;
 	});
 
-	_self.el_btnCropMove.on("tap", function(event) {
+	_self.el_btnCropMove.off("click");
+	_self.el_btnCropMove.on("click", function(event) {
 		_self.corpperImage.cropper("setDragMode", "move");
 		event.preventDefault();
 		return false;
 	});
 
-	_self.el_btnCropFinish.on("tap", function(event) {
+	_self.el_btnCropFinish.off("click");
+	_self.el_btnCropFinish.on("click", function(event) {
 		_self.cropFinished();
 		event.preventDefault();
 		return false;

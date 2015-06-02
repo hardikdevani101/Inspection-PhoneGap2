@@ -221,6 +221,7 @@ App.prototype.register = function() {
 		_self.inspLinePage.init();
 		_self.appCache.addPage('pg_inspection', _self.inspLinePage);
 
+	
 		_self.visionApi = new VisionApi(_self);
 		_self.visionApi.getWaterMarkList(function(data) {
 			_self.appCache.waterMarkImgs = data.responce;
@@ -276,9 +277,9 @@ App.prototype.register = function() {
 		_self.galleryview.init();
 		_self.appCache.addPage('pg_gallery', _self.galleryview);
 		_self.registerErrorPopup('pg_img_editor');
-		_self.imageEditor = new ImageEditorPage(_self);
-		_self.imageEditor.init();
-		_self.appCache.addPage('pg_img_editor', _self.imageEditor);
+//		_self.imageEditor = new ImageEditorPage(_self);
+//		_self.imageEditor.init();
+//		_self.appCache.addPage('pg_img_editor', _self.imageEditor);
 	});
 
 	$(document).on("pagecreate", "#pg_img_editor", function(event) {

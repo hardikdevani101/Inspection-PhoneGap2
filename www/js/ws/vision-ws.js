@@ -91,7 +91,7 @@ VisionApi.prototype.login = function(params, success, error) {
 						var error = xmlResponse.getElementsByTagName("Error");
 						if (error.length > 0) {
 							var resultline = {};
-							resultline["error"] = error[0].outerHTML;
+							resultline["error"] = error[0].textContent;
 							jsonResponse = resultline;
 						}
 						if (fullNodeList.length > 0) {
@@ -288,7 +288,6 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 							'total' : jsonResponse.length
 						});
 					}).fail(function(err) {
-				console.log(err.responseText);
 				return err.responseText;
 			});
 };
@@ -344,12 +343,10 @@ VisionApi.prototype.uploadImage = function(params, success, error) {
 		if (!tmpArray[1] == "")
 			failedArrayList = tmpArray[1].split('$$');
 		if (failedArrayList && failedArrayList.length > 0) {
-			$.each(failedArrayList, function() {
-				_self.processLog.attachImage.push(this);
+			$.each(failedArrayList, function(index, item) {
+				_self.processLog.attachImage.push(item);
 			});
 		}
-		console.log(tmpArray[0]);
-		console.log(tmpArray[1]);
 		success({
 			'id' : params.imginspline,
 			'success' : successArrayList,
@@ -415,8 +412,8 @@ VisionApi.prototype.uploadImageByMInOut = function(params, success, error) {
 		if (!tmpArray[1] == "")
 			failedArrayList = tmpArray[1].split('$$');
 		if (failedArrayList && failedArrayList.length > 0) {
-			$.each(failedArrayList, function() {
-				_self.processLog.attachImage.push(this);
+			$.each(failedArrayList, function(index, item) {
+				_self.processLog.attachImage.push(item);
 			});
 		}
 

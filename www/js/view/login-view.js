@@ -55,7 +55,17 @@ LoginPage.prototype.onLogin = function() {
 };
 
 LoginPage.prototype.init = function() {
+
 	var _self = this;
+	$(document).on(
+			"pagebeforeshow",
+			_self.context,
+			function() {
+				if (_self.app.appCache.settingInfo['username']) {
+					$("#txt_user", _self.context).val(
+							_self.app.appCache.settingInfo['username']);
+				}
+			});
 
 	$('#_form_login', _self.context).validate({
 		rules : {

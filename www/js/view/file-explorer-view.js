@@ -466,6 +466,9 @@ FileExplorerPage.prototype.onSelFileTap = function(event) {
 					watermark : el_watermarkList.val()
 				});
 			} else {
+
+				_self.app.imageEditor = new ImageEditorPage(_self.app);
+				_self.app.imageEditor.init();
 				_self.app.imageEditor.setup({
 					'sourceInfo' : sourceInfo[0],
 					img64 : imgData,

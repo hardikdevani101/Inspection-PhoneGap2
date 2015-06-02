@@ -25,17 +25,17 @@ InspLinesPage.prototype.init = function() {
 		}, 10);
 
 		// TODO : Dummy Data Runner Start
-//		var ermsg = {
-//			// 'X_INSTRUCTIONLINE_ID' : 'MR2323',
-//			// 'M_INOUT_ID' : '23242342',
-//			'fileURI' : 'file/files/ererer.ted',
-//			'error' : 'ERROR Msg'
-//		};
-//		_self.app.appFTPUtil.processLog.push(ermsg);
-//		_self.app.appFTPUtil.processLog.push(ermsg);
-//		_self.app.appFTPUtil.processLog.push(ermsg);
-//		_self.app.appFTPUtil.processLog.push(ermsg);
-//		_self.app.appFTPUtil.processLog.push(ermsg);
+		// var ermsg = {
+		// // 'X_INSTRUCTIONLINE_ID' : 'MR2323',
+		// // 'M_INOUT_ID' : '23242342',
+		// 'fileURI' : 'file/files/ererer.ted',
+		// 'error' : 'ERROR Msg'
+		// };
+		// _self.app.appFTPUtil.processLog.push(ermsg);
+		// _self.app.appFTPUtil.processLog.push(ermsg);
+		// _self.app.appFTPUtil.processLog.push(ermsg);
+		// _self.app.appFTPUtil.processLog.push(ermsg);
+		// _self.app.appFTPUtil.processLog.push(ermsg);
 		// TODO : Dummy Data Runner End
 
 		_self.el_ispProgLog.hide();
@@ -61,7 +61,16 @@ InspLinesPage.prototype.init = function() {
 
 	$("#pop_process_log", _self.contextInspDetail).bind({
 		popupbeforeposition : function(event, ui) {
-			var el_syncItems = $("#sync_items");
+
+			var items = '<li data-role="list-divider">Edit Pending</li>';
+			if (_self.EditImageLog) {
+				items += _self.getPendingEditImageLog();
+			}
+			var el_attachItems = $("#edit_items", _self.contextInspDetail);
+			el_attachItems.html(items);
+			el_attachItems.listview("refresh");
+
+			var el_syncItems = $("#sync_items", _self.contextInspDetail);
 			var items = '<li data-role="list-divider">Sync Failed</li>';
 			if (_self.app.appFTPUtil.processLog) {
 				items += _self.getFTPProcessLog();
@@ -73,7 +82,7 @@ InspLinesPage.prototype.init = function() {
 			if (_self.app.visionApi.processLog.attachImage) {
 				items += _self.getAttacheProcessLog();
 			}
-			var el_attachItems = $("#attach_items");
+			var el_attachItems = $("#attach_items", _self.contextInspDetail);
 			el_attachItems.html(items);
 			el_attachItems.listview("refresh");
 			$("#pop_process_log").enhanceWithin();
@@ -106,7 +115,6 @@ InspLinesPage.prototype.init = function() {
 	});
 
 	$('#btn_sync_insp', _self.contextInspDetail).on("click", function() {
-		_self.app.appCache.inspLines = [];
 		_self.syncInspLines();
 		event.preventDefault();
 		return false;
@@ -122,7 +130,7 @@ InspLinesPage.prototype.init = function() {
 InspLinesPage.prototype.getFTPProcessLog = function() {
 	var _self = this;
 	item1 = '';
-	$.each(_self.app.appFTPUtil.processLog, function(item, index) {
+	$.each(_self.app.appFTPUtil.processLog, function(index, item) {
 		var line = '<li data-mini="true">File Failed:' + item + '</li>';
 		item1 += line;
 	});
@@ -132,7 +140,17 @@ InspLinesPage.prototype.getFTPProcessLog = function() {
 InspLinesPage.prototype.getAttacheProcessLog = function() {
 	var _self = this;
 	item1 = '';
-	$.each(_self.app.visionApi.processLog.attachImage, function(item, index) {
+	$.each(_self.app.visionApi.processLog.attachImage, function(index, item) {
+		var line = '<li data-mini="true">File Failed:' + item + '</li>';
+		item1 += line;
+	});
+	return item1;
+}
+
+InspLinesPage.prototype.getPendingEditImageLog = function() {
+	var _self = this;
+	item1 = '';
+	$.each(_self.EditImageLog, function(index, item) {
 		var line = '<li data-mini="true">File Failed:' + item + '</li>';
 		item1 += line;
 	});
@@ -207,9 +225,32 @@ InspLinesPage.prototype.syncInspLines = function(callBack) {
 		}
 	};
 
+	var onNotEditableFiles = function(tx, results) {
+		if (results.rows.length > 0) {
+			for (var i = 0; i < results.rows.length; i++) {
+				_self.EditImageLog.push(results.rows.item(i).insp_line + " : "
+						+ results.rows.item(i).name)
+			}
+			if (_self.EditImageLog.length > 0) {
+				var el_insProcLog = $("#insp_process_log",
+						_self.contextInspDetail);
+				if (!_self.isAlertDisplay) {
+					_self.isAlertDisplay = true;
+					el_insProcLog.show();
+				}
+				el_insProcLog.html(_self.EditImageLog.length);
+				$("#pop_process_log", _self.contextInspDetail).popup("open");
+			}
+			$.mobile.loading('hide');
+		} else {
+			_self.app.appDB.getUploadFailedEntry(success);
+		}
+	}
+
 	// Restart Sync Process.
 	_self.app.appFTPUtil.processLog = [];
-	_self.app.appDB.getUploadFailedEntry(success);
+	_self.EditImageLog = [];
+	_self.app.appDB.getNotEditableFiles(onNotEditableFiles);
 }
 
 InspLinesPage.prototype.renderMRLines = function() {
@@ -448,8 +489,10 @@ InspLinesPage.prototype.onFinishedCalled = function() {
 				if (_self.app.appFTPUtil.processLog.length > 0) {
 					_self.displayAlert();
 				} else {
-					_self.app.appDB
-							.getAttachPendingEntry(onUploadedEntrySucess);
+					setTimeout(function() {
+						_self.app.appDB
+								.getAttachPendingEntry(onUploadedEntrySucess);
+					}, 100);
 				}
 			});
 		} else {

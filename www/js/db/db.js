@@ -2,7 +2,7 @@ var DB = function(app) {
 	console.log("DB constructor");
 	this.app = app;
 	this.currentDBVersion = "1.1"
-	this.dbstore = window.openDatabase("vision_db2", "", "vision_db2",
+	this.dbstore = window.openDatabase("vision_db3", "", "vision_db3",
 			2 * 1024 * 1024);
 }
 
@@ -33,7 +33,7 @@ DB.prototype.init = function(success, error) {
 						tx
 								.executeSql('CREATE TABLE IF NOT EXISTS '
 										+ ' vis_gallery '
-										+ ' (mr_line,insp_line DEFAULT "0",isMR DEFAULT "N",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F", dataSource DEFAULT "CMR")');
+										+ ' (mr_line,insp_line DEFAULT "0",isMR DEFAULT "N",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F", dataSource DEFAULT "CMR",imgEdited DEFAULT "F")');
 						tx
 								.executeSql('CREATE TABLE IF NOT EXISTS '
 										+ ' vis_server '
@@ -213,7 +213,6 @@ DB.prototype.getUploadedInspEntries = function(param, callBack) {
 DB.prototype.doGalleryEntry = function(fileInfo) {
 	var _self = this;
 	var param = [];
-	console.log(">>>>" + fileInfo.oldURI);
 	var sqlQuery = " select * from vis_gallery ";
 	var whereSQL = ' where file="' + fileInfo.oldURI + '"';
 	;
@@ -225,22 +224,20 @@ DB.prototype.doGalleryEntry = function(fileInfo) {
 		whereSQL += ' and isMR="Y" and insp_line="' + fileInfo.inspID + '"';
 		param.push(fileInfo.inspID);
 	}
-	console.log(sqlQuery + whereSQL);
 
 	_self.dbstore.transaction(function(tx) {
 		tx.executeSql(sqlQuery + whereSQL, [], function(tx, results) {
 			if (results.rows.length > 0) {
 				sqlQuery = 'UPDATE vis_gallery SET name="' + fileInfo.fileName
-						+ '",file="' + fileInfo.filePath + '" ';
-				console.log(sqlQuery);
+						+ '",file="' + fileInfo.filePath + '",imgEdited="T" ';
 				tx.executeSql(sqlQuery + whereSQL, []);
 			} else {
 				sqlQuery = 'INSERT INTO vis_gallery '
-						+ ' (mr_line,isMR,insp_line,name,file)' + ' VALUES ("'
-						+ fileInfo.mrLineID + '","' + fileInfo.isMR + '","'
-						+ fileInfo.inspID + '","' + fileInfo.fileName + '","'
-						+ fileInfo.filePath + '")';
-				console.log(sqlQuery);
+						+ ' (mr_line,isMR,insp_line,name,file,imgEdited)'
+						+ ' VALUES ("' + fileInfo.mrLineID + '","'
+						+ fileInfo.isMR + '","' + fileInfo.inspID + '","'
+						+ fileInfo.fileName + '","' + fileInfo.filePath + '","'
+						+ fileInfo.imgEdited + '")';
 				tx.executeSql(sqlQuery);
 			}
 		}, _self.errorCB);
@@ -317,7 +314,7 @@ DB.prototype.onAttachSucess = function(param) {
 		if (sql.length > 0) {
 			tx.executeSql(sql);
 			if (_self.app.galleryview) {
-				_self.app.galleryview.inspFiles = undefined;
+				_self.app.galleryview.inspFiles = {};
 			}
 		}
 		if (fsql.length > 0) {
@@ -328,8 +325,6 @@ DB.prototype.onAttachSucess = function(param) {
 
 DB.prototype.onChangeUplaodStatus = function(M_InOutLine_ID,
 		X_INSTRUCTIONLINE_ID, isMR, fileName, fileFullPath) {
-	console.log(M_InOutLine_ID+">>>"+
-			X_INSTRUCTIONLINE_ID+">>>"+ isMR+">>>"+ fileName+">>>"+ fileFullPath);
 	var _self = this;
 	_self.dbstore.transaction(function(tx) {
 		var sqlQuery = 'UPDATE vis_gallery SET imgUpload="T"';
@@ -346,12 +341,21 @@ DB.prototype.onChangeUplaodStatus = function(M_InOutLine_ID,
 					+ '" and isMR="N" and insp_line="' + X_INSTRUCTIONLINE_ID
 					+ '"';
 		}
-		console.log(sqlQuery);
 		tx.executeSql(sqlQuery);
 		if (_self.app.galleryview) {
-			_self.app.galleryview.inspFiles[X_INSTRUCTIONLINE_ID] = undefined;
+			_self.app.galleryview.inspFiles[X_INSTRUCTIONLINE_ID] = [];
 		}
 	}, _self.errorCB, _self.success);
+}
+
+DB.prototype.getNotEditableFiles = function(sucess) {
+	var _self = this;
+	_self.dbstore.transaction(function(tx) {
+		var sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
+				+ _self.app.appCache.session.m_inoutline_id
+				+ '" and imgEdited="F"';
+		tx.executeSql(sqlQuery, [], sucess, _self.errorCB);
+	}, _self.errorCB);
 }
 
 DB.prototype.getUploadFailedEntry = function(sucess) {
@@ -360,7 +364,6 @@ DB.prototype.getUploadFailedEntry = function(sucess) {
 		var sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
 				+ _self.app.appCache.session.m_inoutline_id
 				+ '" and imgUpload="F"';
-		console.log(sqlQuery);
 		tx.executeSql(sqlQuery, [], sucess, _self.errorCB);
 	}, _self.errorCB);
 }
