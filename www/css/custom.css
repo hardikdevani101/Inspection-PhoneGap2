@@ -327,7 +327,6 @@ body {
 	.img-container {
 		min-height: 480px;
 	} */
-	
 	#edit-toolbar  .ui-btn-icon-notext:after {
 		top: 10% !important;
 		margin-top: 0px !important;
@@ -421,7 +420,7 @@ body {
 	.xui-header .ui-title, .ui-footer .ui-title {
 		xfont-size: 1em;
 		min-height: 5.1em!importanat;
-		color : white !important;
+		color: white !important;
 	}
 
 	/* #pop_file_actions-popup .ui-btn-icon-notext, .ui-header button.ui-btn.ui-btn-icon-notext,
@@ -525,9 +524,8 @@ body {
 		font-size: 30px !important;
 		padding: 1em 1em !important;
 		margin: 0.1em .1em !important;
-		float:left !important;
+		float: left !important;
 	}
-	
 	#pop_process_log {
 		font-size: 20px !important;
 		min-width: 500px !important;
@@ -544,7 +542,6 @@ body {
 		font-size: 20px !important;
 	}
 }
-
 
 .ui-page {
 	-webkit-backface-visibility: hidden;
@@ -986,12 +983,12 @@ ul.ui-listview li {
 }
 
 .ui-shadow {
-	-moz-box-shadow: 0px 0px 0px /*{global-box-shadow-size}*/  			
-		rgba(0, 0, 0, 0) /*{global-box-shadow-color}*/ !important;
-	-webkit-box-shadow: 0px 0px 0px /*{global-box-shadow-size}*/  		
-		rgba(0, 0, 0, 0) /*{global-box-shadow-color}*/ !important;
-	box-shadow: 0px 0px 0px /*{global-box-shadow-size}*/  				
-		rgba(0, 0, 0, 0) /*{global-box-shadow-color}*/ !important;
+	-moz-box-shadow: 0px 0px 0px /*{global-box-shadow-size}*/   			
+		 rgba(0, 0, 0, 0) /*{global-box-shadow-color}*/ !important;
+	-webkit-box-shadow: 0px 0px 0px /*{global-box-shadow-size}*/   		
+		 rgba(0, 0, 0, 0) /*{global-box-shadow-color}*/ !important;
+	box-shadow: 0px 0px 0px /*{global-box-shadow-size}*/   				
+		 rgba(0, 0, 0, 0) /*{global-box-shadow-color}*/ !important;
 }
 
 .ui-bar-a .ui-shadow, .ui-bar-b .ui-shadow, .ui-bar-c .ui-shadow {
@@ -1019,8 +1016,8 @@ ul.ui-listview li {
 		/*{global-active-background-color}*/ !important;
 	-webkit-box-shadow: 0px 0px 0px #387bbe
 		/*{global-active-background-color}*/ !important;
-	box-shadow: 0px 0px 0px #387bbe /*{global-active-background-color}*/ 
-		!important;
+	box-shadow: 0px 0px 0px #387bbe /*{global-active-background-color}*/  
+		 !important;
 }
 
 /* unset box shadow in browsers that don't do it right
@@ -1041,13 +1038,23 @@ ul.ui-listview li {
 }
 
 .ui-slider-track.ui-mini .ui-slider-handle {
-  height: 30px !important;
-  width: 30px !important;
-  margin: -15px 0 0 -15px !important;
-  background: rgb(240, 200, 39) !important;
+	height: 30px !important;
+	width: 30px !important;
+	margin: -15px 0 0 -15px !important;
+	background: rgb(240, 200, 39) !important;
 }
 
 .ui-slider-track .ui-btn.ui-slider-handle {
-  height: 30px !important;
-  width: 30px !important;
+	height: 30px !important;
+	width: 30px !important;
+}
+
+#sel_gwaterMark-dialog .ui-header.ui-bar-inherit {
+	background-color: #c7b899 !important;
+	line-height: 0.7 !important;
+}
+
+#sel_gwaterMark-dialog .ui-header.ui-bar-inherit a {
+	background-color: #c7b899 !important;
+	border-color: #c7b899 !important
 }

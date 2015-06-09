@@ -528,21 +528,33 @@ VisionApi.prototype.getFTPServerList = function(params, success, error) {
 			});
 };
 
-VisionApi.prototype.getWaterMarkList = function(success, error) {
+VisionApi.prototype.getWaterMarkList = function(params, success, error) {
 	var _self = this;
 	var reqBody = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
 			+ '<soapenv:Header/>'
 			+ '<soapenv:Body>'
-			+ '<_0:getList>'
-			+ '<_0:ModelGetListRequest>'
-			+ '<_0:ModelGetList>'
+			+ '<_0:queryData>'
+			+ '<_0:ModelCRUDRequest>'
+			+ '<_0:ModelCRUD>'
 			+ '<_0:serviceType>Watermark List</_0:serviceType>'
-			+ '<_0:AD_Reference_ID>0</_0:AD_Reference_ID>'
-			+ '<_0:Filter></_0:Filter>'
-			+ '</_0:ModelGetList>'
+			+ '<_0:TableName>insp_watermark</_0:TableName>'
+			+ '<_0:RecordID>0</_0:RecordID>'
+			+ '<_0:DataRow>'
+			+ '<_0:field column="IsActive" >'
+			+ '<_0:val>Y</_0:val>'
+			+ '</_0:field>'
+			+ '<_0:field column="AD_Org_ID" >'
+			+ '<_0:val>'
+			+ params.orgid
+			+ '</_0:val>'
+			+ '</_0:field>'
+			+ '</_0:DataRow>'
+			+ '</_0:ModelCRUD>'
 			+ _self.ADLoginRequest
-			+ '</_0:ModelGetListRequest>'
-			+ '</_0:getList>' + '</soapenv:Body>' + '</soapenv:Envelope>';
+			+ '</_0:ModelCRUDRequest>'
+			+ '</_0:queryData>'
+			+ '</soapenv:Body>'
+			+ '</soapenv:Envelope>';
 	$
 			.ajax(
 					{
@@ -575,7 +587,7 @@ VisionApi.prototype.getWaterMarkList = function(success, error) {
 							for (var i = 0; i < fullNodeList.length; i++) {
 								var item = {};
 								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
-									if (fullNodeList[i].childNodes[j].attributes[0].value == 'Description') {
+									if (fullNodeList[i].childNodes[j].attributes[0].value == 'URL') {
 										item["url"] = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {
 										item["name"] = fullNodeList[i].childNodes[j].childNodes[0].textContent;
