@@ -368,7 +368,7 @@ GalleryPage.prototype.init = function() {
 
 GalleryPage.prototype.loadWatermark = function() {
 	var _self = this;
-	if (_self.app.appCache.waterMarkImgs.length > 0) {
+	if (_self.app.appCache.waterMarkImgs.length >= 0) {
 		_self.el_waterMark.empty();
 		$.each(_self.app.appCache.waterMarkImgs, function() {
 			if (this.url == _self.app.appCache.settingInfo['watermark']) {

@@ -61,6 +61,7 @@ LoginPage.prototype.init = function() {
 			"pagebeforeshow",
 			_self.context,
 			function() {
+				$("#txt_password", _self.context).val("");
 				if (_self.app.appCache.settingInfo['username']) {
 					$("#txt_user", _self.context).val(
 							_self.app.appCache.settingInfo['username']);
