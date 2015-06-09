@@ -24,6 +24,15 @@ InspLinesPage.prototype.init = function() {
 			_self.loadMRLines();
 		}, 10);
 
+		_self.app.visionApi = new VisionApi(_self.app);
+		_self.app.visionApi.getWaterMarkList({
+			orgid : _self.app.appCache.settingInfo.org_id
+		}, function(data) {
+			_self.app.appCache.waterMarkImgs = data.responce;
+			_self.app.loadWaterMarkFiles();
+		}, function() {
+			_self.app.showError(_self.context, "Error: Watermark Not Loaded");
+		});
 		// TODO : Dummy Data Runner Start
 		// var ermsg = {
 		// // 'X_INSTRUCTIONLINE_ID' : 'MR2323',

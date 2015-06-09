@@ -166,9 +166,7 @@ App.prototype.register = function() {
 											if (!_self.isOnline) {
 												alert('No Internet Connection!');
 											} else {
-												if (_self.appCache.settingInfo.is_login) {
-													_self.isLogin = _self.appCache.settingInfo.is_login;
-												}
+												_self.isLogin = _self.appCache.settingInfo.is_login;
 												if (!_self.isLogin) {
 													$.mobile
 															.changePage("#pg_login")
@@ -220,14 +218,6 @@ App.prototype.register = function() {
 		_self.inspLinePage = new InspLinesPage(_self);
 		_self.inspLinePage.init();
 		_self.appCache.addPage('pg_inspection', _self.inspLinePage);
-
-		_self.visionApi = new VisionApi(_self);
-		_self.visionApi.getWaterMarkList(function(data) {
-			_self.appCache.waterMarkImgs = data.responce;
-			_self.loadWaterMarkFiles();
-		}, function() {
-			console.log("Error");
-		});
 
 		// _self.visionApi.getFTPServerList({
 		// 'orgid' : _self.appCache.settingInfo.org_id
