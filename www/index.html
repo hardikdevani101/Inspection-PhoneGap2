@@ -99,9 +99,9 @@
 
 						<li class="ui-field-contain" data-shadow="false"
 							data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-							data-iconpos="right" data-theme="b"><label for="select-server">Srv</label>
-							<select name="txt_url" id="txt_url" data-native-menu="false"
-							data-mini="true">
+							data-iconpos="right" data-theme="b"><label
+							for="select-server">Srv</label> <select name="txt_url"
+							id="txt_url" data-native-menu="false" data-mini="true">
 								<!-- <option value="http://10.210.23.176:8088">FE VISD</option>
 									<option value="http://10.210.23.77:8088">Production</option>
 									<option value="http://10.210.23.78:8088">Development</option>
@@ -111,8 +111,8 @@
 
 						<li class="ui-field-contain" data-shadow="false"
 							data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-							data-iconpos="right"><label for="select-lang">Lang</label>
-							<select name="txt_lang" id="txt_lang" data-native-menu="false"
+							data-iconpos="right"><label for="select-lang">Lang</label> <select
+							name="txt_lang" id="txt_lang" data-native-menu="false"
 							data-mini="true">
 								<option value="en_US">English</option>
 						</select></li>
@@ -631,6 +631,8 @@ Start of Crop page
 					<li><a data-method="enable" data-icon="crop" id="btn_crop"
 						data-iconpos="notext" href="#" data-shadow="false" data-theme="a"
 						title="crop">Crop</a></li>
+					<!-- <li><a id="btn_edit" href="#" data-shadow="false"
+						id="btn_edit" xdata-iconpos="notext" data-theme="a" title="edit">Edit</a></li> -->
 					<li><a id="btn_reset" href="#" data-shadow="false"
 						data-icon="refresh" id="btn_reset" data-iconpos="notext"
 						data-theme="a" title="Reset">Reset</a></li>
@@ -645,6 +647,9 @@ Start of Crop page
 					<li><a id="btn_edit_finished" href="#" data-icon=""
 						xdata-iconpos="notext" data-shadow="false" data-wrapperels="span"
 						data-theme="a" title="save">Save</a></li>
+					<li><a id="btn_preview" href="#" data-shadow="false"
+						id="btn_preview" xdata-iconpos="notext" data-theme="a"
+						title="preview">Preview</a></li>
 				</ul>
 			</div>
 		</div>
@@ -654,6 +659,8 @@ Start of Crop page
 			<div class="ui-grid-solo cropper-container">
 				<div id="crop-image-container" class="ui-block-a img-container"></div>
 			</div>
+			<div id="preview-image-container"
+				class="ui-block-a edit-img-container"></div>
 		</div>
 	</div>
 

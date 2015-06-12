@@ -7,11 +7,6 @@
     <author email="deepak@logilite.com" href="http://logilite.com">
         Logilite Team
     </author>
-    <feature name="http://api.phonegap.com/1.0/camera"/>
-	<feature name="http://api.phonegap.com/1.0/file"/> 
-    
-    <feature name="http://api.phonegap.com/1.0/device" />
-    
     <preference name="permissions" value="none" />
     <preference name="target-device" value="universal" />
     <preference name="fullscreen" value="true" />
@@ -25,12 +20,11 @@
     <preference name="show-splash-screen-spinner" value="true" />
     <preference name="auto-hide-splash-screen" value="true" />
     <preference name="disable-cursor" value="false" />
-    <preference name="android-minSdkVersion" value="7" />
+    <preference name="android-minSdkVersion" value="10" />
     <preference name="android-targetSdkVersion" value="19" />
     <preference name="android-installLocation" value="auto" />
-	<preference name="phonegap-version" value="3.4.0" />
-	<preference name="AndroidPersistentFileLocation" value="Compatibility" />
-	
+    <preference name="phonegap-version" value="5.0.0" />
+    <preference name="AndroidPersistentFileLocation" value="Compatibility" />
     <icon src="icon.png" />
     <icon gap:density="ldpi" gap:platform="android" src="res/icon/android/icon-36-ldpi.png" />
     <icon gap:density="mdpi" gap:platform="android" src="res/icon/android/icon-48-mdpi.png" />
@@ -55,12 +49,14 @@
     <gap:splash gap:platform="ios" height="1024" src="res/screen/ios/screen-ipad-portrait.png" width="768" />
     <gap:splash gap:platform="ios" height="768" src="res/screen/ios/screen-ipad-landscape.png" width="1024" />
     <gap:splash gap:platform="winphone" src="res/screen/windows-phone/screen-portrait.jpg" />
-    
-	<gap:plugin name="camera-all-image.camera" />
-	<gap:plugin name="org.apache.cordova.dialogs" />
-    <gap:plugin name="com.vis.plugin.ftp.FtpClient" />
-	<gap:plugin name="org.apache.cordova.file"/>
-	<gap:plugin name="org.apache.cordova.file-transfer"/>
-	
-    <access origin="*" />	
+    <gap:plugin name="camera-all-image.camera" />
+    <gap:plugin name="org.apache.cordova.dialogs" />
+    <gap:plugin name="org.apache.cordova.file" />
+    <gap:plugin name="org.apache.cordova.file-transfer" />
+    <access origin="*" />
+
+    <allow-navigation href="http://*/*" />
+    <allow-navigation href="https://*/*" />
+    <allow-navigation href="data:*" />
+
 </widget>
