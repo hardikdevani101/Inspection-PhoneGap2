@@ -130,8 +130,14 @@ App.prototype.registerErrorPopup = function(pageId) {
 	$('#' + pageId + '_ErrorPopup').popup();
 }
 
-App.prototype.showError = function(pageId, msg) {
+App.prototype.showError = function(pageId, msg , callBack) {
 	$('#' + pageId + '_ErrorPopup #error_msg').html(msg);
+	if (callBack) {
+		$('#' + pageId + '_ErrorPopup #error_msg').off("click");
+		$('#' + pageId + '_ErrorPopup #error_msg').on("click", function(event) {
+			callBack();
+		});
+	}
 	$('#' + pageId + '_ErrorPopup').popup("open");
 }
 

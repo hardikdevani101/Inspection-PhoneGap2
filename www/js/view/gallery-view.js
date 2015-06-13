@@ -36,7 +36,7 @@ GalleryPage.prototype.onEditFinish = function(sourceInfo, editedImgData) {
 			_self.app.appFS.updateVISFile(sourceInfo);
 			_self.app.galleryview.renderInspFiles();
 		} else {
-			_self.app.appFS.createVISFile(sourceInfo);
+			_self.app.appFS.createVISFile(sourceInfo, "T");
 		}
 	}
 }
@@ -156,7 +156,7 @@ GalleryPage.prototype.onCreateNewEntry = function(file) {
 			param['fileData'] = base64;
 			param['fileExt'] = extension;
 			if (base64) {
-				_self.app.appFS.createVISFile(param);
+				_self.app.appFS.createVISFile(param, "F");
 			}
 		} else {
 			_self.visGallery.addFileInfo(param, function() {
@@ -171,7 +171,7 @@ GalleryPage.prototype.onCreateNewEntry = function(file) {
 			param['fileData'] = base64;
 			param['fileExt'] = "jpg";
 			if (base64) {
-				_self.app.appFS.createVISFile(param);
+				_self.app.appFS.createVISFile(param, "F");
 			}
 		} else {
 			_self.visGallery.addFileInfo(param, function() {
@@ -379,6 +379,17 @@ GalleryPage.prototype.loadWatermark = function() {
 						.html(this.name));
 			}
 		});
+
+		if (!(_self.app.appCache.settingInfo['watermark'])) {
+			var findResult = jQuery.grep(_self.app.appCache.waterMarkImgs,
+					function(item, index) {
+						return item.isDefault == 'Y';
+					});
+			if (findResult.length > 0) {
+				_self.el_waterMark.val(findResult[0].url);
+				_self.el_waterMark.trigger('change');
+			}
+		}
 	}
 	_self.el_waterMark.selectmenu('refresh');
 }

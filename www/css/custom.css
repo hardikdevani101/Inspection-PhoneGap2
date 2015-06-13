@@ -526,7 +526,12 @@ body {
 		margin: 0.1em .1em !important;
 		float: left !important;
 	}
-	#pop_process_log {
+	
+	 #pop_process_log .ui-navbar {
+		  margin-bottom: 30px;
+	}
+	
+	/* #pop_process_log {
 		font-size: 20px !important;
 		min-width: 500px !important;
 	}
@@ -540,7 +545,7 @@ body {
 	}
 	#pop_process_log .ui-btn {
 		font-size: 20px !important;
-	}
+	} */
 }
 
 .ui-page {

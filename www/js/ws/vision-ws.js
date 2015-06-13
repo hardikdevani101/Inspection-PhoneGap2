@@ -591,6 +591,8 @@ VisionApi.prototype.getWaterMarkList = function(params, success, error) {
 										item["url"] = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {
 										item["name"] = fullNodeList[i].childNodes[j].childNodes[0].textContent;
+									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'isDefault') {
+										item["isDefault"] = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									}
 								}
 								data.push(item);

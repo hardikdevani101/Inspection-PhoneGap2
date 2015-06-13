@@ -324,7 +324,7 @@ End of MR line page
 				data-count-theme="b"></ul>
 		</div>
 
-		<div data-role="popup" id="pop_process_log" data-theme="c"
+		<!-- <div data-role="popup" id="pop_process_log" data-theme="c"
 			data-dismissible="false">
 			<div data-role="header" data-theme="b">
 				<a href="#" data-theme="b"
@@ -356,15 +356,15 @@ End of MR line page
 					<li data-role="list-divider">Attach Log</li>
 				</ul>
 			</div>
-		</div>
+		</div> -->
 
 		<div data-role="footer" data-fullscreen="false" data-position="fixed"
 			data-theme="a">
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
 					<li><a href="#pg_inspection" data-icon="arrow-l"
-						data-shadow="false" data-wrapperels="span" data-rel="back"
-						data-theme="a" title="Back">MRLines</a></li>
+						data-shadow="false" data-wrapperels="span" data-rel="Lines"
+						data-theme="a" title="Lines" id="btn_mrline">Lines</a></li>
 					<li><a href="#" id="btn_finish_mr" data-icon="check"
 						data-shadow="false" data-wrapperels="span" data-theme="a"
 						title="Finish">Finish</a></li>
@@ -374,6 +374,57 @@ End of MR line page
 				</ul>
 			</div>
 		</div>
+	</div>
+
+	<!-- Error Page -->
+	<div data-role="page" id="pop_process_log" data-theme="c"
+		data-dismissible="false">
+		<div data-role="header" data-theme="b">
+			<a href="#pg_inspection_detail" data-icon="arrow-l" 
+				data-shadow="false" data-wrapperels="span" title="Back">Back </a>
+			<h1 class="ui-title">Alerts</h1>
+			<div data-role="controlgroup" data-type="horizontal"
+				class="ui-mini ui-btn-right">
+				<button data-theme="b" id="btn_retry_sync" data-mini="true"
+					data-icon="" data-corners="false" data-theme="b"
+					data-shadow="false" data-iconshadow="false" data-wrapperels="span"
+					title="RetrySync">Retry Sync</button>
+				<button id="btn_retry_attach" data-icon="" data-corners="false"
+					data-shadow="false" data-iconshadow="false" data-theme="b"
+					data-wrapperels="span" title="RetryFinish">Retry Finish</button>
+			</div>
+		</div>
+		<div data-role="main" class="ui-content" data-theme="b">
+		<div>
+			<div data-role="tabs">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#fragment-1" class="ui-btn-active">Edit Log</a></li>
+						<li><a href="#fragment-2">Sync Log</a></li>
+						<li><a href="#fragment-3">Attach Log</a></li>
+					</ul>
+				</div>
+				<div id="fragment-1">
+					<ul data-role="listview" id="edit_items" data-inset="false"
+						data-mini="true">
+						<!-- <li data-role="list-divider">Edit Log</li> -->
+					</ul>
+				</div>
+				<div id="fragment-2">
+					<ul data-role="listview" id="sync_items" data-inset="false"
+						data-mini="true">
+						<!-- <li data-role="list-divider">Sync Log</li> -->
+					</ul>
+				</div>
+				<div id="fragment-3">
+					<ul data-role="listview" id="attach_items" data-inset="false"
+						data-mini="true">
+						<!-- <li data-role="list-divider">Attach Log</li> -->
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
 	</div>
 
 	<!-------------------------------------------------------------
