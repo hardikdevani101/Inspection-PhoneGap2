@@ -46,6 +46,7 @@ ImageEditorPage.prototype.enableEditMode = function() {
 	_self.el_editToolbar.show();
 	_self.el_cropImgContainer.hide();
 	_self.el_editImgContainer.show();
+	_self.el_btnPreview.html("Preview");
 	setTimeout(function() {
 		var el_editImg = $('#edit_img_src', _self.context);
 		el_editImg.css("z-index", 2000000);

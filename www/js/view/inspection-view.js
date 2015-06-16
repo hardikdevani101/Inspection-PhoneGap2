@@ -32,21 +32,38 @@ InspLinesPage.prototype.init = function() {
 		}, function(data) {
 			_self.app.appCache.waterMarkImgs = data.responce;
 			_self.app.loadWaterMarkFiles();
-		}, function() {
-			_self.app.showError("pg_inspection", "Error: Watermark Not Loaded");
-		});
+			if (_self.app.appCache.waterMarkImgs.length <= 0) {
+				var item = {};
+				item["url"] = "Default";
+				item["name"] = "Default";
+				item["isDefault"] = "N";
+				item["data"] = _self.app.watermark64;
+				_self.app.appCache.waterMarkImgs.push(item);
+			}
+		},
+				function() {
+					_self.app.showError("pg_inspection",
+							"Error: Watermark Not Loaded");
+					_self.app.appCache.waterMarkImgs = [];
+					var item = {};
+					item["url"] = "Default";
+					item["name"] = "Default";
+					item["isDefault"] = "N";
+					item["data"] = _self.app.watermark64;
+					_self.app.appCache.waterMarkImgs.push(item);
+				});
 		// TODO : Dummy Data Runner Start
-		 var ermsg = {
-		 // 'X_INSTRUCTIONLINE_ID' : 'MR2323',
-		 // 'M_INOUT_ID' : '23242342',
-		 'fileURI' : 'file/files/ererer.ted',
-		 'error' : 'ERROR Msg'
-		 };
-		 _self.app.appFTPUtil.processLog.push(ermsg);
-		 _self.app.appFTPUtil.processLog.push(ermsg);
-		 _self.app.appFTPUtil.processLog.push(ermsg);
-		 _self.app.appFTPUtil.processLog.push(ermsg);
-		 _self.app.appFTPUtil.processLog.push(ermsg);
+		// var ermsg = {
+		// // 'X_INSTRUCTIONLINE_ID' : 'MR2323',
+		// // 'M_INOUT_ID' : '23242342',
+		// 'fileURI' : 'file/files/ererer.ted',
+		// 'error' : 'ERROR Msg'
+		// };
+		// _self.app.appFTPUtil.processLog.push(ermsg);
+		// _self.app.appFTPUtil.processLog.push(ermsg);
+		// _self.app.appFTPUtil.processLog.push(ermsg);
+		// _self.app.appFTPUtil.processLog.push(ermsg);
+		// _self.app.appFTPUtil.processLog.push(ermsg);
 		// TODO : Dummy Data Runner End
 
 		_self.el_ispProgLog.hide();
@@ -58,51 +75,51 @@ InspLinesPage.prototype.init = function() {
 
 	_self.el_ispProgLog.on('tap', function() {
 
-//		$("#pop_process_log", _self.contextInspDetail).popup('open');
+		// $("#pop_process_log", _self.contextInspDetail).popup('open');
 		$.mobile.changePage("#pop_process_log");
 		event.preventDefault();
 		return false;
 	});
 
 	$("#btn_retry_attach").on('tap', function(event) {
-//		$("#pop_process_log", _self.contextInspDetail).popup("close");
+		// $("#pop_process_log", _self.contextInspDetail).popup("close");
 		$.mobile.changePage("#pg_inspection_detail");
 		_self.onFinishedCalled();
 		event.preventDefault();
 		return false
 	});
 
-//	$("#pop_process_log", _self.contextInspDetail).bind({
-//		pagebeforeshow : function(event, ui) {
+	// $("#pop_process_log", _self.contextInspDetail).bind({
+	// pagebeforeshow : function(event, ui) {
 	_self.errorContextPage.on("pagebeforeshow", function() {
-			var items = '';
-			if (_self.EditImageLog) {
-				items += _self.getPendingEditImageLog();
-			}
-			var el_attachItems = $("#edit_items", _self.errorContext);
-			el_attachItems.html(items);
-			el_attachItems.listview("refresh");
+		var items = '';
+		if (_self.EditImageLog) {
+			items += _self.getPendingEditImageLog();
+		}
+		var el_attachItems = $("#edit_items", _self.errorContext);
+		el_attachItems.html(items);
+		el_attachItems.listview("refresh");
 
-			var el_syncItems = $("#sync_items", _self.errorContext);
-			var items = '';
-			if (_self.app.appFTPUtil.processLog) {
-				items += _self.getFTPProcessLog();
-			}
-			el_syncItems.html(items);
-			el_syncItems.listview("refresh");
+		var el_syncItems = $("#sync_items", _self.errorContext);
+		var items = '';
+		if (_self.app.appFTPUtil.processLog) {
+			items += _self.getFTPProcessLog();
+		}
+		el_syncItems.html(items);
+		el_syncItems.listview("refresh");
 
-			var items = '';
-			if (_self.app.visionApi.processLog.attachImage) {
-				items += _self.getAttacheProcessLog();
-			}
-			var el_attachItems = $("#attach_items", _self.errorContext);
-			el_attachItems.html(items);
-			el_attachItems.listview("refresh");
-//		}
+		var items = '';
+		if (_self.app.visionApi.processLog.attachImage) {
+			items += _self.getAttacheProcessLog();
+		}
+		var el_attachItems = $("#attach_items", _self.errorContext);
+		el_attachItems.html(items);
+		el_attachItems.listview("refresh");
+		// }
 	});
 
 	$("#btn_retry_sync").on('tap', function(event) {
-//		$("#pop_process_log", _self.contextInspDetail).popup("close");
+		// $("#pop_process_log", _self.contextInspDetail).popup("close");
 		$.mobile.changePage("#pg_inspection_detail");
 		_self.syncInspLines();
 		event.preventDefault();
@@ -173,10 +190,11 @@ InspLinesPage.prototype.getPendingEditImageLog = function() {
 InspLinesPage.prototype.displayAlert = function() {
 	var _self = this;
 	if (_self.app.appFTPUtil.processLog.length > 0) {
-//		$("#pop_process_log", _self.contextInspDetail).popup("open");
-		_self.app.showError("pg_inspection_detail", "Error: Some images not synced",function(){
-			$.mobile.changePage("#pop_process_log");
-		});
+		// $("#pop_process_log", _self.contextInspDetail).popup("open");
+		_self.app.showError("pg_inspection_detail",
+				"Error: Some images not synced", function() {
+					$.mobile.changePage("#pop_process_log");
+				});
 	} else {
 		_self.app.showError("pg_inspection_detail",
 				"All Files Uploaded Successfully.");
@@ -256,10 +274,11 @@ InspLinesPage.prototype.syncInspLines = function(callBack) {
 					el_insProcLog.show();
 				}
 				el_insProcLog.html(_self.EditImageLog.length);
-				_self.app.showError("pg_inspection_detail", "Error: Some images not Edited",function(){
-					$.mobile.changePage("#pop_process_log");
-				});
-//				$("#pop_process_log", _self.contextInspDetail).popup("open");
+				_self.app.showError("pg_inspection_detail",
+						"Error: Some images not Edited", function() {
+							$.mobile.changePage("#pop_process_log");
+						});
+				// $("#pop_process_log", _self.contextInspDetail).popup("open");
 			}
 			$.mobile.loading('hide');
 		} else {
@@ -415,10 +434,11 @@ InspLinesPage.prototype.displayAttachAlert = function() {
 			el_inspProcLog.show();
 		}
 		el_inspProcLog.html(_self.app.visionApi.processLog.attachImage.length);
-		_self.app.showError("pg_inspection_detail", "Error: Some images not Atteched",function(){
-			$.mobile.changePage("#pop_process_log");
-		});
-//		$("#pop_process_log", _self.contextInspDetail).popup("open");
+		_self.app.showError("pg_inspection_detail",
+				"Error: Some images not Atteched", function() {
+					$.mobile.changePage("#pop_process_log");
+				});
+		// $("#pop_process_log", _self.contextInspDetail).popup("open");
 	} else {
 		_self.app.showError("pg_inspection_detail",
 				"All Files are Attached Successfully!");

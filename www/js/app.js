@@ -121,24 +121,30 @@ App.prototype.hideDialog = function() {
 App.prototype.registerErrorPopup = function(pageId) {
 	var popupHtml = '<div id="'
 			+ pageId
-			+ '_ErrorPopup" data-role="popup" class="ui-body-b" data-theme="none" data-dismissible="false">'
+			+ '_ErrorPopup" data-role="popup" class="ui-body-b" style="top: 0" data-theme="none" data-dismissible="false">'
 			+ '<div data-role="header" class ="ui-header ui-bar-a" data-theme="b"><h1 class="ui-title" style="color:white;">Alerts</h1>'
 			+ '<a href="#" class="ui-btn-left ui-btn ui-btn-b ui-icon-delete ui-corner-all ui-btn-icon-notext" data-rel="back"></a>'
 			+ '</div><div role="main" class="ui-content" data-theme="a" data-mini="true" style="margin-top: auto !important;">'
-			+ '<p id="error_msg" data-theme="a"></p></div></div>';
+			+ '<p id="error_msg" data-theme="a"></p>'
+			+ '<a href="#" id="btn_goto" style="display:none;" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="OK">OK</a>'
+			+ '</div> </div>';
 	$("#" + pageId).append(popupHtml);
 	$('#' + pageId + '_ErrorPopup').popup();
 }
 
-App.prototype.showError = function(pageId, msg , callBack) {
+App.prototype.showError = function(pageId, msg, callBack) {
 	$('#' + pageId + '_ErrorPopup #error_msg').html(msg);
-	if (callBack) {
-		$('#' + pageId + '_ErrorPopup #error_msg').off("click");
-		$('#' + pageId + '_ErrorPopup #error_msg').on("click", function(event) {
-			callBack();
-		});
-	}
+	// if (callBack) {
+	$('#' + pageId + '_ErrorPopup #btn_goto').css("display", "block");
+	$('#' + pageId + '_ErrorPopup #btn_goto').off("click");
+	$('#' + pageId + '_ErrorPopup #btn_goto').on("click", function(event) {
+		callBack();
+	});
+	// }
 	$('#' + pageId + '_ErrorPopup').popup("open");
+	$('.ui-popup-container').css({
+		top : 0
+	});
 }
 
 App.prototype.register = function() {
