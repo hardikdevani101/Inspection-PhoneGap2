@@ -45,6 +45,7 @@ ImageEditorPage.prototype.enableEditMode = function() {
 	_self.el_cropToolbar.hide();
 	_self.el_editToolbar.show();
 	_self.el_cropImgContainer.hide();
+	_self.el_previewImgContainer.hide();
 	_self.el_editImgContainer.show();
 	_self.el_btnPreview.html("Preview");
 	setTimeout(function() {
