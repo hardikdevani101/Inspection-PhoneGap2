@@ -134,13 +134,13 @@ App.prototype.registerErrorPopup = function(pageId) {
 
 App.prototype.showError = function(pageId, msg, callBack) {
 	$('#' + pageId + '_ErrorPopup #error_msg').html(msg);
-	// if (callBack) {
-	$('#' + pageId + '_ErrorPopup #btn_goto').css("display", "block");
-	$('#' + pageId + '_ErrorPopup #btn_goto').off("click");
-	$('#' + pageId + '_ErrorPopup #btn_goto').on("click", function(event) {
-		callBack();
-	});
-	// }
+	if (callBack) {
+		$('#' + pageId + '_ErrorPopup #btn_goto').css("display", "block");
+		$('#' + pageId + '_ErrorPopup #btn_goto').off("click");
+		$('#' + pageId + '_ErrorPopup #btn_goto').on("click", function(event) {
+			callBack();
+		});
+	}
 	$('#' + pageId + '_ErrorPopup').popup("open");
 	$('.ui-popup-container').css({
 		top : 0

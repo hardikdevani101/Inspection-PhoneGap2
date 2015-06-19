@@ -1,5 +1,5 @@
 @echo  on 
-@call phonegap local plugin add https://bitbucket.org/dpansheriya/phonegap-camera.git
+@call phonegap local plugin add https://bitbucket.org/logilite/phonegap.plugins.camera.git
 
 @call phonegap local plugin add https://bitbucket.org/logilite/phonegap.plugins.ftp.git
 

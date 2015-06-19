@@ -150,7 +150,7 @@ FS.prototype.createVISFile = function(param, isEdited) {
 														}
 													}
 
-													if (findResult.length > 0) {
+													if (findResult.length > 0 && param.dataSource !== undefined) {
 														$
 																.each(
 																		_self.app.galleryview.inspFiles[param.inspID],
