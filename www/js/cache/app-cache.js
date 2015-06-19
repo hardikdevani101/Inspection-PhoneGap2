@@ -31,10 +31,8 @@ AppCache.prototype.reset = function() {
 		m_inoutline_id : '',
 		x_instructionline_id : ''
 	}
-	this.warehouseList = [];
-	this.orgList = [];
-	this.roleList = [];
 	this.settingInfo.is_login = false;
+	this.settingInfo.isWaterMarkLoaded = false;
 	this.appInfo = {};
 	this.loginInfo = {};
 	this.pages = [];
@@ -42,7 +40,7 @@ AppCache.prototype.reset = function() {
 		data : {},
 		url : '/'
 	} ];
-	this.ftpServers = [];
+	// this.ftpServers = [];
 	this.mrLines = [];
 	this.inspLines = {};
 	this.inspFiles = {};
@@ -223,7 +221,8 @@ AppCache.prototype.init = function() {
 		'client_id' : '',
 		'warehouse_id' : '',
 		'img_quality' : '',
-		'lang' : ''
+		'lang' : '',
+		'watermark' : ''
 	};
 
 	this.loginInfo = {

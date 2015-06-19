@@ -2,7 +2,7 @@ var DB = function(app) {
 	console.log("DB constructor");
 	this.app = app;
 	this.currentDBVersion = "1.1"
-	this.dbstore = window.openDatabase("vision_db3", "", "vision_db3",
+	this.dbstore = window.openDatabase("vision_db4", "", "vision_db4",
 			2 * 1024 * 1024);
 }
 
@@ -29,7 +29,7 @@ DB.prototype.init = function(success, error) {
 						tx
 								.executeSql('CREATE TABLE IF NOT EXISTS '
 										+ ' vis_setting'
-										+ ' (vis_url, vis_lang, vis_client_id, vis_role, vis_whouse_id, vis_ord_id, username,userid,userpwd, vis_img_qulty, is_login, app_version,img_editor DEFAULT "Vision")');
+										+ ' (vis_url, vis_lang, vis_client_id, vis_role, vis_whouse_id, vis_ord_id, username,userid,userpwd, vis_img_qulty, is_login, app_version,img_editor DEFAULT "Vision", watermark)');
 						tx
 								.executeSql('CREATE TABLE IF NOT EXISTS '
 										+ ' vis_gallery '

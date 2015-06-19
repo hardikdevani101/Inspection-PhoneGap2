@@ -95,7 +95,7 @@ FS.prototype.getFile = function(path, success) {
 	}, _self.errorHandler);
 }
 
-FS.prototype.createVISFile = function(param) {
+FS.prototype.createVISFile = function(param, isEdited) {
 	var _self = this;
 	var prefix = "PS";
 	if (_self.app.appCache.prefixCache[param.mrLineID]) {
@@ -135,7 +135,7 @@ FS.prototype.createVISFile = function(param) {
 												param['oldURI'] = oldFullPath;
 												param.filePath = fileFullPath;
 												param['fileName'] = fileEntry.name;
-												param['imgEdited'] = 'T';
+												param['imgEdited'] = isEdited;
 
 												_self.app.appDB
 														.doGalleryEntry(param);
@@ -143,21 +143,23 @@ FS.prototype.createVISFile = function(param) {
 													findResult = [];
 													for (var i = 0; i < _self.app.galleryview.inspFiles[param.inspID].length; i++) {
 														item = _self.app.galleryview.inspFiles[param.inspID][i];
-														if (item.filePath == param['oldURI'] || item.oldURI == param['oldURI']) {
+														if (item.filePath == param['oldURI']
+																|| item.oldURI == param['oldURI']) {
 															findResult
 																	.push(item);
 														}
 													}
 
-													if (findResult.length > 0) {
+													if (findResult.length > 0 && param.dataSource !== undefined) {
 														$
 																.each(
 																		_self.app.galleryview.inspFiles[param.inspID],
 																		function() {
-																			if (this.filePath == param['oldURI'] || this.oldURI == param['oldURI']) {
+																			if (this.filePath == param['oldURI']
+																					|| this.oldURI == param['oldURI']) {
 																				this.filePath = param.filePath;
 																				this.name = fileEntry.name;
-																				this.imgEdited = 'T';
+																				this.imgEdited = isEdited;
 																			}
 																		});
 													} else {
@@ -166,13 +168,14 @@ FS.prototype.createVISFile = function(param) {
 														item['name'] = fileEntry.name;
 														item['uploded'] = "F";
 														item['dataSource'] = "LS";
-														item['imgEdited'] = "T";
+														item['imgEdited'] = isEdited;
 														_self.app.galleryview.inspFiles[param.inspID]
 																.push(item);
 
 													}
 													_self.app.appCache.imgCache[param.filePath] = param.fileData;
-													_self.app.galleryview.renderInspFiles();
+													_self.app.galleryview
+															.renderInspFiles();
 												}
 											};
 											writer.write(binaryData);

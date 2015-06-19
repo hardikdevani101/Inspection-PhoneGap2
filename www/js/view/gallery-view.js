@@ -36,7 +36,7 @@ GalleryPage.prototype.onEditFinish = function(sourceInfo, editedImgData) {
 			_self.app.appFS.updateVISFile(sourceInfo);
 			_self.app.galleryview.renderInspFiles();
 		} else {
-			_self.app.appFS.createVISFile(sourceInfo);
+			_self.app.appFS.createVISFile(sourceInfo, "T");
 		}
 	}
 }
@@ -156,7 +156,7 @@ GalleryPage.prototype.onCreateNewEntry = function(file) {
 			param['fileData'] = base64;
 			param['fileExt'] = extension;
 			if (base64) {
-				_self.app.appFS.createVISFile(param);
+				_self.app.appFS.createVISFile(param, "F");
 			}
 		} else {
 			_self.visGallery.addFileInfo(param, function() {
@@ -171,7 +171,7 @@ GalleryPage.prototype.onCreateNewEntry = function(file) {
 			param['fileData'] = base64;
 			param['fileExt'] = "jpg";
 			if (base64) {
-				_self.app.appFS.createVISFile(param);
+				_self.app.appFS.createVISFile(param, "F");
 			}
 		} else {
 			_self.visGallery.addFileInfo(param, function() {
@@ -228,7 +228,10 @@ GalleryPage.prototype.init = function() {
 								break;
 							}
 						}
-
+						if (!_self.app.appCache.settingInfo.isWaterMarkLoaded) {
+							_self.loadWatermark();
+							_self.app.appCache.settingInfo.isWaterMarkLoaded = true;
+						}
 						setTimeout(function() {
 							_self.loadInspFile();
 						}, 10);
@@ -242,15 +245,27 @@ GalleryPage.prototype.init = function() {
 						$("#ls_inspFiles li button h2", _self.context).css(
 								"color", "white");
 
-						_self.loadWatermark();
-
 						_self.el_prefix_inspLine
 								.html(_self.app.appCache.prefixCache[sel_inoutline_id]);
 
 						$.mobile.loading('hide');
 					});
+
+	_self.el_waterMark.on('change', function() {
+		var value = $(this).children('option:selected').attr('value');
+		if (value != '') {
+			_self.app.settingnview.onUpdateWaterMark(value, function(msg) {
+				_self.app.showError(_self.context,
+						"Error: Watermark Not Updated - " + msg);
+			});
+		}
+	});
+
 	_self.el_prefix_inspLine.on('click', function(event) {
 		_self.el_prefix_popup.popup("open");
+		$('.ui-popup-container').css({
+			top : 0
+		});
 		_self.el_prefix_insp.val(_self.el_prefix_inspLine.html());
 		event.preventDefault();
 		return false;
@@ -356,12 +371,28 @@ GalleryPage.prototype.init = function() {
 
 GalleryPage.prototype.loadWatermark = function() {
 	var _self = this;
-	if (_self.app.appCache.waterMarkImgs.length > 0) {
+	if (_self.app.appCache.waterMarkImgs.length >= 0) {
 		_self.el_waterMark.empty();
 		$.each(_self.app.appCache.waterMarkImgs, function() {
-			_self.el_waterMark.append($("<option></option>").val(this.url)
-					.html(this.name));
+			if (this.url == _self.app.appCache.settingInfo['watermark']) {
+				_self.el_waterMark.append($("<option selected></option>").val(
+						this.url).html(this.name));
+			} else {
+				_self.el_waterMark.append($("<option></option>").val(this.url)
+						.html(this.name));
+			}
 		});
+
+		if (!(_self.app.appCache.settingInfo['watermark'])) {
+			var findResult = jQuery.grep(_self.app.appCache.waterMarkImgs,
+					function(item, index) {
+						return item.isDefault == 'Y';
+					});
+			if (findResult.length > 0) {
+				_self.el_waterMark.val(findResult[0].url);
+				_self.el_waterMark.trigger('change');
+			}
+		}
 	}
 	_self.el_waterMark.selectmenu('refresh');
 }
@@ -502,7 +533,8 @@ GalleryPage.prototype.onFileTap = function(event) {
 							});
 						} else {
 
-							_self.app.imageEditor = new ImageEditorPage(_self.app);
+							_self.app.imageEditor = new ImageEditorPage(
+									_self.app);
 							_self.app.imageEditor.init();
 							_self.app.imageEditor.setup({
 								img64 : imgData,
@@ -598,6 +630,7 @@ GalleryPage.prototype.getCameraImage = function() {
 		_self.onPhotoDataSuccess(param);
 	}, _self.onFail, {
 		quality : 70,
+		allowEdit : true,
 		destinationType : Camera.DestinationType.FILE_URI,
 		encodingType : Camera.EncodingType.JPEG
 	});
@@ -609,6 +642,7 @@ GalleryPage.prototype.getGalleryImage = function() {
 		_self.onPhotoDataSuccess(param);
 	}, _self.onFail, {
 		quality : 70,
+		allowEdit : true,
 		sourceType : Camera.PictureSourceType.PHOTOLIBRARY,
 		destinationType : Camera.DestinationType.FILE_URI,
 		encodingType : Camera.EncodingType.JPEG

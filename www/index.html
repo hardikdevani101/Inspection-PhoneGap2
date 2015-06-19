@@ -50,9 +50,9 @@
 
 						<li class="ui-field-contain" data-shadow="false"
 							data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-							data-iconpos="right" data-theme="b"><label for="select-server">Srv</label>
-							<select name="txt_url" id="txt_url" data-native-menu="false"
-							data-mini="true">
+							data-iconpos="right" data-theme="b"><label
+							for="select-server">Srv</label> <select name="txt_url"
+							id="txt_url" data-native-menu="false" data-mini="true">
 								<!-- <option value="http://10.210.23.176:8088">FE VISD</option>
 									<option value="http://10.210.23.77:8088">Production</option>
 									<option value="http://10.210.23.78:8088">Development</option>
@@ -62,8 +62,8 @@
 
 						<li class="ui-field-contain" data-shadow="false"
 							data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-							data-iconpos="right"><label for="select-lang">Lang</label>
-							<select name="txt_lang" id="txt_lang" data-native-menu="false"
+							data-iconpos="right"><label for="select-lang">Lang</label> <select
+							name="txt_lang" id="txt_lang" data-native-menu="false"
 							data-mini="true">
 								<option value="en_US">English</option>
 						</select></li>
@@ -192,11 +192,11 @@ End of Home page
 			<ul data-role="listview" data-theme="c" data-inset="false">
 				<li class="ui-field-contain" data-shadow="false"
 					data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-					data-iconpos="right" data-theme="c"><label for="select-server">Version:1.0</label></li>
+					data-iconpos="right" data-theme="c"><label for="select-server">Version:2.0</label></li>
 				<li class="ui-field-contain" data-shadow="false"
 					data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
 					data-iconpos="right" data-theme="c"><label for="select-server">Release
-						Date: 20th May, 2015</label></li>
+						Date: 19th June, 2015</label></li>
 			</ul>
 		</div>
 	</div>
@@ -208,7 +208,7 @@ End of Login Page
 	<div data-role="page" id="pg_inspection" data-theme="c">
 		<div data-role="header" data-fullscreen="false" data-position="fixed"
 			data-theme="c">
-			<h1 data-role="heading">MRLines</h1>
+			<h1 data-role="heading">Lines</h1>
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-right">
 				<button id="btn_user" data-icon="user" data-corners="false"
@@ -275,7 +275,7 @@ End of MR line page
 				data-count-theme="b"></ul>
 		</div>
 
-		<div data-role="popup" id="pop_process_log" data-theme="c"
+		<!-- <div data-role="popup" id="pop_process_log" data-theme="c"
 			data-dismissible="false">
 			<div data-role="header" data-theme="b">
 				<a href="#" data-theme="b"
@@ -307,15 +307,15 @@ End of MR line page
 					<li data-role="list-divider">Attach Log</li>
 				</ul>
 			</div>
-		</div>
+		</div> -->
 
 		<div data-role="footer" data-fullscreen="false" data-position="fixed"
 			data-theme="a">
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
 					<li><a href="#pg_inspection" data-icon="arrow-l"
-						data-shadow="false" data-wrapperels="span" data-rel="back"
-						data-theme="a" title="Back">MRLines</a></li>
+						data-shadow="false" data-wrapperels="span" data-rel="Lines"
+						data-theme="a" title="Lines" id="btn_mrline">Lines</a></li>
 					<li><a href="#" id="btn_finish_mr" data-icon="check"
 						data-shadow="false" data-wrapperels="span" data-theme="a"
 						title="Finish">Finish</a></li>
@@ -325,6 +325,57 @@ End of MR line page
 				</ul>
 			</div>
 		</div>
+	</div>
+
+	<!-- Error Page -->
+	<div data-role="page" id="pop_process_log" data-theme="c"
+		data-dismissible="false">
+		<div data-role="header" data-theme="b">
+			<a href="#pg_inspection_detail" data-icon="arrow-l" 
+				data-shadow="false" data-wrapperels="span" title="Back">Back </a>
+			<h1 class="ui-title">Alerts</h1>
+			<div data-role="controlgroup" data-type="horizontal"
+				class="ui-mini ui-btn-right">
+				<button data-theme="b" id="btn_retry_sync" data-mini="true"
+					data-icon="" data-corners="false" data-theme="b"
+					data-shadow="false" data-iconshadow="false" data-wrapperels="span"
+					title="RetrySync">Retry Sync</button>
+				<button id="btn_retry_attach" data-icon="" data-corners="false"
+					data-shadow="false" data-iconshadow="false" data-theme="b"
+					data-wrapperels="span" title="RetryFinish">Retry Finish</button>
+			</div>
+		</div>
+		<div data-role="main" class="ui-content" data-theme="b">
+		<div>
+			<div data-role="tabs">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#fragment-1" class="ui-btn-active">Edit Log</a></li>
+						<li><a href="#fragment-2">Sync Log</a></li>
+						<li><a href="#fragment-3">Attach Log</a></li>
+					</ul>
+				</div>
+				<div id="fragment-1">
+					<ul data-role="listview" id="edit_items" data-inset="false"
+						data-mini="true">
+						<!-- <li data-role="list-divider">Edit Log</li> -->
+					</ul>
+				</div>
+				<div id="fragment-2">
+					<ul data-role="listview" id="sync_items" data-inset="false"
+						data-mini="true">
+						<!-- <li data-role="list-divider">Sync Log</li> -->
+					</ul>
+				</div>
+				<div id="fragment-3">
+					<ul data-role="listview" id="attach_items" data-inset="false"
+						data-mini="true">
+						<!-- <li data-role="list-divider">Attach Log</li> -->
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
 	</div>
 
 	<!-------------------------------------------------------------
@@ -395,10 +446,10 @@ End of Inspection page
 							<li class="ui-field-contain" data-shadow="false"
 								data-iconshadow="false" data-wrapperels="div"
 								data-icon="arrow-r" data-iconpos="right" data-theme="c"
-								xstyle="width: 50%"><select data-mini="true"
+								xstyle="width: 50%"><label for="sel_gwaterMark"
+								style="display: none">Select Watermark</label><select
 								id="sel_gwaterMark" name="select-gallery-waterMark"
-								data-native-menu="false"><option val="">Select
-										Watermark</option></select></li>
+								data-native-menu="false"></select></li>
 							<li xstyle="width: 15%"></li>
 						</ul>
 					</div>
@@ -582,6 +633,8 @@ Start of Crop page
 					<li><a data-method="enable" data-icon="crop" id="btn_crop"
 						data-iconpos="notext" href="#" data-shadow="false" data-theme="a"
 						title="crop">Crop</a></li>
+					<!-- <li><a id="btn_edit" href="#" data-shadow="false"
+						id="btn_edit" xdata-iconpos="notext" data-theme="a" title="edit">Edit</a></li> -->
 					<li><a id="btn_reset" href="#" data-shadow="false"
 						data-icon="refresh" id="btn_reset" data-iconpos="notext"
 						data-theme="a" title="Reset">Reset</a></li>
@@ -596,6 +649,9 @@ Start of Crop page
 					<li><a id="btn_edit_finished" href="#" data-icon=""
 						xdata-iconpos="notext" data-shadow="false" data-wrapperels="span"
 						data-theme="a" title="save">Save</a></li>
+					<li><a id="btn_preview" href="#" data-shadow="false"
+						id="btn_preview" xdata-iconpos="notext" data-theme="a"
+						title="preview">Preview</a></li>
 				</ul>
 			</div>
 		</div>
@@ -605,6 +661,8 @@ Start of Crop page
 			<div class="ui-grid-solo cropper-container">
 				<div id="crop-image-container" class="ui-block-a img-container"></div>
 			</div>
+			<div id="preview-image-container"
+				class="ui-block-a edit-img-container"></div>
 		</div>
 	</div>
 

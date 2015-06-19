@@ -43,6 +43,7 @@ Tbl_VISSetting.prototype.find = function(filter, success, error) {
 				setting['userid'] = results.rows.item(0).userid;
 				setting['password'] = results.rows.item(0).userpwd;
 				setting['img_editor'] = results.rows.item(0).img_editor;
+				setting['watermark'] = results.rows.item(0).watermark;
 			}
 			successCallback(setting);
 		});
@@ -80,7 +81,6 @@ Tbl_VISSetting.prototype.add = function(settingInfo, success, error) {
 						console.log("SettingInfo inserted.");
 						successCallback(settingInfo);
 					});
-
 };
 
 Tbl_VISSetting.prototype.update = function(setting, success, error) {
@@ -104,7 +104,22 @@ Tbl_VISSetting.prototype.update = function(setting, success, error) {
 		});
 	}, errorCallback, this.appDB.success);
 }
-
+Tbl_VISSetting.prototype.updateWaterMark = function(watermark, success, error) {
+	var successCallback = this.appDB.success;
+	if (typeof success === "function") {
+		successCallback = success;
+	}
+	var errorCallback = this.appDB.error;
+	if (typeof error === "function") {
+		errorCallback = error;
+	}
+	var sql = 'UPDATE vis_setting SET watermark ="' + watermark + '"';
+	this.appDB.dbstore.transaction(function(tx) {
+		tx.executeSql(sql, [], function(tx, results) {
+			successCallback(results)
+		});
+	}, errorCallback, this.appDB.success);
+}
 Tbl_VISSetting.prototype.login = function(isLogin, success, error) {
 	var _self = this;
 	var successCallback = _self.appDB.success;

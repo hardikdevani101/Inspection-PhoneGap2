@@ -179,7 +179,7 @@ SettingsPage.prototype.init = function() {
 
 SettingsPage.prototype.onUpdate = function() {
 	var _self = this;
-	var settingInfo = {};
+	var settingInfo = _self.app.appCache.settingInfo;
 	settingInfo['lang'] = $("#txt_lang option:selected", _self.context).val();
 	settingInfo['service_url'] = $("#txt_url option:selected", _self.context)
 			.val();
@@ -302,4 +302,16 @@ SettingsPage.prototype.onSettingFind = function(setting) {
 				.siblings('option').removeAttr('selected');
 		_self.el_txEditor.selectmenu("refresh", true);
 	}
+}
+
+SettingsPage.prototype.onUpdateWaterMark = function(value, error) {
+	var _self = this;
+	_self.visSettingsDAO.updateWaterMark(value, function(result) {
+		if (result.rowsAffected)
+			if (result.rowsAffected > 0) {
+				var settingInfo = _self.app.appCache.settingInfo;
+				settingInfo['watermark'] = value;
+				_self.app.appCache.updateSettingInfo(settingInfo);
+			}
+	}, error);
 }
