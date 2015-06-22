@@ -52,6 +52,11 @@ SettingsPage.prototype.renderOrgs = function() {
 		_self.el_txOrg.append(new Option(app.appCache.orgList[i].name,
 				_self.app.appCache.orgList[i].orgid));
 	}
+	if (_self.app.appCache.settingInfo.org_id) {
+		_self.el_txOrg.val(_self.app.appCache.settingInfo.org_id)
+				.attr('selected', true).siblings('option').removeAttr(
+						'selected');
+	}
 	_self.el_txOrg.selectmenu('refresh', true);
 }
 
@@ -61,6 +66,11 @@ SettingsPage.prototype.renderRoles = function() {
 	for (var i = 0; i < _self.app.appCache.roleList.length; i++) {
 		_self.el_txRole.append(new Option(_self.app.appCache.roleList[i].name,
 				_self.app.appCache.roleList[i].roleid));
+	}
+	if (_self.app.appCache.settingInfo.role) {
+		_self.el_txRole.val(_self.app.appCache.settingInfo.role)
+				.attr('selected', true).siblings('option').removeAttr(
+						'selected');
 	}
 	_self.el_txRole.selectmenu('refresh', true);
 }

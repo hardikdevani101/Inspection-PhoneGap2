@@ -630,7 +630,6 @@ GalleryPage.prototype.getCameraImage = function() {
 		_self.onPhotoDataSuccess(param);
 	}, _self.onFail, {
 		quality : 70,
-		allowEdit : true,
 		destinationType : Camera.DestinationType.FILE_URI,
 		encodingType : Camera.EncodingType.JPEG
 	});
@@ -642,7 +641,6 @@ GalleryPage.prototype.getGalleryImage = function() {
 		_self.onPhotoDataSuccess(param);
 	}, _self.onFail, {
 		quality : 70,
-		allowEdit : true,
 		sourceType : Camera.PictureSourceType.PHOTOLIBRARY,
 		destinationType : Camera.DestinationType.FILE_URI,
 		encodingType : Camera.EncodingType.JPEG
