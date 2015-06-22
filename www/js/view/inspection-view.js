@@ -161,7 +161,7 @@ InspLinesPage.prototype.getFTPProcessLog = function() {
 	var _self = this;
 	item1 = '';
 	$.each(_self.app.appFTPUtil.processLog, function(index, item) {
-		var line = '<li data-mini="true">File Failed:' + item + '</li>';
+		var line = '<li data-mini="true">File Failed:' + item.fileURI + '</li>';
 		item1 += line;
 	});
 	return item1;
@@ -196,6 +196,9 @@ InspLinesPage.prototype.displayAlert = function() {
 					$.mobile.changePage("#pop_process_log");
 				});
 	} else {
+		var el_insProcLog = $("#insp_process_log", _self.contextInspDetail);
+		_self.isAlertDisplay = false;
+		el_insProcLog.hide();
 		_self.app.showError("pg_inspection_detail",
 				"All Files Uploaded Successfully.");
 	}
@@ -440,6 +443,9 @@ InspLinesPage.prototype.displayAttachAlert = function() {
 				});
 		// $("#pop_process_log", _self.contextInspDetail).popup("open");
 	} else {
+		var el_insProcLog = $("#insp_process_log", _self.contextInspDetail);
+		_self.isAlertDisplay = false;
+		el_insProcLog.hide();
 		_self.app.showError("pg_inspection_detail",
 				"All Files are Attached Successfully!");
 	}

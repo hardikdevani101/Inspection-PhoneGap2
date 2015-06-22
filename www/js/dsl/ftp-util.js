@@ -14,34 +14,34 @@ FTPUtils.prototype.uploadFile = function(fileURI, M_InOutLine_ID,
 	var options = new FileUploadOptions();
 	options.fileKey = "file";
 	options.fileName = fileURI.split('/').pop();
-	ft.upload(encodeURI(fileURI), encodeURI(_self.app.appCache.settingInfo.service_url
-			+ "/VISService/fileUpload"), function(result) {
-		var xmlResponse = result.response;
-		var oldfileName = $(xmlResponse).find('oldName').text().trim();
-		var newFileName = $(xmlResponse).find('newName').text().trim();
-		if (newFileName && newFileName.length > 0) {
-			oldfileName = newFileName;
-		}
-		_self.app.appDB.onChangeUplaodStatus(M_InOutLine_ID,
-				X_INSTRUCTIONLINE_ID, isMR, oldfileName, fileURI);
-		var sucmsg = {
-			'X_INSTRUCTIONLINE_ID' : X_INSTRUCTIONLINE_ID,
-			'isMR' : isMR,
-			'fileURI' : fileURI,
-			'newFileName' : oldfileName
-		};
-		onSuccess(sucmsg);
-	}, function(err) {
-		var msg = _self.uploadFail(err);
-		var ermsg = {
-			'X_INSTRUCTIONLINE_ID' : X_INSTRUCTIONLINE_ID,
-			'isMR' : isMR,
-			'fileURI' : fileURI,
-			'error' : msg
-		};
-		_self.processLog.push(ermsg);
-		onError(ermsg);
-	}, options);
+	ft.upload(encodeURI(fileURI),
+			encodeURI(_self.app.appCache.settingInfo.service_url
+					+ "/VISService/fileUpload"), function(result) {
+				var xmlResponse = result.response;
+				var oldfileName = $(xmlResponse).find('oldName').text().trim();
+				var newFileName = $(xmlResponse).find('newName').text().trim();
+				if (newFileName && newFileName.length > 0) {
+					oldfileName = newFileName;
+				}
+				_self.app.appDB.onChangeUplaodStatus(M_InOutLine_ID,
+						X_INSTRUCTIONLINE_ID, isMR, oldfileName, fileURI);
+				var sucmsg = {
+					'X_INSTRUCTIONLINE_ID' : X_INSTRUCTIONLINE_ID,
+					'isMR' : isMR,
+					'fileURI' : fileURI,
+					'newFileName' : oldfileName
+				};
+				onSuccess(sucmsg);
+			}, function(err) {
+				var msg = _self.uploadFail(err);
+				var ermsg = {
+					'X_INSTRUCTIONLINE_ID' : X_INSTRUCTIONLINE_ID,
+					'isMR' : isMR,
+					'fileURI' : fileURI,
+					'error' : msg
+				};
+				onError(ermsg);
+			}, options);
 }
 
 FTPUtils.prototype.getSDPath = function(Fname) {
@@ -56,7 +56,7 @@ FTPUtils.prototype.getFileName = function(tmpFile) {
 
 FTPUtils.prototype.uploadFail = function(error) {
 	var msg = '';
-	switch (e.code) {
+	switch (error.code) {
 	case FileTransferError.FILE_NOT_FOUND_ERR:
 		msg = 'FILE_NOT_FOUND_ERR';
 		break;
@@ -73,7 +73,6 @@ FTPUtils.prototype.uploadFail = function(error) {
 		msg = 'Unknown Error';
 		break;
 	}
-	;
-	return msg;
 	console.log("File-Transfer:Error - " + msg);
+	return msg;
 }

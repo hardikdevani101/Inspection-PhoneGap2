@@ -68,7 +68,7 @@ Tbl_VISSetting.prototype.add = function(settingInfo, success, error) {
 										+ ' VALUES ("'
 										+ settingInfo['service_url'] + '","'
 										+ settingInfo['lang'] + '","'
-										+ settingInfo['client_id'] + '"," '
+										+ settingInfo['client_id'] + '","'
 										+ settingInfo['role'] + '","'
 										+ settingInfo['warehouse_id'] + '","'
 										+ settingInfo['org_id'] + '","'

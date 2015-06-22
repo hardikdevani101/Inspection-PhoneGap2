@@ -354,8 +354,7 @@ VisionApi.prototype.uploadImage = function(params, success, error) {
 			'type' : 1
 		});
 	}).fail(function(err) {
-		error(err.responseText);
-		_self.processLog.attachImage.push(err.responseText);
+		error(params.imgname);
 	});
 };
 
@@ -424,8 +423,7 @@ VisionApi.prototype.uploadImageByMInOut = function(params, success, error) {
 			'type' : 0
 		});
 	}).fail(function(err) {
-		error(err.responseText);
-		_self.processLog.attachImage.push(err.responseText);
+		error(params.imgname);
 	});
 };
 

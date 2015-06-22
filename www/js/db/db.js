@@ -2,7 +2,7 @@ var DB = function(app) {
 	console.log("DB constructor");
 	this.app = app;
 	this.currentDBVersion = "1.1"
-	this.dbstore = window.openDatabase("vision_db4", "", "vision_db4",
+	this.dbstore = window.openDatabase("vision_db5", "", "vision_db5",
 			2 * 1024 * 1024);
 }
 
