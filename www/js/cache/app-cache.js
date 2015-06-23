@@ -17,6 +17,7 @@ var AppCache = function(app) {
 		data : {},
 		url : '/'
 	} ];
+	this.isFTP = false;
 	this.mrLines = [];
 	this.inspLines = {};
 	this.prefixCache = {};

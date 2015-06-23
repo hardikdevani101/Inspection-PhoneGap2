@@ -132,8 +132,11 @@ App.prototype.registerErrorPopup = function(pageId) {
 	$('#' + pageId + '_ErrorPopup').popup();
 }
 
-App.prototype.showError = function(pageId, msg, callBack) {
+App.prototype.showError = function(pageId, msg, callBack, isGoToActive) {
 	$('#' + pageId + '_ErrorPopup #error_msg').html(msg);
+	if (!isGoToActive) {
+		$('#' + pageId + '_ErrorPopup #btn_goto').hide();
+	}
 	if (callBack) {
 		$('#' + pageId + '_ErrorPopup #btn_goto').css("display", "block");
 		$('#' + pageId + '_ErrorPopup #btn_goto').off("click");

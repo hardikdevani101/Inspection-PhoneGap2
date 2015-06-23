@@ -171,7 +171,7 @@ GalleryPage.prototype.onCreateNewEntry = function(file) {
 			param['fileData'] = base64;
 			param['fileExt'] = "jpg";
 			if (base64) {
-				_self.app.appFS.createVISFile(param, "F");
+				_self.app.appFS.createVISFile(param, "T");
 			}
 		} else {
 			_self.visGallery.addFileInfo(param, function() {
@@ -196,6 +196,8 @@ GalleryPage.prototype.init = function() {
 	_self.el_update_prefix = $("#btn_update_prefix", _self.contextPage);
 	_self.el_btn_camera = $("#btn_pic_camera", _self.contextPage);
 	_self.el_btn_gallery = $("#btn_pic_gallery", _self.contextPage);
+	_self.el_btn_file = $("#btn_file_explorer", _self.contextPage);
+	_self.el_btn_ftp = $("#btn_ftp_explorer", _self.contextPage);
 	_self.el_btn_delete = $("#btn_delete_file", _self.contextPage);
 	_self.el_btn_edit = $("#btn_edit_file", _self.contextPage);
 	_self.el_btn_toggle = $("#btn_doc_view_mode", _self.contextPage);
@@ -281,15 +283,19 @@ GalleryPage.prototype.init = function() {
 		return false;
 	});
 
-	_self.el_update_prefix.on('click', function(event) {
-		_self.el_prefix_inspLine.html(_self.el_prefix_insp.val());
-		_self.el_prefix_popup.popup("close");
-		if (_self.el_prefix_inspLine.data('id'))
-			_self.app.appCache.prefixCache[_self.el_prefix_inspLine.data('id')
-					.toString()] = _self.el_prefix_insp.val();
-		event.preventDefault();
-		return false;
-	});
+	_self.el_update_prefix
+			.on(
+					'click',
+					function(event) {
+						_self.el_prefix_inspLine.html(_self.el_prefix_insp
+								.val());
+						_self.el_prefix_popup.popup("close");
+						if (_self.app.appCache.session.m_inoutline_id)
+							_self.app.appCache.prefixCache[_self.app.appCache.session.m_inoutline_id] = _self.el_prefix_insp
+									.val();
+						event.preventDefault();
+						return false;
+					});
 
 	_self.el_btn_camera.on('click', function(event) {
 		_self.getCameraImage();
@@ -299,6 +305,20 @@ GalleryPage.prototype.init = function() {
 
 	_self.el_btn_gallery.on('click', function(event) {
 		_self.getGalleryImage();
+		event.preventDefault();
+		return false;
+	});
+
+	_self.el_btn_file.on('click', function(event) {
+		_self.app.appCache.isFTP = false;
+		$.mobile.changePage("#pg_file_explorer");
+		event.preventDefault();
+		return false;
+	});
+
+	_self.el_btn_ftp.on('click', function(event) {
+		_self.app.appCache.isFTP = true;
+		$.mobile.changePage("#pg_file_explorer");
 		event.preventDefault();
 		return false;
 	});

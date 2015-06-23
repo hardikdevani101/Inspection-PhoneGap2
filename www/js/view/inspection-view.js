@@ -73,7 +73,7 @@ InspLinesPage.prototype.init = function() {
 		}
 	});
 
-	_self.el_ispProgLog.on('tap', function() {
+	_self.el_ispProgLog.on('tap', function(event) {
 
 		// $("#pop_process_log", _self.contextInspDetail).popup('open');
 		$.mobile.changePage("#pop_process_log");
@@ -126,7 +126,7 @@ InspLinesPage.prototype.init = function() {
 		return false;
 	});
 
-	$('#btn_refresh_mrlines', _self.context).on("click", function() {
+	$('#btn_refresh_mrlines', _self.context).on("click", function(event) {
 		_self.app.appCache.mrLines = [];
 		_self.loadMRLines();
 		event.preventDefault();
@@ -134,7 +134,7 @@ InspLinesPage.prototype.init = function() {
 	});
 
 	var contextPageInspDetail = $(_self.contextInspDetail);
-	contextPageInspDetail.on("pagebeforeshow", function() {
+	contextPageInspDetail.on("pagebeforeshow", function(event) {
 		setTimeout(function() {
 			_self.loadInspLines({
 				'selected_mrline' : _self.app.appCache.session.m_inoutline_id
@@ -144,13 +144,13 @@ InspLinesPage.prototype.init = function() {
 		return false;
 	});
 
-	$('#btn_sync_insp', _self.contextInspDetail).on("click", function() {
+	$('#btn_sync_insp', _self.contextInspDetail).on("click", function(event) {
 		_self.syncInspLines();
 		event.preventDefault();
 		return false;
 	});
 
-	$('#btn_finish_mr', _self.contextInspDetail).on('click', function() {
+	$('#btn_finish_mr', _self.contextInspDetail).on('click', function(event) {
 		_self.onFinishedCalled();
 		event.preventDefault();
 		return false;
@@ -160,10 +160,12 @@ InspLinesPage.prototype.init = function() {
 InspLinesPage.prototype.getFTPProcessLog = function() {
 	var _self = this;
 	item1 = '';
-	$.each(_self.app.appFTPUtil.processLog, function(index, item) {
-		var line = '<li data-mini="true">File Failed:' + item.fileURI + '</li>';
-		item1 += line;
-	});
+	$.each(_self.app.appFTPUtil.processLog,
+			function(index, item) {
+				var line = '<li data-mini="true">File Failed:' + item.fileURI
+						+ '</li>';
+				item1 += line;
+			});
 	return item1;
 }
 

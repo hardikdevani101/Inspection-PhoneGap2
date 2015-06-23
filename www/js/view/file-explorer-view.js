@@ -230,19 +230,24 @@ FileExplorerPage.prototype.fillDataProviders = function() {
 		var el_dataProvider = $('#sel_dataproviders', _self.context);
 		el_dataProvider.html("");
 		// root URI = "file:///storage/sdcard0";
-		el_dataProvider.append(new Option("LocalStorage",
-				_self.app.appFS.rootURI));
-		if (_self.app.appCache.ftpServers.length > 0) {
-			$.each(_self.app.appCache.ftpServers, function(key, data) {
-				if (data.isFTP == 'Y') {
-					el_dataProvider.append(new Option(data.name, data.url));
-				}
-			});
-			// var option1 = $($("option", $('#sel_dataproviders')).get(1));
-			// option1.attr('selected', 'selected');
-			el_dataProvider.selectmenu();
-			el_dataProvider.selectmenu('refresh', true);
+		if (_self.app.appCache.isFTP) {
+			if (_self.app.appCache.ftpServers.length > 0) {
+				$.each(_self.app.appCache.ftpServers,
+						function(key, data) {
+							if (data.isFTP == 'Y') {
+								el_dataProvider.append(new Option(data.name,
+										data.url));
+							}
+						});
+				// var option1 = $($("option", $('#sel_dataproviders')).get(1));
+				// option1.attr('selected', 'selected');
+			}
+		} else {
+			el_dataProvider.append(new Option("LocalStorage",
+					_self.app.appFS.rootURI));
 		}
+		el_dataProvider.selectmenu();
+		el_dataProvider.selectmenu('refresh', true);
 		_self.app.hideDialog();
 	}
 

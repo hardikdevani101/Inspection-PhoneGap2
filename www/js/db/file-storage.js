@@ -150,7 +150,8 @@ FS.prototype.createVISFile = function(param, isEdited) {
 														}
 													}
 
-													if (findResult.length > 0 && param.dataSource !== undefined) {
+													if (findResult.length > 0
+															&& param.dataSource !== undefined) {
 														$
 																.each(
 																		_self.app.galleryview.inspFiles[param.inspID],
@@ -191,6 +192,10 @@ FS.prototype.updateVISFile = function(param) {
 	window.resolveLocalFileSystemURL(param.filePath, function(fileEntry) {
 		fileEntry.createWriter(function(writer) {
 			writer.onwrite = function(evt) {
+				param['oldURI'] = param.filePath;
+				param['fileName'] = fileEntry.name;
+				param['imgEdited'] = "T";
+				_self.app.appDB.doGalleryEntry(param);
 				console.log("FileData Updated");
 			};
 			writer.write(binaryData);

@@ -53,9 +53,8 @@ SettingsPage.prototype.renderOrgs = function() {
 				_self.app.appCache.orgList[i].orgid));
 	}
 	if (_self.app.appCache.settingInfo.org_id) {
-		_self.el_txOrg.val(_self.app.appCache.settingInfo.org_id)
-				.attr('selected', true).siblings('option').removeAttr(
-						'selected');
+		_self.el_txOrg.val(_self.app.appCache.settingInfo.org_id).attr(
+				'selected', true).siblings('option').removeAttr('selected');
 	}
 	_self.el_txOrg.selectmenu('refresh', true);
 }
@@ -68,9 +67,8 @@ SettingsPage.prototype.renderRoles = function() {
 				_self.app.appCache.roleList[i].roleid));
 	}
 	if (_self.app.appCache.settingInfo.role) {
-		_self.el_txRole.val(_self.app.appCache.settingInfo.role)
-				.attr('selected', true).siblings('option').removeAttr(
-						'selected');
+		_self.el_txRole.val(_self.app.appCache.settingInfo.role).attr(
+				'selected', true).siblings('option').removeAttr('selected');
 	}
 	_self.el_txRole.selectmenu('refresh', true);
 }
@@ -245,6 +243,10 @@ SettingsPage.prototype.onOrgChange = function() {
 			_self.el_txWH.append(new Option(result[i].name,
 					result[i].warehouseid));
 		}
+	}
+	if (_self.app.appCache.settingInfo.warehouse_id) {
+		_self.el_txWH.val(_self.app.appCache.settingInfo.warehouse_id).attr(
+				'selected', true).siblings('option').removeAttr('selected');
 	}
 	_self.el_txWH.selectmenu('refresh', true);
 }
