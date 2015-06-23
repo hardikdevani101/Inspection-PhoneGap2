@@ -22,13 +22,24 @@ FileExplorerPage.prototype.init = function() {
 	var contextPage = $("#pg_file_explorer");
 	contextPage.on("pagebeforeshow", function() {
 		_self.rederBreadCrumb();
+		if (_self.app.appCache.isFTP && _self.app.appCache.isFTP == true) {
+			if (_self.isLocalStorage) {
+				_self.currentDirPath = '/';
+			}
+			_self.isLocalStorage = false;
+		} else {
+			if (_self.isLocalStorage == false) {
+				_self.currentDirPath = '/';
+			}
+			_self.isLocalStorage = true;
+		}
+		_self.fillDataProviders();
 		$('#selected-files-count', _self.context).html(_self.selFiles.length);
 		$("#pnl_selected_files", _self.context).enhanceWithin();
 
 		_self.app.showDialog("Loading");
 		setTimeout(function() {
 			_self.loadData();
-			_self.app.hideDialog();
 		}, 1);
 	});
 
@@ -230,7 +241,7 @@ FileExplorerPage.prototype.fillDataProviders = function() {
 		var el_dataProvider = $('#sel_dataproviders', _self.context);
 		el_dataProvider.html("");
 		// root URI = "file:///storage/sdcard0";
-		if (_self.app.appCache.isFTP) {
+		if (_self.app.appCache.isFTP && _self.app.appCache.isFTP == true) {
 			if (_self.app.appCache.ftpServers.length > 0) {
 				$.each(_self.app.appCache.ftpServers,
 						function(key, data) {
@@ -248,7 +259,6 @@ FileExplorerPage.prototype.fillDataProviders = function() {
 		}
 		el_dataProvider.selectmenu();
 		el_dataProvider.selectmenu('refresh', true);
-		_self.app.hideDialog();
 	}
 
 	if (_self.app.appCache.ftpServers.length > 0) {
@@ -302,7 +312,6 @@ FileExplorerPage.prototype.loadData = function() {
 	_self.explodeDirectory(_self.currentDirPath, function() {
 		_self.renderContent()
 	});
-	_self.app.hideDialog();
 }
 
 FileExplorerPage.prototype.renderContent = function(dirPath) {
@@ -387,7 +396,6 @@ FileExplorerPage.prototype.renderContent = function(dirPath) {
 		}
 	}
 	_self.app.hideDialog();
-	// $.mobile.loading('hide');
 }
 
 FileExplorerPage.prototype.onDeleteFile = function(event) {
@@ -419,7 +427,6 @@ FileExplorerPage.prototype.onEditFinish = function(param, data, isLocal) {
 	if (isLocal == "Y") {
 		currentURI = param.filePath;
 	}
-	console.log(currentURI);
 	_self.app.appCache.imgCache[currentURI] = data;
 	$('li[data-id="' + currentURI + '"] img', "#pnl_selected_files").attr(
 			'src', data);
@@ -759,7 +766,6 @@ FileExplorerPage.prototype.explodeDirectory = function(dirName, callback) {
 		dataProviderUrl = selected_dataprovider;
 	}
 	var ftpUrl = dataProviderUrl + dirName;
-
 	var successCB = function(results) {
 		var selIndex = 0
 		var files = results[0]["fileNames"];
@@ -785,6 +791,7 @@ FileExplorerPage.prototype.explodeDirectory = function(dirName, callback) {
 	if (!dataStorageInfo.data || !dataStorageInfo.data[_self.currentDirPath]) {
 		// TODO - open below actual data filler.
 		if (!_self.isLocalStorage) {
+			_self.app.showDialog('Loading...');
 			_self.app.ftpClient.filelist(ftpUrl, {}, function(results) {
 				successCB(results)
 			}, function(msg) {
