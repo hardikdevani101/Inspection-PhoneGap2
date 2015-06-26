@@ -141,7 +141,7 @@ DB.prototype.loadFTPEntry = function(tx) {
 											+ ' values ("Test","http://10.210.23.97:8088","F")');
 							tx
 									.executeSql('insert into vis_server (name , url , isFTP)'
-											+ ' values ("Logilite-Dev","http://203.88.138.222:8384","F")');
+											+ ' values ("Logilite-Dev","http://203.88.138.222:8084","F")');
 						} else {
 							for (var j = 0; j < results.rows.length; j++) {
 								result = 0

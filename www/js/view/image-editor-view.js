@@ -87,17 +87,15 @@ ImageEditorPage.prototype.onPreview = function() {
 			nGctx.drawImage(origImg, 0, 0, origImg.width, origImg.height, 0, 0,
 					1024, 768);
 			
-			x = (nGcanvas.width - 20) - (230);
-			y = (nGcanvas.height - 20) - (58);
+			x = (nGcanvas.width - 20) - (watermark.width);
+			y = (nGcanvas.height - 20) - (watermark.height);
 			
 			if (_self.selectedWM !== undefined && _self.selectedWM != null
 					&& _self.selectedWM == 'Default') {
-				nGctx.drawImage(watermark, 0, 0, watermark.width,
-						watermark.height, x, y, 230, 58);
+				nGctx.drawImage(watermark, x, y);
 			} else if (_self.selectedWM === undefined
 					|| _self.selectedWM === null) {
-				nGctx.drawImage(watermark, 0, 0, watermark.width,
-						watermark.height, x, y, 230, 58);
+				nGctx.drawImage(watermark, x, y);
 			} else {
 				nGctx.drawImage(watermark, 0, 0);
 			}
@@ -577,26 +575,15 @@ ImageEditorPage.prototype.onEditFinish = function() {
 			nGctx.drawImage(origImg, 0, 0, origImg.width, origImg.height, 0, 0,
 					1024, 768);
 
-//			x = (nGcanvas.width - 20) - (watermark.width);
-//			y = (nGcanvas.height - 20) - (watermark.height);
-//			
-//			nGcanvas = document.createElement('canvas');
-//			nGctx = nGcanvas.getContext("2d");
-//			nGcanvas.width = 1024;
-//			nGcanvas.height = 768;
-//			nGctx.drawImage(origImg, 0, 0, origImg.width, origImg.height, 0, 0,
-//					1024, 768);
-			x = (nGcanvas.width - 20) - (230);
-			y = (nGcanvas.height - 20) - (58);
+			x = (nGcanvas.width - 20) - (watermark.width);
+			y = (nGcanvas.height - 20) - (watermark.height);
 			
 			if (_self.selectedWM !== undefined && _self.selectedWM != null
 					&& _self.selectedWM == 'Default') {
-				nGctx.drawImage(watermark, 0, 0, watermark.width,
-						watermark.height, x, y, 230, 58);
+				nGctx.drawImage(watermark, x, y);
 			} else if (_self.selectedWM === undefined
 					|| _self.selectedWM === null) {
-				nGctx.drawImage(watermark, 0, 0, watermark.width,
-						watermark.height, x, y, 230, 58);
+				nGctx.drawImage(watermark, x, y);
 			} else {
 				nGctx.drawImage(watermark, 0, 0);
 			}

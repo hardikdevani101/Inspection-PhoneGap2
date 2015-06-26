@@ -115,7 +115,17 @@ AviaryEditor.prototype.addWaterMark = function(sucess) {
 
 				x = (nGcanvas.width - 20) - (watermark.width);
 				y = (nGcanvas.height - 20) - (watermark.height);
-				nGctx.drawImage(watermark, x, y);
+				
+				if (_self.selectedWM !== undefined && _self.selectedWM != null
+						&& _self.selectedWM == 'Default') {
+					nGctx.drawImage(watermark, x, y);
+				} else if (_self.selectedWM === undefined
+						|| _self.selectedWM === null) {
+					nGctx.drawImage(watermark, x, y);
+				} else {
+					nGctx.drawImage(watermark, 0, 0);
+				}
+
 				if (sucess) {
 					sucess(_self.param, nGcanvas.toDataURL());
 				} else {

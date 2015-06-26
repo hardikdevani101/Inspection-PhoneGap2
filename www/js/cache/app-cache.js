@@ -22,7 +22,6 @@ var AppCache = function(app) {
 	this.inspLines = {};
 	this.prefixCache = {};
 	this.imgCache = {};
-	this.prefixCache = {};
 	this.inspFiles = {};
 	this.waterMarkImgs = [];
 }
@@ -41,6 +40,8 @@ AppCache.prototype.reset = function() {
 		data : {},
 		url : '/'
 	} ];
+
+	this.prefixCache = {};
 	// this.ftpServers = [];
 	this.mrLines = [];
 	this.inspLines = {};

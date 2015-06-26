@@ -194,6 +194,7 @@ GalleryPage.prototype.init = function() {
 	_self.el_add_button = $("#btn-add", _self.contextPage);
 	_self.el_pnl_fileSource = $("#pnl_file_sources", _self.contextPage);
 	_self.el_update_prefix = $("#btn_update_prefix", _self.contextPage);
+	_self.el_reset_prefix = $("#btn_reset_prefix", _self.contextPage);
 	_self.el_btn_camera = $("#btn_pic_camera", _self.contextPage);
 	_self.el_btn_gallery = $("#btn_pic_gallery", _self.contextPage);
 	_self.el_btn_file = $("#btn_file_explorer", _self.contextPage);
@@ -293,6 +294,25 @@ GalleryPage.prototype.init = function() {
 						if (_self.app.appCache.session.m_inoutline_id)
 							_self.app.appCache.prefixCache[_self.app.appCache.session.m_inoutline_id] = _self.el_prefix_insp
 									.val();
+						event.preventDefault();
+						return false;
+					});
+
+	_self.el_reset_prefix
+			.on(
+					'click',
+					function(event) {
+						var sel_inoutline_id = _self.app.appCache.session.m_inoutline_id;
+						var mr_lines = _self.app.appCache.mrLines
+								.filter(function(element, index, array) {
+									return (element.m_inoutline_id == sel_inoutline_id);
+								});
+						if (mr_lines.length > 0) {
+							_self.el_prefix_inspLine.html(mr_lines[0].desc);
+							_self.el_prefix_popup.popup("close");
+							if (_self.app.appCache.session.m_inoutline_id)
+								_self.app.appCache.prefixCache[_self.app.appCache.session.m_inoutline_id] = mr_lines[0].desc;
+						}
 						event.preventDefault();
 						return false;
 					});
