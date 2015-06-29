@@ -380,7 +380,7 @@ End of MR line page
 	<div data-role="page" id="pop_process_log" data-theme="c"
 		data-dismissible="false">
 		<div data-role="header" data-theme="b">
-			<a href="#pg_inspection_detail" data-icon="arrow-l" 
+			<a href="#pg_inspection_detail" data-icon="arrow-l"
 				data-shadow="false" data-wrapperels="span" title="Back">Back </a>
 			<h1 class="ui-title">Alerts</h1>
 			<div data-role="controlgroup" data-type="horizontal"
@@ -395,36 +395,36 @@ End of MR line page
 			</div>
 		</div>
 		<div data-role="main" class="ui-content" data-theme="b">
-		<div>
-			<div data-role="tabs">
-				<div data-role="navbar">
-					<ul>
-						<li><a href="#fragment-1" class="ui-btn-active">Edit Log</a></li>
-						<li><a href="#fragment-2">Sync Log</a></li>
-						<li><a href="#fragment-3">Attach Log</a></li>
-					</ul>
-				</div>
-				<div id="fragment-1">
-					<ul data-role="listview" id="edit_items" data-inset="false"
-						data-mini="true">
-						<!-- <li data-role="list-divider">Edit Log</li> -->
-					</ul>
-				</div>
-				<div id="fragment-2">
-					<ul data-role="listview" id="sync_items" data-inset="false"
-						data-mini="true">
-						<!-- <li data-role="list-divider">Sync Log</li> -->
-					</ul>
-				</div>
-				<div id="fragment-3">
-					<ul data-role="listview" id="attach_items" data-inset="false"
-						data-mini="true">
-						<!-- <li data-role="list-divider">Attach Log</li> -->
-					</ul>
+			<div>
+				<div data-role="tabs">
+					<div data-role="navbar">
+						<ul>
+							<li><a href="#fragment-1" class="ui-btn-active">Edit Log</a></li>
+							<li><a href="#fragment-2">Sync Log</a></li>
+							<li><a href="#fragment-3">Attach Log</a></li>
+						</ul>
+					</div>
+					<div id="fragment-1">
+						<ul data-role="listview" id="edit_items" data-inset="false"
+							data-mini="true">
+							<!-- <li data-role="list-divider">Edit Log</li> -->
+						</ul>
+					</div>
+					<div id="fragment-2">
+						<ul data-role="listview" id="sync_items" data-inset="false"
+							data-mini="true">
+							<!-- <li data-role="list-divider">Sync Log</li> -->
+						</ul>
+					</div>
+					<div id="fragment-3">
+						<ul data-role="listview" id="attach_items" data-inset="false"
+							data-mini="true">
+							<!-- <li data-role="list-divider">Attach Log</li> -->
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 	</div>
 
 	<!-------------------------------------------------------------
@@ -469,27 +469,6 @@ End of Inspection page
 					id="btn_delete_file">Delete</a></li>
 			</ul>
 		</div>
-		<div data-role="panel" data-theme="b" id="pnl_file_sources"
-			data-position="right" data-display="overlay">
-			<div class="ui-panel-wrapper">
-				<div class="ui-content">
-					<ul data-role="listview" data-theme="b">
-						<li data-shadow="false" data-iconshadow="false"
-							data-wrapperels="div" data-icon="grid" data-iconpos="right"
-							data-theme="b"><a href="#" id="btn_pic_gallery">Gallery</a></li>
-						<li data-shadow="false" data-iconshadow="false"
-							data-wrapperels="div" data-icon="camera" data-iconpos="right"
-							data-theme="b"><a href="#" id="btn_pic_camera">Camera</a></li>
-						<li data-icon="cloud" data-shadow="false" data-iconshadow="false"
-							data-wrapperels="div" data-iconpos="right" data-theme="b"><a
-							href="#" id="btn_file_explorer" data-rel="close">File Explorer</a></li>
-						<li data-icon="cloud" data-shadow="false" data-iconshadow="false"
-							data-wrapperels="div" data-iconpos="right" data-theme="b"><a
-							href="#" id="btn_ftp_explorer" data-rel="close">FTP Explorer</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
 		<div data-role="footer" data-position="fixed" data-theme="c">
 			<div data-role="navbar">
 				<div class="ui-grid-a">
@@ -511,10 +490,19 @@ End of Inspection page
 							data-corners="true" data-shadow="false" data-iconshadow="false"
 							data-wrapperels="span" title="InspLine" data-rel="popup"
 							data-transition="flip">text</button>
-						<button id="btn-add" data-icon="plus" data-corners="true"
+						<button id="btn_pic_camera" data-icon="camera" data-corners="true"
 							data-iconpos="notext" data-shadow="false" data-iconshadow="false"
 							data-wrapperels="span" title="Logout"
-							class="ui-btn ui-icon-plus ui-btn-icon-notext ui-last-child">Add</button>
+							class="ui-btn ui-icon-camera ui-btn-icon-notext ui-last-child">Camera</button>
+						<button id="btn_pic_gallery" data-icon="grid" data-corners="true"
+							data-iconpos="notext" data-shadow="false" data-iconshadow="false"
+							data-wrapperels="span" title="Logout"
+							class="ui-btn ui-icon-grid ui-btn-icon-notext ui-last-child">Gallery</button>
+						<button id="btn_file_explorer" data-icon="cloud"
+							data-corners="true" data-iconpos="notext" data-shadow="false"
+							data-iconshadow="false" data-wrapperels="span" title="Logout"
+							class="ui-btn ui-icon-cloud ui-btn-icon-notext ui-last-child">File
+							Explorer</button>
 					</div>
 				</div>
 			</div>

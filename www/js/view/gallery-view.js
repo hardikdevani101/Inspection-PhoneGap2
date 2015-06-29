@@ -145,7 +145,7 @@ GalleryPage.prototype.onCreateNewEntry = function(file) {
 	item['dataSource'] = file.dataSource;
 
 	// Add DB Entry or Create File from FTP Data
-	if (file.dataSource == "FTP") {
+	if (file.dataSource == "FTP" || file.dataSource == "LS") {
 		var extension = file.name.substr((file.name.lastIndexOf('.') + 1));
 		var findResult = jQuery.grep(_self.app.dataTypes,
 				function(item, index) {
@@ -198,7 +198,6 @@ GalleryPage.prototype.init = function() {
 	_self.el_btn_camera = $("#btn_pic_camera", _self.contextPage);
 	_self.el_btn_gallery = $("#btn_pic_gallery", _self.contextPage);
 	_self.el_btn_file = $("#btn_file_explorer", _self.contextPage);
-	_self.el_btn_ftp = $("#btn_ftp_explorer", _self.contextPage);
 	_self.el_btn_delete = $("#btn_delete_file", _self.contextPage);
 	_self.el_btn_edit = $("#btn_edit_file", _self.contextPage);
 	_self.el_btn_toggle = $("#btn_doc_view_mode", _self.contextPage);
@@ -257,6 +256,7 @@ GalleryPage.prototype.init = function() {
 	_self.el_waterMark.on('change', function() {
 		var value = $(this).children('option:selected').attr('value');
 		if (value != '') {
+			_self.app.appCache.selWatermark = value;
 			_self.app.settingnview.onUpdateWaterMark(value, function(msg) {
 				_self.app.showError(_self.context,
 						"Error: Watermark Not Updated - " + msg);
@@ -330,14 +330,6 @@ GalleryPage.prototype.init = function() {
 	});
 
 	_self.el_btn_file.on('click', function(event) {
-		_self.app.appCache.isFTP = false;
-		$.mobile.changePage("#pg_file_explorer");
-		event.preventDefault();
-		return false;
-	});
-
-	_self.el_btn_ftp.on('click', function(event) {
-		_self.app.appCache.isFTP = true;
 		$.mobile.changePage("#pg_file_explorer");
 		event.preventDefault();
 		return false;
@@ -435,6 +427,9 @@ GalleryPage.prototype.loadWatermark = function() {
 		}
 	}
 	_self.el_waterMark.selectmenu('refresh');
+
+	var value = _self.el_waterMark.children('option:selected').attr('value');
+	_self.app.appCache.selWatermark = value;
 }
 
 GalleryPage.prototype.loadInspFile = function() {

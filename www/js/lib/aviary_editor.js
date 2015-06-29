@@ -1,10 +1,8 @@
 var AviaryEditor = function(app) {
 	this.app = app;
-
 }
 
 AviaryEditor.prototype.init = function() {
-	console.log("Edit called");
 	var _self = this;
 	_self.tools = cordova.plugins.Aviary.Tools;
 	_self.toolList = [ _self.tools.SHARPNESS, _self.tools.BRIGHTNESS,
@@ -44,7 +42,7 @@ AviaryEditor.prototype.edit = function(callBack) {
 		_self.app.ftpClient.get(_self.app.appFS.vis_dir.fullPath + "/"
 				+ fileName, _self.imageURI, {}, function(result) {
 			_self.param.actualURI = _self.imageURI;
-			_self.imageURI = result[0].uri;
+			_self.imageURI = result[0].localPath;
 			_self.openEditor(callBack);
 		}, function(msg) {
 			console.log('Error Getting File >>> ' + dataid);
@@ -72,7 +70,6 @@ AviaryEditor.prototype.openEditor = function(callBack) {
 			// var editedImageURI = result.src;
 			// console.log("File name: " + editedImageFileName + ", Image URI: "
 			// + editedImageURI);
-			console.log("sucess>>>>>>>>>>>>>>>>>>>>>>>");
 			_self.param['oldURI'] = _self.imageURI;
 			_self.param['name'] = result.name;
 			_self.param['fileURI'] = result.src;

@@ -124,7 +124,7 @@ DB.prototype.loadFTPEntry = function(tx) {
 							});
 							_self.app.appCache.ftpServers.push({
 								name : "Logilite-Dev",
-								url : "http://203.88.138.222:8384",
+								url : "http://203.88.138.222:8084",
 								isFTP : "F"
 							});
 							tx

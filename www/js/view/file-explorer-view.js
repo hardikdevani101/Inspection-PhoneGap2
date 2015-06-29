@@ -22,18 +22,6 @@ FileExplorerPage.prototype.init = function() {
 	var contextPage = $("#pg_file_explorer");
 	contextPage.on("pagebeforeshow", function() {
 		_self.rederBreadCrumb();
-		if (_self.app.appCache.isFTP && _self.app.appCache.isFTP == true) {
-			if (_self.isLocalStorage) {
-				_self.currentDirPath = '/';
-			}
-			_self.isLocalStorage = false;
-		} else {
-			if (_self.isLocalStorage == false) {
-				_self.currentDirPath = '/';
-			}
-			_self.isLocalStorage = true;
-		}
-		_self.fillDataProviders();
 		$('#selected-files-count', _self.context).html(_self.selFiles.length);
 		$("#pnl_selected_files", _self.context).enhanceWithin();
 
@@ -43,16 +31,39 @@ FileExplorerPage.prototype.init = function() {
 		}, 1);
 	});
 
-	$("#btn_finish_file_selection", _self.context).on('click', function(event) {
-		// TODO: Push Selected File information to Gallery
-		// Page.
-		_self.app.galleryview.onFileData(_self.selFiles);
-		_self.currentDirPath = '/';
-		_self.selFiles = [];
-		$.mobile.changePage("#pg_gallery");
-		event.preventDefault();
-		return false;
-	});
+	$("#btn_finish_file_selection", _self.context).on(
+			'click',
+			function(event) {
+
+				find_rest = jQuery.grep(_self.selFiles, function(item, index) {
+
+					var extension = item.name.substr((item.name
+							.lastIndexOf('.') + 1));
+					var findResult = jQuery.grep(_self.app.dataTypes, function(
+							item, index) {
+						return item == extension.toUpperCase();
+					});
+					if (findResult.length > 0) {
+						return item.edited != true;
+					}
+				});
+
+				if (find_rest.length > 0) {
+					_self.app.showError("pg_file_explorer",
+							"Some images not edited. Please edit images");
+					el_pnlSelFiles.panel("open");
+					event.preventDefault();
+					return false;
+				} else {
+					_self.app.galleryview.onFileData(_self.selFiles);
+					_self.currentDirPath = '/';
+					_self.selFiles = [];
+					$.mobile.changePage("#pg_gallery");
+					event.preventDefault();
+					return false;
+				}
+
+			});
 
 	$("#btn_reload_files", _self.context).on("tap", function(event) {
 		_self.currentDirPath = '/';
@@ -241,22 +252,20 @@ FileExplorerPage.prototype.fillDataProviders = function() {
 		var el_dataProvider = $('#sel_dataproviders', _self.context);
 		el_dataProvider.html("");
 		// root URI = "file:///storage/sdcard0";
-		if (_self.app.appCache.isFTP && _self.app.appCache.isFTP == true) {
-			if (_self.app.appCache.ftpServers.length > 0) {
-				$.each(_self.app.appCache.ftpServers,
-						function(key, data) {
-							if (data.isFTP == 'Y') {
-								el_dataProvider.append(new Option(data.name,
-										data.url));
-							}
-						});
-				// var option1 = $($("option", $('#sel_dataproviders')).get(1));
-				// option1.attr('selected', 'selected');
-			}
-		} else {
-			el_dataProvider.append(new Option("LocalStorage",
-					_self.app.appFS.rootURI));
+		el_dataProvider.append(new Option("LocalStorage",
+				_self.app.appFS.rootURI));
+		if (_self.app.appCache.ftpServers.length > 0) {
+			$.each(_self.app.appCache.ftpServers, function(key, data) {
+				if (data.isFTP == 'Y') {
+					el_dataProvider.append(new Option(data.name, data.url));
+				}
+			});
+			// var option1 = $($("option", $('#sel_dataproviders')).get(1));
+			// option1.attr('selected', 'selected');
+			el_dataProvider.selectmenu();
+			el_dataProvider.selectmenu('refresh', true);
 		}
+
 		el_dataProvider.selectmenu();
 		el_dataProvider.selectmenu('refresh', true);
 	}
@@ -430,13 +439,13 @@ FileExplorerPage.prototype.onEditFinish = function(param, data, isLocal) {
 	_self.app.appCache.imgCache[currentURI] = data;
 	$('li[data-id="' + currentURI + '"] img', "#pnl_selected_files").attr(
 			'src', data);
-	if (!param.actualURI || isLocal == "Y") {
-		$.each(_self.selFiles, function() {
-			if (this.filePath == currentURI) {
-				this.edited = true;
-			}
-		});
-	}
+	// if (!param.actualURI || isLocal == "Y") {
+	$.each(_self.selFiles, function() {
+		if (this.filePath == currentURI) {
+			this.edited = true;
+		}
+	});
+	// }
 }
 
 FileExplorerPage.prototype.onEditFile = function(event) {
@@ -468,14 +477,12 @@ FileExplorerPage.prototype.onSelFileTap = function(event) {
 			return item.filePath == selected;
 		});
 		if (sourceInfo.length > 0) {
-			var el_watermarkList = $('select[name="select-gallery-waterMark"]',
-					_self.context);
 			if (_self.app.appCache.settingInfo.img_editor
 					&& _self.app.appCache.settingInfo.img_editor == 'Aviary') {
 				_self.app.aviaryEdit.setup({
 					'sourceInfo' : sourceInfo[0],
 					imageURI : sourceInfo[0].filePath,
-					watermark : el_watermarkList.val()
+					watermark : _self.app.appCache.selWatermark
 				});
 			} else {
 
@@ -484,7 +491,7 @@ FileExplorerPage.prototype.onSelFileTap = function(event) {
 				_self.app.imageEditor.setup({
 					'sourceInfo' : sourceInfo[0],
 					img64 : imgData,
-					watermark : el_watermarkList.val()
+					watermark : _self.app.appCache.selWatermark
 				}, "N");
 			}
 		}
@@ -786,55 +793,49 @@ FileExplorerPage.prototype.explodeDirectory = function(dirName, callback) {
 		callback();
 	}
 
-	// console.log(ftpUrl);
+	// TODO - open below actual data filler.
+	if (!_self.isLocalStorage) {
+		_self.app.showDialog('Loading...');
+		_self.app.ftpClient.filelist(ftpUrl, {}, function(results) {
+			successCB(results)
+		}, function(msg) {
+			callback();
+			_self.app.showError("pg_file_explorer",
+					"Error:Failed to load data from FTP server.Path:(" + ftpUrl
+							+ ")." + msg);
 
-	if (!dataStorageInfo.data || !dataStorageInfo.data[_self.currentDirPath]) {
-		// TODO - open below actual data filler.
-		if (!_self.isLocalStorage) {
-			_self.app.showDialog('Loading...');
-			_self.app.ftpClient.filelist(ftpUrl, {}, function(results) {
-				successCB(results)
-			}, function(msg) {
-				callback();
-				_self.app.showError("pg_file_explorer",
-						"Error:Failed to load data from FTP server.Path:("
-								+ ftpUrl + ")." + msg);
-
-			});
-		} else {
-			_self.app.appFS.filelist(ftpUrl, function(results) {
-				successCB(results)
-			}, function() {
-				_self.app.showError("pg_file_explorer",
-						"Error:Failed to load data from Local Storage.Path:("
-								+ ftpUrl + ")." + msg);
-				callback();
-			});
-		}
-
-		// TODO - Remove below dummy data filler.
-		// var randomNum = Math.floor(Math.random() * 31);
-		// var extensionList = [ "jpg", "pdf", "png", "txt" ];
-		// var tempFiles = [], tempDir = [];
-		// for (var i = 0; i < randomNum; i++) {
-		// tempFiles.push('file'
-		// + i
-		// + '.'
-		// + extensionList[Math.floor(Math.random()
-		// * (extensionList.length))]);
-		// }
-		// randomNum = Math.floor(Math.random() * 31);
-		// var dirList = [ "subfolder", "textf" ];
-		// for (var i = 0; i < randomNum; i++) {
-		// tempDir.push(dirList[Math.floor(Math.random() * (dirList.length))]
-		// + "_" + i);
-		// }
-		// successCB([ {
-		// fileNames : tempFiles,
-		// directory : tempDir
-		// } ]);
-		// TODO - End
+		});
 	} else {
-		callback();
+		_self.app.appFS.filelist(ftpUrl, function(results) {
+			successCB(results)
+		}, function() {
+			_self.app.showError("pg_file_explorer",
+					"Error:Failed to load data from Local Storage.Path:("
+							+ ftpUrl + ")." + msg);
+			callback();
+		});
 	}
+
+	// TODO - Remove below dummy data filler.
+	// var randomNum = Math.floor(Math.random() * 31);
+	// var extensionList = [ "jpg", "pdf", "png", "txt" ];
+	// var tempFiles = [], tempDir = [];
+	// for (var i = 0; i < randomNum; i++) {
+	// tempFiles.push('file'
+	// + i
+	// + '.'
+	// + extensionList[Math.floor(Math.random()
+	// * (extensionList.length))]);
+	// }
+	// randomNum = Math.floor(Math.random() * 31);
+	// var dirList = [ "subfolder", "textf" ];
+	// for (var i = 0; i < randomNum; i++) {
+	// tempDir.push(dirList[Math.floor(Math.random() * (dirList.length))]
+	// + "_" + i);
+	// }
+	// successCB([ {
+	// fileNames : tempFiles,
+	// directory : tempDir
+	// } ]);
+	// TODO - End
 }

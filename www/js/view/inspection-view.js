@@ -265,7 +265,6 @@ InspLinesPage.prototype.syncInspLines = function(callBack) {
 	};
 
 	var onNotEditableFiles = function(tx, results) {
-		console.log(results.rows.length);
 		if (results.rows.length > 0) {
 			for (var i = 0; i < results.rows.length; i++) {
 				_self.EditImageLog.push(results.rows.item(i).insp_line + " : "

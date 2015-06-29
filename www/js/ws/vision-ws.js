@@ -43,6 +43,7 @@ VisionApi.prototype.resetADLoginRequest = function(params, success, error) {
 
 VisionApi.prototype.login = function(params, success, error) {
 	var _self = this;
+	console.log(">>>>>>>>>>>>>>>>>" + _self.completeUrl);
 	_self.app.appCache.settingInfo['username'] = params.username;
 	_self.app.appCache.settingInfo['password'] = params.password;
 	this.resetADLoginRequest();

@@ -207,7 +207,6 @@ FS.prototype.init = function() {
 	this.fileSystem = "";
 	var _self = this;
 	if (window.requestFileSystem) {
-		console.log("Found File-Storage:Debug - ");
 		window.requestFileSystem(window.PERSISTENT, 0, function(filesystem) {
 			_self.fileSystem = filesystem;
 			_self.rootURI = _self.fileSystem.root.toURL();
@@ -215,16 +214,13 @@ FS.prototype.init = function() {
 				_self.rootURI = _self.rootURI.substring(0,
 						_self.rootURI.length - 1);
 			}
-			console.log(">>>>>>>>>>>>>>>>>>>" + _self.fileSystem.root.toURL());
 			filesystem.root.getDirectory('VIS_Inspection', {
 				create : true
 			}, function(filesystem) {
-				console.log('VIS Directory');
 				_self.vis_dir = filesystem;
 				filesystem.getDirectory('VIS_FTP', {
 					create : true
 				}, function(filesystem) {
-					console.log('VIS FTP');
 					_self.vis_ftp_dir = filesystem;
 				}, _self.errorHandler);
 			}, _self.errorHandler);
