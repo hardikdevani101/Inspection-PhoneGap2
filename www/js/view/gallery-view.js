@@ -156,7 +156,8 @@ GalleryPage.prototype.onCreateNewEntry = function(file) {
 			param['fileData'] = base64;
 			param['fileExt'] = extension;
 			if (base64) {
-				_self.app.appFS.createVISFile(param, "F");
+				_self.app.appFS.createVISFile(param,
+						file.edited ? (file.edited ? "T" : "F") : "F");
 			}
 		} else {
 			_self.visGallery.addFileInfo(param, function() {

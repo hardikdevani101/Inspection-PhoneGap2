@@ -21,6 +21,11 @@ FileExplorerPage.prototype.init = function() {
 	_self.fillDataProviders();
 	var contextPage = $("#pg_file_explorer");
 	contextPage.on("pagebeforeshow", function() {
+
+		if (_self.isEditAll) {
+			return;
+		}
+
 		_self.rederBreadCrumb();
 		$('#selected-files-count', _self.context).html(_self.selFiles.length);
 		$("#pnl_selected_files", _self.context).enhanceWithin();
@@ -31,39 +36,18 @@ FileExplorerPage.prototype.init = function() {
 		}, 1);
 	});
 
-	$("#btn_finish_file_selection", _self.context).on(
-			'click',
-			function(event) {
+	$("#btn_finish_file_selection", _self.context).on('click', function(event) {
+		_self.isEditAll = true;
+		_self.editAll();
+	});
 
-				find_rest = jQuery.grep(_self.selFiles, function(item, index) {
-
-					var extension = item.name.substr((item.name
-							.lastIndexOf('.') + 1));
-					var findResult = jQuery.grep(_self.app.dataTypes, function(
-							item, index) {
-						return item == extension.toUpperCase();
-					});
-					if (findResult.length > 0) {
-						return item.edited != true;
-					}
-				});
-
-				if (find_rest.length > 0) {
-					_self.app.showError("pg_file_explorer",
-							"Some images not edited. Please edit images");
-					el_pnlSelFiles.panel("open");
-					event.preventDefault();
-					return false;
-				} else {
-					_self.app.galleryview.onFileData(_self.selFiles);
-					_self.currentDirPath = '/';
-					_self.selFiles = [];
-					$.mobile.changePage("#pg_gallery");
-					event.preventDefault();
-					return false;
-				}
-
-			});
+	$("#btn_skip_file_explorer", _self.context).on('click', function(event) {
+		_self.currentDirPath = '/';
+		_self.selFiles = [];
+		$.mobile.changePage("#pg_gallery");
+		event.preventDefault();
+		return false;
+	});
 
 	$("#btn_reload_files", _self.context).on("tap", function(event) {
 		_self.currentDirPath = '/';
@@ -198,6 +182,54 @@ FileExplorerPage.prototype.init = function() {
 				event.preventDefault();
 				return false;
 			});
+}
+
+FileExplorerPage.prototype.editAll = function() {
+
+	var _self = this;
+	find_rest = jQuery.grep(_self.selFiles, function(item, index) {
+
+		var extension = item.name.substr((item.name.lastIndexOf('.') + 1));
+		var findResult = jQuery.grep(_self.app.dataTypes,
+				function(item, index) {
+					return item == extension.toUpperCase();
+				});
+		if (findResult.length > 0) {
+			return item.edited != true;
+		}
+	});
+
+	if (find_rest.length > 0) {
+		var imgData = _self.app.appCache.imgCache[find_rest[0].filePath];
+		if (_self.app.appCache.settingInfo.img_editor
+				&& _self.app.appCache.settingInfo.img_editor == 'Aviary') {
+			_self.app.aviaryEdit.setup({
+				'sourceInfo' : find_rest[0],
+				imageURI : find_rest[0].filePath,
+				watermark : _self.app.appCache.selWatermark
+			});
+			_self.app.aviaryEdit.edit(function(param, data) {
+				_self.onEditFinish(param, data)
+			});
+		} else {
+			_self.app.imageEditor = new ImageEditorPage(_self.app);
+			_self.app.imageEditor.init();
+			_self.app.imageEditor.setup({
+				'sourceInfo' : find_rest[0],
+				img64 : imgData,
+				watermark : _self.app.appCache.selWatermark
+			}, "N");
+			$.mobile.changePage("#pg_img_editor");
+		}
+	} else {
+		_self.isEditAll = false;
+		_self.app.galleryview.onFileData(_self.selFiles);
+		_self.currentDirPath = '/';
+		_self.selFiles = [];
+		$.mobile.changePage("#pg_gallery");
+		event.preventDefault();
+		return false;
+	}
 }
 
 FileExplorerPage.prototype.renderSelectedFiles = function() {
@@ -443,9 +475,15 @@ FileExplorerPage.prototype.onEditFinish = function(param, data, isLocal) {
 	$.each(_self.selFiles, function() {
 		if (this.filePath == currentURI) {
 			this.edited = true;
+			console.log(this.filePath + ">>>>>>>" + this.edited);
 		}
 	});
 	// }
+	setTimeout(function() {
+		if (_self.isEditAll) {
+			_self.editAll();
+		}
+	}, 10);
 }
 
 FileExplorerPage.prototype.onEditFile = function(event) {
