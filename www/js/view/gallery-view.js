@@ -664,7 +664,9 @@ GalleryPage.prototype.getCameraImage = function() {
 	var _self = this;
 	navigator.camera.getPicture(function(param) {
 		_self.onPhotoDataSuccess(param);
-	}, _self.onFail, {
+	}, function(message) {
+		_self.onFail(message);
+	}, {
 		quality : 70,
 		destinationType : Camera.DestinationType.FILE_URI,
 		encodingType : Camera.EncodingType.JPEG
@@ -717,5 +719,6 @@ GalleryPage.prototype.onPhotoDataSuccess = function(imageURI) {
 }
 
 GalleryPage.prototype.onFail = function(message) {
-	_self.app.showError("pg_gallery", "message");
+	var _self = this;
+	_self.app.showError("pg_gallery", message);
 }
