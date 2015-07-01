@@ -153,6 +153,10 @@ App.prototype.showError = function(pageId, msg, callBack, isGoToActive) {
 App.prototype.register = function() {
 	var _self = this;
 
+	$(document).on("pagebeforeshow", "#pg_home", function() {
+		_self.appCache.currentPage = "#pg_home";
+	});
+
 	$(document)
 			.on(
 					"pagecreate",
@@ -339,6 +343,33 @@ App.prototype.logout = function() {
 	$.mobile.changePage("#pg_login");
 }
 
+App.prototype.onBackButton = function() {
+	var _self = this;
+	if (_self.appCache.currentPage == '#pg_login') {
+		$.mobile.changePage("#pg_home");
+	} else if (_self.appCache.currentPage == '#pg_home') {
+		function checkButtonSelection(iValue) {
+			if (iValue == 2) {
+				navigator.app.exitApp();
+			}
+		}
+		navigator.notification.confirm("Are you sure you want to EXIT ?",
+				checkButtonSelection, 'EXIT APP:', [ 'Cancel', 'OK' ]);
+	} else if (_self.appCache.currentPage == '#pg_inspection') {
+		$.mobile.changePage("#pg_home");
+	} else if (_self.appCache.currentPage == '#pg_inspection_detail') {
+		$.mobile.changePage("#pg_inspection");
+	} else if (_self.appCache.currentPage == '#pop_process_log') {
+		$.mobile.changePage("#pg_inspection");
+	} else if (_self.appCache.currentPage == '#pg_gallery') {
+		$.mobile.changePage("#pg_inspection_detail");
+	} else if (_self.appCache.currentPage == '#pg_file_explorer') {
+		$.mobile.changePage("#pg_gallery");
+	} else {
+		navigator.app.backHistory();
+	}
+}
+
 // Initialize application.
 
 var app = new App();
@@ -370,6 +401,9 @@ $(document).ready(function() {
 
 			app.aviaryEdit = new AviaryEditor(app);
 			app.aviaryEdit.init();
+			document.addEventListener("backbutton", function() {
+				app.onBackButton();
+			}, false);
 
 		}, false);
 

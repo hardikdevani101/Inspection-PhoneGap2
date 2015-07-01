@@ -19,9 +19,9 @@ FileExplorerPage.prototype.init = function() {
 	var _self = this;
 	_self.isLocalStorage = true;
 	_self.fillDataProviders();
-	var contextPage = $("#pg_file_explorer");
+	var contextPage = $(_self.context);
 	contextPage.on("pagebeforeshow", function() {
-
+		_self.app.appCache.currentPage = _self.context;
 		if (_self.isEditAll) {
 			return;
 		}
@@ -657,7 +657,7 @@ FileExplorerPage.prototype.renderDirPath = function() {
 	for (var i = 0; i < _self.linkRegister.length; i++) {
 		var value = _self.linkRegister[i];
 		var el_dirLink = $(
-				"#current-dir-path .current_dir_location a[data-id='" + value
+				"#current-dir-path a[data-id='" + value
 						+ "']", _self.context)
 		el_dirLink.off('click');
 		el_dirLink.on("click", function(event) {

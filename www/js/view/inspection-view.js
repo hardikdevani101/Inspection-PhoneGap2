@@ -21,6 +21,7 @@ InspLinesPage.prototype.init = function() {
 	_self.el_ispProgLog = $("#insp_process_log", _self.contextInspDetail);
 
 	_self.contextPage.on("pagebeforeshow", function() {
+		_self.app.appCache.currentPage = _self.context;
 		_self.rederBreadCrumb();
 		setTimeout(function() {
 			_self.loadMRLines();
@@ -92,6 +93,7 @@ InspLinesPage.prototype.init = function() {
 	// $("#pop_process_log", _self.contextInspDetail).bind({
 	// pagebeforeshow : function(event, ui) {
 	_self.errorContextPage.on("pagebeforeshow", function() {
+		_self.app.appCache.currentPage = _self.errorContext;
 		var items = '';
 		if (_self.EditImageLog) {
 			items += _self.getPendingEditImageLog();
@@ -135,6 +137,7 @@ InspLinesPage.prototype.init = function() {
 
 	var contextPageInspDetail = $(_self.contextInspDetail);
 	contextPageInspDetail.on("pagebeforeshow", function(event) {
+		_self.app.appCache.currentPage = _self.contextInspDetail;
 		setTimeout(function() {
 			_self.loadInspLines({
 				'selected_mrline' : _self.app.appCache.session.m_inoutline_id

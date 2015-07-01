@@ -214,7 +214,7 @@ GalleryPage.prototype.init = function() {
 					_self.context,
 					function() {
 						_self.isGridView = true;
-
+						_self.app.appCache.currentPage = _self.context;
 						_self.rederBreadCrumb();
 						// TODO remove below hard coded.
 						// _self.line_id = 152452;
