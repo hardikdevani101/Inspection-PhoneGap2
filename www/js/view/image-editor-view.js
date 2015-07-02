@@ -87,18 +87,7 @@ ImageEditorPage.prototype.onPreview = function() {
 			nGctx.drawImage(origImg, 0, 0, origImg.width, origImg.height, 0, 0,
 					1024, 768);
 
-			x = (nGcanvas.width - 20) - (watermark.width);
-			y = (nGcanvas.height - 20) - (watermark.height);
-
-			if (_self.selectedWM !== undefined && _self.selectedWM != null
-					&& _self.selectedWM == 'Default') {
-				nGctx.drawImage(watermark, x, y);
-			} else if (_self.selectedWM === undefined
-					|| _self.selectedWM === null) {
-				nGctx.drawImage(watermark, x, y);
-			} else {
-				nGctx.drawImage(watermark, 0, 0);
-			}
+			nGctx.drawImage(watermark, 0, 0);
 
 			_self.el_previewImgContainer.html([ '<img id="pre_img_src" src="'
 					+ nGcanvas.toDataURL() + '" />' ].join(''));
@@ -585,18 +574,7 @@ ImageEditorPage.prototype.onEditFinish = function() {
 			nGctx.drawImage(origImg, 0, 0, origImg.width, origImg.height, 0, 0,
 					1024, 768);
 
-			x = (nGcanvas.width - 20) - (watermark.width);
-			y = (nGcanvas.height - 20) - (watermark.height);
-
-			if (_self.selectedWM !== undefined && _self.selectedWM != null
-					&& _self.selectedWM == 'Default') {
-				nGctx.drawImage(watermark, x, y);
-			} else if (_self.selectedWM === undefined
-					|| _self.selectedWM === null) {
-				nGctx.drawImage(watermark, x, y);
-			} else {
-				nGctx.drawImage(watermark, 0, 0);
-			}
+			nGctx.drawImage(watermark, 0, 0);
 
 			if (_self.isGallery == 'Y') {
 				_self.app.galleryview.onEditFinish(_self.sourceInfo, nGcanvas

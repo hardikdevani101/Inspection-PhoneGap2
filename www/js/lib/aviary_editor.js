@@ -84,52 +84,43 @@ AviaryEditor.prototype.openEditor = function(callBack) {
 
 AviaryEditor.prototype.addWaterMark = function(sucess) {
 	var _self = this;
-	_self.app.appFS.getFileByURL(_self.param, function(options) {
-		_self.param = options;
-		var watermarkImage = _self.app.watermark64;
-		if (_self.selectedWM) {
-			var findResult = jQuery.grep(_self.app.appCache.waterMarkImgs,
-					function(item, index) {
-						return item.url == _self.selectedWM;
-					});
-			if (findResult.length > 0) {
-				watermarkImage = findResult[0].data;
-			}
-		}
-
-		var watermark = new Image();
-		watermark.src = watermarkImage;
-		watermark.onload = function() {
-			var origImg = new Image();
-			origImg.src = _self.param.data;
-			origImg.onload = function() {
-				nGcanvas = document.createElement('canvas');
-				nGctx = nGcanvas.getContext("2d");
-				nGcanvas.width = 1024;
-				nGcanvas.height = 768;
-				nGctx.drawImage(origImg, 0, 0, origImg.width, origImg.height,
-						0, 0, 1024, 768);
-
-				x = (nGcanvas.width - 20) - (watermark.width);
-				y = (nGcanvas.height - 20) - (watermark.height);
-				
-				if (_self.selectedWM !== undefined && _self.selectedWM != null
-						&& _self.selectedWM == 'Default') {
-					nGctx.drawImage(watermark, x, y);
-				} else if (_self.selectedWM === undefined
-						|| _self.selectedWM === null) {
-					nGctx.drawImage(watermark, x, y);
-				} else {
-					nGctx.drawImage(watermark, 0, 0);
+	_self.app.appFS.getFileByURL(_self.param,
+			function(options) {
+				_self.param = options;
+				var watermarkImage = _self.app.watermark64;
+				if (_self.selectedWM) {
+					var findResult = jQuery.grep(
+							_self.app.appCache.waterMarkImgs, function(item,
+									index) {
+								return item.url == _self.selectedWM;
+							});
+					if (findResult.length > 0) {
+						watermarkImage = findResult[0].data;
+					}
 				}
 
-				if (sucess) {
-					sucess(_self.param, nGcanvas.toDataURL());
-				} else {
-					_self.app.galleryview.onEditFinish(_self.param, nGcanvas
-							.toDataURL());
+				var watermark = new Image();
+				watermark.src = watermarkImage;
+				watermark.onload = function() {
+					var origImg = new Image();
+					origImg.src = _self.param.data;
+					origImg.onload = function() {
+						nGcanvas = document.createElement('canvas');
+						nGctx = nGcanvas.getContext("2d");
+						nGcanvas.width = 1024;
+						nGcanvas.height = 768;
+						nGctx.drawImage(origImg, 0, 0, origImg.width,
+								origImg.height, 0, 0, 1024, 768);
+
+						nGctx.drawImage(watermark, 0, 0);
+
+						if (sucess) {
+							sucess(_self.param, nGcanvas.toDataURL());
+						} else {
+							_self.app.galleryview.onEditFinish(_self.param,
+									nGcanvas.toDataURL());
+						}
+					}
 				}
-			}
-		}
-	});
+			});
 }

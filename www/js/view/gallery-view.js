@@ -160,6 +160,7 @@ GalleryPage.prototype.onCreateNewEntry = function(file) {
 						file.edited ? (file.edited ? "T" : "F") : "F");
 			}
 		} else {
+			param.edited = true;
 			_self.visGallery.addFileInfo(param, function() {
 			}, null);
 			item['uploded'] = 'F';
@@ -167,7 +168,7 @@ GalleryPage.prototype.onCreateNewEntry = function(file) {
 		}
 	} else {
 
-		if (param.edited) {
+		if (file.edited) {
 			var base64 = _self.app.appCache.imgCache[file.filePath];
 			param['fileData'] = base64;
 			param['fileExt'] = "jpg";
@@ -356,21 +357,21 @@ GalleryPage.prototype.init = function() {
 			$(this).removeClass('ui-icon-grid');
 			$(this).html('List View');
 			$(this).addClass('ui-icon-bars ui-btn-icon-notext');
-			_self.el_mainDiv.addClass('img-gallery');
-			_self.el_mainDiv.removeClass('img-gallery-listview');
-			$("#pg_gal_main img", _self.contextPage).removeClass(
+			$('#pg_gallery #pg_gal_main').addClass('img-gallery');
+			$('#pg_gallery .ui-content').removeClass('img-gallery-listview');
+			$("#pg_gallery #pg_gal_main img").removeClass(
 					'ui-listview-mode');
-			$("#ls_inspFiles p button.ui-icon-arrow-u", _self.context).hide();
+			$("#ls_inspFiles p a.ui-icon-arrow-u", _self.context).hide();
 			$.each(_self.inspFiles[_self.line_id], function(index, file) {
 				if (file.uploded == 'T') {
 					$(
 							'#ls_inspFiles li[data-id="' + file.filePath
-									+ '"] p button.ui-icon-arrow-u',
+									+ '"] p a.ui-icon-arrow-u',
 							_self.context).show();
 				}
 			});
-			$("#ls_inspFiles li button h2", _self.context)
-					.css("color", "white");
+			$("#ls_inspFiles .ui-listview .ui-li-has-thumb h2", _self.context)
+					.css("color", "#FFF");
 
 		} else {
 			_self.isGridView = false;
@@ -384,17 +385,17 @@ GalleryPage.prototype.init = function() {
 
 			$('#ls_inspFiles li a', _self.context).removeClass(
 					"ui-icon-carat-r");
-			$("#ls_inspFiles p button.ui-icon-arrow-u", _self.context).hide();
+			$("#ls_inspFiles p a.ui-icon-arrow-u", _self.context).hide();
 			$.each(_self.inspFiles[_self.line_id], function(index, file) {
 				if (file.uploded == 'T') {
 
 					$(
 							'#ls_inspFiles li[data-id="' + file.filePath
-									+ '"] button').addClass("ui-icon-arrow-u",
+									+ '"] a').addClass("ui-icon-arrow-u",
 							_self.context);
 				}
 			});
-			$("#ls_inspFiles li button h2", _self.context).css("color",
+			$("#ls_inspFiles .ui-listview .ui-li-has-thumb h2", _self.context).css("color",
 					"#202C3C");
 		}
 		event.preventDefault();

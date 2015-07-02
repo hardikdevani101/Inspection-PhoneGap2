@@ -78,12 +78,17 @@ Tbl_VISGallery.prototype.addFileInfo = function(fileInfo, success, error) {
 	if (!fileInfo.dataSource) {
 		fileInfo['dataSource'] = "CMR";
 	}
+	isEdited = "F";
+	if(fileInfo.edited){
+		isEdited = "T";
+	}
 	this.appDB.dbstore.transaction(function(tx) {
 		var sqlQuery = 'INSERT INTO vis_gallery'
-				+ ' (mr_line,isMR,insp_line,name,file,dataSource)'
+				+ ' (mr_line,isMR,insp_line,name,file,dataSource,imgEdited)'
 				+ ' VALUES ("' + fileInfo.mrLineID + '","' + fileInfo.isMR
 				+ '","' + fileInfo.inspID + '","' + fileInfo.fileName + '","'
-				+ fileInfo.filePath + '","' + fileInfo.dataSource + '")';
+				+ fileInfo.filePath + '","' + fileInfo.dataSource + '","'
+				+ isEdited + '")';
 		console.log(sqlQuery);
 		tx.executeSql(sqlQuery, [], successCallback, errorCallback);
 	});

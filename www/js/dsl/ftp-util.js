@@ -7,13 +7,14 @@ FTPUtils.prototype.init = function() {
 
 }
 
-FTPUtils.prototype.uploadFile = function(fileURI, M_InOutLine_ID,
-		X_INSTRUCTIONLINE_ID, isMR, onError, onSuccess) {
+FTPUtils.prototype.upload = function(fileURI, M_InOutLine_ID,
+		X_INSTRUCTIONLINE_ID, isMR, onError, onSuccess, ftpURL) {
 	var _self = this;
 	var ft = new FileTransfer();
 	var options = new FileUploadOptions();
 	options.fileKey = "file";
 	options.fileName = fileURI.split('/').pop();
+
 	ft.upload(encodeURI(fileURI),
 			encodeURI(_self.app.appCache.settingInfo.service_url
 					+ "/VISService/fileUpload"), function(result) {
@@ -22,6 +23,9 @@ FTPUtils.prototype.uploadFile = function(fileURI, M_InOutLine_ID,
 				var newFileName = $(xmlResponse).find('newName').text().trim();
 				if (newFileName && newFileName.length > 0) {
 					oldfileName = newFileName;
+				}
+				if (ftpURL) {
+					fileURI = ftpURL;
 				}
 				_self.app.appDB.onChangeUplaodStatus(M_InOutLine_ID,
 						X_INSTRUCTIONLINE_ID, isMR, oldfileName, fileURI);
@@ -37,11 +41,37 @@ FTPUtils.prototype.uploadFile = function(fileURI, M_InOutLine_ID,
 				var ermsg = {
 					'X_INSTRUCTIONLINE_ID' : X_INSTRUCTIONLINE_ID,
 					'isMR' : isMR,
-					'fileURI' : fileURI,
+					'fileURI' : fileURI.split('/').pop(),
 					'error' : msg
 				};
 				onError(ermsg);
 			}, options);
+}
+
+FTPUtils.prototype.uploadFile = function(fileURI, M_InOutLine_ID,
+		X_INSTRUCTIONLINE_ID, isMR, onError, onSuccess) {
+	var _self = this;
+	if (fileURI.startsWith("ftp")) {
+		var fileName = fileURI.split('/').pop();
+		_self.app.ftpClient.get(_self.app.appFS.vis_dir.fullPath + "/"
+				+ fileName, fileURI, {}, function(result) {
+			ftpURL = fileURI;
+			fileURI = result[0].localPath;
+			_self.upload(fileURI, M_InOutLine_ID, X_INSTRUCTIONLINE_ID, isMR,
+					onError, onSuccess, ftpURL);
+		}, function(msg) {
+			var ermsg = {
+				'X_INSTRUCTIONLINE_ID' : X_INSTRUCTIONLINE_ID,
+				'isMR' : isMR,
+				'fileURI' : fileURI.split('/').pop(),
+				'error' : "File Not Found"
+			};
+			onError(ermsg);
+		});
+	} else {
+		_self.upload(fileURI, M_InOutLine_ID, X_INSTRUCTIONLINE_ID, isMR,
+				onError, onSuccess);
+	}
 }
 
 FTPUtils.prototype.getSDPath = function(Fname) {

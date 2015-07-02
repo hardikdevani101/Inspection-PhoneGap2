@@ -471,7 +471,10 @@ InspLinesPage.prototype.onFinishedCalled = function() {
 
 	var attachFail = function(msg) {
 		_self.inProgressAttachCount++;
-		_self.app.visionApi.processLog.attachImage.push(msg);
+		fileArray = msg.split(",");
+		$.each(fileArray, function(index, item) {
+			_self.app.visionApi.processLog.attachImage.push(item);
+		});
 		if (_self.inProgressAttachCount == totalAttachCount) {
 			_self.displayAttachAlert();
 		}
