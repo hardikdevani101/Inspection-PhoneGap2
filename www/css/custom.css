@@ -1063,3 +1063,12 @@ ul.ui-listview li {
 	background-color: #c7b899 !important;
 	border-color: #c7b899 !important
 }
+
+#_form_settings {
+	margin-top : 32px !important;
+}
+
+#_form_settings ul li{
+	padding-top : 5px !important;
+	padding-bottom : 5px !important;
+}

@@ -259,8 +259,8 @@ GalleryPage.prototype.init = function() {
 		var value = $(this).children('option:selected').attr('value');
 		if (value != '') {
 			_self.app.appCache.selWatermark = value;
-			_self.app.settingnview.onUpdateWaterMark(value, function(msg) {
-				_self.app.showError(_self.context,
+			_self.app.onUpdateWaterMark(value, function(msg) {
+				_self.app.showError("pg_gallery",
 						"Error: Watermark Not Updated - " + msg);
 			});
 		}
@@ -284,6 +284,12 @@ GalleryPage.prototype.init = function() {
 		});
 		event.preventDefault();
 		return false;
+	});
+
+	$("#pg_gallery #btn_user").on('click', function(event) {
+		$('#preferenceMenu').popup('open');
+		event.preventDefault();
+		return false
 	});
 
 	_self.el_update_prefix
@@ -359,15 +365,14 @@ GalleryPage.prototype.init = function() {
 			$(this).addClass('ui-icon-bars ui-btn-icon-notext');
 			$('#pg_gallery #pg_gal_main').addClass('img-gallery');
 			$('#pg_gallery .ui-content').removeClass('img-gallery-listview');
-			$("#pg_gallery #pg_gal_main img").removeClass(
-					'ui-listview-mode');
+			$("#pg_gallery #pg_gal_main img").removeClass('ui-listview-mode');
 			$("#ls_inspFiles p a.ui-icon-arrow-u", _self.context).hide();
 			$.each(_self.inspFiles[_self.line_id], function(index, file) {
 				if (file.uploded == 'T') {
 					$(
 							'#ls_inspFiles li[data-id="' + file.filePath
-									+ '"] p a.ui-icon-arrow-u',
-							_self.context).show();
+									+ '"] p a.ui-icon-arrow-u', _self.context)
+							.show();
 				}
 			});
 			$("#ls_inspFiles .ui-listview .ui-li-has-thumb h2", _self.context)
@@ -389,14 +394,12 @@ GalleryPage.prototype.init = function() {
 			$.each(_self.inspFiles[_self.line_id], function(index, file) {
 				if (file.uploded == 'T') {
 
-					$(
-							'#ls_inspFiles li[data-id="' + file.filePath
-									+ '"] a').addClass("ui-icon-arrow-u",
-							_self.context);
+					$('#ls_inspFiles li[data-id="' + file.filePath + '"] a')
+							.addClass("ui-icon-arrow-u", _self.context);
 				}
 			});
-			$("#ls_inspFiles .ui-listview .ui-li-has-thumb h2", _self.context).css("color",
-					"#202C3C");
+			$("#ls_inspFiles .ui-listview .ui-li-has-thumb h2", _self.context)
+					.css("color", "#202C3C");
 		}
 		event.preventDefault();
 		return false;

@@ -89,6 +89,18 @@ InspLinesPage.prototype.init = function() {
 		event.preventDefault();
 		return false
 	});
+	
+	$("#pg_inspection #btn_user").on('click', function(event) {
+		 $('#preferenceMenu').popup('open');
+		 event.preventDefault();
+		return false
+	});
+	
+	$("#pg_inspection_detail #btn_user").on('click', function(event) {
+		 $('#preferenceMenu').popup('open');
+		 event.preventDefault();
+		return false
+	});
 
 	// $("#pop_process_log", _self.contextInspDetail).bind({
 	// pagebeforeshow : function(event, ui) {

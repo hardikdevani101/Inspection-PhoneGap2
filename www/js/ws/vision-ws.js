@@ -41,11 +41,11 @@ VisionApi.prototype.resetADLoginRequest = function(params, success, error) {
 			+ '<_0:stage>9</_0:stage>' + '</_0:ADLoginRequest>';
 }
 
-VisionApi.prototype.login = function(params, success, error) {
+VisionApi.prototype.login = function(success, error) {
 	var _self = this;
 	console.log(">>>>>>>>>>>>>>>>>" + _self.completeUrl);
-	_self.app.appCache.settingInfo['username'] = params.username;
-	_self.app.appCache.settingInfo['password'] = params.password;
+	// _self.app.appCache.settingInfo['username'] = params.username;
+	// _self.app.appCache.settingInfo['password'] = params.password;
 	this.resetADLoginRequest();
 	var reqBody = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
 			+ '<soapenv:Header/>'
@@ -604,3 +604,125 @@ VisionApi.prototype.getWaterMarkList = function(params, success, error) {
 				error(err.responseText);
 			});
 }
+
+VisionApi.prototype.onLoginVarify = function(params, success, error) {
+	var _self = this;
+	var reqBody = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:_0="http://idempiere.org/ADInterface/1_0">'
+			+ '<soapenv:Header/><soapenv:Body>'
+			+ '<_0:runProcess>'
+			+ '<_0:ModelRunProcessRequest>'
+			+ '<_0:ModelRunProcess AD_Record_ID="0">'
+			+ '<_0:serviceType>GetUserPreference</_0:serviceType>'
+			+ '<_0:ParamValues>' + '<_0:field column="Username">' + '<_0:val>'
+			+ params.username
+			+ '</_0:val>'
+			+ '</_0:field>'
+			+ '<_0:field column="password">'
+			+ '<_0:val>'
+			+ params.password
+			+ '</_0:val>'
+			+ '</_0:field>'
+			+ '</_0:ParamValues>'
+			+ '</_0:ModelRunProcess>'
+			+ '<_0:ADLoginRequest>'
+			+ '<_0:user>SuperUser</_0:user>'
+			+ '<_0:pass>password</_0:pass>'
+			+ '<_0:lang>en_US</_0:lang>'
+			+ '<_0:ClientID>1000000</_0:ClientID>'
+			+ '<_0:RoleID>1000000</_0:RoleID>'
+			+ '<_0:OrgID>0</_0:OrgID>'
+			+ '<_0:WarehouseID>0</_0:WarehouseID>'
+			+ '<_0:stage>9</_0:stage>'
+			+ '</_0:ADLoginRequest>'
+			+ '</_0:ModelRunProcessRequest>'
+			+ '</_0:runProcess>' + '</soapenv:Body>' + '</soapenv:Envelope>';
+	$
+			.ajax(
+					{
+						beforeSend : function() {
+							_self.app.showDialog("Loading");
+						},
+						complete : function() {
+							_self.app.hideDialog();
+						},
+						type : 'POST',
+						crossDomain : true,
+						data : reqBody,
+						url : params.completeUrl + "/VISService/services/"
+								+ _self.wsTypeModelADService,
+						accepts : {
+							xml : 'text/xml',
+							text : 'text/plain'
+						},
+						contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
+						dataType : 'xml'
+					})
+			.then(
+					function(response) {
+						_self.app.appCache.orgList = [];
+						_self.app.appCache.roleList = [];
+						_self.app.appCache.warehouseList = [];
+						try {
+							var summary = response
+									.getElementsByTagName("Summary");
+							var jsonObj = jQuery
+									.parseJSON(summary[0].textContent);
+							if (jsonObj.Error) {
+								error(jsonObj.Error);
+							} else {
+								if (jsonObj.Org) {
+									$.each(jsonObj.Org, function(index, item) {
+										_self.app.appCache.orgList.push({
+											orgid : item.m_key,
+											name : item.m_name
+										});
+									});
+								}
+								if (jsonObj.Role) {
+									$.each(jsonObj.Role, function(index, item) {
+										_self.app.appCache.roleList.push({
+											roleid : item.m_key,
+											name : item.m_name
+										});
+									});
+								}
+								if (jsonObj.WHOrg) {
+									$
+											.each(
+													jsonObj.WHOrg,
+													function(index, item) {
+														if (item.m_key == 0) {
+															_self.app.appCache.warehouseList
+																	.push({
+																		orgid : 0,
+																		warehouseid : 0,
+																		name : '*'
+																	});
+														} else {
+															if (item.m_value) {
+																$
+																		.each(
+																				item.m_value,
+																				function(
+																						index,
+																						subItem) {
+																					_self.app.appCache.warehouseList
+																							.push({
+																								orgid : item.m_key,
+																								warehouseid : subItem.m_key,
+																								name : subItem.m_name
+																							});
+																				});
+															}
+														}
+													});
+								}
+								success();
+							}
+						} catch (ex) {
+							error(summary[0].textContent);
+						}
+					}).fail(function(err) {
+				error(err.responseText);
+			});
+};

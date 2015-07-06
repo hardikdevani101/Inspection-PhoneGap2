@@ -64,16 +64,14 @@ Tbl_VISSetting.prototype.add = function(settingInfo, success, error) {
 					function(tx) {
 						tx
 								.executeSql('INSERT INTO vis_setting '
-										+ ' (vis_url, vis_lang, vis_client_id, vis_role, vis_whouse_id, vis_ord_id,img_editor, vis_img_qulty)'
+										+ ' (vis_url, vis_lang, vis_client_id, vis_role, vis_whouse_id, vis_ord_id)'
 										+ ' VALUES ("'
 										+ settingInfo['service_url'] + '","'
 										+ settingInfo['lang'] + '","'
 										+ settingInfo['client_id'] + '","'
 										+ settingInfo['role'] + '","'
 										+ settingInfo['warehouse_id'] + '","'
-										+ settingInfo['org_id'] + '","'
-										+ settingInfo['img_editor'] + '","'
-										+ settingInfo['img_quality'] + '")');
+										+ settingInfo['org_id'] + '")');
 					}, function(err) {
 						console.log("SettingInfo insert failed." + tx.message);
 						errorCallback();
@@ -96,7 +94,24 @@ Tbl_VISSetting.prototype.update = function(setting, success, error) {
 			+ '" ,vis_lang ="' + setting.lang + '",vis_client_id ="'
 			+ setting.client_id + '",vis_role ="' + setting.role
 			+ '",vis_whouse_id ="' + setting.warehouse_id + '",vis_ord_id ="'
-			+ setting.org_id + '",vis_img_qulty ="' + setting.img_quality
+			+ setting.org_id + '"';
+	this.appDB.dbstore.transaction(function(tx) {
+		tx.executeSql(sql, [], function(tx, results) {
+			successCallback(results)
+		});
+	}, errorCallback, this.appDB.success);
+}
+
+Tbl_VISSetting.prototype.updatePreference = function(setting, success, error) {
+	var successCallback = this.appDB.success;
+	if (typeof success === "function") {
+		successCallback = success;
+	}
+	var errorCallback = this.appDB.error;
+	if (typeof error === "function") {
+		errorCallback = error;
+	}
+	var sql = 'UPDATE vis_setting SET vis_img_qulty ="' + setting.img_quality
 			+ '",img_editor ="' + setting.img_editor + '"';
 	this.appDB.dbstore.transaction(function(tx) {
 		tx.executeSql(sql, [], function(tx, results) {
@@ -104,6 +119,7 @@ Tbl_VISSetting.prototype.update = function(setting, success, error) {
 		});
 	}, errorCallback, this.appDB.success);
 }
+
 Tbl_VISSetting.prototype.updateWaterMark = function(watermark, success, error) {
 	var successCallback = this.appDB.success;
 	if (typeof success === "function") {
