@@ -112,10 +112,22 @@ End of Home page
 				<form id="_form_login" action="#">
 					<div id="login-error-box" data-role="popup" data-theme="a"
 						class="ui-content"></div>
-					<div data-role="fieldcontainer">
-						<select name="txt_url" id="txt_url" data-native-menu="false"
-							data-mini="true">
+					<div data-role="controlgroup" data-type="horizontal">
+						<label for="txt_url">Server</label> <select name="txt_url"
+							id="txt_url" data-native-menu="false">
 						</select>
+						<button id="btn_url_update" data-icon="edit" data-corners="false"
+							class="select" data-iconpos="notext" data-shadow="false"
+							data-iconshadow="false" title="update_url"
+							style="height: 75% !important">Update</button>
+						<button id="btn_url_add" data-icon="plus" data-corners="false"
+							class="select" data-iconpos="notext" data-shadow="false"
+							data-iconshadow="false" title="add_url"
+							style="height: 75% !important">Add</button>
+						<button id="btn_url_delete" data-icon="minus" data-corners="false"
+							class="select" data-iconpos="notext" data-shadow="false"
+							data-iconshadow="false" title="delete_url"
+							style="height: 75% !important">Delete</button>
 					</div>
 					<div data-role="fieldcontainer">
 						<input id="txt_user" name="txt_user" type="text" value=""
@@ -129,6 +141,24 @@ End of Home page
 						data-inline="true" value="Login" data-theme="a">
 				</form>
 			</div>
+		</div>
+
+		<div data-role="popup" id="server_popup" data-corners="false"
+			data-shadow="false" data-theme="b">
+			<h5>Server</h5>
+			<form id="_form_servers">
+				<div style="padding: 10px 20px;">
+					<label for="txt_svr_name">Name</label> <input type="text"
+						id="txt_svr_name" data-mini="true" /> <label for="txt_svr_url">URL</label>
+					<input type="text" id="txt_svr_url" data-mini="true" />
+					<div class="ui-field-contain">
+						<fieldset data-role="controlgroup" data-type="horizontal">
+							<button type="submit" data-theme="b" data-icon="check">OK</button>
+							<button id="btn_server_close" data-theme="b" data-icon="delete">Cancel</button>
+						</fieldset>
+					</div>
+				</div>
+			</form>
 		</div>
 	</div>
 
@@ -233,8 +263,8 @@ End of Home page
 	<!------------------------------------------------------------
 	Preferences PopUP 
 ------------------------------------------------------------->
-	<div data-role="popup" id="preferenceMenu" style="width: 150%"
-		data-corners="false" data-shadow="false" data-theme="b">
+	<div data-role="popup" id="preferenceMenu" data-corners="false"
+		data-shadow="false" data-theme="b">
 		<h5>Preferences</h5>
 		<form id="_form_preferences">
 			<div style="padding: 10px 20px;">
@@ -253,7 +283,8 @@ End of Home page
 				<div class="ui-field-contain">
 					<fieldset data-role="controlgroup" data-type="horizontal">
 						<button type="submit" data-theme="b" data-icon="check">OK</button>
-						<button id="btn_preference_close" data-theme="b" data-icon="delete">Cancel</button>
+						<button id="btn_preference_close" data-theme="b"
+							data-icon="delete">Cancel</button>
 					</fieldset>
 				</div>
 			</div>

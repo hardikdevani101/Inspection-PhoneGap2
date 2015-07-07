@@ -10,7 +10,7 @@ PreferencePage.prototype.init = function() {
 	_self.el_txEditor = $("#txt_editApp", _self.context);
 
 	_self.contextPage.on("popupbeforeposition", function(event, ui) {
-		// _self.contextPage.enhanceWithin();
+		console.log("popupbeforeposition");
 		var setting = _self.app.appCache.settingInfo;
 		_self.el_imgQua.val(setting.img_quality).attr('selected', true)
 				.siblings('option').removeAttr('selected');
@@ -18,9 +18,15 @@ PreferencePage.prototype.init = function() {
 		_self.el_txEditor.val(setting.img_editor).attr('selected', true)
 				.siblings('option').removeAttr('selected');
 		_self.el_txEditor.selectmenu("refresh", true);
-		$('.ui-popup-screen').off();
 		event.preventDefault();
+		$('.ui-popup-screen').off();
+		_self.contextPage.enhanceWithin();
 		return false;
+	});
+
+	_self.contextPage.on('popupafterclose', function(event, ui) {
+		console.log("Pop Up close");
+		event.preventDefault();
 	});
 
 	$('#btn_preference_close', _self.context).on('click', function(event) {

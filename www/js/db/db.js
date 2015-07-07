@@ -157,7 +157,7 @@ DB.prototype.loadFTPEntry = function(tx) {
 
 							}
 						}
-//						_self.app.settingnview.renderServer();
+						// _self.app.settingnview.renderServer();
 					}, _self.errorCB);
 }
 
@@ -185,6 +185,24 @@ DB.prototype.createFTPEntry = function() {
 				}
 			}
 		}, _self.errorCB);
+	}, _self.errorCB);
+}
+
+DB.prototype.updateServerEntry = function(ftpItem) {
+	var _self = this;
+	_self.dbstore.transaction(function(tx) {
+		tx.executeSql('update vis_server set url="' + ftpItem.url
+				+ '", isFTP="' + ftpItem.isFTP + '",user="' + ftpItem.user
+				+ '" , password="' + ftpItem.password + '" where name="'
+				+ ftpItem.name + '"');
+	}, _self.errorCB);
+}
+
+DB.prototype.deleteServerEntry = function(ftpItem) {
+	var _self = this;
+	_self.dbstore.transaction(function(tx) {
+		tx.executeSql('delete from vis_server where name="' + ftpItem.name
+				+ '" and url="' + ftpItem.url + '")');
 	}, _self.errorCB);
 }
 

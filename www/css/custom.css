@@ -526,11 +526,10 @@ body {
 		margin: 0.1em .1em !important;
 		float: left !important;
 	}
-	
-	 #pop_process_log .ui-navbar {
-		  margin-bottom: 30px;
+	#pop_process_log .ui-navbar {
+		margin-bottom: 30px;
 	}
-	
+
 	/* #pop_process_log {
 		font-size: 20px !important;
 		min-width: 500px !important;
@@ -1064,11 +1063,28 @@ ul.ui-listview li {
 	border-color: #c7b899 !important
 }
 
-#_form_settings {
-	margin-top : 32px !important;
+#_form_login .ui-controlgroup .ui-controlgroup-horizontal .ui-corner-all
+	{
+	width: 100% !important;
 }
 
-#_form_settings ul li{
-	padding-top : 5px !important;
-	padding-bottom : 5px !important;
+#_form_login .ui-controlgroup-horizontal .ui-controlgroup-controls {
+	width: 100% !important;
+}
+
+#_form_login .ui-controlgroup-controls button.ui-btn-icon-notext {
+	width: 2% !important;
+}
+
+#_form_login .ui-select {
+	width: 75% !important;
+}
+
+#_form_settings {
+	margin-top: 32px !important;
+}
+
+#_form_settings ul li {
+	padding-top: 5px !important;
+	padding-bottom: 5px !important;
 }

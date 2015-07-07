@@ -91,14 +91,14 @@ InspLinesPage.prototype.init = function() {
 	});
 	
 	$("#pg_inspection #btn_user").on('click', function(event) {
-		 $('#preferenceMenu').popup('open');
 		 event.preventDefault();
+		 $('#preferenceMenu').popup('open');
 		return false
 	});
 	
 	$("#pg_inspection_detail #btn_user").on('click', function(event) {
-		 $('#preferenceMenu').popup('open');
 		 event.preventDefault();
+		 $('#preferenceMenu').popup('open');
 		return false
 	});
 
