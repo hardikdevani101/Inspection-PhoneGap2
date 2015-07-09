@@ -209,7 +209,7 @@ InspLinesPage.prototype.displayAlert = function() {
 	if (_self.app.appFTPUtil.processLog.length > 0) {
 		// $("#pop_process_log", _self.contextInspDetail).popup("open");
 		_self.app.showError("pg_inspection_detail",
-				"Error: Some images not synced", function() {
+				"Error: Some files not synced", function() {
 					$.mobile.changePage("#pop_process_log");
 				});
 	} else {
@@ -454,7 +454,7 @@ InspLinesPage.prototype.displayAttachAlert = function() {
 		}
 		el_inspProcLog.html(_self.app.visionApi.processLog.attachImage.length);
 		_self.app.showError("pg_inspection_detail",
-				"Error: Some images not Atteched", function() {
+				"Error: Some files not Atteched", function() {
 					$.mobile.changePage("#pop_process_log");
 				});
 		// $("#pop_process_log", _self.contextInspDetail).popup("open");
