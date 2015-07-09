@@ -6,10 +6,26 @@ var SettingsPage = function(app) {
 SettingsPage.prototype.renderOrgs = function() {
 	var _self = this;
 	_self.el_txOrg.empty();
-	for (var i = 0; i < _self.app.appCache.orgList.length; i++) {
-		_self.el_txOrg.append(new Option(app.appCache.orgList[i].name,
-				_self.app.appCache.orgList[i].orgid));
+
+	var role_id = _self.el_txRole.val();
+	if (role_id == null || role_id == 0) {
+		for (var i = 0; i < app.appCache.orgList.length; i++) {
+			_self.el_txOrg.append(new Option(app.appCache.orgList[i].name,
+					app.appCache.orgList[i].orgid));
+		}
+	} else {
+		var result = $.grep(app.appCache.orgList, function(e) {
+			return e.roleid == role_id;
+		});
+		for (var i = 0; i < result.length; i++) {
+			_self.el_txOrg.append(new Option(result[i].name, result[i].orgid));
+		}
 	}
+
+	//	for (var i = 0; i < _self.app.appCache.orgList.length; i++) {
+	//		_self.el_txOrg.append(new Option(app.appCache.orgList[i].name,
+	//				_self.app.appCache.orgList[i].orgid));
+	//	}
 	if (_self.app.appCache.settingInfo.org_id) {
 		_self.el_txOrg.val(_self.app.appCache.settingInfo.org_id).attr(
 				'selected', true).siblings('option').removeAttr('selected');
@@ -65,8 +81,8 @@ SettingsPage.prototype.init = function() {
 						}
 
 						_self.contextPage.enhanceWithin();
-						_self.renderOrgs();
 						_self.renderRoles();
+						_self.renderOrgs();
 						_self.onOrgChange();
 						return false;
 					});
@@ -83,6 +99,13 @@ SettingsPage.prototype.init = function() {
 		var value = $(this).children('option:selected').attr('value');
 		_self.app.appCache.settingInfo.org_id = value;
 		_self.onOrgChange();
+		event.preventDefault();
+		return false;
+	});
+
+	_self.el_txRole.on("change", function(event) {
+		var value = $(this).children('option:selected').attr('value');
+		_self.renderOrgs();
 		event.preventDefault();
 		return false;
 	});
@@ -150,7 +173,7 @@ SettingsPage.prototype.onLogin = function() {
 						function(result) {
 
 							if (result.loginInfo.error) {
-								_self.app.showError("pg_login",
+								_self.app.showError("pg_settings",
 										result.loginInfo.error);
 							} else {
 								_self.app.isLogin = true;

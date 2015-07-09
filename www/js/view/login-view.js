@@ -251,6 +251,11 @@ LoginPage.prototype.onAddServer = function(isNew, serverObj) {
 			_self.app.appDB.createFTPEntry();
 		}
 	} else {
+		_self.app.appCache.ftpServers = $.grep(_self.app.appCache.ftpServers,
+				function(item, index) {
+					return item.name != serverObj.name;
+				});
+		_self.app.appCache.ftpServers.push(serverObj);
 		_self.app.appDB.updateServerEntry(serverObj);
 	}
 }

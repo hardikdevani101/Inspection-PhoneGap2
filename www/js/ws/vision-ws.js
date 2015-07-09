@@ -671,12 +671,26 @@ VisionApi.prototype.onLoginVarify = function(params, success, error) {
 								error(jsonObj.Error);
 							} else {
 								if (jsonObj.Org) {
-									$.each(jsonObj.Org, function(index, item) {
-										_self.app.appCache.orgList.push({
-											orgid : item.m_key,
-											name : item.m_name
-										});
-									});
+									$
+											.each(
+													jsonObj.Org,
+													function(index, item) {
+														if (item.m_value) {
+															$
+																	.each(
+																			item.m_value,
+																			function(
+																					index,
+																					subItem) {
+																				_self.app.appCache.orgList
+																						.push({
+																							roleid : item.m_key,
+																							orgid : subItem.m_key,
+																							name : subItem.m_name
+																						});
+																			});
+														}
+													});
 								}
 								if (jsonObj.Role) {
 									$.each(jsonObj.Role, function(index, item) {
