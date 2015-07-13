@@ -55,6 +55,7 @@
 <script src="js/view/file-explorer-view.js"></script>
 <script src="js/view/image-editor-view.js"></script>
 <script src="js/view/preference_view.js"></script>
+<script src="js/view/server-setting.js"></script>
 
 <script src="js/app.js"></script>
 <script src="js/sync/uploader.js"></script>
@@ -104,31 +105,12 @@ End of Home page
 		<!-------------- Login page main content ----------->
 		<div data-role="main" class="ui-content" data-theme="c"
 			data-mini="true">
-
-			<div class="logoimage">
-				<img src="icon.png">
-			</div>
 			<div>
 				<form id="_form_login" action="#">
 					<div id="login-error-box" data-role="popup" data-theme="a"
 						class="ui-content"></div>
-					<div data-role="controlgroup" data-type="horizontal">
-						<label for="txt_url">Server</label> <select name="txt_url"
-							id="txt_url" data-native-menu="false">
-						</select>
-						<button id="btn_url_update" data-icon="edit" data-corners="false"
-							class="select" data-iconpos="notext" data-shadow="false"
-							data-iconshadow="false" title="update_url"
-							style="height: 75% !important">Update</button>
-						<button id="btn_url_add" data-icon="plus" data-corners="false"
-							class="select" data-iconpos="notext" data-shadow="false"
-							data-iconshadow="false" title="add_url"
-							style="height: 75% !important">Add</button>
-						<button id="btn_url_delete" data-icon="minus" data-corners="false"
-							class="select" data-iconpos="notext" data-shadow="false"
-							data-iconshadow="false" title="delete_url"
-							style="height: 75% !important">Delete</button>
-					</div>
+
+
 					<div data-role="fieldcontainer">
 						<input id="txt_user" name="txt_user" type="text" value=""
 							placeholder="Username" data-mini="true" />
@@ -137,28 +119,19 @@ End of Home page
 						<input id="txt_password" name="txt_password" type="password"
 							value="" placeholder="Password" data-mini="true" />
 					</div>
+					<div data-role="controlgroup" data-type="horizontal">
+						<label for="txt_url">Server</label> <select name="txt_url"
+							id="txt_url" data-native-menu="false">
+						</select>
+						<button id="btn_url_update" data-icon="edit" data-corners="false"
+							class="select" data-iconpos="notext" data-shadow="false"
+							data-iconshadow="false" title="update_url"
+							style="height: 75% !important">Update</button>
+					</div>
 					<input id="loginbtn" type="submit" data-mini="true"
-						data-inline="true" value="Login" data-theme="a">
+						data-inline="true" value="OK" data-theme="a">
 				</form>
 			</div>
-		</div>
-
-		<div data-role="popup" id="server_popup" data-corners="false"
-			data-shadow="false" data-theme="b">
-			<h5>Server</h5>
-			<form id="_form_servers">
-				<div style="padding: 10px 20px;">
-					<label for="txt_svr_name">Name</label> <input type="text"
-						id="txt_svr_name" data-mini="true" /> <label for="txt_svr_url">URL</label>
-					<input type="text" id="txt_svr_url" data-mini="true" />
-					<div class="ui-field-contain">
-						<fieldset data-role="controlgroup" data-type="horizontal">
-							<button type="submit" data-theme="b" data-icon="check">OK</button>
-							<button id="btn_server_close" data-theme="b" data-icon="delete">Cancel</button>
-						</fieldset>
-					</div>
-				</div>
-			</form>
 		</div>
 	</div>
 
@@ -168,11 +141,11 @@ End of Home page
 		<ul data-role="listview" data-theme="c" data-inset="false">
 			<li class="ui-field-contain" data-shadow="false"
 				data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-				data-iconpos="right" data-theme="c"><label for="select-server">Version:2.4</label></li>
+				data-iconpos="right" data-theme="c"><label for="select-server">Version:3.0.0</label></li>
 			<li class="ui-field-contain" data-shadow="false"
 				data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
 				data-iconpos="right" data-theme="c"><label for="select-server">Release
-					Date: 1 July, 2015</label></li>
+					Date: 13 July, 2015</label></li>
 		</ul>
 	</div>
 
@@ -253,17 +226,75 @@ End of Home page
 						<li data-shadow="false" data-iconshadow="false"
 							data-wrapperels="div" data-icon="arrow-r" data-iconpos="right"
 							data-theme="c"><input id="btn_setting_save" type="submit"
-							data-inline="true" value="Save" data-theme="b" data-mini="true"></li>
+							data-inline="true" value="Login" data-theme="b" data-mini="true"></li>
 					</ul>
 				</form>
 			</div>
 		</div>
 	</div>
 
+	<!------------------------------------------------------------- 
+	Server page 
+-------------------------------------------------------------->
+
+	<div data-role="page" id="server-setting" data-theme="c">
+		<div data-role="header" data-fullscreen="false" data-position="fixed"
+			data-theme="c">
+			<h1 data-role="heading">Servers</h1>
+			<div data-role="controlgroup" data-type="horizontal"
+				class="ui-mini ui-btn-right"></div>
+		</div>
+		<!-------------- Second page main content ----------->
+		<div data-role="main" class="ui-content" data-theme="b">
+			<ul data-role="listview" data-filter="true" data-inset="false"
+				data-filter-placeholder="Search Server" data-autodividers="false"
+				id="_list_serverLines">
+
+			</ul>
+		</div>
+
+		<div data-role="footer" data-fullscreen="false" data-position="fixed"
+			data-theme="a">
+			<div data-role="navbar" data-iconpos="left">
+				<ul>
+					<li><a href="#pg_login" data-icon="arrow-l"
+						data-shadow="false" data-wrapperels="span" data-theme="a"
+						title="Back">Back</a></li>
+					<li><a href="#" data-icon="plus" data-shadow="false"
+						id="btn_add_server" data-wrapperels="span" data-theme="a"
+						title="Add">Add</a></li>
+				</ul>
+			</div>
+		</div>
+
+
+
+		<div data-role="popup" id="server_popup" data-corners="false"
+			data-shadow="false" data-theme="b">
+			<form id="_form_servers">
+				<div style="padding: 10px 20px;">
+					<input type="text" id="txt_svr_name" placeholder="Name"
+						data-mini="true" /> <input type="text" id="txt_svr_url"
+						data-mini="true" placeholder="URL" />
+					<div class="ui-field-contain">
+						<fieldset data-role="controlgroup" data-type="horizontal">
+							<button type="submit" data-theme="b" data-icon="check">OK</button>
+							<button id="btn_server_close" data-theme="b" data-icon="delete">Cancel</button>
+						</fieldset>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-------------------------------------------------------------
+	End of Server page
+-------------------------------------------------------------->
+
 	<!------------------------------------------------------------
 	Preferences PopUP 
 ------------------------------------------------------------->
-	<div data-role="popup" id="preferenceMenu" data-corners="false"
+	<!-- <div data-role="popup" id="preferenceMenu" data-corners="false"
 		data-shadow="false" data-theme="b">
 		<h5>Preferences</h5>
 		<form id="_form_preferences">
@@ -289,7 +320,7 @@ End of Home page
 				</div>
 			</div>
 		</form>
-	</div>
+	</div> -->
 
 	<!------------------------------------------------------------- 
 	MR line page 
@@ -301,9 +332,9 @@ End of Home page
 			<h1 data-role="heading">Lines</h1>
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-right">
-				<button id="btn_user" href="#preferenceMenu" data-icon="user"
-					data-corners="false" data-shadow="false" data-iconshadow="false"
-					data-wrapperels="span" title="User" data-transition="flip"></button>
+				<button id="btn_user" href="#" data-icon="user" data-corners="false"
+					data-shadow="false" data-iconshadow="false" data-wrapperels="span"
+					title="User" data-transition="flip"></button>
 				<button id="btn_logout" data-icon="power" data-corners="false"
 					data-iconpos="notext" data-shadow="false" data-iconshadow="false"
 					data-wrapperels="span" title="Logout">SignOut</button>
@@ -349,10 +380,9 @@ End of Home page
 			<h2 data-role="heading">Inspection Lines</h2>
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-right">
-				<button id="btn_user" href="#preferenceMenu" data-icon="user"
-					data-corners="false" data-shadow="false" data-iconshadow="false"
-					data-wrapperels="span" title="User" data-rel="popup"
-					data-transition="flip"></button>
+				<button id="btn_user" href="#" data-icon="user" data-corners="false"
+					data-shadow="false" data-iconshadow="false" data-wrapperels="span"
+					title="User" data-rel="popup" data-transition="flip"></button>
 				<button id="btn_logout" data-icon="power" data-corners="false"
 					data-iconpos="notext" data-shadow="false" data-iconshadow="false"
 					data-wrapperels="span" title="Logout">SignOut</button>
@@ -449,10 +479,9 @@ End of Inspection page
 			<h2 data-role="heading">Documents</h2>
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-right">
-				<button id="btn_user" href="#preferenceMenu" data-icon="user"
-					data-corners="false" data-shadow="false" data-iconshadow="false"
-					data-wrapperels="span" title="User" data-rel="popup"
-					data-transition="flip"></button>
+				<button id="btn_user" href="#" data-icon="user" data-corners="false"
+					data-shadow="false" data-iconshadow="false" data-wrapperels="span"
+					title="User" data-rel="popup" data-transition="flip"></button>
 				<button id="btn_logout" data-icon="power" data-corners="false"
 					data-iconpos="notext" data-shadow="false" data-iconshadow="false"
 					data-wrapperels="span" title="Logout">SignOut</button>

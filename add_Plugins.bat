@@ -1,19 +1,21 @@
 @echo  on 
-@call phonegap local plugin add https://bitbucket.org/logilite/phonegap.plugins.camera.git
+@call cordova plugin add https://bitbucket.org/logilite/phonegap.plugins.camera.git
 
-@call phonegap local plugin add https://bitbucket.org/logilite/phonegap.plugins.ftp.git
+@call cordova plugin add https://bitbucket.org/logilite/phonegap.plugins.ftp.git
 
-@call phonegap plugin add https://github.com/m1is/AviaryCordovaPlugin.git
+@call cordova plugin add https://bitbucket.org/logilite/phonegap.plugins.aviary.git
 
-@call phonegap plugin add https://github.com/apache/cordova-plugin-network-information.git
+@call cordova plugin add https://github.com/apache/cordova-plugin-network-information.git
 
-@call phonegap local plugin add org.apache.cordova.file
+@call cordova plugin add org.apache.cordova.file
 
-@call phonegap plugin add org.apache.cordova.device
+@call cordova plugin add org.apache.cordova.device
 
-@call phonegap local plugin add org.apache.cordova.file-transfer
+@call cordova plugin add org.apache.cordova.file-transfer
 
-@call phonegap local plugin add org.apache.cordova.dialogs
+@call cordova plugin add org.apache.cordova.dialogs
 
-@call phonegap local build android
+@call cordova plugin add https://github.com/apache/cordova-plugin-whitelist.git
+
+@call cordova build android
 

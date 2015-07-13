@@ -1,20 +1,22 @@
-var PreferencePage = function(app) {
+var Preference = function(app) {
 	this.app = app;
-	this.context = "#preferenceMenu";
+	this.context = '_PreferencePopup';
+	
 }
 
-PreferencePage.prototype.init = function() {
+Preference.prototype.init = function(pageId) {
 	var _self = this;
-	_self.contextPage = $("#preferenceMenu");
-	_self.el_imgQua = $("#txt_imgQua", _self.context);
-	_self.el_txEditor = $("#txt_editApp", _self.context);
+	_self.pageId = pageId;
+	_self.contextPage = $('#'+pageId+ _self.context);
+	_self.el_imgQua = $("#txt_imgQua", _self.contextPage);
+	_self.el_txEditor = $("#txt_editApp", _self.contextPage);
 
 	_self.contextPage.on("popupbeforeposition", function(event, ui) {
 		console.log("popupbeforeposition");
 		var setting = _self.app.appCache.settingInfo;
 		_self.el_imgQua.val(setting.img_quality).attr('selected', true)
 				.siblings('option').removeAttr('selected');
-		_self.el_imgQua.selectmenu("refresh", true);
+		_self.el_imgQua.selectmenu('refresh', true);
 		_self.el_txEditor.val(setting.img_editor).attr('selected', true)
 				.siblings('option').removeAttr('selected');
 		_self.el_txEditor.selectmenu("refresh", true);
@@ -29,12 +31,12 @@ PreferencePage.prototype.init = function() {
 		event.preventDefault();
 	});
 
-	$('#btn_preference_close', _self.context).on('click', function(event) {
-		$(_self.context).popup("close");
+	$('#btn_preference_close', _self.contextPage).on('click', function(event) {
+		$('#'+pageId+ _self.context).popup("close");
 		event.preventDefault();
 	});
 
-	$('#_form_preferences', _self.context).validate({
+	$('#_form_preferences', _self.contextPage).validate({
 		rules : {
 			txt_imgQua : {
 				required : true
@@ -60,12 +62,12 @@ PreferencePage.prototype.init = function() {
 	});
 }
 
-PreferencePage.prototype.onUpdate = function() {
+Preference.prototype.onUpdate = function() {
 	var _self = this;
 	var settingInfo = _self.app.appCache.settingInfo;
-	settingInfo['img_quality'] = $("#txt_imgQua option:selected", _self.context)
+	settingInfo['img_quality'] = $("#txt_imgQua option:selected", _self.contextPage)
 			.val();
-	settingInfo['img_editor'] = $("#txt_editApp option:selected", _self.context)
+	settingInfo['img_editor'] = $("#txt_editApp option:selected", _self.contextPage)
 			.val();
 
 	var error = function(msg) {
@@ -75,7 +77,7 @@ PreferencePage.prototype.onUpdate = function() {
 
 	_self.app.visSettingsDAO.updatePreference(settingInfo, function(data) {
 		_self.app.appCache.updateSettingInfo(settingInfo);
-		$(_self.context).popup("close");
+		$('#' + _self.pageId + _self.context).popup("close");
 	}, error);
 
 }

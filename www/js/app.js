@@ -159,6 +159,41 @@ App.prototype.showError = function(pageId, msg, callBack, isGoToActive) {
 	});
 }
 
+
+App.prototype.registerPreferencePopup = function(pageId) {
+	var popupHtml = '<div data-role="popup" id="'
+			+ pageId
+			+ '_PreferencePopup" data-corners="false" data-shadow="false" data-theme="b">'
+			+ '<h5>Preferences</h5>'
+			+ '<form id="_form_preferences">'
+			+ '<div style="padding: 10px 20px;">'
+			+ '<label for="txt_imgQua">Img</label> <select name="txt_imgQua" id="txt_imgQua" data-native-menu="false" data-mini="true">'
+			+ '<option value="50">50% (low)</option>'
+			+ '<option value="75">75% (default)</option>'
+			+ '<option value="80">80% (high)</option>'
+			+ '<option value="90">90% (higher)</option>'
+			+ '<option value="100">100% (highest)</option>'
+			+ '</select> <label for="txt_editApp">Editor</label>' 
+			+ '<select name="txt_editApp" id="txt_editApp" data-native-menu="false" data-mini="true">'
+			+ '<option value="Vision">Vision</option>'
+			+ '<option value="Aviary">Aviary</option>'
+			+ '</select>'
+			+ '<div class="ui-field-contain">'
+			+' <fieldset data-role="controlgroup" data-type="horizontal">'
+			+ '<button type="submit" data-theme="b" data-icon="check">OK</button>'
+			+ '<button id="btn_preference_close" data-theme="b" data-icon="delete">Cancel</button>'
+			+ '</fieldset> </div>	</div> </form> </div>';
+	$("#" + pageId).append(popupHtml);
+	$("#" + pageId).enhanceWithin();
+	$('#' + pageId + '_PreferencePopup').popup();
+}
+
+App.prototype.showPreference = function(pageId) {
+	$("#" + pageId).enhanceWithin();
+	$('#' + pageId + '_PreferencePopup').popup("open");
+}
+
+
 App.prototype.register = function() {
 	var _self = this;
 
@@ -213,6 +248,12 @@ App.prototype.register = function() {
 										})
 					});
 
+	$(document).on("pagecreate", "#server-setting", function(event) {
+		_self.settingnview = new ServerSettingPage(_self);
+		_self.settingnview.init();
+		_self.appCache.addPage('server-setting', _self.settingnview);
+	});
+	
 	$(document).on("pagecreate", "#pg_settings", function(event) {
 		_self.settingnview = new SettingsPage(_self);
 		_self.settingnview.init();
@@ -245,6 +286,9 @@ App.prototype.register = function() {
 			tapToggle : false
 		});
 		_self.registerErrorPopup('pg_inspection');
+		_self.registerPreferencePopup('pg_inspection');
+		var inspPreference = new Preference(_self);
+		inspPreference.init('pg_inspection');
 		_self.inspLinePage = new InspLinesPage(_self);
 		_self.inspLinePage.init();
 		_self.appCache.addPage('pg_inspection', _self.inspLinePage);
@@ -277,6 +321,9 @@ App.prototype.register = function() {
 			tapToggle : false
 		});
 		_self.registerErrorPopup('pg_inspection_detail');
+		_self.registerPreferencePopup('pg_inspection_detail');
+		var inspPreference = new Preference(_self);
+		inspPreference.init('pg_inspection_detail');
 		_self.inspLinePage.loadInspLines({
 			m_inoutline_id : _self.appCache.session.m_inoutline_id
 		});
@@ -292,6 +339,9 @@ App.prototype.register = function() {
 			tapToggle : false
 		});
 		_self.registerErrorPopup('pg_gallery');
+		_self.registerPreferencePopup('pg_gallery');
+		var inspPreference = new Preference(_self);
+		inspPreference.init('pg_gallery');
 		_self.galleryview = new GalleryPage(_self);
 		_self.galleryview.init();
 		_self.appCache.addPage('pg_gallery', _self.galleryview);
@@ -322,6 +372,9 @@ App.prototype.register = function() {
 			tapToggle : false
 		});
 		_self.registerErrorPopup('pg_file_explorer');
+		_self.registerPreferencePopup('pg_file_explorer');
+		var inspPreference = new Preference(_self);
+		inspPreference.init('pg_file_explorer');
 		_self.fileExplorer = new FileExplorerPage(_self);
 		_self.fileExplorer.init();
 		_self.appCache.addPage('pg_file_explorer', _self.fileExplorer);
@@ -425,10 +478,10 @@ $(document).ready(function() {
 	console.log('User Agent!!' + navigator.userAgent)
 
 	$("#pnl_aboutus").enhanceWithin().popup();
-	$("#preferenceMenu").enhanceWithin().popup();
+//	$("#preferenceMenu").enhanceWithin().popup();
 
-	app.preferencePage = new PreferencePage(app);
-	app.preferencePage.init();
+//	app.preferencePage = new PreferencePage(app);
+//	app.preferencePage.init();
 
 	// app.onDeviceReady();
 

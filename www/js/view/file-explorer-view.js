@@ -15,6 +15,8 @@ FileExplorerPage.prototype.rederBreadCrumb = function() {
 			_self.app.appCache.settingInfo.username);
 };
 
+
+
 FileExplorerPage.prototype.init = function() {
 	var _self = this;
 	_self.isLocalStorage = true;
@@ -47,6 +49,13 @@ FileExplorerPage.prototype.init = function() {
 		$.mobile.changePage("#pg_gallery");
 		event.preventDefault();
 		return false;
+	});
+	
+	$("#pg_file_explorer #btn_user").on('click', function(event) {
+		//$('#preferenceMenu').popup('open');
+		_self.app.showPreference('pg_file_explorer');
+		event.preventDefault();
+		return false
 	});
 
 	$("#btn_reload_files", _self.context).on("tap", function(event) {

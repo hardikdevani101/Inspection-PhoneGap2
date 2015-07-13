@@ -287,7 +287,8 @@ GalleryPage.prototype.init = function() {
 	});
 
 	$("#pg_gallery #btn_user").on('click', function(event) {
-		$('#preferenceMenu').popup('open');
+		//$('#preferenceMenu').popup('open');
+		_self.app.showPreference('pg_gallery');
 		event.preventDefault();
 		return false
 	});

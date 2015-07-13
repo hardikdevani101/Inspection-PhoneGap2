@@ -1077,7 +1077,7 @@ ul.ui-listview li {
 }
 
 #_form_login .ui-select {
-	width: 75% !important;
+	width: 92% !important;
 }
 
 #_form_settings {
@@ -1087,4 +1087,40 @@ ul.ui-listview li {
 #_form_settings ul li {
 	padding-top: 5px !important;
 	padding-bottom: 5px !important;
+}
+
+#server-setting .split-custom-wrapper {
+    /* position wrapper on the right of the listitem */
+    position: absolute !important;
+    right: 0 !important;
+    top: 0 !important;
+    height: 100% !important;
+}
+
+#server-setting .split-custom-button {
+    position: relative !important;
+    float: right !important;   /* allow multiple links stacked on the right */
+    height: 90% !important;
+    margin:0 !important;
+    min-width:3em !important;
+    margin-top: 2% !important;
+    /* remove boxshadow and border */
+    border:none !important;
+    moz-border-radius: 0 !important;
+    webkit-border-radius: 0 !important;
+    border-radius: 0 !important;
+    moz-box-shadow: none !important;
+    webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+#server-setting .split-custom-button span.ui-btn-inner {
+    /* position icons in center of listitem*/
+    position: relative !important;
+    margin-top:50% !important;
+    margin-left:50% !important;
+    /* compensation for icon dimensions */
+    top:11px !important; 
+    left:-12px !important;
+    height:35% !important; /* stay within boundaries of list item */
 }

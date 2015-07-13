@@ -202,7 +202,7 @@ DB.prototype.deleteServerEntry = function(ftpItem) {
 	var _self = this;
 	_self.dbstore.transaction(function(tx) {
 		tx.executeSql('delete from vis_server where name="' + ftpItem.name
-				+ '" and url="' + ftpItem.url + '")');
+				+ '" and url="' + ftpItem.url + '"');
 	}, _self.errorCB);
 }
 
