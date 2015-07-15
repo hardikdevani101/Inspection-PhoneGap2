@@ -625,7 +625,7 @@ VisionApi.prototype.onLoginVarify = function(params, success, error) {
 			+ '</_0:ParamValues>'
 			+ '</_0:ModelRunProcess>'
 			+ '<_0:ADLoginRequest>'
-			+ '<_0:user>SuperUser</_0:user>'
+			+ '<_0:user>VisionUser</_0:user>'
 			+ '<_0:pass>password</_0:pass>'
 			+ '<_0:lang>en_US</_0:lang>'
 			+ '<_0:ClientID>1000000</_0:ClientID>'

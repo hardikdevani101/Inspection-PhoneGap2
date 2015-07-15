@@ -267,10 +267,7 @@ GalleryPage.prototype.init = function() {
 	});
 
 	_self.el_prefix_inspLine.on('click', function(event) {
-		_self.el_prefix_popup.popup("open");
-		$('.ui-popup-container').css({
-			top : 0
-		});
+		_self.el_prefix_popup.popup("open", {positionTo: '#pg_gallery div[data-role="header"]'});
 		_self.el_prefix_insp.val(_self.el_prefix_inspLine.html());
 		event.preventDefault();
 		return false;

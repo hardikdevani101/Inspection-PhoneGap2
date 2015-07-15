@@ -152,7 +152,7 @@ body {
 		padding: 0em !important;
 	}
 	#pnl_selected_files .ui-content {
-		padding: 1em 0 1em 0px !important;
+		padding: 0px 0px !important;
 		margin-top: 0px;
 	}
 	#pnl_selected_files  .ui-content .ui-listview, .ui-panel-inner>.ui-listview
@@ -636,6 +636,7 @@ body .ui-body-c, body .ui-overlay-c {
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;
+	margin-top: 1em !important;
 }
 
 .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-btn-icon-notext,
@@ -650,7 +651,7 @@ body .ui-body-c, body .ui-overlay-c {
 }
 
 .current_dir_location {
-	margin-bottom: 0px;
+	margin-top: .5em;
 	text-transform: capitalize !important;
 	xfont-weight: bold;
 }
@@ -1081,7 +1082,7 @@ ul.ui-listview li {
 }
 
 #_form_settings {
-	margin-top: 32px !important;
+	
 }
 
 #_form_settings ul li {
@@ -1123,4 +1124,20 @@ ul.ui-listview li {
     top:11px !important; 
     left:-12px !important;
     height:35% !important; /* stay within boundaries of list item */
+}
+
+.ui-content {
+	padding-top: 0px !important;
+}
+
+.ui-content .ui-listview, .ui-panel-inner>.ui-listview {
+  margin-top: 0em !important;
+}
+
+#pg_gallery .ui-mini {
+	margin: 0em;
+}
+
+#pg_gallery .ui-controlgroup, #pg_gallery fieldset.ui-controlgroup {
+	margin: 0;
 }

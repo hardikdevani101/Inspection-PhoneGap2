@@ -119,15 +119,15 @@ FileExplorerPage.prototype.init = function() {
 		for (var i = 0; i < _self.selFiles.length; i++) {
 			var file = _self.selFiles[i];
 			var el_selfile = $('#ls_sel_files li[data-id="' + file.filePath
-					+ '"]', '#pnl_selected_files');
+					+ '"]', _self.context);
 			el_selfile.off('click');
 			el_selfile.on('click', function(event) {
-				$('#pop_fileEplorer_actions', _self.context).popup(
-						"open",
-						{
-							positionTo : '#ls_sel_files li[data-id="'
-									+ file.filePath + '"]'
-						});
+				var elm = $(event.delegateTarget, '#pnl_selected_files');
+				var elmFile = elm.data('id');
+				$('#pop_fileEplorer_actions', _self.context).popup("open", {
+					positionTo : '#ls_sel_files li[data-id="' + elmFile + '"]'
+				});
+
 				_self.onSelFileTap(event);
 				event.preventDefault();
 				return false;

@@ -139,6 +139,7 @@ App.prototype.registerErrorPopup = function(pageId) {
 			+ '</div> </div>';
 	$("#" + pageId).append(popupHtml);
 	$('#' + pageId + '_ErrorPopup').popup();
+	
 }
 
 App.prototype.showError = function(pageId, msg, callBack, isGoToActive) {
@@ -153,9 +154,8 @@ App.prototype.showError = function(pageId, msg, callBack, isGoToActive) {
 			callBack();
 		});
 	}
-	$('#' + pageId + '_ErrorPopup').popup("open");
-	$('.ui-popup-container').css({
-		top : 0
+	$('#' + pageId + '_ErrorPopup').popup("open", {
+		positionTo : '#' + pageId + ' div[data-role="header"]'
 	});
 }
 
@@ -249,6 +249,7 @@ App.prototype.register = function() {
 					});
 
 	$(document).on("pagecreate", "#server-setting", function(event) {
+		
 		_self.settingnview = new ServerSettingPage(_self);
 		_self.settingnview.init();
 		_self.appCache.addPage('server-setting', _self.settingnview);
@@ -463,6 +464,8 @@ App.prototype.onBackButton = function() {
 		$.mobile.changePage("#pg_inspection_detail");
 	} else if (_self.appCache.currentPage == '#pg_file_explorer') {
 		$.mobile.changePage("#pg_gallery");
+	} else if (_self.appCache.currentPage == '#server-setting') {
+		$.mobile.changePage("#pg_login");
 	} else {
 		navigator.app.backHistory();
 	}

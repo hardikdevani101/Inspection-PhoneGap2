@@ -9,6 +9,7 @@ ServerSettingPage.prototype.init = function() {
 	_self.contextPage = $(_self.context);
 
 	$(document).on("pagebeforeshow", _self.context, function(event) {
+		_self.app.appCache.currentPage = _self.context;
 		_self.renderServer();
 		event.preventDefault();
 		return false;
@@ -38,10 +39,11 @@ ServerSettingPage.prototype.init = function() {
 
 	$('#btn_add_server', _self.context).on('click', function(event) {
 		_self.isNew = true;
-		$('#server_popup').popup('open');
-		$('.ui-popup-container').css({
-			top : 0
-		});
+		$('#server_popup').popup('open',{positionTo: '#server-setting div[data-role="header"]'});
+//		$('.ui-popup-container').css({
+//			top : 0,
+//			position : relative
+//		});
 		event.preventDefault();
 		return false;
 	});
@@ -51,7 +53,7 @@ ServerSettingPage.prototype.init = function() {
 		event.preventDefault();
 		return false;
 	});
-
+	
 	$('#_form_servers', _self.context).validate({
 		rules : {
 			txt_svr_name : {
@@ -155,10 +157,10 @@ ServerSettingPage.prototype.renderServer = function() {
 		_self.isNew = false;
 
 		if (_self.fUrl) {
-			$('#server_popup').popup('open');
-			$('.ui-popup-container').css({
-				top : 0
-			});
+			$('#server_popup').popup('open',{positionTo: '#server-setting div[data-role="header"]'});
+//			$('.ui-popup-container').css({
+//				top : 0
+//			});
 		}
 
 		event.preventDefault();
