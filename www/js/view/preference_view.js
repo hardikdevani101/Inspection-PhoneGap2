@@ -21,7 +21,7 @@ Preference.prototype.init = function(pageId) {
 				.siblings('option').removeAttr('selected');
 		_self.el_txEditor.selectmenu("refresh", true);
 		event.preventDefault();
-		$('.ui-popup-screen').off();
+		//$('.ui-popup-screen').off();
 		_self.contextPage.enhanceWithin();
 		return false;
 	});
