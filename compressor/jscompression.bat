@@ -25,6 +25,8 @@ CMD /C "java -jar compressor\yuicompressor-2.4.8.jar www\js\view\inspection-view
 CMD /C "java -jar compressor\yuicompressor-2.4.8.jar www\js\view\gallery-view.js >> compressor\vision_app.min.js"
 CMD /C "java -jar compressor\yuicompressor-2.4.8.jar www\js\view\file-explorer-view.js >> compressor\vision_app.min.js"
 CMD /C "java -jar compressor\yuicompressor-2.4.8.jar www\js\view\image-editor-view.js >> compressor\vision_app.min.js"
+CMD /C "java -jar compressor\yuicompressor-2.4.8.jar www\js\view\preference_view.js >> compressor\vision_app.min.js"
+CMD /C "java -jar compressor\yuicompressor-2.4.8.jar www\js\view\server-setting.js >> compressor\vision_app.min.js"
 CMD /C "java -jar compressor\yuicompressor-2.4.8.jar www\js\app.js >> compressor\vision_app.min.js"
 CMD /C "java -jar compressor\yuicompressor-2.4.8.jar www\js\sync\uploader.js >> compressor\vision_app.min.js"
 CMD /C "java -jar compressor\yuicompressor-2.4.8.jar www\js\sync\downloader.js >> compressor\vision_app.min.js"
