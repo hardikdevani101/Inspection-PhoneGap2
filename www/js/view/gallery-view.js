@@ -289,6 +289,13 @@ GalleryPage.prototype.init = function() {
 		event.preventDefault();
 		return false
 	});
+	
+	_self.el_prefix_popup.on("keypress", "input", function(e) {
+		if (e.which === 13) {
+			_self.el_update_prefix.trigger( "click" );
+			return false;
+		}
+	});
 
 	_self.el_update_prefix
 			.on(

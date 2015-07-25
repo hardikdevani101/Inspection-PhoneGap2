@@ -110,6 +110,15 @@ SettingsPage.prototype.init = function() {
 		return false;
 	});
 
+	$("#_form_settings").on("keypress", "input", function(e) {
+		if (e.which === 13) {
+			if ($('#_form_settings', _self.context).valid()) {
+				$('#_form_settings', _self.context).submit();
+			}
+			return false;
+		}
+	});
+
 	$('#_form_settings', _self.context).validate({
 		rules : {
 			txt_lang : {

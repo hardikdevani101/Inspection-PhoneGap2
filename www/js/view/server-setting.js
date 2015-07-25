@@ -39,11 +39,13 @@ ServerSettingPage.prototype.init = function() {
 
 	$('#btn_add_server', _self.context).on('click', function(event) {
 		_self.isNew = true;
-		$('#server_popup').popup('open',{positionTo: '#server-setting div[data-role="header"]'});
-//		$('.ui-popup-container').css({
-//			top : 0,
-//			position : relative
-//		});
+		$('#server_popup').popup('open', {
+			positionTo : '#server-setting div[data-role="header"]'
+		});
+		// $('.ui-popup-container').css({
+		// top : 0,
+		// position : relative
+		// });
 		event.preventDefault();
 		return false;
 	});
@@ -53,7 +55,16 @@ ServerSettingPage.prototype.init = function() {
 		event.preventDefault();
 		return false;
 	});
-	
+
+	$("#_form_servers").on("keypress", "input", function(e) {
+		if (e.which === 13) {
+			if ($('#_form_servers', _self.context).valid()) {
+				$('#_form_servers', _self.context).submit();
+			}
+			return false;
+		}
+	});
+
 	$('#_form_servers', _self.context).validate({
 		rules : {
 			txt_svr_name : {
@@ -91,14 +102,14 @@ ServerSettingPage.prototype.init = function() {
 			fPass = '';
 			isFTP = 'N';
 			fName = $('#txt_svr_name', _self.context).val();
-//
-//			if (_self.isNew) {
-//				if (isFTP == 'Y') {
-//					fUrl = "ftp://" + fUser + ":" + fPass + "@" + fUrl;
-//				} else {
-//					fUrl = "http://" + fUrl;
-//				}
-//			}
+			//
+			// if (_self.isNew) {
+			// if (isFTP == 'Y') {
+			// fUrl = "ftp://" + fUser + ":" + fPass + "@" + fUrl;
+			// } else {
+			// fUrl = "http://" + fUrl;
+			// }
+			// }
 			resultline = {};
 			resultline['rid'] = 0;
 			resultline['url'] = fUrl.trim();
@@ -157,10 +168,12 @@ ServerSettingPage.prototype.renderServer = function() {
 		_self.isNew = false;
 
 		if (_self.fUrl) {
-			$('#server_popup').popup('open',{positionTo: '#server-setting div[data-role="header"]'});
-//			$('.ui-popup-container').css({
-//				top : 0
-//			});
+			$('#server_popup').popup('open', {
+				positionTo : '#server-setting div[data-role="header"]'
+			});
+			// $('.ui-popup-container').css({
+			// top : 0
+			// });
 		}
 
 		event.preventDefault();

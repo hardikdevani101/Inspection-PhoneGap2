@@ -79,11 +79,22 @@ LoginPage.prototype.init = function() {
 		$.mobile.changePage("#server-setting");
 		return false;
 	});
-	
-	$('#txt_url', _self.context).on('change', function(event) {
-		_self.app.appCache.settingInfo['service_url'] = $("#txt_url",
-				_self.context).val();
-		return false;
+
+	$('#txt_url', _self.context).on(
+			'change',
+			function(event) {
+				_self.app.appCache.settingInfo['service_url'] = $("#txt_url",
+						_self.context).val();
+				return false;
+			});
+
+	$("#_form_login").on("keypress", "input", function(e) {
+		if (e.which === 13) {
+			if ($('#_form_login', _self.context).valid()) {
+				$('#_form_login', _self.context).submit();
+			}
+			return false;
+		}
 	});
 
 	$('#_form_login', _self.context).validate({

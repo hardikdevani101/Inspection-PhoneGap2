@@ -713,6 +713,7 @@ VisionApi.prototype.onLoginVarify = function(params, success, error) {
 																		name : '*'
 																	});
 														} else {
+
 															if (item.m_value) {
 																$
 																		.each(
@@ -720,12 +721,23 @@ VisionApi.prototype.onLoginVarify = function(params, success, error) {
 																				function(
 																						index,
 																						subItem) {
-																					_self.app.appCache.warehouseList
-																							.push({
-																								orgid : item.m_key,
-																								warehouseid : subItem.m_key,
-																								name : subItem.m_name
-																							});
+																					var result = $
+																							.grep(
+																									_self.app.appCache.warehouseList,
+																									function(
+																											e) {
+																										return e.orgid == item.m_key
+																												&& e.warehouseid == subItem.m_key;
+																									});
+
+																					if (result.length <= 0) {
+																						_self.app.appCache.warehouseList
+																								.push({
+																									orgid : item.m_key,
+																									warehouseid : subItem.m_key,
+																									name : subItem.m_name
+																								});
+																					}
 																				});
 															}
 														}

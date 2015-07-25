@@ -35,6 +35,15 @@ Preference.prototype.init = function(pageId) {
 		$('#'+pageId+ _self.context).popup("close");
 		event.preventDefault();
 	});
+	
+	$("#_form_preferences").on("keypress", "input", function(e) {
+		if (e.which === 13) {
+			if ($('#_form_preferences', _self.contextPage).valid()) {
+				$('#_form_preferences', _self.contextPage).submit();
+			}
+			return false;
+		}
+	});
 
 	$('#_form_preferences', _self.contextPage).validate({
 		rules : {
@@ -61,6 +70,7 @@ Preference.prototype.init = function(pageId) {
 		}
 	});
 }
+
 
 Preference.prototype.onUpdate = function() {
 	var _self = this;
