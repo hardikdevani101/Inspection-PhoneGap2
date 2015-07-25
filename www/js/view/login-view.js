@@ -11,52 +11,56 @@ LoginPage.prototype.rederBreadCrumb = function() {
 LoginPage.prototype.onLogin = function() {
 	var _self = this;
 	try {
-		this.visionApi = new VisionApi(this.app);
-		this.visionApi
-				.login(
-						{
-							username : $("#txt_user", _self.context).val(),
-							password : $("#txt_password", _self.context).val()
-						},
-						function(result) {
-							if (result.loginInfo.error) {
-								_self.app.showError("pg_login",
-										result.loginInfo.error);
-							} else {
-								_self.app.isLogin = true;
-								_self.app.appCache.settingInfo['userid'] = result.loginInfo.ad_user_id;
-								_self.app.appCache.settingInfo['is_login'] = true;
+		if (!_self.app.visionApi) {
+			_self.app.visionApi = new VisionApi(_self.app);
+		}
+		_self.app.appCache.settingInfo['username'] = $("#txt_user",
+				_self.context).val();
+		_self.app.appCache.settingInfo['password'] = $("#txt_password",
+				_self.context).val();
+		_self.app.appCache.settingInfo['service_url'] = $("#txt_url",
+				_self.context).val();
 
-								var visSettingsDAO = new Tbl_VISSetting(
-										_self.app);
-								visSettingsDAO.login("Y", function(data) {
-									console.log("DB-Login Success!")
-								}, function(msg) {
-									console.log("DB-Login Failed!")
-								});
-								_self.rederBreadCrumb();
-								$(':mobile-pagecontainer').pagecontainer(
-										'change', '#pg_inspection', {
-											reload : false
-										});
-								_self.app.settingnview.reloadServerDetail();
-							}
-							// Load More Server details.
+		_self.app.visionApi.onLoginVarify({
+			username : _self.app.appCache.settingInfo['username'],
+			password : _self.app.appCache.settingInfo['password'],
+			completeUrl : _self.app.appCache.settingInfo['service_url']
+		}, function() {
 
-						}, function() {
-							_self.app.showError("pg_login", "Login failed");
-							console.log("Login failed");
-						});
+			$.mobile.changePage("#pg_settings");
+
+		}, function(error) {
+			_self.app.showError("pg_login", "Login failed" + error);
+		});
 
 	} catch (error) {
 		_self.app.showError("pg_login", "Login failed" + error);
-		console.log("Login failed" + error);
 	}
 };
 
-LoginPage.prototype.init = function() {
-
+LoginPage.prototype.renderServer = function() {
 	var _self = this;
+	_self.el_txURL.html('');
+	if (_self.app.appCache.ftpServers.length > 0) {
+		$.each(_self.app.appCache.ftpServers, function(key, data) {
+			if (data.isFTP != 'Y') {
+				_self.el_txURL.append(new Option(data.name, data.url));
+			}
+		});
+		_self.el_txURL.selectmenu();
+		if (_self.app.appCache.settingInfo.service_url) {
+			_self.el_txURL.val(_self.app.appCache.settingInfo.service_url)
+					.attr('selected', true).siblings('option').removeAttr(
+							'selected');
+		}
+		_self.el_txURL.selectmenu('refresh', true);
+	}
+}
+
+LoginPage.prototype.init = function() {
+	var _self = this;
+	_self.el_txURL = $("#txt_url", _self.context);
+
 	$(document).on(
 			"pagebeforeshow",
 			_self.context,
@@ -67,7 +71,31 @@ LoginPage.prototype.init = function() {
 					$("#txt_user", _self.context).val(
 							_self.app.appCache.settingInfo['username']);
 				}
+				_self.renderServer();
 			});
+
+	$('#btn_url_update', _self.context).on('click', function(event) {
+
+		$.mobile.changePage("#server-setting");
+		return false;
+	});
+
+	$('#txt_url', _self.context).on(
+			'change',
+			function(event) {
+				_self.app.appCache.settingInfo['service_url'] = $("#txt_url",
+						_self.context).val();
+				return false;
+			});
+
+	$("#_form_login").on("keypress", "input", function(e) {
+		if (e.which === 13) {
+			if ($('#_form_login', _self.context).valid()) {
+				$('#_form_login', _self.context).submit();
+			}
+			return false;
+		}
+	});
 
 	$('#_form_login', _self.context).validate({
 		rules : {

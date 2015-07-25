@@ -124,7 +124,7 @@ DB.prototype.loadFTPEntry = function(tx) {
 							});
 							_self.app.appCache.ftpServers.push({
 								name : "Logilite-Dev",
-								url : "http://203.88.138.222:8084",
+								url : "http://192.168.1.33:8084",
 								isFTP : "F"
 							});
 							tx
@@ -141,7 +141,7 @@ DB.prototype.loadFTPEntry = function(tx) {
 											+ ' values ("Test","http://10.210.23.97:8088","F")');
 							tx
 									.executeSql('insert into vis_server (name , url , isFTP)'
-											+ ' values ("Logilite-Dev","http://203.88.138.222:8084","F")');
+											+ ' values ("Logilite-Dev","http://192.168.1.33:8084","F")');
 						} else {
 							for (var j = 0; j < results.rows.length; j++) {
 								result = 0
@@ -157,7 +157,7 @@ DB.prototype.loadFTPEntry = function(tx) {
 
 							}
 						}
-						_self.app.settingnview.renderServer();
+						// _self.app.settingnview.renderServer();
 					}, _self.errorCB);
 }
 
@@ -185,6 +185,24 @@ DB.prototype.createFTPEntry = function() {
 				}
 			}
 		}, _self.errorCB);
+	}, _self.errorCB);
+}
+
+DB.prototype.updateServerEntry = function(ftpItem) {
+	var _self = this;
+	_self.dbstore.transaction(function(tx) {
+		tx.executeSql('update vis_server set url="' + ftpItem.url
+				+ '", isFTP="' + ftpItem.isFTP + '",user="' + ftpItem.user
+				+ '" , password="' + ftpItem.password + '" where name="'
+				+ ftpItem.name + '"');
+	}, _self.errorCB);
+}
+
+DB.prototype.deleteServerEntry = function(ftpItem) {
+	var _self = this;
+	_self.dbstore.transaction(function(tx) {
+		tx.executeSql('delete from vis_server where name="' + ftpItem.name
+				+ '" and url="' + ftpItem.url + '"');
 	}, _self.errorCB);
 }
 

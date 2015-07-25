@@ -81,12 +81,26 @@ InspLinesPage.prototype.init = function() {
 		event.preventDefault();
 		return false;
 	});
-
+	
+	
 	$("#btn_retry_attach").on('tap', function(event) {
 		// $("#pop_process_log", _self.contextInspDetail).popup("close");
 		$.mobile.changePage("#pg_inspection_detail");
 		_self.onFinishedCalled();
 		event.preventDefault();
+		return false
+	});
+	
+	$("#pg_inspection #btn_user").on('click', function(event) {
+		 event.preventDefault();
+		 _self.app.showPreference('pg_inspection');
+		return false
+	});
+	
+	$("#pg_inspection_detail #btn_user").on('click', function(event) {
+		 event.preventDefault();
+		 /*$('#preferenceMenu').popup('open');*/
+		 _self.app.showPreference('pg_inspection_detail');
 		return false
 	});
 
