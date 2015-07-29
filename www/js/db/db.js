@@ -124,7 +124,7 @@ DB.prototype.loadFTPEntry = function(tx) {
 							});
 							_self.app.appCache.ftpServers.push({
 								name : "Logilite-Dev",
-								url : "http://192.168.1.33:8084",
+								url : "http://192.168.1.20:8084",
 								isFTP : "F"
 							});
 							tx
@@ -141,7 +141,7 @@ DB.prototype.loadFTPEntry = function(tx) {
 											+ ' values ("Test","http://10.210.23.97:8088","F")');
 							tx
 									.executeSql('insert into vis_server (name , url , isFTP)'
-											+ ' values ("Logilite-Dev","http://192.168.1.33:8084","F")');
+											+ ' values ("Logilite-Dev","http://192.168.1.20:8084","F")');
 						} else {
 							for (var j = 0; j < results.rows.length; j++) {
 								result = 0
@@ -170,7 +170,7 @@ DB.prototype.createFTPEntry = function() {
 				found = false;
 				for (var j = 0; j < results.rows.length; j++) {
 					item = results.rows.item(j);
-					if (ftpItem.url == item.url) {
+					if (ftpItem.name == item.name) {
 						found = true;
 						break;
 					}

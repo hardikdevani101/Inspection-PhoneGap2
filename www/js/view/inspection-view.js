@@ -81,8 +81,7 @@ InspLinesPage.prototype.init = function() {
 		event.preventDefault();
 		return false;
 	});
-	
-	
+
 	$("#btn_retry_attach").on('tap', function(event) {
 		// $("#pop_process_log", _self.contextInspDetail).popup("close");
 		$.mobile.changePage("#pg_inspection_detail");
@@ -90,17 +89,17 @@ InspLinesPage.prototype.init = function() {
 		event.preventDefault();
 		return false
 	});
-	
+
 	$("#pg_inspection #btn_user").on('click', function(event) {
-		 event.preventDefault();
-		 _self.app.showPreference('pg_inspection');
+		event.preventDefault();
+		_self.app.showPreference('pg_inspection');
 		return false
 	});
-	
+
 	$("#pg_inspection_detail #btn_user").on('click', function(event) {
-		 event.preventDefault();
-		 /*$('#preferenceMenu').popup('open');*/
-		 _self.app.showPreference('pg_inspection_detail');
+		event.preventDefault();
+		/* $('#preferenceMenu').popup('open'); */
+		_self.app.showPreference('pg_inspection_detail');
 		return false
 	});
 
@@ -108,13 +107,6 @@ InspLinesPage.prototype.init = function() {
 	// pagebeforeshow : function(event, ui) {
 	_self.errorContextPage.on("pagebeforeshow", function() {
 		_self.app.appCache.currentPage = _self.errorContext;
-		var items = '';
-		if (_self.EditImageLog) {
-			items += _self.getPendingEditImageLog();
-		}
-		var el_attachItems = $("#edit_items", _self.errorContext);
-		el_attachItems.html(items);
-		el_attachItems.listview("refresh");
 
 		var el_syncItems = $("#sync_items", _self.errorContext);
 		var items = '';
@@ -196,16 +188,6 @@ InspLinesPage.prototype.getAttacheProcessLog = function() {
 	return item1;
 }
 
-InspLinesPage.prototype.getPendingEditImageLog = function() {
-	var _self = this;
-	item1 = '';
-	$.each(_self.EditImageLog, function(index, item) {
-		var line = '<li data-mini="true">File Failed:' + item + '</li>';
-		item1 += line;
-	});
-	return item1;
-}
-
 InspLinesPage.prototype.displayAlert = function() {
 	var _self = this;
 	if (_self.app.appFTPUtil.processLog.length > 0) {
@@ -277,40 +259,16 @@ InspLinesPage.prototype.syncInspLines = function(callBack) {
 		} else {
 			_self.app.showError("pg_inspection_detail",
 					"No files pending for Sync.");
+			var el_insProcLog = $("#insp_process_log", _self.contextInspDetail);
+			_self.isAlertDisplay = false;
+			el_insProcLog.hide();
 			$.mobile.loading('hide');
 		}
 	};
 
-	var onNotEditableFiles = function(tx, results) {
-		if (results.rows.length > 0) {
-			for (var i = 0; i < results.rows.length; i++) {
-				_self.EditImageLog.push(results.rows.item(i).insp_line + " : "
-						+ results.rows.item(i).name)
-			}
-			if (_self.EditImageLog.length > 0) {
-				var el_insProcLog = $("#insp_process_log",
-						_self.contextInspDetail);
-				if (!_self.isAlertDisplay) {
-					_self.isAlertDisplay = true;
-					el_insProcLog.show();
-				}
-				el_insProcLog.html(_self.EditImageLog.length);
-				_self.app.showError("pg_inspection_detail",
-						"Error: Some images not Edited", function() {
-							$.mobile.changePage("#pop_process_log");
-						});
-				// $("#pop_process_log", _self.contextInspDetail).popup("open");
-			}
-			$.mobile.loading('hide');
-		} else {
-			_self.app.appDB.getUploadFailedEntry(success);
-		}
-	}
-
 	// Restart Sync Process.
 	_self.app.appFTPUtil.processLog = [];
-	_self.EditImageLog = [];
-	_self.app.appDB.getNotEditableFiles(onNotEditableFiles);
+	_self.app.appDB.getUploadFailedEntry(success);
 }
 
 InspLinesPage.prototype.renderMRLines = function() {
@@ -548,6 +506,9 @@ InspLinesPage.prototype.onFinishedCalled = function() {
 		} else {
 			_self.app.showError("pg_inspection_detail",
 					"No files pending for attach.");
+			var el_insProcLog = $("#insp_process_log", _self.contextInspDetail);
+			_self.isAlertDisplay = false;
+			el_insProcLog.hide();
 		}
 	};
 

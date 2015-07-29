@@ -92,11 +92,11 @@ End of Home page
 		<ul data-role="listview" data-theme="c" data-inset="false">
 			<li class="ui-field-contain" data-shadow="false"
 				data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-				data-iconpos="right" data-theme="c"><label for="select-server">Version:3.0.3</label></li>
+				data-iconpos="right" data-theme="c"><label for="select-server">Version:3.0.4</label></li>
 			<li class="ui-field-contain" data-shadow="false"
 				data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
 				data-iconpos="right" data-theme="c"><label for="select-server">Release
-					Date: 25 July, 2015</label></li>
+					Date: 29 July, 2015</label></li>
 		</ul>
 	</div>
 
@@ -224,8 +224,8 @@ End of Home page
 			data-shadow="false" data-theme="b">
 			<form id="_form_servers">
 				<div style="padding: 10px 20px;">
-					<input type="text" id="txt_svr_name" placeholder="Name"
-						data-mini="true" /> <input type="text" id="txt_svr_url"
+					<input type="text" id="txt_svr_name" placeholder="Name" name="txt_svr_name"
+						data-mini="true" /> <input type="text" id="txt_svr_url" name = "txt_svr_url"
 						data-mini="true" placeholder="URL" />
 					<div class="ui-field-contain">
 						<fieldset data-role="controlgroup" data-type="horizontal">
@@ -372,7 +372,7 @@ End of Home page
 		data-dismissible="false">
 		<div data-role="header" data-theme="b">
 			<a href="#pg_inspection_detail" data-icon="arrow-l"
-				data-shadow="false" data-wrapperels="span" title="Back">Back </a>
+				data-shadow="false" data-wrapperels="span" title="Back">Back</a>
 			<h1 class="ui-title">Alerts</h1>
 			<div data-role="controlgroup" data-type="horizontal"
 				class="ui-mini ui-btn-right">
@@ -390,15 +390,8 @@ End of Home page
 				<div data-role="tabs">
 					<div data-role="navbar">
 						<ul>
-							<li><a href="#fragment-1" class="ui-btn-active">Edit Log</a></li>
 							<li><a href="#fragment-2">Sync Log</a></li>
 							<li><a href="#fragment-3">Attach Log</a></li>
-						</ul>
-					</div>
-					<div id="fragment-1">
-						<ul data-role="listview" id="edit_items" data-inset="false"
-							data-mini="true">
-							<!-- <li data-role="list-divider">Edit Log</li> -->
 						</ul>
 					</div>
 					<div id="fragment-2">

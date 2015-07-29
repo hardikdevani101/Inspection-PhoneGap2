@@ -396,7 +396,7 @@ App.prototype.reloadServerDetail = function() {
 			ftpItem = result.ftpservers[i];
 			findCount = jQuery.grep(_self.appCache.ftpServers, function(item,
 					index) {
-				return item.url == ftpItem.url;
+				return item.name == ftpItem.name;
 			});
 			if (!findCount.length > 0) {
 				_self.appCache.ftpServers.push(ftpItem);
