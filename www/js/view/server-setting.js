@@ -23,7 +23,7 @@ ServerSettingPage.prototype.init = function() {
 				if (!_self.isNew) {
 					var res = $.grep(_self.app.appCache.ftpServers, function(
 							item, index) {
-						return item.url == _self.fUrl;
+						return item.name == _self.fName;
 					});
 					if (res.length > 0) {
 						$('#txt_svr_url', _self.context).val(res[0].url);
@@ -39,6 +39,7 @@ ServerSettingPage.prototype.init = function() {
 
 	$('#btn_add_server', _self.context).on('click', function(event) {
 		_self.isNew = true;
+		$("#txt_svr_name").prop("disabled", false);
 		$('#server_popup').popup('open', {
 			positionTo : '#server-setting div[data-role="header"]'
 		});
@@ -65,35 +66,29 @@ ServerSettingPage.prototype.init = function() {
 		}
 	});
 
-	$('#_form_servers', _self.context).validate({
+	$('#_form_servers', '#server_popup').validate({
 		rules : {
 			txt_svr_name : {
 				required : true
 			},
 			txt_svr_url : {
-				required : true
+				required : true,
+				url : true
 			}
 		},
 		messages : {
 			txt_svr_name : {
-				required : "Server Name is Required!."
+				required : "Name is Required!"
 			},
 			txt_svr_url : {
-				required : "Server URL is Required!."
+				required : "URL is Required!",
+				url : "Invalid URL!"
 			}
 		},
 		errorPlacement : function(error, element) {
-			// error.appendTo(element.parent().prev());
-			$("#login-error-box", _self.context).html(error);
-			//			
-			// element.attr("placeholder", error);
-			// element.attr("style", "border:1px solid red;");
+			 error.appendTo(element.parent());
 		},
 		invalidHandler : function() {
-			$("#login-error-box", _self.context).popup("open", {
-				overlayTheme : "a",
-				positionTo : "#txt_svr_name"
-			});
 		},
 		submitHandler : function(form) {
 
@@ -142,11 +137,11 @@ ServerSettingPage.prototype.renderServer = function() {
 									+ this.name
 									+ '</a> <div class="split-custom-wrapper">'
 									+ '<a href="#" data-role="button" data-id="'
-									+ this.url
+									+ this.name
 									+ '" class="split-custom-button" data-type="delete" data-icon="minus"'
 									+ 'data-rel="dialog" data-theme="c" data-iconpos="notext">Add</a>'
 									+ '<a href="#" data-role="button" data-id="'
-									+ this.url
+									+ this.name
 									+ '" class="split-custom-button" data-type="edit" data-icon="edit"'
 									+ 'data-rel="dialog" data-theme="c" data-iconpos="notext">Edit</a></div></li>';
 
@@ -163,11 +158,12 @@ ServerSettingPage.prototype.renderServer = function() {
 			_self.context);
 	el_editServer.off('click');
 	el_editServer.on('click', function(event) {
-		_self.fUrl = $(this).data("id");
+		_self.fName = $(this).data("id");
 
 		_self.isNew = false;
+		$("#txt_svr_name").prop("disabled", true);
 
-		if (_self.fUrl) {
+		if (_self.fName) {
 			$('#server_popup').popup('open', {
 				positionTo : '#server-setting div[data-role="header"]'
 			});
@@ -185,18 +181,18 @@ ServerSettingPage.prototype.renderServer = function() {
 	el_deleteServer.off('click');
 	el_deleteServer.on('click', function(event) {
 
-		fUrl = $(this).data("id");
-		if (fUrl) {
+		fName = $(this).data("id");
+		if (fName) {
 			var res = $.grep(_self.app.appCache.ftpServers, function(item,
 					index) {
-				return item.url == fUrl;
+				return item.name == fName;
 			});
 			if (res.length > 0) {
 				_self.app.appDB.deleteServerEntry(res[0]);
 			}
 			_self.app.appCache.ftpServers = $.grep(
 					_self.app.appCache.ftpServers, function(item, index) {
-						return item.url != fUrl;
+						return item.name != fName;
 					});
 			_self.renderServer();
 		}
@@ -210,7 +206,7 @@ ServerSettingPage.prototype.onAddServer = function(isNew, serverObj) {
 	var _self = this;
 	if (isNew) {
 		var res = $.grep(_self.app.appCache.ftpServers, function(item, index) {
-			return item.url == serverObj.url;
+			return item.name == serverObj.name;	
 		});
 		if (res.length <= 0) {
 			_self.app.appCache.ftpServers.push(serverObj);
