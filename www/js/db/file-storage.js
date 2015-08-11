@@ -101,6 +101,20 @@ FS.prototype.createVISFile = function(param, isEdited) {
 	if (_self.app.appCache.prefixCache[param.mrLineID]) {
 		prefix = _self.app.appCache.prefixCache[param.mrLineID];
 	}
+	var arrINsp = _self.app.appCache.inspLines[_self.app.appCache.session.m_inoutline_id];
+	var insLabel="";
+
+	$
+			.each(
+					arrINsp,
+					function(i, item) {
+						if ((item.x_instructionline_id) == (_self.app.appCache.session.x_instructionline_id)) {
+							insLabel = item.name;
+						}
+					});
+	insLabel = insLabel.replace(/\s+/g, '');
+	prefix += "_" + insLabel;
+	
 	var date = new Date;
 	var milSec = Math.floor(Math.random() * date.getMilliseconds());
 	var sec = date.getSeconds();
@@ -111,6 +125,7 @@ FS.prototype.createVISFile = function(param, isEdited) {
 	var dd = date.getDate();
 	var fileName = prefix + "_" + mm + dd + yy + "_" + hh + mi + sec + milSec
 			+ "." + param.fileExt;
+	console.log("File Name ===> " +  fileName);
 	_self.vis_dir
 			.getFile(
 					fileName,
