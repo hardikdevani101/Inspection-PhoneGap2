@@ -28,6 +28,7 @@ ImageEditorPage.prototype.setup = function(options, isGallery) {
 	_self.image64 = options.img64;
 	_self.sourceInfo = options.sourceInfo;
 	_self.selectedWM = options.watermark;
+	_self.skipimgidit = options.skipImgEdit;
 	_self.isGallery = isGallery;
 }
 
@@ -42,12 +43,14 @@ ImageEditorPage.prototype.saveEditedImage = function() {
 
 ImageEditorPage.prototype.enableEditMode = function() {
 	var _self = this;
+	
 	_self.el_cropToolbar.hide();
 	_self.el_editToolbar.show();
 	_self.el_cropImgContainer.hide();
 	_self.el_previewImgContainer.hide();
 	_self.el_editImgContainer.show();
 	_self.el_btnPreview.html("Preview");
+	
 	setTimeout(function() {
 		var el_editImg = $('#edit_img_src', _self.context);
 		el_editImg.css("z-index", 2000000);
@@ -213,6 +216,7 @@ ImageEditorPage.prototype.viewToggle = function() {
 		_self.el_editToolbar.hide();
 		_self.el_cropToolbar.show();
 		_self.enableCropMode();
+		_self.corpperImage.cropper("setAspectRatio", 4/3);
 		// _self.el_btnPreview.hide();
 		// _self.el_btnEdit.hide();
 		_self.corpperImage.cropper("setDragMode", "crop");
@@ -244,41 +248,52 @@ ImageEditorPage.prototype.init = function() {
 	_self.el_previewImgContainer = $("#preview-image-container", _self.context);
 	_self.el_contextPage = $("#pg_img_editor");
 
+	_self.el_contextPage.off("pagebeforeshow");
 	_self.el_contextPage.on("pagebeforeshow", function(event) {
-		_self.app.appCache.currentPage = '';
-		_self.reload();
-		_self.loadEditableImage();
-		_self.loadCropableImage();
+		
+			_self.app.appCache.currentPage = '';
+			_self.reload();
+			_self.loadEditableImage();
+			_self.loadCropableImage();
 
-		_self.el_sliderBrightness = $("#slider-brightness", _self.context);
-		_self.el_sliderContrast = $("#slider-contrast", _self.context);
-		_self.el_sliderCrop = $("#slider-crop", _self.context);
+			_self.el_sliderBrightness = $("#slider-brightness", _self.context);
+			_self.el_sliderContrast = $("#slider-contrast", _self.context);
+			_self.el_sliderCrop = $("#slider-crop", _self.context);
 
-		_self.el_sliderBrightness.on("slidestop", function(event, ui) {
-			_self.brightness = event.target.value;
-			_self.onBrightnessChange(event);
+			_self.el_sliderBrightness.off("slidestop");
+			_self.el_sliderBrightness.on("slidestop", function(event, ui) {
+				_self.brightness = event.target.value;
+				_self.onBrightnessChange(event);
+				event.preventDefault();
+				return false;
+			});
+
+			_self.el_sliderContrast.off("slidestop");
+			_self.el_sliderContrast.on("slidestop", function(event, ui) {
+				_self.contrast = event.target.value;
+				_self.onContrastChange(event);
+				event.preventDefault();
+				return false;
+			});
+
+			_self.el_sliderCrop.off("slidestop");
+			_self.el_sliderCrop.on("slidestop", function(event, ui) {
+				_self.currentCropSize = event.target.value;
+				_self.onCropSizeChange(event);
+				event.preventDefault();
+				return false;
+			});
+			
+			
+			if(_self.skipimgidit){
+				setTimeout(function() {
+					_self.onEditFinish();
+				}, 500);
+			}
 			event.preventDefault();
 			return false;
-		});
-
-		_self.el_sliderContrast.off("slidestop");
-		_self.el_sliderContrast.on("slidestop", function(event, ui) {
-			_self.contrast = event.target.value;
-			_self.onContrastChange(event);
-			event.preventDefault();
-			return false;
-		});
-
-		_self.el_sliderCrop.off("slidestop");
-		_self.el_sliderCrop.on("slidestop", function(event, ui) {
-			_self.currentCropSize = event.target.value;
-			_self.onCropSizeChange(event);
-			event.preventDefault();
-			return false;
-		});
-
-		event.preventDefault();
-		return false;
+		
+		
 	});
 
 	_self.el_btnSkipEdit.off("click");
@@ -290,6 +305,7 @@ ImageEditorPage.prototype.init = function() {
 		return false;
 	});
 
+	_self.el_btnAddWatermark.off("tap");
 	_self.el_btnAddWatermark.on("tap", function(event) {
 		_self.applyWatermark();
 		event.preventDefault();
@@ -531,7 +547,7 @@ ImageEditorPage.prototype.initCropMode = function() {
 			// console.log(e.type);
 		}
 	}).cropper(options);
-
+	
 	_self.isCropperOn = true;
 }
 
@@ -577,6 +593,49 @@ ImageEditorPage.prototype.onEditFinish = function() {
 			nGctx.drawImage(watermark, 0, 0);
 
 			if (_self.isGallery == 'Y') {
+				console.log("image editor page edit finish");
+				_self.app.galleryview.onEditFinish(_self.sourceInfo, nGcanvas
+						.toDataURL());
+				$.mobile.changePage("#pg_gallery");
+			} else {
+				_self.app.fileExplorer.onEditFinish(_self.sourceInfo, nGcanvas
+						.toDataURL(), "Y");
+				$.mobile.changePage("#pg_file_explorer");
+			}
+		}
+	}
+}
+
+
+ImageEditorPage.prototype.onWatermarkOnly = function() {
+	var _self = this;
+	var watermarkImage = _self.app.watermark64;
+	if (_self.selectedWM) {
+		var findResult = jQuery.grep(_self.app.appCache.waterMarkImgs,
+				function(item, index) {
+					return item.url == _self.selectedWM;
+				});
+		if (findResult.length > 0) {
+			watermarkImage = findResult[0].data;
+		}
+	}
+	var watermark = new Image();
+	watermark.src = watermarkImage;
+	watermark.onload = function() {
+		var origImg = new Image();
+		origImg.src = _self.image64;
+		origImg.onload = function() {
+			nGcanvas = document.createElement('canvas');
+			nGctx = nGcanvas.getContext("2d");
+			nGcanvas.width = 1024;
+			nGcanvas.height = 768;
+			nGctx.drawImage(origImg, 0, 0, origImg.width, origImg.height, 0, 0,
+					1024, 768);
+
+			nGctx.drawImage(watermark, 0, 0);
+
+			if (_self.isGallery == 'Y') {
+				console.log("image editor page edit finish");
 				_self.app.galleryview.onEditFinish(_self.sourceInfo, nGcanvas
 						.toDataURL());
 				$.mobile.changePage("#pg_gallery");

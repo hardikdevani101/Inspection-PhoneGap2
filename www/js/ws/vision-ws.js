@@ -281,6 +281,13 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 								resultline['x_instructionline_id'] = dval
 								resultline['isMR'] = "N";
 								resultline['name'] = dlab;
+								if(dlab.match(/X-Ray/gi) != null){
+									resultline['skipEdit'] = true;
+								}
+								else{
+									resultline['skipEdit'] = false;
+								}
+									
 								jsonResponse.push(resultline);
 							}
 						}

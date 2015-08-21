@@ -23,6 +23,16 @@ FileExplorerPage.prototype.init = function() {
 	_self.fillDataProviders();
 	var contextPage = $(_self.context);
 	contextPage.on("pagebeforeshow", function() {
+		var arrINsp = _self.app.appCache.inspLines[_self.app.appCache.session.m_inoutline_id];
+		$
+				.each(
+						arrINsp,
+						function(i, item) {
+							if ((item.x_instructionline_id) == (_self.app.appCache.session.x_instructionline_id)) {
+								_self.skipEditImg = item.skipEdit;
+							}
+						});
+		
 		_self.app.appCache.currentPage = _self.context;
 		if (_self.isEditAll) {
 			return;
@@ -40,6 +50,9 @@ FileExplorerPage.prototype.init = function() {
 
 	$("#btn_finish_file_selection", _self.context).on('click', function(event) {
 		_self.isEditAll = true;
+		if(_self.skipEditImg){
+			_self.app.showDialog("Loading");
+		}
 		_self.editAll();
 	});
 
@@ -194,7 +207,6 @@ FileExplorerPage.prototype.init = function() {
 }
 
 FileExplorerPage.prototype.editAll = function() {
-
 	var _self = this;
 	find_rest = jQuery.grep(_self.selFiles, function(item, index) {
 
@@ -207,15 +219,17 @@ FileExplorerPage.prototype.editAll = function() {
 			return item.edited != true;
 		}
 	});
-
+	
 	if (find_rest.length > 0) {
+		
 		var imgData = _self.app.appCache.imgCache[find_rest[0].filePath];
 		if (_self.app.appCache.settingInfo.img_editor
 				&& _self.app.appCache.settingInfo.img_editor == 'Aviary') {
 			_self.app.aviaryEdit.setup({
 				'sourceInfo' : find_rest[0],
 				imageURI : find_rest[0].filePath,
-				watermark : _self.app.appCache.selWatermark
+				watermark : _self.app.appCache.selWatermark,
+				skipImgEdit : _self.skipEditImg
 			});
 			_self.app.aviaryEdit.edit(function(param, data) {
 				_self.onEditFinish(param, data)
@@ -226,16 +240,27 @@ FileExplorerPage.prototype.editAll = function() {
 			_self.app.imageEditor.setup({
 				'sourceInfo' : find_rest[0],
 				img64 : imgData,
-				watermark : _self.app.appCache.selWatermark
+				watermark : _self.app.appCache.selWatermark,
+				skipImgEdit : _self.skipEditImg
 			}, "N");
-			$.mobile.changePage("#pg_img_editor");
+			
+			if(_self.skipEditImg){
+				_self.app.imageEditor.onWatermarkOnly();
+			}
+			else{
+				$.mobile.changePage("#pg_img_editor");
+			}			
 		}
+		
 	} else {
 		_self.isEditAll = false;
 		_self.app.galleryview.onFileData(_self.selFiles);
 		_self.currentDirPath = '/';
 		_self.selFiles = [];
-		$.mobile.changePage("#pg_gallery");
+		setTimeout(function() {
+			$.mobile.changePage("#pg_gallery");
+		}, 500)
+		
 		event.preventDefault();
 		return false;
 	}
@@ -513,7 +538,8 @@ FileExplorerPage.prototype.onSelFileTap = function(event) {
 	_self.selectedFile = selected;
 	var file_name = el_selected.data('name');
 	var isImg = el_selected.data('isimg');
-	if (isImg) {
+	
+	if ((isImg) && (!_self.skipEditImg)) {
 		$("#pop_fileEplorer_actions #btn_FEedit_file", _self.context).show();
 	} else {
 		$("#pop_fileEplorer_actions #btn_FEedit_file", _self.context).hide();
@@ -529,7 +555,8 @@ FileExplorerPage.prototype.onSelFileTap = function(event) {
 				_self.app.aviaryEdit.setup({
 					'sourceInfo' : sourceInfo[0],
 					imageURI : sourceInfo[0].filePath,
-					watermark : _self.app.appCache.selWatermark
+					watermark : _self.app.appCache.selWatermark,
+					skipImgEdit : _self.skipEditImg
 				});
 			} else {
 
@@ -538,7 +565,8 @@ FileExplorerPage.prototype.onSelFileTap = function(event) {
 				_self.app.imageEditor.setup({
 					'sourceInfo' : sourceInfo[0],
 					img64 : imgData,
-					watermark : _self.app.appCache.selWatermark
+					watermark : _self.app.appCache.selWatermark,
+					skipImgEdit : _self.skipEditImg
 				}, "N");
 			}
 		}

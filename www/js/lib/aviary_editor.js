@@ -20,6 +20,7 @@ AviaryEditor.prototype.setup = function(options) {
 	_self.param = options.sourceInfo;
 	_self.imageURI = options.imageURI;
 	_self.selectedWM = options.watermark;
+	_self.skipimgidit = options.skipImgEdit;
 }
 
 AviaryEditor.prototype.edit = function(callBack) {
@@ -32,7 +33,6 @@ AviaryEditor.prototype.edit = function(callBack) {
 		
 		var arrINsp = _self.app.appCache.inspLines[_self.app.appCache.session.m_inoutline_id];
 		var insLabel = "";
-
 		$
 				.each(
 						arrINsp,
@@ -59,6 +59,7 @@ AviaryEditor.prototype.edit = function(callBack) {
 				+ fileName, _self.imageURI, {}, function(result) {
 			_self.param.actualURI = _self.imageURI;
 			_self.imageURI = result[0].localPath;
+			console.log(">>> Image URI ----> "+ _self.imageURI);
 			_self.openEditor(callBack);
 		}, function(msg) {
 			console.log('Error Getting File >>> ' + dataid);
@@ -70,32 +71,42 @@ AviaryEditor.prototype.edit = function(callBack) {
 
 AviaryEditor.prototype.openEditor = function(callBack) {
 	var _self = this;
-	cordova.plugins.Aviary.show({
-		imageURI : _self.imageURI,
-		outputFormat : cordova.plugins.Aviary.OutputFormat.JPEG,
-		quality : 90,
-		toolList : _self.toolList,
-		hideExitUnsaveConfirmation : false,
-		enableEffectsPacks : true,
-		enableFramesPacks : true,
-		enableStickersPacks : true,
-		disableVibration : false,
-		folderName : "VISion_Aviary",
-		success : function(result) {
-			// var editedImageFileName = result.name;
-			// var editedImageURI = result.src;
-			// console.log("File name: " + editedImageFileName + ", Image URI: "
-			// + editedImageURI);
-			_self.param['oldURI'] = _self.imageURI;
-			_self.param['name'] = result.name;
-			_self.param['fileURI'] = result.src;
-			_self.addWaterMark(callBack);
-			// sucessCallback(_self.param);
-		},
-		error : function(message) {
-			console.log(">>>>>>>>>>>>>>>>>>>" + message);
-		}
-	});
+	if (_self.skipimgidit) {
+		_self.param['oldURI'] = _self.imageURI;
+		var filename = _self.imageURI
+				.substring(_self.imageURI.lastIndexOf('/') + 1);
+		_self.param['name'] = filename;
+		_self.param['fileURI'] = _self.imageURI;
+		_self.addWaterMark(callBack);
+	} else {
+		cordova.plugins.Aviary.show({
+			imageURI : _self.imageURI,
+			outputFormat : cordova.plugins.Aviary.OutputFormat.JPEG,
+			quality : 90,
+			toolList : _self.toolList,
+			hideExitUnsaveConfirmation : false,
+			enableEffectsPacks : true,
+			enableFramesPacks : true,
+			enableStickersPacks : true,
+			disableVibration : false,
+			folderName : "VISion_Aviary",
+			success : function(result) {
+				// var editedImageFileName = result.name;
+				// var editedImageURI = result.src;
+				// console.log("File name: " + editedImageFileName + ", Image
+				// URI: "
+				// + editedImageURI);
+				_self.param['oldURI'] = _self.imageURI;
+				_self.param['name'] = result.name;
+				_self.param['fileURI'] = result.src;
+				_self.addWaterMark(callBack);
+				// sucessCallback(_self.param);
+			},
+			error : function(message) {
+				console.log(">>>>>>>>>>>>>>>>>>>" + message);
+			}
+		});
+	}
 }
 
 AviaryEditor.prototype.addWaterMark = function(sucess) {
