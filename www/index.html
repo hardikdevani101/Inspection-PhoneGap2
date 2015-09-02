@@ -139,11 +139,11 @@ End of Home page
 		<ul data-role="listview" data-theme="c" data-inset="false">
 			<li class="ui-field-contain" data-shadow="false"
 				data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-				data-iconpos="right" data-theme="c"><label for="select-server">Version:3.0.6</label></li>
+				data-iconpos="right" data-theme="c"><label for="select-server">Version:3.0.7</label></li>
 			<li class="ui-field-contain" data-shadow="false"
 				data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
 				data-iconpos="right" data-theme="c"><label for="select-server">Release
-					Date: 21 August, 2015</label></li>
+					Date: 1 September, 2015</label></li>
 		</ul>
 	</div>
 
@@ -683,8 +683,9 @@ Start of Crop page
 						<label for="slider-crop" data-theme="b"
 							class="ui-icon-crop ui-btn-c  ui-btn-icon-notext">Crop</label> <input
 							data-highlight="true" data-track-theme="a" data-mini="true"
-							type="range" name="slider-crop" id="slider-crop" value="0"
-							min="-50" max="50" class="ui-hidden-accessible" />
+							type="range" name="slider-crop" id="slider-crop" value=""
+							min="0" max="100" class="ui-hidden-accessible" />
+							
 					</div>
 				</div>
 				<div data-theme="c" id="edit-toolbar" class="ui-grid-a">
@@ -738,6 +739,17 @@ Start of Crop page
 			<div id="preview-image-container"
 				class="ui-block-a edit-img-container" style="margin-top:1em;"></div>
 		</div>
+		
+		<div data-role="popup" id="numberInput" 
+			data-corners="false" data-shadow="false" data-theme="b">
+			<ul data-role="listview" data-inset="true">
+				<li><label for="currentSize">Size</label> <input type="number"
+					name="currentSize" id="currentSize" value=""
+					placeholder="Enter Value Here!" data-theme="a" data-mini="true"
+					data-inset="false"></li>
+			</ul>
+		</div>
+		
 	</div>
 
 	<!-------------------------------------------------------------
