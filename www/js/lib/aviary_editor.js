@@ -30,7 +30,7 @@ AviaryEditor.prototype.edit = function(callBack) {
 		if (_self.app.appCache.prefixCache[_self.app.appCache.session.m_inoutline_id]) {
 			prefix = _self.app.appCache.prefixCache[_self.app.appCache.session.m_inoutline_id];
 		}
-		
+
 		var arrINsp = _self.app.appCache.inspLines[_self.app.appCache.session.m_inoutline_id];
 		var insLabel = "";
 		$
@@ -53,13 +53,13 @@ AviaryEditor.prototype.edit = function(callBack) {
 		var dd = date.getDate();
 		var fileName = prefix + "_" + mm + dd + yy + "_" + hh + mi + sec
 				+ milSec + ".jpg";
-		console.log("File Name ===> " +  fileName);
-		
+		console.log("File Name ===> " + fileName);
+
 		_self.app.ftpClient.get(_self.app.appFS.vis_dir.fullPath + "/"
 				+ fileName, _self.imageURI, {}, function(result) {
 			_self.param.actualURI = _self.imageURI;
 			_self.imageURI = result[0].localPath;
-			console.log(">>> Image URI ----> "+ _self.imageURI);
+			console.log(">>> Image URI ----> " + _self.imageURI);
 			_self.openEditor(callBack);
 		}, function(msg) {
 			console.log('Error Getting File >>> ' + dataid);
@@ -111,43 +111,66 @@ AviaryEditor.prototype.openEditor = function(callBack) {
 
 AviaryEditor.prototype.addWaterMark = function(sucess) {
 	var _self = this;
-	_self.app.appFS.getFileByURL(_self.param,
-			function(options) {
-				_self.param = options;
-				var watermarkImage = _self.app.watermark64;
-				if (_self.selectedWM) {
-					var findResult = jQuery.grep(
-							_self.app.appCache.waterMarkImgs, function(item,
-									index) {
-								return item.url == _self.selectedWM;
-							});
-					if (findResult.length > 0) {
-						watermarkImage = findResult[0].data;
-					}
-				}
-
-				var watermark = new Image();
-				watermark.src = watermarkImage;
-				watermark.onload = function() {
-					var origImg = new Image();
-					origImg.src = _self.param.data;
-					origImg.onload = function() {
-						nGcanvas = document.createElement('canvas');
-						nGctx = nGcanvas.getContext("2d");
-						nGcanvas.width = 1024;
-						nGcanvas.height = 768;
-						nGctx.drawImage(origImg, 0, 0, origImg.width,
-								origImg.height, 0, 0, 1024, 768);
-
-						nGctx.drawImage(watermark, 0, 0);
-
-						if (sucess) {
-							sucess(_self.param, nGcanvas.toDataURL());
-						} else {
-							_self.app.galleryview.onEditFinish(_self.param,
-									nGcanvas.toDataURL());
+	_self.app.appFS
+			.getFileByURL(
+					_self.param,
+					function(options) {
+						_self.param = options;
+						var watermarkImage = _self.app.watermark64;
+						if (_self.selectedWM) {
+							var findResult = jQuery.grep(
+									_self.app.appCache.waterMarkImgs, function(
+											item, index) {
+										return item.url == _self.selectedWM;
+									});
+							if (findResult.length > 0) {
+								watermarkImage = findResult[0].data;
+							}
 						}
-					}
-				}
-			});
+
+						var watermark = new Image();
+						watermark.src = watermarkImage;
+						watermark.onload = function() {
+							var origImg = new Image();
+							origImg.src = _self.param.data;
+							origImg.onload = function() {
+								nGcanvas = document.createElement('canvas');
+								nGctx = nGcanvas.getContext("2d");
+								nGcanvas.width = 1024;
+								nGcanvas.height = 768;
+								var newWidth = ((origImg.width * nGcanvas.height) / origImg.height);
+
+								if ((nGcanvas.width >= newWidth)) {
+									nGctx.drawImage(origImg, 0, 0,
+											origImg.width, origImg.height,
+											(nGcanvas.width - newWidth) / 2, 0,
+											newWidth, nGcanvas.height);
+								} else {
+									var newHeight = ((origImg.height * nGcanvas.width) / origImg.width);
+									if ((nGcanvas.height >= newHeight)) {
+										nGctx
+												.drawImage(
+														origImg,
+														0,
+														0,
+														origImg.width,
+														origImg.height,
+														0,
+														(nGcanvas.height - newHeight) / 2,
+														nGcanvas.width,
+														newHeight);
+									}
+								}
+
+								nGctx.drawImage(watermark, 0, 0);
+
+								if (sucess) {
+									sucess(_self.param, nGcanvas.toDataURL());
+								} else {
+									_self.app.galleryview.onEditFinish(
+											_self.param, nGcanvas.toDataURL());
+								}
+							}
+						}
+					});
 }
