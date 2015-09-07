@@ -1,6 +1,7 @@
 var GalleryPage = function(app) {
 	this.app = app;
 	this.selFiles = [];
+	this.editImages = [];
 	this.inspFiles = {};
 	this.selectedFile = '';
 	this.isGridView = true;
@@ -39,6 +40,10 @@ GalleryPage.prototype.onEditFinish = function(sourceInfo, editedImgData) {
 			_self.app.appFS.createVISFile(sourceInfo, "T");
 		}
 	}
+	
+	if(_self.editImages && _self.editImages.length > 0)
+		_self.onPhotoDataSuccess(_self.editImages.pop());
+	
 	_self.app.hideDialog();
 }
 
@@ -699,14 +704,21 @@ GalleryPage.prototype.getCameraImage = function() {
 
 GalleryPage.prototype.getGalleryImage = function() {
 	var _self = this;
-	navigator.camera.getPicture(function(param) {
-		_self.onPhotoDataSuccess(param);
-	}, _self.onFail, {
-		quality : 70,
-		sourceType : Camera.PictureSourceType.PHOTOLIBRARY,
-		destinationType : Camera.DestinationType.FILE_URI,
-		encodingType : Camera.EncodingType.JPEG
+
+	window.plugins.multiImageSelector.getPictures(function(results) {
+		for (var i = 0; i < results.paths.length; i++) {
+			_self.editImages.push(results.paths[i]);
+		}
+		_self.onPhotoDataSuccess(_self.editImages.pop());
+
+	}, function(error) {
+		alert('Error: ' + error);
+	}, {
+		type : "multiple",
+		limit : 8,
+		errorMessageText : "Images should be less than or equals to 8"
 	});
+
 }
 
 GalleryPage.prototype.onPhotoDataSuccess = function(imageURI) {
