@@ -163,29 +163,31 @@ App.prototype.showError = function(pageId, msg, callBack, isGoToActive) {
 App.prototype.registerPreferencePopup = function(pageId) {
 	var popupHtml = '<div data-role="popup" id="'
 			+ pageId
-			+ '_PreferencePopup" data-corners="false" data-shadow="false" data-theme="b">'
+			+ '_PreferencePopup" data-corners="false" data-shadow="false" >'
 			+ '<h5>Preferences</h5>'
 			+ '<form id="_form_preferences">'
-			+ '<div style="padding: 10px 20px;">'
-			+ '<label for="txt_imgQua">Img</label> <select name="txt_imgQua" id="txt_imgQua" data-native-menu="false" data-mini="true">'
+			+ '<div style="padding: 10px 20px;" data-theme="c">'
+			+ '<label for="txt_imgQua">Img</label><select name="txt_imgQua" id="txt_imgQua" '
+			+ 'data-native-menu="false" data-mini="true">'
 			+ '<option value="50">50% (low)</option>'
 			+ '<option value="75">75% (default)</option>'
 			+ '<option value="80">80% (high)</option>'
 			+ '<option value="90">90% (higher)</option>'
-			+ '<option value="100">100% (highest)</option>'
-			+ '</select> <label for="txt_editApp">Editor</label>' 
-			+ '<select name="txt_editApp" id="txt_editApp" data-native-menu="false" data-mini="true">'
-			+ '<option value="Vision">Vision</option>'
-			+ '<option value="Aviary">Aviary</option>'
+			+ '<option value="100">100% (highest)</option></select>'
+			+ '<label for="txt_editApp">Editor</label>' 
+			+ '<select name="txt_editApp" id="txt_editApp" data-native-menu="false" data-mini="true" >'
+			+ '<option data-theme="c" data-mini="true" value="Vision">Vision</option>'
+			+ '<option data-theme="c" data-mini="true" value="Aviary">Aviary</option>'
 			+ '</select>'
 			+ '<div class="ui-field-contain">'
 			+' <fieldset data-role="controlgroup" data-type="horizontal">'
-			+ '<button type="submit" data-theme="b" data-icon="check">OK</button>'
-			+ '<button id="btn_preference_close" data-theme="b" data-icon="delete">Cancel</button>'
-			+ '</fieldset> </div>	</div> </form> </div>';
+			+ '<button type="submit" data-icon="check">OK</button>'
+			+ '<button id="btn_preference_close" data-icon="delete">Cancel</button>'
+			+ '</fieldset> </div></div> </form> </div>';
 	$("#" + pageId).append(popupHtml);
 	$("#" + pageId).enhanceWithin();
 	$('#' + pageId + '_PreferencePopup').popup();
+	
 }
 
 App.prototype.showPreference = function(pageId) {
