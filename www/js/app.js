@@ -159,42 +159,48 @@ App.prototype.showError = function(pageId, msg, callBack, isGoToActive) {
 	});
 }
 
-
 App.prototype.registerPreferencePopup = function(pageId) {
-	var popupHtml = '<div data-role="popup" id="'
+	var popupHtml = '<div data-role="panel" id="'
 			+ pageId
-			+ '_PreferencePopup" data-corners="false" data-shadow="false" >'
-			+ '<h5>Preferences</h5>'
+			+ '_PreferencePopup" data-corners="false" data-shadow="false" data-display="overlay" class="preferencepanel">'
+			+ '<h3 class="ui-bar ui-bar-c">Preferences</h3>'
 			+ '<form id="_form_preferences">'
-			+ '<div style="padding: 10px 20px;" data-theme="c">'
-			+ '<label for="txt_imgQua">Img</label><select name="txt_imgQua" id="txt_imgQua" '
+			+ '<div style="padding: 5% 10%;">'
+			+ '<label for="'
+			+ pageId
+			+ '_txt_imgQua">Img</label><select name="txt_imgQua" id="'
+			+ pageId
+			+ '_txt_imgQua" '
 			+ 'data-native-menu="false" data-mini="true">'
 			+ '<option value="50">50% (low)</option>'
 			+ '<option value="75">75% (default)</option>'
 			+ '<option value="80">80% (high)</option>'
 			+ '<option value="90">90% (higher)</option>'
 			+ '<option value="100">100% (highest)</option></select>'
-			+ '<label for="txt_editApp">Editor</label>' 
-			+ '<select name="txt_editApp" id="txt_editApp" data-native-menu="false" data-mini="true" >'
-			+ '<option data-theme="c" data-mini="true" value="Vision">Vision</option>'
-			+ '<option data-theme="c" data-mini="true" value="Aviary">Aviary</option>'
+			+ '<label for="'
+			+ pageId
+			+ '_txt_editApp">Editor</label>'
+			+ '<select name="txt_editApp" id="'
+			+ pageId
+			+ '_txt_editApp" data-native-menu="false" data-mini="true" >'
+			+ '<option value="Vision">Vision</option>'
+			+ '<option value="Aviary">Aviary</option>'
 			+ '</select>'
-			+ '<div class="ui-field-contain">'
-			+' <fieldset data-role="controlgroup" data-type="horizontal">'
-			+ '<button type="submit" data-icon="check">OK</button>'
-			+ '<button id="btn_preference_close" data-icon="delete">Cancel</button>'
-			+ '</fieldset> </div></div> </form> </div>';
+			+ '<div data-role="footer" data-fullscreen="false" data-position="fixed" data-theme="a">'
+			+ '<div data-role="navbar" data-iconpos="left" data-theme="a">'
+			+ '<ul data-theme="a">'
+			+ '<li><button type="submit" data-icon="check" style="border-width:1px; border-style:solid;">OK</button></li>'
+			+ '<li><button id="btn_preference_close" data-icon="delete" data-rel="close" style="border-width:1px; border-style:solid;">Cancel</button></li></ul>'
+			+ '</div></div></div> </form> </div>';
+
 	$("#" + pageId).append(popupHtml);
+	$('#' + pageId + '_PreferencePopup').panel();
 	$("#" + pageId).enhanceWithin();
-	$('#' + pageId + '_PreferencePopup').popup();
-	
 }
 
 App.prototype.showPreference = function(pageId) {
-	$("#" + pageId).enhanceWithin();
-	$('#' + pageId + '_PreferencePopup').popup("open");
+	$('#' + pageId + '_PreferencePopup').panel("open");
 }
-
 
 App.prototype.register = function() {
 	var _self = this;
@@ -290,6 +296,7 @@ App.prototype.register = function() {
 		});
 		_self.registerErrorPopup('pg_inspection');
 		_self.registerPreferencePopup('pg_inspection');
+		
 		var inspPreference = new Preference(_self);
 		inspPreference.init('pg_inspection');
 		_self.inspLinePage = new InspLinesPage(_self);

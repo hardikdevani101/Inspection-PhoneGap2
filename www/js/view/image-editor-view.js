@@ -787,8 +787,21 @@ ImageEditorPage.prototype.onWatermarkOnly = function() {
 			nGctx = nGcanvas.getContext("2d");
 			nGcanvas.width = 1024;
 			nGcanvas.height = 768;
-			nGctx.drawImage(origImg, 0, 0, origImg.width, origImg.height, 0, 0,
-					1024, 768);
+			var newWidth = ((origImg.width * nGcanvas.height) / origImg.height);
+
+			if ((nGcanvas.width >= newWidth)) {
+				nGctx.drawImage(origImg, 0, 0, origImg.width, origImg.height,
+						(nGcanvas.width - newWidth) / 2, 0, newWidth,
+						nGcanvas.height);
+			} else {
+				var newHeight = ((origImg.height * nGcanvas.width) / origImg.width);
+				if ((nGcanvas.height >= newHeight)) {
+					nGctx.drawImage(origImg, 0, 0, origImg.width,
+							origImg.height, 0,
+							(nGcanvas.height - newHeight) / 2, nGcanvas.width,
+							newHeight);
+				}
+			}
 
 			nGctx.drawImage(watermark, 0, 0);
 

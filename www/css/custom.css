@@ -163,6 +163,27 @@ body {
 		margin-top: 0px;
 		text-align: center;
 	}
+	.preferencepanel .ui-listview li { /* float: left; */
+		/* width: 25% !important; */
+		float: left;
+		width: 30% !important;
+		margin: .1em !important;
+	}
+	.preferencepanel .ui-panel-inner {
+		padding: 0em !important;
+	}
+	.preferencepanel .ui-content {
+		padding: 0px 0px !important;
+		margin-top: 0px;
+	}
+	.preferencepanel  .ui-content .ui-listview, .ui-panel-inner>.ui-listview
+		{
+		margin: 0em;
+	}
+	.preferencepanel .ui-bar {
+		margin-top: 0px;
+		text-align: center;
+	}
 	.img-gallery .ui-content {
 		padding: .5625em; /* 9px */
 	}
@@ -510,6 +531,9 @@ body {
 		background: #DDDCC5 !important;
 	}
 	#pnl_selected_files .ui-listview li {
+		width: 47% !important;
+	}
+	.preferencepanel .ui-listview li {
 		width: 47% !important;
 	}
 	.current_dir_location_list .ui-bar {
