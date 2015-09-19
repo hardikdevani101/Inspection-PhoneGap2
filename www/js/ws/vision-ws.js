@@ -263,6 +263,8 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 							resultline['x_instructionline_id'] = mr_lines[0].m_inout_id;
 							resultline['isMR'] = "Y";
 							resultline['name'] = "Vendor Paper work";
+							resultline['skipEdit'] = true;
+							resultline['skipWatermark'] = true;
 							jsonResponse.push(resultline);
 						}
 
@@ -281,13 +283,14 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 								resultline['x_instructionline_id'] = dval
 								resultline['isMR'] = "N";
 								resultline['name'] = dlab;
-								if(dlab.match(/X-Ray/gi) != null){
+								if (dlab.match(/X-Ray/gi) != null) {
 									resultline['skipEdit'] = true;
-								}
-								else{
+									resultline['skipWatermark'] = false;
+								} else {
 									resultline['skipEdit'] = false;
+									resultline['skipWatermark'] = false;
 								}
-									
+
 								jsonResponse.push(resultline);
 							}
 						}

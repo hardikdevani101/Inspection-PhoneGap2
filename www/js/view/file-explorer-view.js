@@ -30,6 +30,7 @@ FileExplorerPage.prototype.init = function() {
 						function(i, item) {
 							if ((item.x_instructionline_id) == (_self.app.appCache.session.x_instructionline_id)) {
 								_self.skipEditImg = item.skipEdit;
+								_self.skipWatermarkImg = item.skipWatermark;
 							}
 						});
 		
@@ -219,10 +220,13 @@ FileExplorerPage.prototype.editAll = function() {
 			return item.edited != true;
 		}
 	});
-	
+
 	if (find_rest.length > 0) {
-		
+
 		var imgData = _self.app.appCache.imgCache[find_rest[0].filePath];
+		if (_self.skipEditImg && _self.skipWatermarkImg) {
+			_self.onEditFinish(find_rest[0], imgData, "Y");
+		}
 		if (_self.app.appCache.settingInfo.img_editor
 				&& _self.app.appCache.settingInfo.img_editor == 'Aviary') {
 			_self.app.aviaryEdit.setup({
@@ -243,15 +247,14 @@ FileExplorerPage.prototype.editAll = function() {
 				watermark : _self.app.appCache.selWatermark,
 				skipImgEdit : _self.skipEditImg
 			}, "N");
-			
-			if(_self.skipEditImg){
+
+			if (_self.skipEditImg) {
 				_self.app.imageEditor.onWatermarkOnly();
-			}
-			else{
+			} else {
 				$.mobile.changePage("#pg_img_editor");
-			}			
+			}
 		}
-		
+
 	} else {
 		_self.isEditAll = false;
 		_self.app.galleryview.onFileData(_self.selFiles);
@@ -260,7 +263,7 @@ FileExplorerPage.prototype.editAll = function() {
 		setTimeout(function() {
 			$.mobile.changePage("#pg_gallery");
 		}, 500)
-		
+
 		event.preventDefault();
 		return false;
 	}

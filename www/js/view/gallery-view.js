@@ -227,6 +227,7 @@ GalleryPage.prototype.init = function() {
 										function(i, item) {
 											if ((item.x_instructionline_id) == (_self.app.appCache.session.x_instructionline_id)) {
 												_self.skipEditImg = item.skipEdit;
+												_self.skipWatermarkImg = item.skipWatermark;
 											}
 										});
 						
@@ -723,45 +724,55 @@ GalleryPage.prototype.getGalleryImage = function() {
 
 GalleryPage.prototype.onPhotoDataSuccess = function(imageURI) {
 	var _self = this;
-	if(_self.skipEditImg){
+	if (_self.skipEditImg && _self.skipWatermarkImg) {
 		_self.app.showDialog("Loading");
-	}
-	if (_self.app.appCache.settingInfo.img_editor
-			&& _self.app.appCache.settingInfo.img_editor != 'Vision') {
-		_self.app.aviaryEdit.setup({
-			'sourceInfo' : {},
-			imageURI : imageURI,
-			watermark : (_self.el_waterMark.val()),
-			skipImgEdit : _self.skipEditImg
-		});
-		_self.app.aviaryEdit.edit(function(param, data) {
-			_self.onEditFinish(param, data);
-		});
-	} else {
+		var info = {};
+
 		_self.app.appFS.getFileByURL({
 			fileURI : imageURI
 		}, function(param) {
-			_self.app.imageEditor = new ImageEditorPage(_self.app);
-			_self.app.imageEditor.init();
-			_self.app.imageEditor.setup({
-				img64 : param.data,
+			_self.onEditFinish(info, param.data);
+		});
+	} else {
+
+		if (_self.skipEditImg) {
+			_self.app.showDialog("Loading");
+		}
+
+		if (_self.app.appCache.settingInfo.img_editor
+				&& _self.app.appCache.settingInfo.img_editor != 'Vision') {
+			_self.app.aviaryEdit.setup({
 				'sourceInfo' : {},
+				imageURI : imageURI,
 				watermark : (_self.el_waterMark.val()),
 				skipImgEdit : _self.skipEditImg
-			}, "Y");
-			
-			if(_self.skipEditImg){
-				_self.app.imageEditor.onWatermarkOnly();
-			}
-			else{
-				setTimeout(function() {
-					$.mobile.changePage("#pg_img_editor");
-				}, 10);
-			}
-			
-		});
-	}
+			});
+			_self.app.aviaryEdit.edit(function(param, data) {
+				_self.onEditFinish(param, data);
+			});
+		} else {
+			_self.app.appFS.getFileByURL({
+				fileURI : imageURI
+			}, function(param) {
+				_self.app.imageEditor = new ImageEditorPage(_self.app);
+				_self.app.imageEditor.init();
+				_self.app.imageEditor.setup({
+					img64 : param.data,
+					'sourceInfo' : {},
+					watermark : (_self.el_waterMark.val()),
+					skipImgEdit : _self.skipEditImg
+				}, "Y");
 
+				if (_self.skipEditImg) {
+					_self.app.imageEditor.onWatermarkOnly();
+				} else {
+					setTimeout(function() {
+						$.mobile.changePage("#pg_img_editor");
+					}, 10);
+				}
+			});
+		}
+	}
 }
 
 GalleryPage.prototype.onFail = function(message) {
