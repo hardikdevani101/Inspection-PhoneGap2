@@ -56,6 +56,7 @@
 <script src="js/view/image-editor-view.js"></script>
 <script src="js/view/preference_view.js"></script>
 <script src="js/view/server-setting.js"></script>
+<script src="js/view/menu-view.js"></script>
 
 <script src="js/app.js"></script>
 <script src="js/sync/uploader.js"></script>
@@ -139,11 +140,11 @@ End of Home page
 		<ul data-role="listview" data-theme="c" data-inset="false">
 			<li class="ui-field-contain" data-shadow="false"
 				data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
-				data-iconpos="right" data-theme="c"><label for="select-server">Version:3.0.12</label></li>
+				data-iconpos="right" data-theme="c"><label for="select-server">Version:3.0.13</label></li>
 			<li class="ui-field-contain" data-shadow="false"
 				data-iconshadow="false" data-wrapperels="div" data-icon="arrow-r"
 				data-iconpos="right" data-theme="c"><label for="select-server">Release
-					Date: 19 September, 2015</label></li>
+					Date: 25 September, 2015</label></li>
 		</ul>
 	</div>
 
@@ -319,6 +320,45 @@ End of Home page
 			</div>
 		</form>
 	</div> -->
+	
+	<!------------------------------------------------------------- 
+	Menu page 
+-------------------------------------------------------------->
+
+	<div data-role="page" id="pg_menu" data-theme="c">
+		<div data-role="header" data-fullscreen="false" data-position="fixed"
+			data-theme="c">
+			<h1 data-role="heading">Menu</h1>
+			<div data-role="controlgroup" data-type="horizontal"
+				class="ui-mini ui-btn-right">
+				<button id="btn_user" href="#" data-icon="user" data-corners="false"
+					data-shadow="false" data-iconshadow="false" data-wrapperels="span"
+					title="User" data-transition="flip"></button>
+				<button id="btn_logout" data-icon="power" data-corners="false"
+					data-iconpos="notext" data-shadow="false" data-iconshadow="false"
+					data-wrapperels="span" title="Logout">SignOut</button>
+			</div>
+		</div>
+		<!-- ------------ Second page main content --------- -->
+		<div data-role="main" class="ui-content" data-theme="b">
+			<ul data-role="listview" data-inset="false" data-autodividers="false"
+				id="_list_lines">
+			</ul>
+		</div>
+
+		<div data-role="footer" data-fullscreen="false" data-position="fixed"
+			data-theme="a">
+			<div data-role="navbar" data-iconpos="left">
+				<ul>
+					<li><a href="#pg_home" data-icon="home" data-shadow="false"
+						data-wrapperels="span" data-theme="a" title="Back">Home</a></li>
+					<li><a href="#" id="btn_refresh_mrlines" data-icon="refresh"
+						data-shadow="false" data-wrapperels="span" data-theme="a"
+						title="Refresh">Refresh</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
 
 	<!------------------------------------------------------------- 
 	MR line page 
@@ -341,7 +381,7 @@ End of Home page
 		<!-------------- Second page main content ----------->
 		<div data-role="main" class="ui-content" data-theme="b">
 			<ul data-role="listview" data-filter="true" data-inset="false"
-				data-filter-placeholder="Search MRLines" data-autodividers="false"
+				data-filter-placeholder="Search Lines" data-autodividers="false"
 				id="_list_mrlines">
 
 			</ul>
@@ -351,8 +391,8 @@ End of Home page
 			data-theme="a">
 			<div data-role="navbar" data-iconpos="left">
 				<ul>
-					<li><a href="#pg_home" data-icon="home" data-shadow="false"
-						data-wrapperels="span" data-theme="a" title="Back">Home</a></li>
+					<li><a href="#pg_menu" data-icon="arrow-l" data-shadow="false"
+						data-wrapperels="span" data-theme="a" title="Back">Menu</a></li>
 					<li><a href="#" id="btn_refresh_mrlines" data-icon="refresh"
 						data-shadow="false" data-wrapperels="span" data-theme="a"
 						title="Refresh">Refresh</a></li>

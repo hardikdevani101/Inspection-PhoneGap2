@@ -98,11 +98,14 @@ FS.prototype.getFile = function(path, success) {
 FS.prototype.createVISFile = function(param, isEdited) {
 	var _self = this;
 	var prefix = "PS";
-	if (_self.app.appCache.prefixCache[param.mrLineID]) {
-		prefix = _self.app.appCache.prefixCache[param.mrLineID];
+	var sel_inoutline_id = _self.app.appCache.session.m_inoutline;
+	var uuID = sel_inoutline_id.m_inoutline_id + ""
+			+ sel_inoutline_id.isPickTicket;
+	if (_self.app.appCache.prefixCache[uuID]) {
+		prefix = _self.app.appCache.prefixCache[uuID];
 	}
-	var arrINsp = _self.app.appCache.inspLines[_self.app.appCache.session.m_inoutline_id];
-	var insLabel="";
+	var arrINsp = _self.app.appCache.inspLines[uuID];
+	var insLabel = "";
 
 	$
 			.each(
@@ -114,7 +117,7 @@ FS.prototype.createVISFile = function(param, isEdited) {
 					});
 	insLabel = insLabel.replace(/\s+/g, '');
 	prefix += "_" + insLabel;
-	
+
 	var date = new Date;
 	var milSec = Math.floor(Math.random() * date.getMilliseconds());
 	var sec = date.getSeconds();
@@ -125,7 +128,7 @@ FS.prototype.createVISFile = function(param, isEdited) {
 	var dd = date.getDate();
 	var fileName = prefix + "_" + mm + dd + yy + "_" + hh + mi + sec + milSec
 			+ "." + param.fileExt;
-	console.log("File Name ===> " +  fileName);
+	console.log("File Name ===> " + fileName);
 	_self.vis_dir
 			.getFile(
 					fileName,

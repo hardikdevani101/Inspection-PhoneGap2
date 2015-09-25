@@ -23,7 +23,9 @@ FileExplorerPage.prototype.init = function() {
 	_self.fillDataProviders();
 	var contextPage = $(_self.context);
 	contextPage.on("pagebeforeshow", function() {
-		var arrINsp = _self.app.appCache.inspLines[_self.app.appCache.session.m_inoutline_id];
+		var sel_inoutline_id = _self.app.appCache.session.m_inoutline;	
+		var uuID = sel_inoutline_id.m_inoutline_id+ "" +sel_inoutline_id.isPickTicket;
+		var arrINsp = _self.app.appCache.inspLines[uuID];
 		$
 				.each(
 						arrINsp,
@@ -264,7 +266,6 @@ FileExplorerPage.prototype.editAll = function() {
 			$.mobile.changePage("#pg_gallery");
 		}, 500)
 
-		event.preventDefault();
 		return false;
 	}
 }

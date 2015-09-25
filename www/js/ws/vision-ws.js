@@ -43,7 +43,6 @@ VisionApi.prototype.resetADLoginRequest = function(params, success, error) {
 
 VisionApi.prototype.login = function(success, error) {
 	var _self = this;
-	console.log(">>>>>>>>>>>>>>>>>" + _self.completeUrl);
 	// _self.app.appCache.settingInfo['username'] = params.username;
 	// _self.app.appCache.settingInfo['password'] = params.password;
 	this.resetADLoginRequest();
@@ -173,7 +172,7 @@ VisionApi.prototype.getMRLines = function(params, success, error) {
 								.getElementsByTagName("DataRow");
 						if (fullNodeList.length > 0) {
 							for (var i = 0; i < fullNodeList.length; i++) {
-								var dlab, dval, inOut, desc;
+								var dlab, dval, inOut, desc,isPickTicket;
 								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'LABEL') {
 										dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent;
@@ -183,6 +182,8 @@ VisionApi.prototype.getMRLines = function(params, success, error) {
 										inOut = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'Description') {
 										desc = fullNodeList[i].childNodes[j].childNodes[0].textContent;
+									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'IS_PICK_TICKET') {
+										isPickTicket = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									}
 								}
 								var mrLine = {};
@@ -190,6 +191,7 @@ VisionApi.prototype.getMRLines = function(params, success, error) {
 								mrLine["m_inoutline_id"] = dval;
 								mrLine["m_inout_id"] = inOut;
 								mrLine["desc"] = desc;
+								mrLine["isPickTicket"] = isPickTicket;
 								jsonResponse.push(mrLine);
 							}
 						}
@@ -217,7 +219,7 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 			+ '<_0:DataRow>'
 			+ '<_0:field column="M_InOutLine_ID" >'
 			+ '<_0:val>'
-			+ params.m_inoutline_id
+			+ params.m_inoutline_id.m_inoutline_id
 			+ '</_0:val>'
 			+ '</_0:field>'
 			+ '</_0:DataRow>'
@@ -250,27 +252,25 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 			.then(
 					function(response) {
 						var jsonResponse = [];
+						var isPickTicket = 'N';
 						var xmlResponse = response;
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
-						function mrLine(element, index, array) {
-							return (element.m_inoutline_id == params.m_inoutline_id);
-						}
-						var mr_lines = _self.app.appCache.mrLines
-								.filter(mrLine);
-						if (mr_lines && mr_lines.length > 0) {
+
+						if (params.m_inoutline_id) {
 							var resultline = {};
-							resultline['x_instructionline_id'] = mr_lines[0].m_inout_id;
+							resultline['x_instructionline_id'] = params.m_inoutline_id.m_inout_id;
 							resultline['isMR'] = "Y";
 							resultline['name'] = "Vendor Paper work";
 							resultline['skipEdit'] = true;
 							resultline['skipWatermark'] = true;
 							jsonResponse.push(resultline);
+							isPickTicket = params.m_inoutline_id.isPickTicket;
 						}
 
 						if (fullNodeList.length > 0) {
 							for (var i = 0; i < fullNodeList.length; i++) {
-								var dlab, dval;
+								var dlab, dval, dpick;
 								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {
@@ -296,6 +296,7 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 						}
 						success({
 							'insplines' : jsonResponse,
+							'isPickTicket' : isPickTicket,
 							'total' : jsonResponse.length
 						});
 					}).fail(function(err) {

@@ -26,12 +26,15 @@ AviaryEditor.prototype.setup = function(options) {
 AviaryEditor.prototype.edit = function(callBack) {
 	var _self = this;
 	if (_self.imageURI.startsWith("ftp")) {
+		var sel_inoutline_id = _self.app.appCache.session.m_inoutline;
+		var uuID = sel_inoutline_id.m_inoutline_id + ""
+				+ sel_inoutline_id.isPickTicket;
 		var prefix = "PS";
-		if (_self.app.appCache.prefixCache[_self.app.appCache.session.m_inoutline_id]) {
-			prefix = _self.app.appCache.prefixCache[_self.app.appCache.session.m_inoutline_id];
+		if (_self.app.appCache.prefixCache[uuID]) {
+			prefix = _self.app.appCache.prefixCache[uuID];
 		}
 
-		var arrINsp = _self.app.appCache.inspLines[_self.app.appCache.session.m_inoutline_id];
+		var arrINsp = _self.app.appCache.inspLines[uuID];
 		var insLabel = "";
 		$
 				.each(

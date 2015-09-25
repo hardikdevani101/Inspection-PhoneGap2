@@ -236,7 +236,7 @@ SettingsPage.prototype.onLogin = function() {
 								});
 
 								$(':mobile-pagecontainer').pagecontainer(
-										'change', '#pg_inspection', {
+										'change', '#pg_menu', {
 											reload : false
 										});
 								_self.app.reloadServerDetail();
