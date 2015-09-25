@@ -218,18 +218,6 @@ App.prototype.register = function() {
 
 						_self.registerErrorPopup('pg_settings');
 						_self.isLogin = false;
-						// _self.settingnview = new SettingsPage(_self);
-						// _self.settingnview.init();
-						// _self.appCache.addPage('pg_settings',
-						// _self.settingnview);
-						// var pageHeight = $('#pg_home').height();
-						// if ((pageHeight / 2) + 225 > pageHeight) {
-						// $('#pg_home .ui-content').css('margin-top',
-						// ((pageHeight - 225) / 2));
-						// } else {
-						// $('#pg_home .ui-content').css('margin-top',
-						// (pageHeight / 2));
-						// }
 						$("#btn_start")
 								.on(
 										'tap',
@@ -246,7 +234,7 @@ App.prototype.register = function() {
 													$(':mobile-pagecontainer')
 															.pagecontainer(
 																	'change',
-																	'#pg_inspection',
+																	'#pg_menu',
 																	{
 																		reload : false
 																	});
@@ -257,12 +245,12 @@ App.prototype.register = function() {
 					});
 
 	$(document).on("pagecreate", "#server-setting", function(event) {
-		
+
 		_self.settingnview = new ServerSettingPage(_self);
 		_self.settingnview.init();
 		_self.appCache.addPage('server-setting', _self.settingnview);
 	});
-	
+
 	$(document).on("pagecreate", "#pg_settings", function(event) {
 		_self.settingnview = new SettingsPage(_self);
 		_self.settingnview.init();
@@ -296,7 +284,7 @@ App.prototype.register = function() {
 		});
 		_self.registerErrorPopup('pg_inspection');
 		_self.registerPreferencePopup('pg_inspection');
-		
+
 		var inspPreference = new Preference(_self);
 		inspPreference.init('pg_inspection');
 		_self.inspLinePage = new InspLinesPage(_self);
@@ -313,6 +301,25 @@ App.prototype.register = function() {
 		// }, function() {
 		// console.log("Error");
 		// });
+	});
+
+	$(document).on("pagecreate", "#pg_menu", function(event) {
+		$("#pg_menu [data-role=header]").toolbar({
+			transition : "fade",
+			tapToggle : false
+		});
+		$("#pg_menu [data-role=footer]").toolbar({
+			transition : "fade",
+			tapToggle : false
+		});
+		_self.registerErrorPopup('pg_menu');
+		_self.registerPreferencePopup('pg_menu');
+
+		var inspPreference = new Preference(_self);
+		inspPreference.init('pg_menu');
+		_self.menuPage = new MenuPage(_self);
+		_self.menuPage.init();
+		_self.appCache.addPage('pg_menu', _self.menuPage);
 	});
 
 	$(document).on("pagecreate", "#pg_aboutus", function(event) {
@@ -335,7 +342,7 @@ App.prototype.register = function() {
 		var inspPreference = new Preference(_self);
 		inspPreference.init('pg_inspection_detail');
 		_self.inspLinePage.loadInspLines({
-			m_inoutline_id : _self.appCache.session.m_inoutline_id
+			'selected_mrline' : _self.appCache.session.m_inoutline_id
 		});
 	});
 
@@ -413,7 +420,7 @@ App.prototype.reloadServerDetail = function() {
 		}
 		_self.appDB.createFTPEntry();
 	}, function(msg) {
-		_self.showError("pg_inspection", "Servers failed : " + msg);
+		_self.showError("pg_menu", "Servers failed : " + msg);
 	});
 }
 
@@ -463,8 +470,10 @@ App.prototype.onBackButton = function() {
 		}
 		navigator.notification.confirm("Are you sure you want to EXIT ?",
 				checkButtonSelection, 'EXIT APP:', [ 'Cancel', 'OK' ]);
-	} else if (_self.appCache.currentPage == '#pg_inspection') {
+	} else if (_self.appCache.currentPage == '#pg_menu') {
 		$.mobile.changePage("#pg_home");
+	} else if (_self.appCache.currentPage == '#pg_inspection') {
+		$.mobile.changePage("#pg_menu");
 	} else if (_self.appCache.currentPage == '#pg_inspection_detail') {
 		$.mobile.changePage("#pg_inspection");
 	} else if (_self.appCache.currentPage == '#pop_process_log') {

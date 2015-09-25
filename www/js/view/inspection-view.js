@@ -146,7 +146,7 @@ InspLinesPage.prototype.init = function() {
 		_self.app.appCache.currentPage = _self.contextInspDetail;
 		setTimeout(function() {
 			_self.loadInspLines({
-				'selected_mrline' : _self.app.appCache.session.m_inoutline_id
+				'selected_mrline' : _self.app.appCache.session.m_inoutline
 			});
 		}, 10);
 		event.preventDefault();
@@ -275,10 +275,12 @@ InspLinesPage.prototype.renderMRLines = function() {
 	var _self = this;
 	var items = '';
 	$.each(_self.app.appCache.mrLines, function() {
-		var line = '<li data-mini="true"><a  data-mini="true" id="mrline_'
+		if(_self.app.appCache.session.isPick == this.isPickTicket){
+			var line = '<li data-mini="true"><a  data-mini="true" id="mrline_'
 				+ this.m_inoutline_id + '" data-id="' + this.m_inoutline_id
-				+ '">' + this.label + ' / ' + this.desc + '</a></li>';
-		items = items + line;
+				+ '" data-isPick="' + this.isPickTicket + '">' + this.label + ' / ' + this.desc + '</a></li>';
+			items = items + line;
+		}
 	});
 
 	var el_mrlinesList = $('#_list_mrlines', _self.context);
@@ -287,26 +289,41 @@ InspLinesPage.prototype.renderMRLines = function() {
 	el_mrlinesList.listview("refresh");
 	var el_mrLinelinks = $('#_list_mrlines li a', _self.context);
 	el_mrLinelinks.off('click');
-	el_mrLinelinks.on('click', function(event) {
-		_self.app.appCache.session.m_inoutline_id = $(this).data("id");
-		$.mobile.changePage("#pg_inspection_detail");
-		event.preventDefault();
-		return false;
-	});
+	el_mrLinelinks
+			.on(
+					'click',
+					function(event) {
+
+						var cId = $(this).data("id");
+						var cIsPick = $(this).attr("data-isPick");
+
+						_self.app.appCache.session.m_inoutline = $.grep(
+								_self.app.appCache.mrLines, function(item,
+										index) {
+									return item.isPickTicket == cIsPick
+											&& item.m_inoutline_id == cId;
+								});
+
+						if (_self.app.appCache.session.m_inoutline.length > 0) {
+							_self.app.appCache.session.m_inoutline = _self.app.appCache.session.m_inoutline[0];
+						}
+
+						$.mobile.changePage("#pg_inspection_detail");
+						event.preventDefault();
+						return false;
+					});
 
 	$.mobile.loading('hide');
 }
 
 InspLinesPage.prototype.loadMRLines = function() {
 	var _self = this;
-	// _self.app.showDialog('Loading MR Lines');
+
 	_self.app.showDialog("Loading");
 	if (_self.app.appCache.mrLines.length > 0) {
 		_self.renderMRLines();
 	} else {
 		var success = function(result) {
-			var items = '';
-			_self.mrLines = result.mrlines;
 			_self.insp_lines = [];
 			_self.app.appCache.mrLines = result.mrlines;
 			_self.renderMRLines();
@@ -324,27 +341,23 @@ InspLinesPage.prototype.loadMRLines = function() {
 
 InspLinesPage.prototype.renderInspLines = function() {
 	var _self = this;
-	var sel_inoutline_id = _self.app.appCache.session.m_inoutline_id;
 	var items = '';
+	var sel_inoutline_id = _self.app.appCache.session.m_inoutline;	
+	var uuID = sel_inoutline_id.m_inoutline_id+ "" +sel_inoutline_id.isPickTicket;
 
-	var mr_lines = _self.app.appCache.mrLines.filter(function(element, index,
-			array) {
-		return (element.m_inoutline_id == sel_inoutline_id);
-	});
-
-	if (!_self.app.appCache.prefixCache[sel_inoutline_id]) {
-		_self.app.appCache.prefixCache[sel_inoutline_id] = mr_lines[0].desc;
+	if (!_self.app.appCache.prefixCache[uuID]) {
+		_self.app.appCache.prefixCache[uuID] = sel_inoutline_id.desc;
 	}
 
-	$('#inspMRDetail', _self.contextInspDetail).html(mr_lines[0].label);
+	$('#inspMRDetail', _self.contextInspDetail).html(sel_inoutline_id.label);
 
 	var el_prefixInspLine = $('#prefixInpectLine', _self.contextInspDetail);
-	el_prefixInspLine.attr("data-id", sel_inoutline_id);
-	el_prefixInspLine.html(_self.app.appCache.prefixCache[sel_inoutline_id]);
+	el_prefixInspLine.attr("data-id", uuID);
+	el_prefixInspLine.html(_self.app.appCache.prefixCache[uuID]);
 
-	if (!(typeof _self.app.appCache.inspLines[sel_inoutline_id] === 'undefined')
-			&& _self.app.appCache.inspLines[sel_inoutline_id].length > 0) {
-		$.each(_self.app.appCache.inspLines[sel_inoutline_id], function() {
+	if (!(typeof _self.app.appCache.inspLines[uuID] === 'undefined')
+			&& _self.app.appCache.inspLines[uuID].length > 0) {
+		$.each(_self.app.appCache.inspLines[uuID], function() {
 			var line = '<li><a data-isMR="' + this.isMR + '" id="inspline_'
 					+ this.x_instructionline_id + '" data-id="'
 					+ this.x_instructionline_id + '">' + this.name
@@ -374,12 +387,13 @@ InspLinesPage.prototype.renderInspLines = function() {
 
 InspLinesPage.prototype.renderCounts = function() {
 	var _self = this;
-	var mrLineID = _self.app.appCache.session.m_inoutline_id;
+	var mrLineID = _self.app.appCache.session.m_inoutline;
+	var uuID = mrLineID.m_inoutline_id+ "" +mrLineID.isPickTicket;
 	_self.inspCount = {};
 
-	if (_self.app.appCache.inspLines[mrLineID]) {
+	if (_self.app.appCache.inspLines[uuID]) {
 		var el_inspLineList = $('#_list_insp', _self.contextInspDetail);
-		$.each(_self.app.appCache.inspLines[mrLineID], function() {
+		$.each(_self.app.appCache.inspLines[uuID], function() {
 			_self.app.appDB.getTotalInspEntries(this, function(param, results) {
 				var elm = $('a#inspline_' + param.x_instructionline_id
 						+ ' span', "#_list_insp");
@@ -465,10 +479,11 @@ InspLinesPage.prototype.onFinishedCalled = function() {
 					item['type'] = 1;
 				}
 				item['files'] = results.rows.item(i).name;
+				item['isPickTicket'] = results.rows.item(i).isPickTicket;
 
 				var isUpdated = false;
 				$.each(attachmentList, function() {
-					if (this.id == item['id']) {
+					if (this.id == item['id'] && this.isPickTicket == item['isPickTicket']) {
 						this.files = this.files + "," + item['files'];
 						isUpdated = true;
 					}
@@ -491,9 +506,12 @@ InspLinesPage.prototype.onFinishedCalled = function() {
 						attachFail(msg);
 					});
 				} else {
+					var tabName = 'M_InOut';
+					if (this.isPickTicket == 'Y')
+						tabName = 'C_Order';
 					_self.app.visionApi.uploadImageByMInOut({
 						recid : this.id,
-						tabname : 'M_InOut',
+						tabname : tabName,
 						imgname : this.files
 					}, function(param) {
 						attachSucess(param);
@@ -535,19 +553,21 @@ InspLinesPage.prototype.onFinishedCalled = function() {
 
 InspLinesPage.prototype.loadInspLines = function(params) {
 	var _self = this;
+	
 	_self.rederInspLinesDetailsBreadCrumb();
 	_self.app.showDialog('Loading..');
-	var sel_inoutline_id = _self.app.appCache.session.m_inoutline_id;
+	var sel_inoutline_id = _self.app.appCache.session.m_inoutline;
 	if (!(typeof params === 'undefined')) {
 		sel_inoutline_id = params.selected_mrline;
 	}
+	var uuID = sel_inoutline_id.m_inoutline_id+ "" +sel_inoutline_id.isPickTicket;
 
-	if (!(typeof _self.app.appCache.inspLines[sel_inoutline_id] === 'undefined')) {
+	if (!(typeof _self.app.appCache.inspLines[uuID] === 'undefined')) {
 		_self.renderInspLines();
 	} else {
 		var success = function(result) {
-			var items = '';
-			_self.app.appCache.inspLines[sel_inoutline_id] = result.insplines;
+			
+			_self.app.appCache.inspLines[uuID] = result.insplines;
 			_self.renderInspLines();
 		}
 

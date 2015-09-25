@@ -15,7 +15,8 @@ GalleryPage.prototype.rederBreadCrumb = function() {
 
 GalleryPage.prototype.onEditFinish = function(sourceInfo, editedImgData) {
 	var _self = this;
-	sourceInfo['mrLineID'] = _self.app.appCache.session.m_inoutline_id;
+	sourceInfo['mrLineID'] = _self.app.appCache.session.m_inoutline.m_inoutline_id;
+	sourceInfo['isPickTicket'] = _self.app.appCache.session.m_inoutline.isPickTicket;
 	sourceInfo['inspID'] = _self.app.appCache.session.x_instructionline_id;
 	sourceInfo['isMR'] = _self.app.appCache.session.isMR;
 	sourceInfo['fileData'] = editedImgData;
@@ -60,7 +61,7 @@ GalleryPage.prototype.onDeleteFile = function(event) {
 	_self.app.galleryview.renderInspFiles();
 	var selected = _self.selectedFile;
 	var param = {};
-	param['mrLineID'] = _self.app.appCache.session.m_inoutline_id;
+	param['mrLineID'] = _self.app.appCache.session.m_inoutline.m_inoutline_id;
 	param['inspID'] = _self.app.appCache.session.x_instructionline_id;
 	param['isMR'] = _self.app.appCache.session.isMR;
 	param['fileFullPath'] = selected;
@@ -137,7 +138,8 @@ GalleryPage.prototype.onCreateNewEntry = function(file) {
 	var _self = this;
 
 	param = {};
-	param['mrLineID'] = _self.app.appCache.session.m_inoutline_id;
+	param['mrLineID'] = _self.app.appCache.session.m_inoutline.m_inoutline_id;
+	param['isPickTicket'] = _self.app.appCache.session.m_inoutline.isPickTicket;
 	param['inspID'] = _self.app.appCache.session.x_instructionline_id;
 	param['isMR'] = _self.app.appCache.session.isMR;
 	param['fileName'] = file.name;
@@ -220,7 +222,9 @@ GalleryPage.prototype.init = function() {
 					"pagebeforeshow",
 					_self.context,
 					function() {
-						var arrINsp = _self.app.appCache.inspLines[_self.app.appCache.session.m_inoutline_id];
+						var sel_inoutline_id = _self.app.appCache.session.m_inoutline;	
+						var uuID = sel_inoutline_id.m_inoutline_id+ "" +sel_inoutline_id.isPickTicket;
+						var arrINsp = _self.app.appCache.inspLines[uuID];
 						$
 								.each(
 										arrINsp,
@@ -239,11 +243,10 @@ GalleryPage.prototype.init = function() {
 						_self.line_id = _self.app.appCache.session.x_instructionline_id;
 						_self.isMR = _self.app.appCache.session.isMR;
 						_self.visGallery = new Tbl_VISGallery(_self.app);
-						var sel_inoutline_id = _self.app.appCache.session.m_inoutline_id;
 
 						// _self.app.appCache.inspLines[sel_inoutline_id]
-						for (var i = 0; i < _self.app.appCache.inspLines[sel_inoutline_id].length; i++) {
-							obj = _self.app.appCache.inspLines[sel_inoutline_id][i];
+						for (var i = 0; i < _self.app.appCache.inspLines[uuID].length; i++) {
+							obj = _self.app.appCache.inspLines[uuID][i];
 							if (obj.x_instructionline_id == _self.line_id) {
 								_self.el_lbl_inspDetail.html(obj.name);
 								break;
@@ -267,7 +270,7 @@ GalleryPage.prototype.init = function() {
 								"color", "white");
 
 						_self.el_prefix_inspLine
-								.html(_self.app.appCache.prefixCache[sel_inoutline_id]);
+								.html(_self.app.appCache.prefixCache[uuID]);
 
 						$.mobile.loading('hide');
 					});
@@ -323,8 +326,10 @@ GalleryPage.prototype.init = function() {
 						_self.el_prefix_inspLine.html(_self.el_prefix_insp
 								.val());
 						_self.el_prefix_popup.popup("close");
-						if (_self.app.appCache.session.m_inoutline_id)
-							_self.app.appCache.prefixCache[_self.app.appCache.session.m_inoutline_id] = _self.el_prefix_insp
+						var sel_inoutline_id = _self.app.appCache.session.m_inoutline;	
+						var uuID = sel_inoutline_id.m_inoutline_id+ "" +sel_inoutline_id.isPickTicket;
+						if (sel_inoutline_id)
+							_self.app.appCache.prefixCache[uuID] = _self.el_prefix_insp
 									.val();
 						event.preventDefault();
 						return false;
@@ -334,7 +339,8 @@ GalleryPage.prototype.init = function() {
 			.on(
 					'click',
 					function(event) {
-						var sel_inoutline_id = _self.app.appCache.session.m_inoutline_id;
+						var sel_inoutline_id = _self.app.appCache.session.m_inoutline;
+						var uuID = sel_inoutline_id.m_inoutline_id+ "" +sel_inoutline_id.isPickTicket;
 						var mr_lines = _self.app.appCache.mrLines
 								.filter(function(element, index, array) {
 									return (element.m_inoutline_id == sel_inoutline_id);
@@ -342,8 +348,8 @@ GalleryPage.prototype.init = function() {
 						if (mr_lines.length > 0) {
 							_self.el_prefix_inspLine.html(mr_lines[0].desc);
 							_self.el_prefix_popup.popup("close");
-							if (_self.app.appCache.session.m_inoutline_id)
-								_self.app.appCache.prefixCache[_self.app.appCache.session.m_inoutline_id] = mr_lines[0].desc;
+							if (sel_inoutline_id)
+								_self.app.appCache.prefixCache[uuID] = mr_lines[0].desc;
 						}
 						event.preventDefault();
 						return false;
@@ -500,14 +506,14 @@ GalleryPage.prototype.loadInspFile = function() {
 		};
 		if (_self.isMR == "Y") {
 			_self.visGallery.getFilesByMRInfo({
-				M_InOutLine_ID : _self.app.appCache.session.m_inoutline_id,
+				M_InOutLine_ID : _self.app.appCache.session.m_inoutline.m_inoutline_id,
 				X_INSTRUCTIONLINE_ID : _self.line_id
 			}, success, function(msg) {
 				_self.app.showError("pg_gallery", "Reading Data Failed.");
 			});
 		} else {
 			_self.visGallery.getFilesByInspInfo({
-				M_InOutLine_ID : _self.app.appCache.session.m_inoutline_id,
+				M_InOutLine_ID : _self.app.appCache.session.m_inoutline.m_inoutline_id,
 				X_INSTRUCTIONLINE_ID : _self.line_id
 			}, success, function(msg) {
 				_self.app.showError("pg_gallery", "Reading Data Failed.");
@@ -727,7 +733,6 @@ GalleryPage.prototype.onPhotoDataSuccess = function(imageURI) {
 	if (_self.skipEditImg && _self.skipWatermarkImg) {
 		_self.app.showDialog("Loading");
 		var info = {};
-
 		_self.app.appFS.getFileByURL({
 			fileURI : imageURI
 		}, function(param) {

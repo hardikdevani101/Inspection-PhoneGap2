@@ -2,7 +2,7 @@ var DB = function(app) {
 	console.log("DB constructor");
 	this.app = app;
 	this.currentDBVersion = "1.1"
-	this.dbstore = window.openDatabase("vision_db5", "", "vision_db5",
+	this.dbstore = window.openDatabase("vision_db6", "", "vision_db6",
 			2 * 1024 * 1024);
 }
 
@@ -33,7 +33,7 @@ DB.prototype.init = function(success, error) {
 						tx
 								.executeSql('CREATE TABLE IF NOT EXISTS '
 										+ ' vis_gallery '
-										+ ' (mr_line,insp_line DEFAULT "0",isMR DEFAULT "N",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F", dataSource DEFAULT "CMR",imgEdited DEFAULT "F")');
+										+ ' (mr_line,insp_line DEFAULT "0",isMR DEFAULT "N",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F", dataSource DEFAULT "CMR",imgEdited DEFAULT "F",isPickTicket DEFAULT "F")');
 						tx
 								.executeSql('CREATE TABLE IF NOT EXISTS '
 										+ ' vis_server '
@@ -230,19 +230,14 @@ DB.prototype.getUploadedInspEntries = function(param, callBack) {
 
 DB.prototype.doGalleryEntry = function(fileInfo) {
 	var _self = this;
-	var param = [];
 	var sqlQuery = " select * from vis_gallery ";
 	var whereSQL = ' where file="' + fileInfo.oldURI + '"';
-	;
-	param.push(fileInfo.oldURI);
 	if (fileInfo.isMR == "N") {
 		whereSQL += ' and isMR="N" and insp_line="' + fileInfo.inspID + '"';
-		param.push(fileInfo.inspID);
 	} else {
 		whereSQL += ' and isMR="Y" and insp_line="' + fileInfo.inspID + '"';
-		param.push(fileInfo.inspID);
 	}
-
+	whereSQL += ' and isPickTicket="' + fileInfo.isPickTicket + '"';
 	_self.dbstore.transaction(function(tx) {
 		tx.executeSql(sqlQuery + whereSQL, [], function(tx, results) {
 			if (results.rows.length > 0) {
@@ -251,11 +246,11 @@ DB.prototype.doGalleryEntry = function(fileInfo) {
 				tx.executeSql(sqlQuery + whereSQL, []);
 			} else {
 				sqlQuery = 'INSERT INTO vis_gallery '
-						+ ' (mr_line,isMR,insp_line,name,file,imgEdited)'
+						+ ' (mr_line,isMR,insp_line,name,file,imgEdited,isPickTicket)'
 						+ ' VALUES ("' + fileInfo.mrLineID + '","'
 						+ fileInfo.isMR + '","' + fileInfo.inspID + '","'
 						+ fileInfo.fileName + '","' + fileInfo.filePath + '","'
-						+ fileInfo.imgEdited + '")';
+						+ fileInfo.imgEdited + '","' + fileInfo.isPickTicket + '")';
 				tx.executeSql(sqlQuery);
 			}
 		}, _self.errorCB);
@@ -370,7 +365,7 @@ DB.prototype.getNotEditableFiles = function(sucess) {
 	var _self = this;
 	_self.dbstore.transaction(function(tx) {
 		var sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
-				+ _self.app.appCache.session.m_inoutline_id
+				+ _self.app.appCache.session.m_inoutline.m_inoutline_id
 				+ '" and imgEdited="F"';
 		tx.executeSql(sqlQuery, [], sucess, _self.errorCB);
 	}, _self.errorCB);
@@ -380,7 +375,7 @@ DB.prototype.getUploadFailedEntry = function(sucess) {
 	var _self = this;
 	_self.dbstore.transaction(function(tx) {
 		var sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
-				+ _self.app.appCache.session.m_inoutline_id
+				+ _self.app.appCache.session.m_inoutline.m_inoutline_id
 				+ '" and imgUpload="F"';
 		tx.executeSql(sqlQuery, [], sucess, _self.errorCB);
 	}, _self.errorCB);
@@ -391,7 +386,7 @@ DB.prototype.getAttachPendingEntry = function(sucess) {
 	_self.dbstore.transaction(function(tx) {
 		var sqlQuery;
 		sqlQuery = 'SELECT * FROM vis_gallery WHERE mr_line="'
-				+ _self.app.appCache.session.m_inoutline_id
+				+ _self.app.appCache.session.m_inoutline.m_inoutline_id
 				+ '" and imgUpload="T" and imgAttach="F"';
 		tx.executeSql(sqlQuery, [], sucess, _self.errorCB);
 	}, _self.errorCB);
