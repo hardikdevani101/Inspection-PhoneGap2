@@ -428,7 +428,7 @@ InspLinesPage.prototype.displayAttachAlert = function() {
 		}
 		el_inspProcLog.html(_self.app.visionApi.processLog.attachImage.length);
 		_self.app.showError("pg_inspection_detail",
-				"Error: Some files not Atteched", function() {
+				"Error: Some files not Attached", function() {
 					$.mobile.changePage("#pop_process_log");
 				});
 		// $("#pop_process_log", _self.contextInspDetail).popup("open");
