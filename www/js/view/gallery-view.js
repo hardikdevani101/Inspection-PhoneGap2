@@ -343,7 +343,7 @@ GalleryPage.prototype.init = function() {
 						var uuID = sel_inoutline_id.m_inoutline_id+ "" +sel_inoutline_id.isPickTicket;
 						var mr_lines = _self.app.appCache.mrLines
 								.filter(function(element, index, array) {
-									return (element.m_inoutline_id == sel_inoutline_id);
+									return (element.m_inoutline_id == sel_inoutline_id.m_inoutline_id);
 								});
 						if (mr_lines.length > 0) {
 							_self.el_prefix_inspLine.html(mr_lines[0].desc);

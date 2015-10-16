@@ -285,7 +285,7 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 								resultline['name'] = dlab;
 								if (dlab.match(/X-Ray/gi) != null) {
 									resultline['skipEdit'] = true;
-									resultline['skipWatermark'] = false;
+									resultline['skipWatermark'] = true;
 								} else {
 									resultline['skipEdit'] = false;
 									resultline['skipWatermark'] = false;
