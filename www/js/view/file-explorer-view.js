@@ -641,7 +641,6 @@ FileExplorerPage.prototype.onDirTap = function(event) {
 			_self.renderDirPath();
 		}, 1)
 		_self.changeDir();
-		_self.app.hideDialog();
 	}, 1);
 };
 
@@ -663,7 +662,6 @@ FileExplorerPage.prototype.onBackDir = function() {
 				_self.renderDirPath();
 			}, 1)
 			_self.changeDir();
-			_self.app.hideDialog();
 		}, 1);
 	}
 }
@@ -723,7 +721,6 @@ FileExplorerPage.prototype.renderDirs = function(dirs) {
 	if (!_self.isGridView) {
 		imgClass = "ui-listview-mode";
 	}
-
 	$.each(dirs, function(index, value) {
 		var fileData = _self.app.dir64;
 		var storage = _self.isLocalStorage ? "LS" : "FTP";
@@ -734,7 +731,6 @@ FileExplorerPage.prototype.renderDirs = function(dirs) {
 				+ '" /><h2>' + value + '</h2></a></li>';
 		dirItems = dirItems + line;
 	});
-
 	return dirItems;
 }
 
