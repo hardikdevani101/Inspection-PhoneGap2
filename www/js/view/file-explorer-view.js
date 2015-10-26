@@ -132,23 +132,7 @@ FileExplorerPage.prototype.init = function() {
 
 	el_pnlSelFiles.on("panelbeforeopen", function(e, ui) {
 		_self.renderSelectedFiles(e, ui);
-		for (var i = 0; i < _self.selFiles.length; i++) {
-			var file = _self.selFiles[i];
-			var el_selfile = $('#ls_sel_files li[data-id="' + file.filePath
-					+ '"]', _self.context);
-			el_selfile.off('click');
-			el_selfile.on('click', function(event) {
-				var elm = $(event.delegateTarget, '#pnl_selected_files');
-				var elmFile = elm.data('id');
-				$('#pop_fileEplorer_actions', _self.context).popup("open", {
-					positionTo : '#ls_sel_files li[data-id="' + elmFile + '"]'
-				});
-
-				_self.onSelFileTap(event);
-				event.preventDefault();
-				return false;
-			});
-		}
+		_self.onSelectFileFromPanel();
 		el_pnlSelFiles.enhanceWithin();
 		e.preventDefault();
 		return false;
@@ -207,6 +191,29 @@ FileExplorerPage.prototype.init = function() {
 				event.preventDefault();
 				return false;
 			});
+}
+
+
+FileExplorerPage.prototype.onSelectFileFromPanel = function() {
+	var _self = this;
+	
+	for (var i = 0; i < _self.selFiles.length; i++) {
+		var file = _self.selFiles[i];
+		var el_selfile = $('#ls_sel_files li[data-id="' + file.filePath
+				+ '"]', _self.context);
+		el_selfile.off('click');
+		el_selfile.on('click', function(event) {
+			var elm = $(event.delegateTarget, '#pnl_selected_files');
+			var elmFile = elm.data('id');
+			$('#pop_fileEplorer_actions', _self.context).popup("open", {
+				positionTo : '#ls_sel_files li[data-id="' + elmFile + '"]'
+			});
+
+			_self.onSelFileTap(event);
+			event.preventDefault();
+			return false;
+		});
+	}
 }
 
 FileExplorerPage.prototype.editAll = function() {
@@ -488,12 +495,12 @@ FileExplorerPage.prototype.onDeleteFile = function(event) {
 			$('#ls_files li[data-id="' + _self.selectedFile + '"] a',
 					_self.context).removeClass("ui-icon-arrow-d");
 		}
-
-		$('#selected-files-count', _self.context).html(_self.selFiles.length);
 		_self.selFiles = jQuery.grep(_self.selFiles, function(item, index) {
 			return item.filePath != _self.selectedFile;
 		});
+		$('#selected-files-count', _self.context).html(_self.selFiles.length);
 		_self.renderSelectedFiles();
+		_self.onSelectFileFromPanel();
 	}, 1);
 }
 
@@ -898,7 +905,7 @@ FileExplorerPage.prototype.explodeDirectory = function(dirName, callback) {
 	// for (var i = 0; i < randomNum; i++) {
 	// tempFiles.push('file'
 	// + i
-	// + '.'
+	// + '.' 
 	// + extensionList[Math.floor(Math.random()
 	// * (extensionList.length))]);
 	// }
