@@ -23,6 +23,9 @@ FileExplorerPage.prototype.init = function() {
 	_self.fillDataProviders();
 	var contextPage = $(_self.context);
 	contextPage.on("pagebeforeshow", function() {
+		if (_self.isEditAll == true) {
+			return;
+		}
 		var sel_inoutline_id = _self.app.appCache.session.m_inoutline;	
 		var uuID = sel_inoutline_id.m_inoutline_id+ "" +sel_inoutline_id.isPickTicket;
 		var arrINsp = _self.app.appCache.inspLines[uuID];
@@ -37,9 +40,6 @@ FileExplorerPage.prototype.init = function() {
 						});
 		
 		_self.app.appCache.currentPage = _self.context;
-		if (_self.isEditAll) {
-			return;
-		}
 
 		_self.rederBreadCrumb();
 		$('#selected-files-count', _self.context).html(_self.selFiles.length);
@@ -524,11 +524,15 @@ FileExplorerPage.prototype.onEditFinish = function(param, data, isLocal) {
 		}
 	});
 	// }
-	setTimeout(function() {
-		if (_self.isEditAll) {
+
+	if (_self.skipEditImg && _self.skipWatermarkImg && _self.isEditAll == true) {
+		_self.editAll();
+	} else if (_self.isEditAll == true) {
+		setTimeout(function() {
 			_self.editAll();
-		}
-	}, 10);
+		}, 10);
+	}
+
 }
 
 FileExplorerPage.prototype.onEditFile = function(event) {
@@ -905,7 +909,7 @@ FileExplorerPage.prototype.explodeDirectory = function(dirName, callback) {
 	// for (var i = 0; i < randomNum; i++) {
 	// tempFiles.push('file'
 	// + i
-	// + '.' 
+	// + '.'
 	// + extensionList[Math.floor(Math.random()
 	// * (extensionList.length))]);
 	// }
@@ -918,6 +922,6 @@ FileExplorerPage.prototype.explodeDirectory = function(dirName, callback) {
 	// successCB([ {
 	// fileNames : tempFiles,
 	// directory : tempDir
-	// } ]);
+	//	 } ]);
 	// TODO - End
 }
