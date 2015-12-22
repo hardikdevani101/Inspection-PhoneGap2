@@ -676,8 +676,14 @@ VisionApi.prototype.onLoginVarify = function(params, success, error) {
 						try {
 							var summary = response
 									.getElementsByTagName("Summary");
-							var jsonObj = jQuery
-									.parseJSON(summary[0].textContent);
+							var jsonObj = [];
+							if (summary.length > 0) {
+								jsonObj = jQuery
+										.parseJSON(summary[0].textContent);
+							} else {
+								jsonObj.Error = response
+										.getElementsByTagName("Error")[0].textContent;
+							}
 							if (jsonObj.Error) {
 								error(jsonObj.Error);
 							} else {
@@ -757,7 +763,7 @@ VisionApi.prototype.onLoginVarify = function(params, success, error) {
 								success();
 							}
 						} catch (ex) {
-							error(summary[0].textContent);
+							error("Error on LoginVarify :" + ex);
 						}
 					}).fail(function(err) {
 				error(err.responseText);
