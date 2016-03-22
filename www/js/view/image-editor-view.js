@@ -7,8 +7,8 @@ var ImageEditorPage = function(app) {
 	this.sourceInfo = '';
 	this.contrast = '';
 	this.brightness = '';
-	this.isCropEnable = false;
-	this.isEditEnable = true;
+	this.isCropEnable = true;
+	this.isEditEnable = false;
 	this.curentImage = this.image64;
 	this.gcanvas = '';
 	this.editCtx = '';
@@ -50,8 +50,15 @@ ImageEditorPage.prototype.enableEditMode = function() {
 	_self.el_previewImgContainer.hide();
 	_self.el_editImgContainer.show();
 	_self.el_btnPreview.html("Preview");
+	_self.el_cropImgContainer.hide();
+	$("#edit-canvase").show();
+	_self.el_cropToolbar.hide();
+	_self.el_editToolbar.show();
+	_self.isCropEnable = false;
+	_self.isEditEnable = true;
+	_self.el_btnPreview.show();
 
-	setTimeout(function() {
+	// setTimeout(function() {
 		var el_editImg = $('#edit_img_src', _self.context);
 		el_editImg.css("z-index", 2000000);
 		el_editImg.veditor({
@@ -59,7 +66,9 @@ ImageEditorPage.prototype.enableEditMode = function() {
 			canvasWidth : _self.cropImageW,
 			canvasHeight : _self.cropImageH
 		});
-	}, 10);
+	// }, 10);
+
+	_self.el_btnPreview.attr('disabled', 'disabled');
 }
 
 ImageEditorPage.prototype.onPreview = function() {
@@ -196,43 +205,21 @@ ImageEditorPage.prototype.reset = function() {
 	_self.cValue = 0;
 	_self.bValue = 0;
 	$('#edit_img_src').veditor('reset');
-	_self.enableEditMode();
-	_self.isCropEnable = false;
-	_self.isEditEnable = true;
-	_self.el_cropToolbar.hide();
-	_self.el_editToolbar.show();
-
 	_self.corpperImage.cropper("destroy");
 	_self.corpperImage.cropper("reset");
+	_self.enableCropMode();
+	_self.isCropEnable = true;
+	_self.isEditEnable = false;
+	_self.el_cropToolbar.show();
+	_self.el_editToolbar.hide();
 }
 
 ImageEditorPage.prototype.viewToggle = function() {
 	var _self = this;
 	if (_self.isCropEnable) {
-		_self.el_cropImgContainer.hide();
-		$("#edit-canvase").show();
-		_self.el_cropToolbar.hide();
-		_self.el_editToolbar.show();
-		_self.isCropEnable = false;
-		_self.isEditEnable = true;
-		_self.el_btnPreview.show();
-		// _self.el_btnEdit.hide();
-		// _self.corpperImage.cropper("destroy");
 		_self.enableEditMode();
-		_self.el_btnPreview.attr('disabled', 'disabled');
 	} else {
-		_self.isCropEnable = true;
-		_self.isEditEnable = false;
-		_self.el_cropImgContainer.show();
-		$("#edit-canvase").hide();
-		_self.el_editToolbar.hide();
-		_self.el_cropToolbar.show();
 		_self.enableCropMode();
-		_self.corpperImage.cropper("setAspectRatio", 4 / 3);
-		// _self.el_btnPreview.hide();
-		// _self.el_btnEdit.hide();
-		_self.corpperImage.cropper("setDragMode", "crop");
-		_self.el_btnPreview.removeAttr('disabled');
 	}
 }
 
@@ -390,6 +377,11 @@ ImageEditorPage.prototype.init = function() {
 				_self.onEditFinish();
 			}, 500);
 		}
+		else{
+			setTimeout(function() {
+				_self.enableCropMode();
+			}, 500);
+		}
 		event.preventDefault();
 		return false;
 
@@ -440,22 +432,6 @@ ImageEditorPage.prototype.init = function() {
 		event.preventDefault();
 		return false;
 	});
-
-	// _self.el_btnEdit.off("click");
-	// _self.el_btnEdit.on("click", function(event) {
-	// _self.el_previewImgContainer.hide();
-	// $("#edit-canvase").show();
-	// _self.el_btnPreview.show();
-	// _self.el_btnEdit.hide();
-	// _self.el_cropToolbar.hide();
-	// _self.el_editToolbar.show();
-	// _self.isCropEnable = false;
-	// _self.isEditEnable = true;
-	// // _self.corpperImage.cropper("destroy");
-	// _self.enableEditMode();
-	// event.preventDefault();
-	// return false;
-	// });
 
 	_self.el_btnEditFinish.off("click");
 	_self.el_btnEditFinish.on("click", function(event) {
@@ -579,13 +555,26 @@ ImageEditorPage.prototype.init = function() {
 
 ImageEditorPage.prototype.enableCropMode = function() {
 	var _self = this;
+	_self.isCropEnable = true;
+	_self.isEditEnable = false;
+	_self.el_cropImgContainer.show();
+	$("#edit-canvase").hide();
+	_self.el_editToolbar.hide();
+	_self.el_cropToolbar.show();
 	_self.el_cropImgContainer.show();
 	_self.el_editImgContainer.hide();
+	_self.corpperImage.cropper("setAspectRatio", 4 / 3);
 	if (!_self.isCropperOn) {
 		_self.initCropMode();
 	}
 	_self.corpperImage.cropper('destroy');
 	_self.corpperImage.cropper('reset');
+	_self.corpperImage.cropper("setAspectRatio", 4 / 3);
+	// _self.el_btnPreview.hide();
+	// _self.el_btnEdit.hide();
+	_self.corpperImage.cropper("setDragMode", "crop");
+	_self.el_btnPreview.removeAttr('disabled');
+	_self.el_btnPreview.html("Edit");
 }
 
 ImageEditorPage.prototype.onCropSizeChange = function(event) {
