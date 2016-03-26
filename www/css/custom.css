@@ -550,6 +550,12 @@ body {
 		margin: 0.1em .1em !important;
 		float: left !important;
 	}
+	#edit-toolbar .ui-edit-tools .ui-btn {
+		font-size: 30px !important;
+		padding: 1em 1em !important;
+		margin: 0.1em .4em !important;
+		float: left !important;
+	}
 	#pop_process_log .ui-navbar {
 		margin-bottom: 30px;
 	}
@@ -847,7 +853,7 @@ body .ui-body-c, body .ui-overlay-c {
 }
 
 #edit-toolbar .ui-slider {
-	max-width: 90%
+	max-width: 85%
 }
 
 #edit-toolbar label {
