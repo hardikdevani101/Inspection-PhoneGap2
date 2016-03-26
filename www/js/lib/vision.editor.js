@@ -295,6 +295,11 @@
 
 			if (data) {
 				data.ctx.globalCompositeOperation = 'source-over';
+				if(data.canvas[0])
+				{
+					data.canvas[0].width = data.w;
+					data.canvas[0].height = data.h;
+				}
 				// data.ctx.drawImage( data.source, 0, 0 );
 				data.ctx.clearRect(0, 0, data.w, data.h);
 				data.ctx.drawImage(data.source, 0, 0, data.source.width,
@@ -309,7 +314,40 @@
 				data.ratio = 0;
 				data.complete = false;
 				data.touchDown = false;
+
+				data.ctx.strokeStyle = 'rgba(255,255,255,255)';
+				data.ctx.lineWidth = data.size;
+				data.ctx.lineCap = 'round';
 			}
+		},
+		rotate : function(degree , isChange) {
+			var $this = $(this), data = $this.data('veditor');
+			var canvas = data.canvas[0];
+			var currImageData = new Image();
+			currImageData.onload=function(){
+
+				h = canvas.height;
+		      	w = canvas.width;
+
+		      	canvas.width = h;
+		      	canvas.height = w;
+
+		      	data.ctx.clearRect(0,0,canvas.width,canvas.height);
+		      	data.ctx.save();
+			    data.ctx.translate(canvas.width/2,canvas.height/2);
+
+		      	data.ctx.rotate(degree*Math.PI/180);
+		      	data.ctx.drawImage(currImageData,-canvas.height/2,-canvas.width/2);
+		      	data.ctx.restore();
+		      	data.ctx.strokeStyle = 'rgba(255,255,255,255)';
+				data.ctx.lineWidth = data.size;
+				data.ctx.lineCap = 'round';
+
+		      	if (data.previewImgId != null) {
+					$('#' + data.previewImgId).attr('src', canvas.toDataURL());
+				}
+			}
+			currImageData.src = canvas.toDataURL();
 		},
 		setPreviewImageData : function() {
 			var $this = $(this), data = $this.data('veditor');

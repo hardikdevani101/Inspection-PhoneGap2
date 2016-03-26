@@ -57,6 +57,7 @@ ImageEditorPage.prototype.enableEditMode = function() {
 	_self.isCropEnable = false;
 	_self.isEditEnable = true;
 	_self.el_btnPreview.show();
+	_self.el_btnCrop.html("Crop");
 
 	// setTimeout(function() {
 		var el_editImg = $('#edit_img_src', _self.context);
@@ -131,15 +132,6 @@ ImageEditorPage.prototype.enablePreviewMode = function() {
 	_self.el_cropImgContainer.hide();
 	_self.el_editImgContainer.hide();
 	_self.el_previewImgContainer.show();
-	// setTimeout(function() {
-	// var el_editImg = $('#edit_img_src', _self.context);
-	// el_editImg.css("z-index", 2000000);
-	// el_editImg.veditor({
-	// previewImgId : "crop_img_src",
-	// canvasWidth : _self.cropImageW,
-	// canvasHeight : _self.cropImageH
-	// });
-	// }, 10);
 }
 
 ImageEditorPage.prototype.cropFinished = function() {
@@ -179,10 +171,17 @@ ImageEditorPage.prototype.loadEditableImage = function() {
 			_self.cropImageH = randerHeight;
 			_self.cropImageW = (_self.cropImageH / img.height) * img.width;
 		}
+		
+		
 		// _self.cropImageH = _self.cropImageH - 32;
 		// _self.cropImageW = _self.cropImageW - 32;
 
 		_self.enableEditMode();
+
+		if(_self.app.appCache.settingInfo.org_id == 1000003)
+		{
+			$('#edit_img_src').veditor('rotate',90);
+		}
 	}, 10);
 }
 
@@ -193,6 +192,7 @@ ImageEditorPage.prototype.loadCropableImage = function() {
 			[ '<img id="crop_img_src" src="' + _self.image64 + '" />' ]
 					.join(''));
 	setTimeout(function() {
+
 		if (!_self.isCropperOn)
 			_self.initCropMode();
 	}, 10);
@@ -241,6 +241,8 @@ ImageEditorPage.prototype.init = function() {
 	_self.el_btnCropZoomMinus = $("#btn_crop_zoom_minus", _self.context);
 	_self.el_btnRotateLeft = $("#btn_rotate_left", _self.context);
 	_self.el_btnRotateRight = $("#btn_rotate_right", _self.context);
+	_self.el_btnEditRotateLeft = $("#btnEdit_rotate_left", _self.context);
+	_self.el_btnEditRotateRight = $("#btnEdit_rotate_right", _self.context);
 	_self.el_btnCropFinish = $("#btn_crop_finished", _self.context);
 	_self.el_cropImgContainer = $("#crop-image-container", _self.context);
 	_self.el_editImgContainer = $("#edit-image-container", _self.context);
@@ -257,6 +259,8 @@ ImageEditorPage.prototype.init = function() {
 		_self.reload();
 		_self.loadEditableImage();
 		_self.loadCropableImage();
+		_self.el_btnCrop.html("Edit");
+		_self.el_btnPreview.html("Edit");
 
 		_self.el_sliderBrightness = $("#slider-brightness", _self.context);
 		_self.el_sliderContrast = $("#slider-contrast", _self.context);
@@ -501,6 +505,20 @@ ImageEditorPage.prototype.init = function() {
 		event.preventDefault();
 		return false;
 	});
+	
+	_self.el_btnEditRotateLeft.off("click");
+	_self.el_btnEditRotateLeft.on("click", function(event) {
+		$('#edit_img_src').veditor('rotate',-90);
+		event.preventDefault();
+		return false;
+	});
+
+	_self.el_btnEditRotateRight.off("click");
+	_self.el_btnEditRotateRight.on("click", function(event) {
+		$('#edit_img_src').veditor('rotate',90);
+		event.preventDefault();
+		return false;
+	});
 
 	_self.el_btnCropMove.off("click");
 	_self.el_btnCropMove.on("click", function(event) {
@@ -563,18 +581,19 @@ ImageEditorPage.prototype.enableCropMode = function() {
 	_self.el_cropToolbar.show();
 	_self.el_cropImgContainer.show();
 	_self.el_editImgContainer.hide();
-	_self.corpperImage.cropper("setAspectRatio", 4 / 3);
 	if (!_self.isCropperOn) {
 		_self.initCropMode();
 	}
-	_self.corpperImage.cropper('destroy');
-	_self.corpperImage.cropper('reset');
-	_self.corpperImage.cropper("setAspectRatio", 4 / 3);
-	// _self.el_btnPreview.hide();
-	// _self.el_btnEdit.hide();
-	_self.corpperImage.cropper("setDragMode", "crop");
-	_self.el_btnPreview.removeAttr('disabled');
-	_self.el_btnPreview.html("Edit");
+
+	setTimeout(function() {
+		_self.corpperImage.cropper('destroy');
+		_self.corpperImage.cropper('reset');
+		_self.corpperImage.cropper("setAspectRatio", 4 / 3);
+		_self.corpperImage.cropper("setDragMode", "crop");
+		_self.el_btnPreview.removeAttr('disabled');
+		_self.el_btnPreview.html("Edit");
+		_self.el_btnCrop.html("Edit");
+	},500);
 }
 
 ImageEditorPage.prototype.onCropSizeChange = function(event) {
@@ -613,6 +632,7 @@ ImageEditorPage.prototype.onBrightnessChange = function(event) {
 	var brightValue = event - _self.bValue;
 	var brightImageData = _self.editCtx.getImageData(0, 0, _self.gcanvas.width,
 			_self.gcanvas.height);
+	
 	var pixels = brightImageData.data;
 	for (var i = 0; i < pixels.length; i += 4) {
 		pixels[i] += brightValue;
