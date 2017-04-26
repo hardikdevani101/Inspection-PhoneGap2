@@ -36,6 +36,7 @@ FileExplorerPage.prototype.init = function() {
 							if ((item.x_instructionline_id) == (_self.app.appCache.session.x_instructionline_id)) {
 								_self.skipEditImg = item.skipEdit;
 								_self.skipWatermarkImg = item.skipWatermark;
+								_self.isIMR = item.isIMR;
 							}
 						});
 		
@@ -242,7 +243,8 @@ FileExplorerPage.prototype.editAll = function() {
 				'sourceInfo' : find_rest[0],
 				imageURI : find_rest[0].filePath,
 				watermark : _self.app.appCache.selWatermark,
-				skipImgEdit : _self.skipEditImg
+				skipImgEdit : _self.skipEditImg,
+				isIMR : _self.isIMR
 			});
 			_self.app.aviaryEdit.edit(function(param, data) {
 				_self.onEditFinish(param, data)
@@ -254,11 +256,16 @@ FileExplorerPage.prototype.editAll = function() {
 				'sourceInfo' : find_rest[0],
 				img64 : imgData,
 				watermark : _self.app.appCache.selWatermark,
-				skipImgEdit : _self.skipEditImg
+				skipImgEdit : _self.skipEditImg,
+				isIMR : _self.isIMR
 			}, "N");
 
 			if (_self.skipEditImg) {
-				_self.app.imageEditor.onWatermarkOnly();
+				if(!_self.isIMR){
+					_self.app.imageEditor.onWatermarkOnly();
+				} else{
+					_self.onEditFinish(find_rest[0], imgData, "Y");
+				}
 			} else {
 				$.mobile.changePage("#pg_img_editor");
 			}
@@ -571,7 +578,8 @@ FileExplorerPage.prototype.onSelFileTap = function(event) {
 					'sourceInfo' : sourceInfo[0],
 					imageURI : sourceInfo[0].filePath,
 					watermark : _self.app.appCache.selWatermark,
-					skipImgEdit : _self.skipEditImg
+					skipImgEdit : _self.skipEditImg,
+					isIMR : _self.isIMR
 				});
 			} else {
 
@@ -581,7 +589,8 @@ FileExplorerPage.prototype.onSelFileTap = function(event) {
 					'sourceInfo' : sourceInfo[0],
 					img64 : imgData,
 					watermark : _self.app.appCache.selWatermark,
-					skipImgEdit : _self.skipEditImg
+					skipImgEdit : _self.skipEditImg,
+					isIMR : _self.isIMR
 				}, "N");
 			}
 		}

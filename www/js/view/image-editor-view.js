@@ -30,6 +30,7 @@ ImageEditorPage.prototype.setup = function(options, isGallery) {
 	_self.selectedWM = options.watermark;
 	_self.skipimgidit = options.skipImgEdit;
 	_self.isGallery = isGallery;
+	_self.isIMR = options.isIMR;
 }
 
 ImageEditorPage.prototype.saveEditedImage = function() {
@@ -77,51 +78,63 @@ ImageEditorPage.prototype.onPreview = function() {
 	// _self.el_btnPreview.hide();
 	// _self.el_btnEdit.show();
 	_self.gcanvas = $("#edit_img_src", "#edit-image-container")[0];
-	var watermarkImage = _self.app.watermark64;
-	if (_self.selectedWM) {
-		var findResult = jQuery.grep(_self.app.appCache.waterMarkImgs,
-				function(item, index) {
-					return item.url == _self.selectedWM;
-				});
-		if (findResult.length > 0) {
-			watermarkImage = findResult[0].data;
-		}
-	}
-	var watermark = new Image();
-	watermark.src = watermarkImage;
-	watermark.onload = function() {
-		var origImg = new Image();
-		origImg.src = _self.gcanvas.toDataURL();
-		origImg.onload = function() {
-			nGcanvas = document.createElement('canvas');
-			nGctx = nGcanvas.getContext("2d");
-			nGcanvas.width = 1024;
-			nGcanvas.height = 768;
-			var newWidth = ((origImg.width * nGcanvas.height) / origImg.height);
-
-			if ((nGcanvas.width >= newWidth)) {
-				nGctx.drawImage(origImg, 0, 0, origImg.width, origImg.height,
-						(nGcanvas.width - newWidth)/2, 0, newWidth, nGcanvas.height);
-			} else {
-				var newHeight = ((origImg.height * nGcanvas.width) / origImg.width);
-				if ((nGcanvas.height >= newHeight)) {
-					nGctx.drawImage(origImg, 0, 0, origImg.width,
-							origImg.height, 0, (nGcanvas.height - newHeight)/2, nGcanvas.width, newHeight);
-				}
+	
+	if(!_self.isIMR){
+		var watermarkImage = _self.app.watermark64;
+		if (_self.selectedWM) {
+			var findResult = jQuery.grep(_self.app.appCache.waterMarkImgs,
+					function(item, index) {
+				return item.url == _self.selectedWM;
+			});
+			if (findResult.length > 0) {
+				watermarkImage = findResult[0].data;
 			}
-
-			nGctx.drawImage(watermark, 0, 0);
-
-			_self.el_previewImgContainer.html([ '<img id="pre_img_src" src="'
-					+ nGcanvas.toDataURL() + '" />' ].join(''));
-			setTimeout(function() {
-				img = $("#pre_img_src", _self.context)[0];
-				img.width = _self.cropImageW;
-				img.height = _self.cropImageH;
-				_self.enablePreviewMode();
-			}, 10);
+		}
+		var watermark = new Image();
+		watermark.src = watermarkImage;
+		watermark.onload = function() {
+			var origImg = new Image();
+			origImg.src = _self.gcanvas.toDataURL();
+			origImg.onload = function() {
+				nGcanvas = document.createElement('canvas');
+				nGctx = nGcanvas.getContext("2d");
+				nGcanvas.width = 1024;
+				nGcanvas.height = 768;
+				var newWidth = ((origImg.width * nGcanvas.height) / origImg.height);
+				
+				if ((nGcanvas.width >= newWidth)) {
+					nGctx.drawImage(origImg, 0, 0, origImg.width, origImg.height,
+							(nGcanvas.width - newWidth)/2, 0, newWidth, nGcanvas.height);
+				} else {
+					var newHeight = ((origImg.height * nGcanvas.width) / origImg.width);
+					if ((nGcanvas.height >= newHeight)) {
+						nGctx.drawImage(origImg, 0, 0, origImg.width,
+								origImg.height, 0, (nGcanvas.height - newHeight)/2, nGcanvas.width, newHeight);
+					}
+				}
+				
+				nGctx.drawImage(watermark, 0, 0);
+				
+				_self.el_previewImgContainer.html([ '<img id="pre_img_src" src="'
+				                                    + nGcanvas.toDataURL() + '" />' ].join(''));
+				setTimeout(function() {
+					img = $("#pre_img_src", _self.context)[0];
+					img.width = _self.cropImageW;
+					img.height = _self.cropImageH;
+					_self.enablePreviewMode();
+				}, 10);
+			};
 		};
-	};
+	} else{
+		_self.el_previewImgContainer.html([ '<img id="pre_img_src" src="'
+		                                    + _self.gcanvas.toDataURL() + '" />' ].join(''));
+		setTimeout(function() {
+			img = $("#pre_img_src", _self.context)[0];
+			img.width = _self.cropImageW;
+			img.height = _self.cropImageH;
+			_self.enablePreviewMode();
+		}, 10);
+	}
 
 }
 
@@ -724,51 +737,65 @@ ImageEditorPage.prototype.setCropBoxData = function(param) {
 ImageEditorPage.prototype.onEditFinish = function() {
 	var _self = this;
 	_self.gcanvas = $("#edit_img_src", "#edit-image-container")[0];
-	var watermarkImage = _self.app.watermark64;
-	if (_self.selectedWM) {
-		var findResult = jQuery.grep(_self.app.appCache.waterMarkImgs,
-				function(item, index) {
-					return item.url == _self.selectedWM;
-				});
-		if (findResult.length > 0) {
-			watermarkImage = findResult[0].data;
+	
+	if(!_self.isIMR){
+		var watermarkImage = _self.app.watermark64;
+		if (_self.selectedWM) {
+			var findResult = jQuery.grep(_self.app.appCache.waterMarkImgs,
+					function(item, index) {
+				return item.url == _self.selectedWM;
+			});
+			if (findResult.length > 0) {
+				watermarkImage = findResult[0].data;
+			}
 		}
-	}
-	var watermark = new Image();
-	watermark.src = watermarkImage;
-	watermark.onload = function() {
-		var origImg = new Image();
-		origImg.src = _self.gcanvas.toDataURL();
-		origImg.onload = function() {
-			nGcanvas = document.createElement('canvas');
-			nGctx = nGcanvas.getContext("2d");
-			nGcanvas.width = 1024;
-			nGcanvas.height = 768;
-			var newWidth = ((origImg.width * nGcanvas.height) / origImg.height);
-
-			if ((nGcanvas.width >= newWidth)) {
-				nGctx.drawImage(origImg, 0, 0, origImg.width, origImg.height,
-						(nGcanvas.width - newWidth)/2, 0, newWidth, nGcanvas.height);
-			} else {
-				var newHeight = ((origImg.height * nGcanvas.width) / origImg.width);
-				if ((nGcanvas.height >= newHeight)) {
-					nGctx.drawImage(origImg, 0, 0, origImg.width,
-							origImg.height, 0, (nGcanvas.height - newHeight)/2, nGcanvas.width, newHeight);
+		var watermark = new Image();
+		watermark.src = watermarkImage;
+		watermark.onload = function() {
+			var origImg = new Image();
+			origImg.src = _self.gcanvas.toDataURL();
+			origImg.onload = function() {
+				nGcanvas = document.createElement('canvas');
+				nGctx = nGcanvas.getContext("2d");
+				nGcanvas.width = 1024;
+				nGcanvas.height = 768;
+				var newWidth = ((origImg.width * nGcanvas.height) / origImg.height);
+				
+				if ((nGcanvas.width >= newWidth)) {
+					nGctx.drawImage(origImg, 0, 0, origImg.width, origImg.height,
+							(nGcanvas.width - newWidth)/2, 0, newWidth, nGcanvas.height);
+				} else {
+					var newHeight = ((origImg.height * nGcanvas.width) / origImg.width);
+					if ((nGcanvas.height >= newHeight)) {
+						nGctx.drawImage(origImg, 0, 0, origImg.width,
+								origImg.height, 0, (nGcanvas.height - newHeight)/2, nGcanvas.width, newHeight);
+					}
+				}
+				
+				nGctx.drawImage(watermark, 0, 0);
+				
+				if (_self.isGallery == 'Y') {
+					console.log("image editor page edit finish");
+					_self.app.galleryview.onEditFinish(_self.sourceInfo, nGcanvas
+							.toDataURL());
+					$.mobile.changePage("#pg_gallery");
+				} else {
+					_self.app.fileExplorer.onEditFinish(_self.sourceInfo, nGcanvas
+							.toDataURL(), "Y");
+					$.mobile.changePage("#pg_file_explorer");
 				}
 			}
-
-			nGctx.drawImage(watermark, 0, 0);
-
-			if (_self.isGallery == 'Y') {
-				console.log("image editor page edit finish");
-				_self.app.galleryview.onEditFinish(_self.sourceInfo, nGcanvas
-						.toDataURL());
-				$.mobile.changePage("#pg_gallery");
-			} else {
-				_self.app.fileExplorer.onEditFinish(_self.sourceInfo, nGcanvas
-						.toDataURL(), "Y");
-				$.mobile.changePage("#pg_file_explorer");
-			}
+		}
+	} else{
+		if (_self.isGallery == 'Y') {
+			console.log("image editor page edit finish");
+			_self.app.galleryview.onEditFinish(_self.sourceInfo, _self.gcanvas
+					.toDataURL());
+			$.mobile.changePage("#pg_gallery");
+		} else {
+			_self.app.fileExplorer.onEditFinish(_self.sourceInfo, _self.gcanvas
+					.toDataURL(), "Y");
+			$.mobile.changePage("#pg_file_explorer");
 		}
 	}
 }

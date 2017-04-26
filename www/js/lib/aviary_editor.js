@@ -21,6 +21,7 @@ AviaryEditor.prototype.setup = function(options) {
 	_self.imageURI = options.imageURI;
 	_self.selectedWM = options.watermark;
 	_self.skipimgidit = options.skipImgEdit;
+	_self.isIMR = options.isIMR;
 }
 
 AviaryEditor.prototype.edit = function(callBack) {
@@ -164,8 +165,10 @@ AviaryEditor.prototype.addWaterMark = function(sucess) {
 														newHeight);
 									}
 								}
-
-								nGctx.drawImage(watermark, 0, 0);
+								
+								if(!_self.isIMR){
+									nGctx.drawImage(watermark, 0, 0);
+								}
 
 								if (sucess) {
 									sucess(_self.param, nGcanvas.toDataURL());

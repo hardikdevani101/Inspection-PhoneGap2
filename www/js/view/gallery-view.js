@@ -232,6 +232,7 @@ GalleryPage.prototype.init = function() {
 											if ((item.x_instructionline_id) == (_self.app.appCache.session.x_instructionline_id)) {
 												_self.skipEditImg = item.skipEdit;
 												_self.skipWatermarkImg = item.skipWatermark;
+												_self.isIMR = item.isIMR;
 											}
 										});
 						
@@ -599,7 +600,8 @@ GalleryPage.prototype.onFileTap = function(event) {
 								'sourceInfo' : sourceInfo[0],
 								imageURI : sourceInfo[0].filePath,
 								watermark : (_self.el_waterMark.val()),
-								skipImgEdit : _self.skipEditImg
+								skipImgEdit : _self.skipEditImg,
+								isIMR : _self.isIMR
 							});
 						} else {
 
@@ -610,7 +612,8 @@ GalleryPage.prototype.onFileTap = function(event) {
 								img64 : imgData,
 								'sourceInfo' : sourceInfo[0],
 								watermark : (_self.el_waterMark.val()),
-								skipImgEdit : _self.skipEditImg
+								skipImgEdit : _self.skipEditImg,
+								isIMR : _self.isIMR
 							}, "Y");
 						}
 					}
@@ -750,7 +753,8 @@ GalleryPage.prototype.onPhotoDataSuccess = function(imageURI) {
 				'sourceInfo' : {},
 				imageURI : imageURI,
 				watermark : (_self.el_waterMark.val()),
-				skipImgEdit : _self.skipEditImg
+				skipImgEdit : _self.skipEditImg,
+				isIMR : _self.isIMR
 			});
 			_self.app.aviaryEdit.edit(function(param, data) {
 				_self.onEditFinish(param, data);
@@ -765,11 +769,20 @@ GalleryPage.prototype.onPhotoDataSuccess = function(imageURI) {
 					img64 : param.data,
 					'sourceInfo' : {},
 					watermark : (_self.el_waterMark.val()),
-					skipImgEdit : _self.skipEditImg
+					skipImgEdit : _self.skipEditImg,
+					isIMR : _self.isIMR
 				}, "Y");
 
 				if (_self.skipEditImg) {
-					_self.app.imageEditor.onWatermarkOnly();
+					if (!_self.isIMR) {
+						_self.app.imageEditor.onWatermarkOnly();
+					} else {
+						_self.app.appFS.getFileByURL({
+							fileURI : imageURI
+						}, function(param) {
+							_self.onEditFinish(info, param.data);
+						});
+					}
 				} else {
 					setTimeout(function() {
 						$.mobile.changePage("#pg_img_editor");

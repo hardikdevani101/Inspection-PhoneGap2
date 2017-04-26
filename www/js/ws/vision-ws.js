@@ -264,19 +264,22 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 							resultline['name'] = "Vendor Paper work";
 							resultline['skipEdit'] = true;
 							resultline['skipWatermark'] = true;
+							resultline['isIMR'] = false;
 							jsonResponse.push(resultline);
 							isPickTicket = params.m_inoutline_id.isPickTicket;
 						}
 
 						if (fullNodeList.length > 0) {
 							for (var i = 0; i < fullNodeList.length; i++) {
-								var dlab, dval, dpick;
+								var dlab, dval, dpick, ddoc;
 								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'Name') {
 										dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'X_INSTRUCTIONLINE_ID') {
 										dval = fullNodeList[i].childNodes[j].childNodes[0].textContent;
+									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'DocumentNo') {
+										ddoc = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									}
 								}
 								var resultline = {};
@@ -289,6 +292,11 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 								} else {
 									resultline['skipEdit'] = false;
 									resultline['skipWatermark'] = false;
+								}
+								if (ddoc.match(/IMR-/gi) != null) {
+									resultline['isIMR'] = true;
+								} else {
+									resultline['isIMR'] = false;
 								}
 
 								jsonResponse.push(resultline);
