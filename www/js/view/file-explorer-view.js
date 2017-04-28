@@ -37,6 +37,7 @@ FileExplorerPage.prototype.init = function() {
 								_self.skipEditImg = item.skipEdit;
 								_self.skipWatermarkImg = item.skipWatermark;
 								_self.isIMR = item.isIMR;
+								_self.skipAutoRotateImg = item.skipAutoRotate;
 							}
 						});
 		
@@ -234,7 +235,7 @@ FileExplorerPage.prototype.editAll = function() {
 	if (find_rest.length > 0) {
 
 		var imgData = _self.app.appCache.imgCache[find_rest[0].filePath];
-		if (_self.skipEditImg && _self.skipWatermarkImg) {
+		if (_self.skipEditImg && _self.skipWatermarkImg  && _self.skipAutoRotateImg) {
 			_self.onEditFinish(find_rest[0], imgData, "Y");
 		}
 		if (_self.app.appCache.settingInfo.img_editor
@@ -244,7 +245,8 @@ FileExplorerPage.prototype.editAll = function() {
 				imageURI : find_rest[0].filePath,
 				watermark : _self.app.appCache.selWatermark,
 				skipImgEdit : _self.skipEditImg,
-				isIMR : _self.isIMR
+				isIMR : _self.isIMR,
+				skipAutoRotate : _self.skipAutoRotateImg
 			});
 			_self.app.aviaryEdit.edit(function(param, data) {
 				_self.onEditFinish(param, data)
@@ -261,11 +263,17 @@ FileExplorerPage.prototype.editAll = function() {
 			}, "N");
 
 			if (_self.skipEditImg) {
-				if(!_self.isIMR){
+				if(_self.isIMR){
+					if(!_self.skipAutoRotateImg){
+						_self.app.imageEditor.onAutoRotate(90);
+					}else {
+						_self.onEditFinish(find_rest[0], imgData, "Y");
+					}
+				} else if (!_self.skipAutoRotateImg) {
+					_self.app.imageEditor.onAutoRotate(90);
+				} else if(!_self.skipWatermarkImg){
 					_self.app.imageEditor.onWatermarkOnly();
-				} else{
-					_self.onEditFinish(find_rest[0], imgData, "Y");
-				}
+				} 
 			} else {
 				$.mobile.changePage("#pg_img_editor");
 			}
@@ -532,7 +540,7 @@ FileExplorerPage.prototype.onEditFinish = function(param, data, isLocal) {
 	});
 	// }
 
-	if (_self.skipEditImg && _self.skipWatermarkImg && _self.isEditAll == true) {
+	if (_self.skipEditImg && _self.skipWatermarkImg && _self.skipAutoRotateImg && _self.isEditAll == true) {
 		_self.editAll();
 	} else if (_self.isEditAll == true) {
 		setTimeout(function() {
@@ -579,7 +587,8 @@ FileExplorerPage.prototype.onSelFileTap = function(event) {
 					imageURI : sourceInfo[0].filePath,
 					watermark : _self.app.appCache.selWatermark,
 					skipImgEdit : _self.skipEditImg,
-					isIMR : _self.isIMR
+					isIMR : _self.isIMR,
+					skipAutoRotate : _self.skipAutoRotateImg
 				});
 			} else {
 

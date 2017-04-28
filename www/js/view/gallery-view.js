@@ -233,6 +233,7 @@ GalleryPage.prototype.init = function() {
 												_self.skipEditImg = item.skipEdit;
 												_self.skipWatermarkImg = item.skipWatermark;
 												_self.isIMR = item.isIMR;
+												_self.skipAutoRotateImg = item.skipAutoRotate;
 											}
 										});
 						
@@ -601,7 +602,8 @@ GalleryPage.prototype.onFileTap = function(event) {
 								imageURI : sourceInfo[0].filePath,
 								watermark : (_self.el_waterMark.val()),
 								skipImgEdit : _self.skipEditImg,
-								isIMR : _self.isIMR
+								isIMR : _self.isIMR,
+								skipAutoRotate : _self.skipAutoRotateImg
 							});
 						} else {
 
@@ -733,7 +735,7 @@ GalleryPage.prototype.getGalleryImage = function() {
 
 GalleryPage.prototype.onPhotoDataSuccess = function(imageURI) {
 	var _self = this;
-	if (_self.skipEditImg && _self.skipWatermarkImg) {
+	if (_self.skipEditImg && _self.skipWatermarkImg && _self.skipAutoRotateImg) {
 		_self.app.showDialog("Loading");
 		var info = {};
 		_self.app.appFS.getFileByURL({
@@ -754,7 +756,8 @@ GalleryPage.prototype.onPhotoDataSuccess = function(imageURI) {
 				imageURI : imageURI,
 				watermark : (_self.el_waterMark.val()),
 				skipImgEdit : _self.skipEditImg,
-				isIMR : _self.isIMR
+				isIMR : _self.isIMR,
+				skipAutoRotate : _self.skipAutoRotateImg
 			});
 			_self.app.aviaryEdit.edit(function(param, data) {
 				_self.onEditFinish(param, data);
@@ -774,15 +777,21 @@ GalleryPage.prototype.onPhotoDataSuccess = function(imageURI) {
 				}, "Y");
 
 				if (_self.skipEditImg) {
-					if (!_self.isIMR) {
+					if (_self.isIMR) {
+						if(!_self.skipAutoRotateImg){
+							_self.app.imageEditor.onAutoRotate(90);
+						} else {
+							_self.app.appFS.getFileByURL({
+								fileURI : imageURI
+							}, function(param) {
+								_self.onEditFinish(info, param.data);
+							});
+						}
+					}else if (!_self.skipAutoRotateImg) {
+						_self.app.imageEditor.onAutoRotate(90);
+					}else if (!_self.skipWatermarkImg) {
 						_self.app.imageEditor.onWatermarkOnly();
-					} else {
-						_self.app.appFS.getFileByURL({
-							fileURI : imageURI
-						}, function(param) {
-							_self.onEditFinish(info, param.data);
-						});
-					}
+					} 
 				} else {
 					setTimeout(function() {
 						$.mobile.changePage("#pg_img_editor");

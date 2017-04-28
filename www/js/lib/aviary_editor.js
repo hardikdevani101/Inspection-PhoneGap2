@@ -22,6 +22,7 @@ AviaryEditor.prototype.setup = function(options) {
 	_self.selectedWM = options.watermark;
 	_self.skipimgidit = options.skipImgEdit;
 	_self.isIMR = options.isIMR;
+	_self.skipautorotate = options.skipAutoRotate;
 }
 
 AviaryEditor.prototype.edit = function(callBack) {
@@ -144,14 +145,52 @@ AviaryEditor.prototype.addWaterMark = function(sucess) {
 								nGcanvas.height = 768;
 								var newWidth = ((origImg.width * nGcanvas.height) / origImg.height);
 
-								if ((nGcanvas.width >= newWidth)) {
-									nGctx.drawImage(origImg, 0, 0,
-											origImg.width, origImg.height,
-											(nGcanvas.width - newWidth) / 2, 0,
-											newWidth, nGcanvas.height);
+								if (!_self.skipautorotate) {
+									if ((nGcanvas.width >= newWidth)) {
+										nGctx
+												.drawImage(
+														origImg,
+														-nGcanvas.height / 2,
+														-nGcanvas.width / 2,
+														origImg.width,
+														origImg.height,
+														(nGcanvas.width - newWidth) / 2,
+														0, newWidth,
+														nGcanvas.height);
+									} else {
+										var newHeight = ((origImg.height * nGcanvas.width) / origImg.width);
+										if ((nGcanvas.height >= newHeight)) {
+											nGctx
+													.drawImage(
+															origImg,
+															-nGcanvas.height / 2,
+															-nGcanvas.width / 2,
+															origImg.width,
+															origImg.height,
+															0,
+															(nGcanvas.height - newHeight) / 2,
+															nGcanvas.width,
+															newHeight);
+										}
+									}
+
+									nGctx.clearRect(0, 0, nGcanvas.width,
+											nGcanvas.height);
+									nGctx.save();
+									nGctx.translate(nGcanvas.width / 2,
+											nGcanvas.height / 2);
+									nGctx.rotate(90 * Math.PI / 180);
+									nGctx.drawImage(origImg,
+											-origImg.width / 2,
+											-origImg.width / 2);
+									nGctx.restore();
+
+									// if(!_self.isIMR){
+									// nGctx.drawImage(watermark, 0, 0);
+									// }
+
 								} else {
-									var newHeight = ((origImg.height * nGcanvas.width) / origImg.width);
-									if ((nGcanvas.height >= newHeight)) {
+									if ((nGcanvas.width >= newWidth)) {
 										nGctx
 												.drawImage(
 														origImg,
@@ -159,15 +198,29 @@ AviaryEditor.prototype.addWaterMark = function(sucess) {
 														0,
 														origImg.width,
 														origImg.height,
-														0,
-														(nGcanvas.height - newHeight) / 2,
-														nGcanvas.width,
-														newHeight);
+														(nGcanvas.width - newWidth) / 2,
+														0, newWidth,
+														nGcanvas.height);
+									} else {
+										var newHeight = ((origImg.height * nGcanvas.width) / origImg.width);
+										if ((nGcanvas.height >= newHeight)) {
+											nGctx
+													.drawImage(
+															origImg,
+															0,
+															0,
+															origImg.width,
+															origImg.height,
+															0,
+															(nGcanvas.height - newHeight) / 2,
+															nGcanvas.width,
+															newHeight);
+										}
 									}
-								}
-								
-								if(!_self.isIMR){
-									nGctx.drawImage(watermark, 0, 0);
+
+									if (!_self.isIMR) {
+										nGctx.drawImage(watermark, 0, 0);
+									}
 								}
 
 								if (sucess) {

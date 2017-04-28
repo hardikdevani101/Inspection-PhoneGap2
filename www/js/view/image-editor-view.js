@@ -191,10 +191,11 @@ ImageEditorPage.prototype.loadEditableImage = function() {
 
 		_self.enableEditMode();
 
-		if(_self.app.appCache.settingInfo.org_id == 1000003)
-		{
-			$('#edit_img_src').veditor('rotate',90);
-		}
+//		VISION-52 : rotate 90 only if X-ray image in Austin Org.
+//		if(_self.app.appCache.settingInfo.org_id == 1000003)
+//		{
+//			$('#edit_img_src').veditor('rotate',90);
+//		}
 	}, 10);
 }
 
@@ -840,6 +841,70 @@ ImageEditorPage.prototype.onWatermarkOnly = function() {
 			}
 
 			nGctx.drawImage(watermark, 0, 0);
+
+			if (_self.isGallery == 'Y') {
+				console.log("image editor page edit finish");
+				_self.app.galleryview.onEditFinish(_self.sourceInfo, nGcanvas
+						.toDataURL());
+				$.mobile.changePage("#pg_gallery");
+			} else {
+				_self.app.fileExplorer.onEditFinish(_self.sourceInfo, nGcanvas
+						.toDataURL(), "Y");
+				$.mobile.changePage("#pg_file_explorer");
+			}
+		}
+	}
+}
+
+ImageEditorPage.prototype.onAutoRotate = function(degree) {
+	var _self = this;
+	var watermarkImage = _self.app.watermark64;
+	if (_self.selectedWM) {
+		var findResult = jQuery.grep(_self.app.appCache.waterMarkImgs,
+				function(item, index) {
+					return item.url == _self.selectedWM;
+				});
+		if (findResult.length > 0) {
+			watermarkImage = findResult[0].data;
+		}
+	}
+	var watermark = new Image();
+	watermark.src = watermarkImage;
+	watermark.onload = function() {
+		var origImg = new Image();
+		origImg.src = _self.image64;
+		origImg.onload = function() {
+			nGcanvas = document.createElement('canvas');
+			nGctx = nGcanvas.getContext("2d");
+			nGcanvas.width = 1024;
+			nGcanvas.height = 768;
+
+			var newWidth = ((origImg.width * nGcanvas.height) / origImg.height);
+
+			if ((nGcanvas.width >= newWidth)) {
+				nGctx.drawImage(origImg, -nGcanvas.height / 2,
+						-nGcanvas.width / 2, origImg.width, origImg.height,
+						(nGcanvas.width - newWidth) / 2, 0, newWidth,
+						nGcanvas.height);
+
+			} else {
+				var newHeight = ((origImg.height * nGcanvas.width) / origImg.width);
+				if ((nGcanvas.height >= newHeight)) {
+					nGctx.drawImage(origImg, -nGcanvas.height / 2,
+							-nGcanvas.width / 2, origImg.width, origImg.height,
+							0, (nGcanvas.height - newHeight) / 2,
+							nGcanvas.width, newHeight);
+				}
+			}
+
+			nGctx.clearRect(0, 0, nGcanvas.width, nGcanvas.height);
+			nGctx.save();
+			nGctx.translate(nGcanvas.width / 2, nGcanvas.height / 2);
+			nGctx.rotate(degree * Math.PI / 180);
+			nGctx.drawImage(origImg, -origImg.width / 2, -origImg.width / 2);
+			nGctx.restore();
+
+			// nGctx.drawImage(watermark, 0, 0);
 
 			if (_self.isGallery == 'Y') {
 				console.log("image editor page edit finish");

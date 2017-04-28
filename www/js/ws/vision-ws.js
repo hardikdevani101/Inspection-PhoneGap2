@@ -265,6 +265,7 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 							resultline['skipEdit'] = true;
 							resultline['skipWatermark'] = true;
 							resultline['isIMR'] = false;
+							resultline['skipAutoRotate'] = true;
 							jsonResponse.push(resultline);
 							isPickTicket = params.m_inoutline_id.isPickTicket;
 						}
@@ -289,9 +290,15 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 								if (dlab.match(/X-Ray/gi) != null) {
 									resultline['skipEdit'] = true;
 									resultline['skipWatermark'] = true;
+									if(_self.app.appCache.settingInfo.org_id == 1000003){
+										resultline['skipAutoRotate'] = false;
+									}else {
+										resultline['skipAutoRotate'] = true;
+									}
 								} else {
 									resultline['skipEdit'] = false;
 									resultline['skipWatermark'] = false;
+									resultline['skipAutoRotate'] = true;
 								}
 								if (ddoc.match(/IMR-/gi) != null) {
 									resultline['isIMR'] = true;
