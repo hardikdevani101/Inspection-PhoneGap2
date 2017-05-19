@@ -1,6 +1,5 @@
 var FileExplorerPage = function(app) {
 	this.app = app;
-	this.currentDirPath = '/';
 	this.isLocalStorage = true;
 	this.isGridView = true;
 	this.selFiles = [];
@@ -44,6 +43,7 @@ FileExplorerPage.prototype.init = function() {
 		_self.app.appCache.currentPage = _self.context;
 
 		_self.rederBreadCrumb();
+		_self.renderDirPath();
 		$('#selected-files-count', _self.context).html(_self.selFiles.length);
 		$("#pnl_selected_files", _self.context).enhanceWithin();
 
@@ -62,7 +62,7 @@ FileExplorerPage.prototype.init = function() {
 	});
 
 	$("#btn_skip_file_explorer", _self.context).on('click', function(event) {
-		_self.currentDirPath = '/';
+//		_self.app.currentDirPath = '/';
 		_self.selFiles = [];
 		$.mobile.changePage("#pg_gallery");
 		event.preventDefault();
@@ -77,10 +77,11 @@ FileExplorerPage.prototype.init = function() {
 	});
 
 	$("#btn_reload_files", _self.context).on("tap", function(event) {
-		_self.currentDirPath = '/';
+		_self.app.currentDirPath = '/';
 		// _self.selFiles = [];
-		_self.explodeDirectory(_self.currentDirPath, function() {
+		_self.explodeDirectory(_self.app.currentDirPath, function() {
 			_self.renderContent()
+			_self.renderDirPath()
 		});
 		event.preventDefault();
 		return false;
@@ -233,56 +234,55 @@ FileExplorerPage.prototype.editAll = function() {
 	});
 
 	if (find_rest.length > 0) {
-
 		var imgData = _self.app.appCache.imgCache[find_rest[0].filePath];
 		if (_self.skipEditImg && _self.skipWatermarkImg  && _self.skipAutoRotateImg) {
 			_self.onEditFinish(find_rest[0], imgData, "Y");
-		}
-		if (_self.app.appCache.settingInfo.img_editor
-				&& _self.app.appCache.settingInfo.img_editor == 'Aviary') {
-			_self.app.aviaryEdit.setup({
-				'sourceInfo' : find_rest[0],
-				imageURI : find_rest[0].filePath,
-				watermark : _self.app.appCache.selWatermark,
-				skipImgEdit : _self.skipEditImg,
-				isIMR : _self.isIMR,
-				skipAutoRotate : _self.skipAutoRotateImg
-			});
-			_self.app.aviaryEdit.edit(function(param, data) {
-				_self.onEditFinish(param, data)
-			});
 		} else {
-			_self.app.imageEditor = new ImageEditorPage(_self.app);
-			_self.app.imageEditor.init();
-			_self.app.imageEditor.setup({
-				'sourceInfo' : find_rest[0],
-				img64 : imgData,
-				watermark : _self.app.appCache.selWatermark,
-				skipImgEdit : _self.skipEditImg,
-				isIMR : _self.isIMR
-			}, "N");
-
-			if (_self.skipEditImg) {
-				if(_self.isIMR){
-					if(!_self.skipAutoRotateImg){
-						_self.app.imageEditor.onAutoRotate(90);
-					}else {
-						_self.onEditFinish(find_rest[0], imgData, "Y");
-					}
-				} else if (!_self.skipAutoRotateImg) {
-					_self.app.imageEditor.onAutoRotate(90);
-				} else if(!_self.skipWatermarkImg){
-					_self.app.imageEditor.onWatermarkOnly();
-				} 
+			if (_self.app.appCache.settingInfo.img_editor
+					&& _self.app.appCache.settingInfo.img_editor == 'Aviary') {
+				_self.app.aviaryEdit.setup({
+					'sourceInfo' : find_rest[0],
+					imageURI : find_rest[0].filePath,
+					watermark : _self.app.appCache.selWatermark,
+					skipImgEdit : _self.skipEditImg,
+					isIMR : _self.isIMR,
+					skipAutoRotate : _self.skipAutoRotateImg
+				});
+				_self.app.aviaryEdit.edit(function(param, data) {
+					_self.onEditFinish(param, data)
+				});
 			} else {
-				$.mobile.changePage("#pg_img_editor");
+				_self.app.imageEditor = new ImageEditorPage(_self.app);
+				_self.app.imageEditor.init();
+				_self.app.imageEditor.setup({
+					'sourceInfo' : find_rest[0],
+					img64 : imgData,
+					watermark : _self.app.appCache.selWatermark,
+					skipImgEdit : _self.skipEditImg,
+					isIMR : _self.isIMR
+				}, "N");
+				
+				if (_self.skipEditImg) {
+					if(_self.isIMR){
+						if(!_self.skipAutoRotateImg){
+							_self.app.imageEditor.onAutoRotate(90);
+						}else {
+							_self.onEditFinish(find_rest[0], imgData, "Y");
+						}
+					} else if (!_self.skipAutoRotateImg) {
+						_self.app.imageEditor.onAutoRotate(90);
+					} else if(!_self.skipWatermarkImg){
+						_self.app.imageEditor.onWatermarkOnly();
+					} 
+				} else {
+					$.mobile.changePage("#pg_img_editor");
+				}
 			}
 		}
-
 	} else {
 		_self.isEditAll = false;
 		_self.app.galleryview.onFileData(_self.selFiles);
-		_self.currentDirPath = '/';
+//		_self.app.currentDirPath = '/';
 		_self.selFiles = [];
 		setTimeout(function() {
 			$.mobile.changePage("#pg_gallery");
@@ -329,10 +329,10 @@ FileExplorerPage.prototype.renderSelectedFiles = function() {
 FileExplorerPage.prototype.onDataStorageChange = function() {
 	var _self = this;
 	_self.app.showDialog('Loading...');
-	_self.currentDirPath = '/';
+	_self.app.currentDirPath = '/';
 	$("#current-dir-path", _self.context).html(
 			'<h3 class="ui-bar ui-bar-a">root</h3>');
-	_self.explodeDirectory(_self.currentDirPath, function() {
+	_self.explodeDirectory(_self.app.currentDirPath, function() {
 		_self.renderContent()
 	});
 }
@@ -410,7 +410,7 @@ FileExplorerPage.prototype.fillDataProviders = function() {
 
 FileExplorerPage.prototype.loadData = function() {
 	var _self = this;
-	_self.explodeDirectory(_self.currentDirPath, function() {
+	_self.explodeDirectory(_self.app.currentDirPath, function() {
 		_self.renderContent()
 	});
 }
@@ -438,10 +438,10 @@ FileExplorerPage.prototype.renderContent = function(dirPath) {
 
 	var serverData = dataStorageInfo.data;
 	if (serverData) {
-		if (serverData[_self.currentDirPath]) {
+		if (serverData[_self.app.currentDirPath]) {
 
-			var files = serverData[_self.currentDirPath].files;
-			var dirs = serverData[_self.currentDirPath].dirs;
+			var files = serverData[_self.app.currentDirPath].files;
+			var dirs = serverData[_self.app.currentDirPath].dirs;
 
 			var fileItems = _self.renderFiles(files);
 			var dirItems = _self.renderDirs(dirs);
@@ -470,7 +470,7 @@ FileExplorerPage.prototype.renderContent = function(dirPath) {
 			for (var i = 0; i < files.length; i++) {
 				file = files[i];
 				var dataid = $("#sel_dataproviders").val()
-						+ _self.currentDirPath + file
+						+ _self.app.currentDirPath + file
 				var el_fileLi = $('#ls_files li[data-id="' + dataid + '"]',
 						_self.context);
 
@@ -484,7 +484,7 @@ FileExplorerPage.prototype.renderContent = function(dirPath) {
 
 			for (var i = 0; i < dirs.length; i++) {
 				value = dirs[i];
-				var el_dirLi = $('#ls_dirs li[data-id="' + _self.currentDirPath
+				var el_dirLi = $('#ls_dirs li[data-id="' + _self.app.currentDirPath
 						+ value + '"]', _self.context);
 
 				el_dirLi.off('click');
@@ -656,15 +656,15 @@ FileExplorerPage.prototype.onFileTap = function(event) {
 
 FileExplorerPage.prototype.onDirTap = function(event) {
 	var _self = this;
-	_self.currentDirPath = $(event.delegateTarget).data('id').toString();
-	var tmp = _self.currentDirPath;
+	_self.app.currentDirPath = $(event.delegateTarget).data('id').toString();
+	var tmp = _self.app.currentDirPath;
 	_self.app.showDialog("Loading..");
 	setTimeout(function() {
-		if (!_self.currentDirPath.endsWith('/')) {
-			_self.currentDirPath += '/';
+		if (!_self.app.currentDirPath.endsWith('/')) {
+			_self.app.currentDirPath += '/';
 		}
 		if (tmp == '/') {
-			_self.currentDirPath = '/';
+			_self.app.currentDirPath = '/';
 		}
 		setTimeout(function() {
 			_self.renderDirPath();
@@ -677,15 +677,15 @@ FileExplorerPage.prototype.onBackDir = function() {
 	var _self = this;
 	if (_self.linkRegister && _self.linkRegister.length > 1) {
 		_self.linkRegister.pop();
-		_self.currentDirPath = _self.linkRegister.pop();
-		var tmp = _self.currentDirPath;
+		_self.app.currentDirPath = _self.linkRegister.pop();
+		var tmp = _self.app.currentDirPath;
 		_self.app.showDialog("Loading..");
 		setTimeout(function() {
-			if (!_self.currentDirPath.endsWith('/')) {
-				_self.currentDirPath += '/';
+			if (!_self.app.currentDirPath.endsWith('/')) {
+				_self.app.currentDirPath += '/';
 			}
 			if (tmp == '/') {
-				_self.currentDirPath = '/';
+				_self.app.currentDirPath = '/';
 			}
 			setTimeout(function() {
 				_self.renderDirPath();
@@ -697,7 +697,7 @@ FileExplorerPage.prototype.onBackDir = function() {
 
 FileExplorerPage.prototype.renderDirPath = function() {
 	var _self = this;
-	var dirPathArray = _self.currentDirPath.split('/');
+	var dirPathArray = _self.app.currentDirPath.split('/');
 	var items = '';
 	var dirPath = '/';
 	_self.linkRegister = [];
@@ -738,8 +738,8 @@ FileExplorerPage.prototype.renderDirPath = function() {
 
 FileExplorerPage.prototype.changeDir = function() {
 	var _self = this;
-	_self.explodeDirectory(_self.currentDirPath, function() {
-		_self.renderContent(_self.currentDirPath);
+	_self.explodeDirectory(_self.app.currentDirPath, function() {
+		_self.renderContent(_self.app.currentDirPath);
 	});
 };
 
@@ -754,7 +754,7 @@ FileExplorerPage.prototype.renderDirs = function(dirs) {
 		var fileData = _self.app.dir64;
 		var storage = _self.isLocalStorage ? "LS" : "FTP";
 		var line = '<li data-storage="' + storage + '" data-id="'
-				+ _self.currentDirPath + value
+				+ _self.app.currentDirPath + value
 				+ '" class="dir-placeholder"><a href="#">'
 				+ '<img class="ui-li-thumb ' + imgClass + '" src="' + fileData
 				+ '" /><h2>' + value + '</h2></a></li>';
@@ -823,7 +823,7 @@ FileExplorerPage.prototype.renderFiles = function(files) {
 			fileData = _self.app.image64
 		}
 		var dataid = $("#sel_dataproviders", _self.context).val()
-				+ _self.currentDirPath + value;
+				+ _self.app.currentDirPath + value;
 
 		// TODO: Get Images from FTP;
 		if (isImage) {
@@ -888,7 +888,7 @@ FileExplorerPage.prototype.explodeDirectory = function(dirName, callback) {
 		if (!dataStorageInfo.data) {
 			dataStorageInfo.data = {};
 		}
-		dataStorageInfo.data[_self.currentDirPath] = resultline;
+		dataStorageInfo.data[_self.app.currentDirPath] = resultline;
 		if (!_self.isLocalStorage) {
 			_self.app.appCache.ftpServers[selIndex] = dataStorageInfo;
 		} else {

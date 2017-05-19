@@ -718,11 +718,12 @@ GalleryPage.prototype.getGalleryImage = function() {
 	var _self = this;
 
 	window.plugins.multiImageSelector.getPictures(function(results) {
-		for (var i = 0; i < results.paths.length; i++) {
-			_self.editImages.push(results.paths[i]);
+		if (!results.cancelled) {
+			for (var i = 0; i < results.paths.length; i++) {
+				_self.editImages.push(results.paths[i]);
+			}
+			_self.onPhotoDataSuccess(_self.editImages.pop());
 		}
-		_self.onPhotoDataSuccess(_self.editImages.pop());
-
 	}, function(error) {
 		alert('Error: ' + error);
 	}, {
