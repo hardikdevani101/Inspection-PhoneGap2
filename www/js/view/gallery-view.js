@@ -16,7 +16,7 @@ GalleryPage.prototype.rederBreadCrumb = function() {
 GalleryPage.prototype.onEditFinish = function(sourceInfo, editedImgData) {
 	var _self = this;
 	sourceInfo['mrLineID'] = _self.app.appCache.session.m_inoutline.m_inoutline_id;
-	sourceInfo['isPickTicket'] = _self.app.appCache.session.m_inoutline.isPickTicket;
+	sourceInfo['lineType'] = _self.app.appCache.session.m_inoutline.lineType;
 	sourceInfo['inspID'] = _self.app.appCache.session.x_instructionline_id;
 	sourceInfo['isMR'] = _self.app.appCache.session.isMR;
 	sourceInfo['fileData'] = editedImgData;
@@ -139,7 +139,7 @@ GalleryPage.prototype.onCreateNewEntry = function(file) {
 
 	param = {};
 	param['mrLineID'] = _self.app.appCache.session.m_inoutline.m_inoutline_id;
-	param['isPickTicket'] = _self.app.appCache.session.m_inoutline.isPickTicket;
+	param['lineType'] = _self.app.appCache.session.m_inoutline.lineType;
 	param['inspID'] = _self.app.appCache.session.x_instructionline_id;
 	param['isMR'] = _self.app.appCache.session.isMR;
 	param['fileName'] = file.name;
@@ -223,7 +223,7 @@ GalleryPage.prototype.init = function() {
 					_self.context,
 					function() {
 						var sel_inoutline_id = _self.app.appCache.session.m_inoutline;	
-						var uuID = sel_inoutline_id.m_inoutline_id+ "" +sel_inoutline_id.isPickTicket;
+						var uuID = sel_inoutline_id.m_inoutline_id+ "" +sel_inoutline_id.lineType;
 						var arrINsp = _self.app.appCache.inspLines[uuID];
 						$
 								.each(
@@ -329,7 +329,7 @@ GalleryPage.prototype.init = function() {
 								.val());
 						_self.el_prefix_popup.popup("close");
 						var sel_inoutline_id = _self.app.appCache.session.m_inoutline;	
-						var uuID = sel_inoutline_id.m_inoutline_id+ "" +sel_inoutline_id.isPickTicket;
+						var uuID = sel_inoutline_id.m_inoutline_id+ "" +sel_inoutline_id.lineType;
 						if (sel_inoutline_id)
 							_self.app.appCache.prefixCache[uuID] = _self.el_prefix_insp
 									.val();
@@ -342,7 +342,7 @@ GalleryPage.prototype.init = function() {
 					'click',
 					function(event) {
 						var sel_inoutline_id = _self.app.appCache.session.m_inoutline;
-						var uuID = sel_inoutline_id.m_inoutline_id+ "" +sel_inoutline_id.isPickTicket;
+						var uuID = sel_inoutline_id.m_inoutline_id+ "" +sel_inoutline_id.lineType;
 						var mr_lines = _self.app.appCache.mrLines
 								.filter(function(element, index, array) {
 									return (element.m_inoutline_id == sel_inoutline_id.m_inoutline_id);

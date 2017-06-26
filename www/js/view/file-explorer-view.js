@@ -26,7 +26,7 @@ FileExplorerPage.prototype.init = function() {
 			return;
 		}
 		var sel_inoutline_id = _self.app.appCache.session.m_inoutline;	
-		var uuID = sel_inoutline_id.m_inoutline_id+ "" +sel_inoutline_id.isPickTicket;
+		var uuID = sel_inoutline_id.m_inoutline_id+ "" +sel_inoutline_id.lineType;
 		var arrINsp = _self.app.appCache.inspLines[uuID];
 		$
 				.each(

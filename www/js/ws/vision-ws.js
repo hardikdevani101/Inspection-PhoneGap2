@@ -172,7 +172,7 @@ VisionApi.prototype.getMRLines = function(params, success, error) {
 								.getElementsByTagName("DataRow");
 						if (fullNodeList.length > 0) {
 							for (var i = 0; i < fullNodeList.length; i++) {
-								var dlab, dval, inOut, desc,isPickTicket;
+								var dlab, dval, inOut, desc, lineType;
 								for (var j = 0; j < fullNodeList[i].childNodes.length; j++) {
 									if (fullNodeList[i].childNodes[j].attributes[0].value == 'LABEL') {
 										dlab = fullNodeList[i].childNodes[j].childNodes[0].textContent;
@@ -182,8 +182,8 @@ VisionApi.prototype.getMRLines = function(params, success, error) {
 										inOut = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'Description') {
 										desc = fullNodeList[i].childNodes[j].childNodes[0].textContent;
-									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'IS_PICK_TICKET') {
-										isPickTicket = fullNodeList[i].childNodes[j].childNodes[0].textContent;
+									} else if (fullNodeList[i].childNodes[j].attributes[0].value == 'LINE_TYPE') {
+										lineType = fullNodeList[i].childNodes[j].childNodes[0].textContent;
 									}
 								}
 								var mrLine = {};
@@ -191,7 +191,7 @@ VisionApi.prototype.getMRLines = function(params, success, error) {
 								mrLine["m_inoutline_id"] = dval;
 								mrLine["m_inout_id"] = inOut;
 								mrLine["desc"] = desc;
-								mrLine["isPickTicket"] = isPickTicket;
+								mrLine["lineType"] = lineType;
 								jsonResponse.push(mrLine);
 							}
 						}
@@ -252,7 +252,7 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 			.then(
 					function(response) {
 						var jsonResponse = [];
-						var isPickTicket = 'N';
+						var lineType = 'MR';
 						var xmlResponse = response;
 						var fullNodeList = xmlResponse
 								.getElementsByTagName("DataRow");
@@ -267,7 +267,7 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 							resultline['isIMR'] = false;
 							resultline['skipAutoRotate'] = true;
 							jsonResponse.push(resultline);
-							isPickTicket = params.m_inoutline_id.isPickTicket;
+							lineType = params.m_inoutline_id.lineType;
 						}
 
 						if (fullNodeList.length > 0) {
@@ -311,7 +311,7 @@ VisionApi.prototype.getInspLines = function(params, success, error) {
 						}
 						success({
 							'insplines' : jsonResponse,
-							'isPickTicket' : isPickTicket,
+							'lineType' : lineType,
 							'total' : jsonResponse.length
 						});
 					}).fail(function(err) {

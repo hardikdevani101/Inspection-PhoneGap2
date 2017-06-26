@@ -100,7 +100,7 @@ FS.prototype.createVISFile = function(param, isEdited) {
 	var prefix = "PS";
 	var sel_inoutline_id = _self.app.appCache.session.m_inoutline;
 	var uuID = sel_inoutline_id.m_inoutline_id + ""
-			+ sel_inoutline_id.isPickTicket;
+			+ sel_inoutline_id.lineType;
 	if (_self.app.appCache.prefixCache[uuID]) {
 		prefix = _self.app.appCache.prefixCache[uuID];
 	}
