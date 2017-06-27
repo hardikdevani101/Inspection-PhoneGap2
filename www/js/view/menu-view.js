@@ -88,17 +88,23 @@ MenuPage.prototype.renderLines = function() {
 	var _self = this;
 	var SO = 0;
 	var MR = 0;
+	var IMR = 0;
 	$.each(_self.app.appCache.mrLines, function() {
-		if (this.isPickTicket == 'Y')
+		if (this.lineType == 'PT')
 			SO += 1;
+		else if (this.lineType == 'IMR')
+			IMR += 1;
 		else
 			MR += 1;
 	});
 
-	var line = '<li data-mini="true"><a data-mini="true" data-isPick="N"> MR Lines<span class="ui-li-count">'
+	var line = '<li data-mini="true"><a data-mini="true" data-lineType="MR"> MR Lines<span class="ui-li-count">'
 			+ MR
 			+ '</span></a></li>'
-			+ '<li data-mini="true"><a data-mini="true" data-isPick="Y"> Pick Tickets<span class="ui-li-count">'
+			+ '<li data-mini="true"><a data-mini="true" data-lineType="IMR"> IMR Lines<span class="ui-li-count">'
+			+ IMR
+			+ '</span></a></li>'
+			+ '<li data-mini="true"><a data-mini="true" data-lineType="PT"> Pick Tickets<span class="ui-li-count">'
 			+ SO + '</span></a></li>';
 
 	var el_mrlinesList = $('#_list_lines', _self.context);
@@ -108,9 +114,9 @@ MenuPage.prototype.renderLines = function() {
 	var el_Linelinks = $('#_list_lines li a', _self.context);
 	el_Linelinks.off('click');
 	el_Linelinks.on('click', function(event) {
-		var cIsPick = $(this).attr("data-isPick");
+		var cDocLineType = $(this).attr("data-lineType");
 
-		_self.app.appCache.session.isPick = cIsPick;
+		_self.app.appCache.session.docLineType = cDocLineType;
 
 		$.mobile.changePage("#pg_inspection");
 		event.preventDefault();

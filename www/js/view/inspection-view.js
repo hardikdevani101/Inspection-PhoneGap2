@@ -275,10 +275,10 @@ InspLinesPage.prototype.renderMRLines = function() {
 	var _self = this;
 	var items = '';
 	$.each(_self.app.appCache.mrLines, function() {
-		if(_self.app.appCache.session.isPick == this.isPickTicket){
+		if(_self.app.appCache.session.docLineType == this.lineType){
 			var line = '<li data-mini="true"><a  data-mini="true" id="mrline_'
 				+ this.m_inoutline_id + '" data-id="' + this.m_inoutline_id
-				+ '" data-isPick="' + this.isPickTicket + '">' + this.label + ' / ' + this.desc + '</a></li>';
+				+ '" data-lineType="' + this.lineType + '">' + this.label + ' / ' + this.desc + '</a></li>';
 			items = items + line;
 		}
 	});
@@ -295,12 +295,12 @@ InspLinesPage.prototype.renderMRLines = function() {
 					function(event) {
 
 						var cId = $(this).data("id");
-						var cIsPick = $(this).attr("data-isPick");
+						var cDocLineType = $(this).attr("data-lineType");
 
 						_self.app.appCache.session.m_inoutline = $.grep(
 								_self.app.appCache.mrLines, function(item,
 										index) {
-									return item.isPickTicket == cIsPick
+									return item.lineType == cDocLineType
 											&& item.m_inoutline_id == cId;
 								});
 
@@ -343,7 +343,7 @@ InspLinesPage.prototype.renderInspLines = function() {
 	var _self = this;
 	var items = '';
 	var sel_inoutline_id = _self.app.appCache.session.m_inoutline;	
-	var uuID = sel_inoutline_id.m_inoutline_id+ "" +sel_inoutline_id.isPickTicket;
+	var uuID = sel_inoutline_id.m_inoutline_id+ "" +sel_inoutline_id.lineType;
 
 	if (!_self.app.appCache.prefixCache[uuID]) {
 		_self.app.appCache.prefixCache[uuID] = sel_inoutline_id.desc;
@@ -388,7 +388,7 @@ InspLinesPage.prototype.renderInspLines = function() {
 InspLinesPage.prototype.renderCounts = function() {
 	var _self = this;
 	var mrLineID = _self.app.appCache.session.m_inoutline;
-	var uuID = mrLineID.m_inoutline_id+ "" +mrLineID.isPickTicket;
+	var uuID = mrLineID.m_inoutline_id+ "" +mrLineID.lineType;
 	_self.inspCount = {};
 
 	if (_self.app.appCache.inspLines[uuID]) {
@@ -479,11 +479,11 @@ InspLinesPage.prototype.onFinishedCalled = function() {
 					item['type'] = 1;
 				}
 				item['files'] = results.rows.item(i).name;
-				item['isPickTicket'] = results.rows.item(i).isPickTicket;
+				item['lineType'] = results.rows.item(i).lineType;
 
 				var isUpdated = false;
 				$.each(attachmentList, function() {
-					if (this.id == item['id'] && this.isPickTicket == item['isPickTicket']) {
+					if (this.id == item['id'] && this.lineType == item['lineType']) {
 						this.files = this.files + "," + item['files'];
 						isUpdated = true;
 					}
@@ -507,7 +507,7 @@ InspLinesPage.prototype.onFinishedCalled = function() {
 					});
 				} else {
 					var tabName = 'M_InOut';
-					if (this.isPickTicket == 'Y')
+					if (this.lineType == 'PT')
 						tabName = 'C_Order';
 					_self.app.visionApi.uploadImageByMInOut({
 						recid : this.id,
@@ -560,7 +560,7 @@ InspLinesPage.prototype.loadInspLines = function(params) {
 	if (!(typeof params === 'undefined')) {
 		sel_inoutline_id = params.selected_mrline;
 	}
-	var uuID = sel_inoutline_id.m_inoutline_id+ "" +sel_inoutline_id.isPickTicket;
+	var uuID = sel_inoutline_id.m_inoutline_id+ "" +sel_inoutline_id.lineType;
 
 	if (!(typeof _self.app.appCache.inspLines[uuID] === 'undefined')) {
 		_self.renderInspLines();

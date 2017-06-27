@@ -2,7 +2,7 @@ var DB = function(app) {
 	console.log("DB constructor");
 	this.app = app;
 	this.currentDBVersion = "1.1"
-	this.dbstore = window.openDatabase("vision_db6", "", "vision_db6",
+	this.dbstore = window.openDatabase("vision_db7", "", "vision_db7",
 			2 * 1024 * 1024);
 }
 
@@ -33,7 +33,7 @@ DB.prototype.init = function(success, error) {
 						tx
 								.executeSql('CREATE TABLE IF NOT EXISTS '
 										+ ' vis_gallery '
-										+ ' (mr_line,insp_line DEFAULT "0",isMR DEFAULT "N",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F", dataSource DEFAULT "CMR",imgEdited DEFAULT "F",isPickTicket DEFAULT "F")');
+										+ ' (mr_line,insp_line DEFAULT "0",isMR DEFAULT "N",name,file,imgUpload DEFAULT "F",imgAttach DEFAULT "F", dataSource DEFAULT "CMR",imgEdited DEFAULT "F",lineType DEFAULT "MR")');
 						tx
 								.executeSql('CREATE TABLE IF NOT EXISTS '
 										+ ' vis_server '
@@ -237,7 +237,7 @@ DB.prototype.doGalleryEntry = function(fileInfo) {
 	} else {
 		whereSQL += ' and isMR="Y" and insp_line="' + fileInfo.inspID + '"';
 	}
-	whereSQL += ' and isPickTicket="' + fileInfo.isPickTicket + '"';
+	whereSQL += ' and lineType="' + fileInfo.lineType + '"';
 	_self.dbstore.transaction(function(tx) {
 		tx.executeSql(sqlQuery + whereSQL, [], function(tx, results) {
 			if (results.rows.length > 0) {
@@ -246,11 +246,11 @@ DB.prototype.doGalleryEntry = function(fileInfo) {
 				tx.executeSql(sqlQuery + whereSQL, []);
 			} else {
 				sqlQuery = 'INSERT INTO vis_gallery '
-						+ ' (mr_line,isMR,insp_line,name,file,imgEdited,isPickTicket)'
+						+ ' (mr_line,isMR,insp_line,name,file,imgEdited,lineType)'
 						+ ' VALUES ("' + fileInfo.mrLineID + '","'
 						+ fileInfo.isMR + '","' + fileInfo.inspID + '","'
 						+ fileInfo.fileName + '","' + fileInfo.filePath + '","'
-						+ fileInfo.imgEdited + '","' + fileInfo.isPickTicket + '")';
+						+ fileInfo.imgEdited + '","' + fileInfo.lineType + '")';
 				tx.executeSql(sqlQuery);
 			}
 		}, _self.errorCB);
